@@ -307,8 +307,13 @@ public class AutomationCompositionHandler {
                 migrateExistingElementsOnThisParticipant(migrationMsg.getAutomationCompositionId(),
                         migrationMsg.getCompositionTargetId(), participantDeploy, migrationMsg.getStage());
 
-                callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
-                    acCopy, migrationMsg.getCompositionTargetId(), migrationMsg.getStage());
+                if (Boolean.TRUE.equals(migrationMsg.getRollback())) {
+                    callParticipantRollback(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
+                            acCopy, migrationMsg.getCompositionTargetId(), migrationMsg.getStage());
+                } else {
+                    callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
+                            acCopy, migrationMsg.getCompositionTargetId(), migrationMsg.getStage());
+                }
             }
         }
     }
@@ -339,13 +344,13 @@ public class AutomationCompositionHandler {
                     var instanceElementMigrateDto = CacheProvider
                             .changeStateToNew(instanceElementMigrateMap.get(acElement.getId()));
 
-                    listener.migrate(messageId, compositionElementDto, compositionElementTargetDto, instanceElementDto,
-                            instanceElementMigrateDto, stage);
+                    listener.migrate(messageId, compositionElementDto, compositionElementTargetDto,
+                            instanceElementDto, instanceElementMigrateDto, stage);
                 } else {
                     listener.migrate(messageId, compositionElementMap.get(acElement.getId()),
                             compositionElementTargetMap.get(acElement.getId()),
-                            instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()),
-                            stage);
+                            instanceElementMap.get(acElement.getId()), instanceElementMigrateMap
+                                    .get(acElement.getId()), stage);
                 }
             }
         }
@@ -358,9 +363,24 @@ public class AutomationCompositionHandler {
                                 Map.of(), Map.of(), ElementState.REMOVED);
                 var instanceDtoTarget = new InstanceElementDto(acCopy.getInstanceId(), elementId, Map.of(),
                                 Map.of(), ElementState.REMOVED);
-
                 listener.migrate(messageId, compositionElementMap.get(elementId), compositionDtoTarget,
                         instanceElementMap.get(elementId), instanceDtoTarget, 0);
+            }
+        }
+    }
+
+    private void callParticipantRollback(UUID messageId, List<AcElementDeploy> acElements,
+                                         AutomationComposition acCopy, UUID compositionTargetId, int stage) {
+        var compositionElementMap = cacheProvider.getCompositionElementDtoMap(acCopy);
+        var instanceElementMap = cacheProvider.getInstanceElementDtoMap(acCopy);
+
+        for (var acElement : acElements) {
+            var compositionInProperties = cacheProvider
+                    .getCommonProperties(compositionTargetId, acElement.getDefinition());
+            var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
+            if (stageSet.contains(stage)) {
+                listener.rollback(messageId, compositionElementMap.get(acElement.getId()),
+                        instanceElementMap.get(acElement.getId()), stage);
             }
         }
     }
