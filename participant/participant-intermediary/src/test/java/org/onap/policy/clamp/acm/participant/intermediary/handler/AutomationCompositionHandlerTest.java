@@ -220,13 +220,20 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(
                 mock(CacheProvider.class), mock(ParticipantMessagePublisher.class), mock(ThreadHandler.class));
         var migrationMsg = new AutomationCompositionMigration();
+        var rollbackMsg = new AutomationCompositionMigration();
+        rollbackMsg.setRollback(true);
+
         migrationMsg.setStage(0);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
         migrationMsg.setAutomationCompositionId(UUID.randomUUID());
         migrationMsg.setCompositionTargetId(UUID.randomUUID());
         assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
-        migrationMsg.setRollback(true);
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
+
+        rollbackMsg.setStage(0);
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(rollbackMsg));
+        rollbackMsg.setAutomationCompositionId(UUID.randomUUID());
+        rollbackMsg.setCompositionTargetId(UUID.randomUUID());
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(rollbackMsg));
     }
 
     @Test
@@ -244,7 +251,8 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getInstanceId(), definitions,
                 automationComposition.getCompositionTargetId(), definitions);
 
-        testMigration(cacheProvider, automationComposition, 0, automationComposition.getElements().size());
+        testMigration(cacheProvider, automationComposition, 0, automationComposition.getElements().size(), false);
+
     }
 
     @Test
@@ -271,8 +279,12 @@ class AutomationCompositionHandlerTest {
         var cacheProvider = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
                 automationComposition.getInstanceId(), definitions,
                 acMigrate.getCompositionTargetId(), migrateDefinitions);
+        var cacheProviderRollback = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
+                automationComposition.getInstanceId(), definitions,
+                acMigrate.getCompositionTargetId(), migrateDefinitions);
 
-        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size() + 1);
+        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size() + 1, false);
+        testMigration(cacheProviderRollback, acMigrate, 0, acMigrate.getElements().size() + 1, true);
     }
 
     @Test
@@ -306,19 +318,28 @@ class AutomationCompositionHandlerTest {
         var cacheProvider = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
                 automationComposition.getInstanceId(), definitions,
                 acMigrate.getCompositionTargetId(), migrateDefinitions);
+        var cacheProviderRollback = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
+                automationComposition.getInstanceId(), definitions,
+                acMigrate.getCompositionTargetId(), migrateDefinitions);
+
 
         // scenario 1,2
         migrateDefinitions.forEach(el -> el.getAutomationCompositionElementToscaNodeTemplate()
                 .setProperties(Map.of("stage", List.of(1, 2))));
 
         // expected the element deleted
-        testMigration(cacheProvider, acMigrate, 0, 1);
+        testMigration(cacheProvider, acMigrate, 0, 1, false);
+        testMigration(cacheProviderRollback, acMigrate, 0, 1, true);
 
         // expected 4 elements from stage 1
-        testMigration(cacheProvider, acMigrate, 1, 4);
+        testMigration(cacheProvider, acMigrate, 1, 4, false);
+        testMigration(cacheProviderRollback, acMigrate, 1, 4, true);
 
         // scenario 0,2
         cacheProvider = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
+                automationComposition.getInstanceId(), definitions,
+                acMigrate.getCompositionTargetId(), migrateDefinitions);
+        cacheProviderRollback = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
                 automationComposition.getInstanceId(), definitions,
                 acMigrate.getCompositionTargetId(), migrateDefinitions);
 
@@ -326,10 +347,12 @@ class AutomationCompositionHandlerTest {
                 .setProperties(Map.of("stage", List.of(0, 2))));
 
         // expected the element deleted + 4 elements from stage 0
-        testMigration(cacheProvider, acMigrate, 0, 5);
+        testMigration(cacheProvider, acMigrate, 0, 5, false);
+        testMigration(cacheProviderRollback, acMigrate, 0, 5, true);
 
         // expected 0 elements
-        testMigration(cacheProvider, acMigrate, 1, 0);
+        testMigration(cacheProvider, acMigrate, 1, 0, false);
+        testMigration(cacheProviderRollback, acMigrate, 1, 0, true);
     }
 
     private CacheProvider createCacheProvider(ParticipantDeploy participantDeploy,
@@ -343,20 +366,29 @@ class AutomationCompositionHandlerTest {
     }
 
     private void testMigration(CacheProvider cacheProvider, AutomationComposition acMigrate,
-            int stage, int expectedMigrated) {
+            int stage, int expectedMigrated, boolean rollback) {
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(stage);
         migrationMsg.setCompositionId(acMigrate.getCompositionId());
         migrationMsg.setAutomationCompositionId(acMigrate.getInstanceId());
         migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
-        migrationMsg.setRollback(false);
         var participantMigrate = CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), acMigrate);
         migrationMsg.setParticipantUpdatesList(List.of(participantMigrate));
         var listener = mock(ThreadHandler.class);
 
         clearInvocations();
-        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
-        ach.handleAutomationCompositionMigration(migrationMsg);
-        verify(listener, times(expectedMigrated)).migrate(any(), any(), any(), any(), any(), anyInt());
+        var ach = new AutomationCompositionHandler(cacheProvider,
+                mock(ParticipantMessagePublisher.class), listener);
+
+        if (!rollback) {
+            clearInvocations();
+            ach.handleAutomationCompositionMigration(migrationMsg);
+            verify(listener, times(expectedMigrated)).migrate(any(), any(), any(), any(), any(), anyInt());
+        } else {
+            clearInvocations();
+            migrationMsg.setRollback(true);
+            ach.handleAutomationCompositionMigration(migrationMsg);
+            verify(listener, times(expectedMigrated)).rollback(any(), any(), any(), anyInt());
+        }
     }
 }
