@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48aa3988_ca42d925",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-20T14:21:25Z",
+      "side": 1,
+      "message": "// the rollback key should be the instance, because a composition could have more instances.\n\n var result \u003d acRollbackRepository.findById(instanceId);\n if (result.isEmpty()) {\n            throw new PfModelRuntimeException(Status.NOT_FOUND, \"Rollback not found\");\n }\n return result.get();",
+      "range": {
+        "startLine": 277,
+        "startChar": 9,
+        "endLine": 281,
+        "endChar": 26
+      },
+      "revId": "851d21088122e0cfa5db84e2778aa6ef27cf2336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
