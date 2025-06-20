@@ -22,6 +22,30 @@
       },
       "revId": "1935c837997e4ad3399dd43b86596483094df366",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f155fdc_dc0ec7d0",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-20T14:05:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c18e1a4f_8712ef8d",
+      "range": {
+        "startLine": 473,
+        "startChar": 8,
+        "endLine": 489,
+        "endChar": 9
+      },
+      "revId": "1935c837997e4ad3399dd43b86596483094df366",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
