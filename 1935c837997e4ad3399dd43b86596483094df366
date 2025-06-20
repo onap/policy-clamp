@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c18e1a4f_8712ef8d",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-20T12:38:46Z",
+      "side": 1,
+      "message": "it could better decouple this business logic moving the use of the AutomationCompositionRollback and AutomationCompositionRollbackRepository into AutomationCompositionProvider.",
+      "range": {
+        "startLine": 473,
+        "startChar": 8,
+        "endLine": 489,
+        "endChar": 9
+      },
+      "revId": "1935c837997e4ad3399dd43b86596483094df366",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
