@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,12 @@ package org.onap.policy.clamp.models.acm.utils;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -40,6 +43,7 @@ public class CommonTestData {
     public static final UUID PARTICIPANT_ID = UUID.randomUUID();
     public static final UUID REPLICA_ID = UUID.randomUUID();
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
+    private static final Coder CODER = new StandardCoder();
 
     /**
      * Returns participantId for test cases.
@@ -103,6 +107,22 @@ public class CommonTestData {
             return YAML_TRANSLATOR.decode(yaml, clazz);
         } catch (CoderException e) {
             fail("Cannot decode " + yaml);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from json file.
+     *
+     * @param path path of the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getJsonObject(final String path, Class<T> clazz) {
+        try {
+            return CODER.decode(new File(path), clazz);
+        } catch (CoderException e) {
+            fail("Cannot decode " + path);
             return null;
         }
     }
