@@ -207,6 +207,6 @@ class AutomationCompositionElementHandlerTest {
         assertDoesNotThrow(() -> automationCompositionElementHandler
                 .migrate(commonTestData.createCompositionElementDto(),
                 commonTestData.createCompositionElementDto(), commonTestData.createInstanceElementDto(Map.of()),
-                commonTestData.createInstanceElementDto(Map.of())));
+                commonTestData.createInstanceElementDto(Map.of()), 0));
     }
 }

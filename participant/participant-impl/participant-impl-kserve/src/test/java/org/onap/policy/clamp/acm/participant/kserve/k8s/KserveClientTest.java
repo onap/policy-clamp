@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -56,7 +56,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KserveClientTest {
 
-    @SpyBean
+    @MockitoSpyBean
     private KserveClient kserveClient;
 
     String namespace = "kserve-test";
@@ -67,7 +67,7 @@ class KserveClientTest {
 
     final CustomObjectsApi customObjectsApi = mock(CustomObjectsApi.class);
 
-    @MockBean
+    @MockitoBean
     ApiClient apiClient;
 
     @BeforeAll

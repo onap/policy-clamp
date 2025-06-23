@@ -31,7 +31,7 @@ import org.apache.hc.core5.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV2;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -51,7 +51,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler extends AcElementListenerV2 {
+public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
     private static final Coder CODER = new StandardCoder();

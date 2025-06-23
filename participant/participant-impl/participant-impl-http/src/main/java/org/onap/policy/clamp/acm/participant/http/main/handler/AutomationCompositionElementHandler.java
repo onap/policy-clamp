@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,15 @@ package org.onap.policy.clamp.acm.participant.http.main.handler;
 import jakarta.validation.Validation;
 import jakarta.ws.rs.core.Response.Status;
 import java.lang.invoke.MethodHandles;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.Coder;
@@ -45,7 +46,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler extends AcElementListenerV1 {
+public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private static final Coder CODER = new StandardCoder();
 
@@ -58,43 +59,29 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
         this.acHttpClient = acHttpClient;
     }
 
-    /**
-     * Handle a automation composition element state change.
-     *
-     * @param automationCompositionElementId the ID of the automation composition element
-     */
     @Override
-    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) {
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "");
-    }
-
-    /**
-     * Callback method to handle an update on a automation composition element.
-     *
-     * @param automationCompositionId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
-     */
-    @Override
-    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties) {
+    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
-            var configRequest = getConfigRequest(properties);
+            var map = new HashMap<>(compositionElement.inProperties());
+            map.putAll(instanceElement.inProperties());
+            var configRequest = getConfigRequest(map);
             var restResponseMap = acHttpClient.run(configRequest);
             var failedResponseStatus = restResponseMap.values().stream()
                     .filter(response -> !HttpStatus.valueOf(response.getKey()).is2xxSuccessful())
                     .toList();
             if (failedResponseStatus.isEmpty()) {
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                        DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+                intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                        instanceElement.elementId(), DeployState.DEPLOYED, null,
+                        StateChangeResult.NO_ERROR, "Deployed");
             } else {
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                        DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                        "Error on Invoking the http request: " + failedResponseStatus);
+                intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                        instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+                        StateChangeResult.FAILED, "Error on Invoking the http request: " + failedResponseStatus);
             }
         } catch (AutomationCompositionException e) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                    instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+                    StateChangeResult.FAILED, e.getMessage());
         }
     }
 
@@ -113,5 +100,11 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
         } catch (CoderException e) {
             throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ConfigRequest ", e);
         }
+    }
+
+    @Override
+    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "");
     }
 }
