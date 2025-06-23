@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2a601a1_530c60b9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/DeployState.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-23T14:59:13Z",
+      "side": 1,
+      "message": "Ack. I will make this change",
+      "parentUuid": "606a19a9_37db1945",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 25
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2dce5354_2fd30232",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-06-23T14:29:04Z",
       "side": 1,
       "message": "Can this error message be updated as \"instance not found for rollback\" ?",
+      "range": {
+        "startLine": 279,
+        "startChar": 65,
+        "endLine": 279,
+        "endChar": 83
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d330802_c987d1c3",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-23T14:59:13Z",
+      "side": 1,
+      "message": "Ack. I will make this change",
+      "parentUuid": "2dce5354_2fd30232",
       "range": {
         "startLine": 279,
         "startChar": 65,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e3cf19ce_9459af3b",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AcInstanceStateResolverTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-23T14:59:13Z",
+      "side": 1,
+      "message": "I don\u0027t think so. Maybe I\u0027ve missed scenarios that may be more obvious to you. If so, I can add those scenarios.",
+      "parentUuid": "a7fdc0a6_b7e4f2b9",
+      "range": {
+        "startLine": 80,
+        "startChar": 7,
+        "endLine": 81,
+        "endChar": 108
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f02dcbd9_b3d69621",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
         "patchSetId": 8
@@ -83,6 +155,30 @@
       "writtenOn": "2025-06-23T14:29:04Z",
       "side": 1,
       "message": "If this condition doesn\u0027t satisfy, we still return response as success? Require error handling for invalid states?",
+      "range": {
+        "startLine": 473,
+        "startChar": 8,
+        "endLine": 475,
+        "endChar": 96
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5521d614_dca4d8d6",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-23T14:59:13Z",
+      "side": 1,
+      "message": "Would something like this be preferred?\n\nif (DeployState.DEPLOYED.equals(automationComposition.getDeployState())\n              \u0026\u0026 SubState.NONE.equals(automationComposition.getSubState())\n              \u0026\u0026 StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {\n.\n.\n.\n.            \n            automationCompositionProvider.updateAutomationComposition(automationComposition);\n            return createInstantiationResponse(automationComposition);\n        } else {\n            automationComposition.setStateChangeResult(StateChangeResult.FAILED);\n            var response \u003d new InstantiationResponse();\n            response.setInstanceId(automationComposition.getInstanceId());\n            response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());\n            response.setErrorDetails(\"Invalid state for rollback\");\n            return response;\n        }",
+      "parentUuid": "f02dcbd9_b3d69621",
       "range": {
         "startLine": 473,
         "startChar": 8,
