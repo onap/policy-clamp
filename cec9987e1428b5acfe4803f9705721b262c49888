@@ -144,6 +144,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "21854d3f_cb8816f4",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AcInstanceStateResolverTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-23T15:54:46Z",
+      "side": 1,
+      "message": "scenario where rollback failed and user can undeploy:\nresult \u003d acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, SubOrder.NONE, DeployState.MIGRATION_ROLLBACKING, LockState.LOCKED, SubState.NONE, StateChangeResult.FAILED);\nassertThat(result).isEqualTo(AcInstanceStateResolver.UNDEPLOY);",
+      "parentUuid": "e3cf19ce_9459af3b",
+      "range": {
+        "startLine": 80,
+        "startChar": 7,
+        "endLine": 81,
+        "endChar": 108
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f02dcbd9_b3d69621",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
         "patchSetId": 8
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "Would something like this be preferred?\n\nif (DeployState.DEPLOYED.equals(automationComposition.getDeployState())\n              \u0026\u0026 SubState.NONE.equals(automationComposition.getSubState())\n              \u0026\u0026 StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {\n.\n.\n.\n.            \n            automationCompositionProvider.updateAutomationComposition(automationComposition);\n            return createInstantiationResponse(automationComposition);\n        } else {\n            automationComposition.setStateChangeResult(StateChangeResult.FAILED);\n            var response \u003d new InstantiationResponse();\n            response.setInstanceId(automationComposition.getInstanceId());\n            response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());\n            response.setErrorDetails(\"Invalid state for rollback\");\n            return response;\n        }",
       "parentUuid": "f02dcbd9_b3d69621",
+      "range": {
+        "startLine": 473,
+        "startChar": 8,
+        "endLine": 475,
+        "endChar": 96
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b989a0c_0882e684",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-23T15:54:46Z",
+      "side": 1,
+      "message": "} else {\n throw new PfModelRuntimeException(Status.BAD_REQUEST, \"...\")\n}",
+      "parentUuid": "5521d614_dca4d8d6",
       "range": {
         "startLine": 473,
         "startChar": 8,
