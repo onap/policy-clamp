@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f84404d_6363df3b",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-23T12:10:51Z",
+      "side": 1,
+      "message": "where automationComposition.deployState will be set as DeployState.MIGRATION_ROLLBACKING?\nthe condition should be different: automationComposition should be \nDeployState.DEPLOYED with NOE_RROR and SubState.NONE\n\nafter it should set the DeployState in automationComposition and all elements:\nsetDeployState(DeployState.MIGRATION_ROLLBACKING);",
+      "range": {
+        "startLine": 473,
+        "startChar": 12,
+        "endLine": 473,
+        "endChar": 91
+      },
+      "revId": "1dfc41d3e05541d1f52ed630cd2053f28bc1826b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6cc0da9_8fd0a585",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-23T12:10:51Z",
+      "side": 1,
+      "message": "is OK that automationComposition.compositionId should be updated with utomationCompositionToRollback.compositionId, but it will never happen because of the condition \"automationComposition.getCompositionId().toString().equals(automationCompositionToRollback.getCompositionId())\"",
+      "range": {
+        "startLine": 474,
+        "startChar": 15,
+        "endLine": 476,
+        "endChar": 120
+      },
+      "revId": "1dfc41d3e05541d1f52ed630cd2053f28bc1826b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
