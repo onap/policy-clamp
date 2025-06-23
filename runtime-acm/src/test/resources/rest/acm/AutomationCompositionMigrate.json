@@ -1,30 +1,47 @@
 {
-  "name": "PMSHInstance1",
+  "name": "PMSHInstance0",
   "version": "1.0.1",
   "compositionId": "709c62b3-8918-41b9-a747-d21eb79c6c40",
-  "deployState": "DEPLOYED",
-  "lockState": "LOCKED",
   "description": "PMSH automation composition instance 0",
   "elements": {
-    "709c62b3-8918-41b9-a747-d21eb79c6c21": {
-      "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+    "709c62b3-8918-41b9-a747-d21eb79c6c20": {
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
       "definition": {
         "name": "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement",
-        "version": "1.2.3"
+        "version": "1.2.4"
       },
-      "deployState": "DEPLOYED",
-      "lockState": "LOCKED",
-      "description": "Automation composition element for the K8S microservice for PMSH"
+      "description": "Automation composition element for the K8S microservice for PMSH",
+      "deployTimeoutMs": "200000",
+      "undeployTimeoutMs": "150000",
+      "updateTimeoutMs": "200000",
+      "migrateTimeoutMs": "200000",
+      "deleteTimeoutMs": "100000"
+    },
+    "709c62b3-8918-41b9-a747-d21eb79c6c29": {
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c29",
+      "definition": {
+        "name": "org.onap.domain.database.PMSH_HttpMicroserviceAutomationCompositionElement",
+        "version": "1.2.4"
+      },
+      "description": "Automation composition element for the http requests of PMSH microservice",
+      "deployTimeoutMs": "200000",
+      "undeployTimeoutMs": "150000",
+      "updateTimeoutMs": "200000",
+      "migrateTimeoutMs": "200000",
+      "deleteTimeoutMs": "100000"
     },
     "709c62b3-8918-41b9-a747-d21eb79c6c22": {
       "id": "709c62b3-8918-41b9-a747-d21eb79c6c22",
       "definition": {
-        "name": "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement",
-        "version": "1.2.3"
+        "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
+        "version": "1.2.4"
       },
-      "deployState": "DEPLOYED",
-      "lockState": "LOCKED",
-      "description": "Automation composition element for the operational policy for Performance Management Subscription Handling"
+      "description": "Automation composition element for the operational policy for Performance Management Subscription Handling",
+      "deployTimeoutMs": "200000",
+      "undeployTimeoutMs": "150000",
+      "updateTimeoutMs": "200000",
+      "migrateTimeoutMs": "200000",
+      "deleteTimeoutMs": "100000"
     }
   }
 }

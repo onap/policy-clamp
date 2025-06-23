@@ -71,6 +71,8 @@ import org.springframework.data.domain.Pageable;
  *
  */
 class AutomationCompositionInstantiationProviderTest {
+
+    public static final String MIGRATION_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase-migration.yaml";
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
     private static final String AC_INSTANTIATION_UPDATE_JSON =
             "src/test/resources/rest/acm/AutomationCompositionUpdate.json";
@@ -83,8 +85,6 @@ class AutomationCompositionInstantiationProviderTest {
     private static final String DELETE_BAD_REQUEST = "Not valid order DELETE;";
 
     private static final String AC_ELEMENT_NAME_NOT_FOUND = """
-            "AutomationComposition" INVALID, item has status INVALID
-              "entry PMSHInstance0AcElementNotFound" INVALID, item has status INVALID
                 "entry org.onap.domain.pmsh.DCAEMicroservice" INVALID, Not found
                 "entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement" INVALID, Not found
             """;
@@ -96,13 +96,17 @@ class AutomationCompositionInstantiationProviderTest {
     private static final String DO_NOT_MATCH = " do not match with ";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+    private static ToscaServiceTemplate serviceTemplateMigration = new ToscaServiceTemplate();
 
     @BeforeAll
     public static void setUpBeforeClass() {
-        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var jpa =
-                ProviderUtils.getJpaAndValidate(serviceTemplate, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
+        var st = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var jpa = ProviderUtils.getJpaAndValidate(st, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
         serviceTemplate = jpa.toAuthorative();
+
+        st = InstantiationUtils.getToscaServiceTemplate(MIGRATION_SERVICE_TEMPLATE_YAML);
+        jpa = ProviderUtils.getJpaAndValidate(st, JpaToscaServiceTemplate::new, "migrationServiceTemplate");
+        serviceTemplateMigration = jpa.toAuthorative();
     }
 
     @Test
@@ -263,7 +267,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instanceId = UUID.randomUUID();
 
         var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_MIGRATE_JSON, "Crud");
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(instanceId);
         automationComposition.setDeployState(DeployState.DEPLOYED);
@@ -272,29 +276,11 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
 
-        var automationCompositionTarget = new AutomationComposition(automationComposition);
+        var automationCompositionTarget =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_MIGRATE_JSON, "Migrate");
         automationCompositionTarget.setInstanceId(instanceId);
         automationCompositionTarget.setCompositionId(compositionId);
-        // Add a new element
-        var uuid = UUID.randomUUID();
-        var newElement = new AutomationCompositionElement();
-        newElement.setId(uuid);
-        newElement.setDefinition(new ToscaConceptIdentifier(
-                "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement", "1.2.3"));
-        newElement.setProperties(Map.of("testVar", "1", "testVar2", "2"));
-        automationCompositionTarget.getElements().put(uuid, newElement);
-
-        //Remove an existing element
-        var elementIdToRemove = UUID.randomUUID();
-        for (var element : automationCompositionTarget.getElements().values()) {
-            if (element.getDefinition().getName()
-                    .equals("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement")) {
-                elementIdToRemove = element.getId();
-            }
-        }
-        automationCompositionTarget.getElements().remove(elementIdToRemove);
-
-        var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplateMigration, AcTypeState.PRIMED);
         var compositionTargetId = acDefinitionTarget.getCompositionId();
         automationCompositionTarget.setCompositionTargetId(compositionTargetId);
         when(acDefinitionProvider.findAcDefinition(compositionTargetId)).thenReturn(Optional.of(acDefinitionTarget));
@@ -638,13 +624,13 @@ class AutomationCompositionInstantiationProviderTest {
                 participantProvider, CommonTestData.getTestParamaterGroup(), encryptionUtils);
 
         assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
-                .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
+                .hasMessageContaining(AC_ELEMENT_NAME_NOT_FOUND);
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
 
         assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, automationComposition))
-                .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
+                .hasMessageContaining(AC_ELEMENT_NAME_NOT_FOUND);
     }
 
     @Test

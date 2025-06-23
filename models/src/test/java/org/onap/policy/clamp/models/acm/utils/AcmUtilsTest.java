@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,7 +45,6 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -62,7 +59,7 @@ class AcmUtilsTest {
             "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement";
     private static final String PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT = "org.onap.policy.clamp.acm.Participant";
     private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
-
+    private static final String AC_INSTANTIATION_JSON = "src/test/resources/json/AutomationComposition.json";
     public static final String AUTOMATION_COMPOSITION_ELEMENT =
             "org.onap.policy.clamp.acm.AutomationCompositionElement";
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
@@ -120,6 +117,22 @@ class AcmUtilsTest {
 
     @Test
     void testValidateAutomationComposition() {
+        var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
+        var automationComposition = CommonTestData.getJsonObject(AC_INSTANTIATION_JSON, AutomationComposition.class);
+        var result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
+                AUTOMATION_COMPOSITION_NODE_TYPE);
+        assertTrue(result.isValid());
+
+        var element = automationComposition.getElements().values().iterator().next();
+        automationComposition.getElements().remove(element.getId());
+        result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
+                AUTOMATION_COMPOSITION_NODE_TYPE);
+        assertFalse(result.isValid());
+        assertThat(result.getMessage()).contains("not matching");
+    }
+
+    @Test
+    void testNotValidateAutomationComposition() {
         var automationComposition = getDummyAutomationComposition();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
         var result = AcmUtils.validateAutomationComposition(automationComposition,
@@ -234,15 +247,10 @@ class AcmUtilsTest {
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(UUID.randomUUID());
         Map<UUID, AutomationCompositionElement> map = new LinkedHashMap<>();
-        try {
-            var element = new StandardCoder().decode(
-                    new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
-                    AutomationCompositionElement.class);
-            map.put(UUID.randomUUID(), element);
-        } catch (Exception e) {
-            fail("Cannot read or decode " + e.getMessage());
-            return null;
-        }
+        var element = CommonTestData.getJsonObject(
+                "src/test/resources/json/AutomationCompositionElementNoOrderedState.json",
+                AutomationCompositionElement.class);
+        map.put(UUID.randomUUID(), element);
         automationComposition.setElements(map);
         return automationComposition;
     }

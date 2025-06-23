@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,6 +215,11 @@ public final class AcmUtils {
                     .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
                     .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
             // @formatter:on
+
+            if (definitions.size() != automationComposition.getElements().size()) {
+                result.setResult(ValidationStatus.INVALID,
+                        "Elements of the instance not matching with the elements of the composition");
+            }
 
             for (var element : automationComposition.getElements().values()) {
                 result.addResult(validateDefinition(definitions, element.getDefinition()));
