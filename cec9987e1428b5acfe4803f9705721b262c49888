@@ -114,6 +114,30 @@
       },
       "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "615197ec_0d881f8d",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-06-23T14:30:57Z",
+      "side": 1,
+      "message": "I think this is the next step where Adam is working",
+      "parentUuid": "44f97842_2e345d81",
+      "range": {
+        "startLine": 485,
+        "startChar": 15,
+        "endLine": 485,
+        "endChar": 42
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
