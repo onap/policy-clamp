@@ -166,6 +166,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fda197f_9de0724c",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AcInstanceStateResolverTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-24T07:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21854d3f_cb8816f4",
+      "range": {
+        "startLine": 80,
+        "startChar": 7,
+        "endLine": 81,
+        "endChar": 108
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f02dcbd9_b3d69621",
@@ -227,6 +251,30 @@
       "side": 1,
       "message": "} else {\n throw new PfModelRuntimeException(Status.BAD_REQUEST, \"...\")\n}",
       "parentUuid": "5521d614_dca4d8d6",
+      "range": {
+        "startLine": 473,
+        "startChar": 8,
+        "endLine": 475,
+        "endChar": 96
+      },
+      "revId": "cec9987e1428b5acfe4803f9705721b262c49888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "296d9797_aa0b0556",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-06-24T07:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b989a0c_0882e684",
       "range": {
         "startLine": 473,
         "startChar": 8,
