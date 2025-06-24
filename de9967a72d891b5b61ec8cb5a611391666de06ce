@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b358a01a_e33c7867",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-24T10:36:55Z",
+      "side": 1,
+      "message": "maybe is better to create a new method that can be reused",
+      "range": {
+        "startLine": 342,
+        "startChar": 20,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "de9967a72d891b5b61ec8cb5a611391666de06ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
