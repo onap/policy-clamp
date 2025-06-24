@@ -22,6 +22,30 @@
       },
       "revId": "179f90e4e11147da2b9b78d488680092e7e82246",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31480b51_7cba3155",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/utils/AcmUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-24T09:26:21Z",
+      "side": 1,
+      "message": "During creation of an instance, the instance elements have to be aligned with the composition definition elements and during migration the instance elements updated have to be aligned with the target composition definition elements. Exactly what the validation is doing.\nCSIT has already add/remove tests, any error will be intercepted.",
+      "parentUuid": "11f61fb4_060da657",
+      "range": {
+        "startLine": 219,
+        "startChar": 12,
+        "endLine": 223,
+        "endChar": 0
+      },
+      "revId": "179f90e4e11147da2b9b78d488680092e7e82246",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
