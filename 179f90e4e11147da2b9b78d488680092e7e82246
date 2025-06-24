@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11f61fb4_060da657",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/utils/AcmUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-06-24T09:17:10Z",
+      "side": 1,
+      "message": "Just confirming that this check won\u0027t cause issues in the add/remove elements scenario during migration, as it will be compared with the target definition?",
+      "range": {
+        "startLine": 219,
+        "startChar": 12,
+        "endLine": 223,
+        "endChar": 0
+      },
+      "revId": "179f90e4e11147da2b9b78d488680092e7e82246",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
