@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +22,14 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import jakarta.ws.rs.core.Response;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.base.PfModelRuntimeException;
 
 @Converter(autoApply = true)
-public class StringToDocMessage implements AttributeConverter<DocMessage, String> {
-
-    private static final Coder coder = new StandardCoder();
+public class StringToDocMessage extends AbstractConverter implements AttributeConverter<DocMessage, String> {
 
     @Override
     public String convertToDatabaseColumn(DocMessage docMessage) {
-        try {
-            return docMessage == null ? null : coder.encode(docMessage);
-        } catch (CoderException e) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-        }
+        return encode(docMessage);
     }
 
     @Override
@@ -48,10 +37,6 @@ public class StringToDocMessage implements AttributeConverter<DocMessage, String
         if (message == null) {
             return new DocMessage();
         }
-        try {
-            return coder.decode(message, DocMessage.class);
-        } catch (CoderException e) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-        }
+        return decode(message, DocMessage.class);
     }
 }

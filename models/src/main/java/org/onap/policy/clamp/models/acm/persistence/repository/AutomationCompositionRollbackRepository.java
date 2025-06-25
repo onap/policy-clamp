@@ -20,12 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
-import java.util.List;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionRollback;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AutomationCompositionRollbackRepository
         extends JpaRepository<JpaAutomationCompositionRollback, String> {
-
-    List<JpaAutomationCompositionRollback> findByCompositionId(String compositionId);
 }

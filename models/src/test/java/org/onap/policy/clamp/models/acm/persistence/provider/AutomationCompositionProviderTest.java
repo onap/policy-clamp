@@ -268,8 +268,9 @@ class AutomationCompositionProviderTest {
         automationCompositionProvider.copyAcElementsBeforeUpdate(ac);
 
         verify(acRollbackRepository).save(any(JpaAutomationCompositionRollback.class));
-        assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider // NOSONAR
-            .getAutomationCompositionRollback(ac.getInstanceId().toString()));
+        var instanceId = ac.getInstanceId();
+        assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider
+            .getAutomationCompositionRollback(instanceId));
     }
 
     @Test
@@ -281,15 +282,15 @@ class AutomationCompositionProviderTest {
 
         when(acRollbackRepository.findById(anyString())).thenReturn(Optional.of(rollback));
 
-        var rbFromDb = automationCompositionProvider.getAutomationCompositionRollback(ac.getInstanceId()
-            .toString());
+        var rbFromDb = automationCompositionProvider.getAutomationCompositionRollback(ac.getInstanceId());
         assertNotNull(rbFromDb);
     }
 
     @Test
     void testGetRollbackEmpty() {
         when(acRollbackRepository.findById(anyString())).thenReturn(Optional.empty());
+        var compositionId = UUID.randomUUID();
         assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider
-            .getAutomationCompositionRollback("empty"));
+            .getAutomationCompositionRollback(compositionId));
     }
 }

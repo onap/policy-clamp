@@ -24,15 +24,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
-import org.onap.policy.models.base.PfUtils;
-
 
 class JpaAutomationCompositionRollbackTest {
 
@@ -96,9 +93,8 @@ class JpaAutomationCompositionRollbackTest {
         var testAcmRollback = new AutomationCompositionRollback();
         testAcmRollback.setInstanceId(UUID.fromString(INSTANCE_ID));
         testAcmRollback.setCompositionId(UUID.fromString(COMPOSITION_ID));
-        Map<String, Object> map = new HashMap<>();
-        map.put("test", "test");
-        testAcmRollback.setElements(PfUtils.mapMap(map, UnaryOperator.identity()));
+        var acElement = new AutomationCompositionElement();
+        testAcmRollback.setElements(Map.of(acElement.getId(), acElement));
 
         return testAcmRollback;
     }

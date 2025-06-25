@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022, 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,26 +22,15 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.base.PfModelRuntimeException;
 
 @Converter(autoApply = true)
-public class StringToMapConverter implements AttributeConverter<Map<String, Object>, String> {
-
-    private static final Coder coder = new StandardCoder();
+public class StringToMapConverter extends AbstractConverter implements AttributeConverter<Map<String, Object>, String> {
 
     @Override
     public String convertToDatabaseColumn(Map<String, Object> map) {
-        try {
-            return map == null ? null : coder.encode(map);
-        } catch (CoderException e) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-        }
+        return encode(map);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,10 +39,6 @@ public class StringToMapConverter implements AttributeConverter<Map<String, Obje
         if (dbData == null) {
             return new HashMap<>();
         }
-        try {
-            return coder.decode(dbData, Map.class);
-        } catch (CoderException e) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-        }
+        return decode(dbData, Map.class);
     }
 }

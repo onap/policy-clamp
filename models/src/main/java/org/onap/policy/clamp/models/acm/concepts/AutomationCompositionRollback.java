@@ -40,7 +40,7 @@ public class AutomationCompositionRollback {
     private UUID compositionId;
 
     @NonNull
-    private Map<String, Object> elements = new LinkedHashMap<>();
+    private Map<UUID, AutomationCompositionElement> elements = new LinkedHashMap<>();
 
     /**
      * Copy constructor, does a deep copy.
@@ -61,10 +61,6 @@ public class AutomationCompositionRollback {
     public AutomationCompositionRollback(final AutomationComposition automationComposition) {
         this.instanceId = automationComposition.getInstanceId();
         this.compositionId = automationComposition.getCompositionId();
-        var originalElements = automationComposition.getElements();
-
-        this.elements = new LinkedHashMap<>();
-        originalElements.forEach((uuid, element) ->
-            this.elements.put(uuid.toString(), element));
+        this.elements = PfUtils.mapMap(automationComposition.getElements(), UnaryOperator.identity());
     }
 }

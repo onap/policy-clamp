@@ -33,10 +33,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfUtils;
@@ -110,7 +112,9 @@ public class JpaAutomationCompositionRollback extends Validated
         var acmRollback = new AutomationCompositionRollback();
         acmRollback.setInstanceId(UUID.fromString(this.instanceId));
         acmRollback.setCompositionId(UUID.fromString(this.compositionId));
-        acmRollback.setElements(PfUtils.mapMap(this.elements, UnaryOperator.identity()));
+        acmRollback.setElements(this.elements.values().stream()
+                .map(el -> AbstractConverter.convertObject(el, AutomationCompositionElement.class))
+                .collect(Collectors.toMap(AutomationCompositionElement::getId, UnaryOperator.identity())));
         return acmRollback;
     }
 
@@ -118,7 +122,8 @@ public class JpaAutomationCompositionRollback extends Validated
     public void fromAuthorative(@NonNull final AutomationCompositionRollback acmRollback) {
         this.instanceId = acmRollback.getInstanceId().toString();
         this.compositionId = acmRollback.getCompositionId().toString();
-        this.elements = PfUtils.mapMap(acmRollback.getElements(), UnaryOperator.identity());
+        this.elements = acmRollback.getElements().values().stream()
+                .collect(Collectors.toMap(element -> element.getId().toString(), UnaryOperator.identity()));
     }
 
     @Override

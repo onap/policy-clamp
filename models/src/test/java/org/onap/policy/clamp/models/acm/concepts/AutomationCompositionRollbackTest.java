@@ -22,13 +22,9 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.models.base.PfUtils;
 
 class AutomationCompositionRollbackTest {
     @Test
@@ -36,9 +32,7 @@ class AutomationCompositionRollbackTest {
         var acr0 = new AutomationCompositionRollback();
         acr0.setInstanceId(UUID.randomUUID());
         acr0.setCompositionId(UUID.randomUUID());
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("test", "test");
-        acr0.setElements(PfUtils.mapMap(map, UnaryOperator.identity()));
+        acr0.setElements(Map.of(UUID.randomUUID(), new AutomationCompositionElement()));
 
         var acr1 = new AutomationCompositionRollback(acr0);
         assertEquals(acr0, acr1);
