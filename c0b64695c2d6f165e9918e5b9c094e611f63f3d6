@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c9c1754_bf437fff",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-06-25T08:42:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99107882_e91939be",
+      "range": {
+        "startLine": 372,
+        "startChar": 4,
+        "endLine": 386,
+        "endChar": 5
+      },
+      "revId": "c0b64695c2d6f165e9918e5b9c094e611f63f3d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d67653db_2c5d28f5",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-06-24T15:57:45Z",
       "side": 1,
       "message": "rollback?",
+      "range": {
+        "startLine": 356,
+        "startChar": 33,
+        "endLine": 356,
+        "endChar": 38
+      },
+      "revId": "c0b64695c2d6f165e9918e5b9c094e611f63f3d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47a001cb_a6cfad29",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-06-25T08:42:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d67653db_2c5d28f5",
       "range": {
         "startLine": 356,
         "startChar": 33,
