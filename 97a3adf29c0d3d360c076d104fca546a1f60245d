@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f226dd0b_5151f770",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandlerTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-25T09:18:57Z",
+      "side": 1,
+      "message": "clearInvocations();\nmigrationMsg.setRollback(rollback);\nach.handleAutomationCompositionMigration(migrationMsg);\nif (!rollback) {\nverify(listener, times(expectedMigrated)).migrate(any(), any(), any(), any(), any(), anyInt());\n} else {\nverify(listener, times(expectedMigrated)).rollback(any(), any(), any(), anyInt());\n}",
+      "range": {
+        "startLine": 389,
+        "startChar": 8,
+        "endLine": 398,
+        "endChar": 9
+      },
+      "revId": "97a3adf29c0d3d360c076d104fca546a1f60245d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
