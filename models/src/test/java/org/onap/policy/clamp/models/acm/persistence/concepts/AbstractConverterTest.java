@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +20,30 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Converter(autoApply = true)
-public class StringToDocMessage extends AbstractConverter implements AttributeConverter<DocMessage, String> {
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import org.onap.policy.models.base.PfModelRuntimeException;
 
-    @Override
-    public String convertToDatabaseColumn(DocMessage docMessage) {
-        return encode(docMessage);
+class AbstractConverterTest {
+
+    static class TestConverter extends AbstractConverter {
+
     }
 
-    @Override
-    public DocMessage convertToEntityAttribute(String message) {
-        if (message == null) {
-            return new DocMessage();
-        }
-        return decode(message, DocMessage.class);
+    @Test
+    void testNull() {
+        assertThatThrownBy(() -> AbstractConverter.convertObject("-", Map.class))
+                .isInstanceOf(PfModelRuntimeException.class);
+
+        var converter = new TestConverter();
+        var dbData = converter.encode(null);
+        assertThat(dbData).isNull();
+
+        assertThatThrownBy(() -> converter.decode("-", Map.class))
+                .isInstanceOf(PfModelRuntimeException.class);
     }
+
 }

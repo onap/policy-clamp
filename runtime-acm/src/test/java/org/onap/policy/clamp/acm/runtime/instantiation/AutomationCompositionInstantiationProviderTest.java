@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,7 +36,6 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
@@ -49,7 +47,6 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -67,7 +64,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.springframework.data.domain.Pageable;
@@ -568,8 +564,8 @@ class AutomationCompositionInstantiationProviderTest {
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
             .thenReturn(automationComposition);
-        var rollbackRecord = mock(JpaAutomationCompositionRollback.class);
-        when(acProvider.getAutomationCompositionRollback(anyString())).thenReturn(rollbackRecord);
+        var rollbackRecord = new JpaAutomationCompositionRollback();
+        when(acProvider.getAutomationCompositionRollback(any(UUID.class))).thenReturn(rollbackRecord.toAuthorative());
 
         final var acDefinitionProvider = mock(AcDefinitionProvider.class);
         final var supervisionAcHandler = mock(SupervisionAcHandler.class);
@@ -579,29 +575,26 @@ class AutomationCompositionInstantiationProviderTest {
             new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, new AcRuntimeParameterGroup(),
             encryptionUtils);
 
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
-            .rollback(automationComposition.getInstanceId()));
+        var instanceId = automationComposition.getInstanceId();
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
 
         // DeployState != MIGRATION_REVERTING
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
             .thenReturn(automationComposition);
-        when(acProvider.getAutomationCompositionRollback(anyString())).thenReturn(rollbackRecord);
+        when(acProvider.getAutomationCompositionRollback(any(UUID.class))).thenReturn(rollbackRecord.toAuthorative());
 
         automationComposition.setDeployState(DeployState.DELETING);
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
-            .rollback(automationComposition.getInstanceId()));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
 
         // SubState != NONE
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setSubState(SubState.PREPARING);
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
-            .rollback(automationComposition.getInstanceId()));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
 
         // StateChangeResult != NO_ERROR
         automationComposition.setSubState(SubState.NONE);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
-            .rollback(automationComposition.getInstanceId()));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
 
         verify(acProvider, never()).updateAutomationComposition(any());
     }
@@ -636,7 +629,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
             .thenReturn(automationComposition);
-        when(acProvider.getAutomationCompositionRollback(anyString())).thenReturn(rollbackRecord);
+        when(acProvider.getAutomationCompositionRollback(any(UUID.class))).thenReturn(rollbackRecord.toAuthorative());
 
         instantiationProvider.rollback(automationComposition.getInstanceId());
 

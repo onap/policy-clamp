@@ -69,33 +69,24 @@ class AutomationCompositionProviderTest {
     private List<JpaAutomationComposition> inputAutomationCompositionsJpa;
     private final String originalJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
 
-    private AutomationCompositionProvider automationCompositionProvider;
-    private AutomationCompositionRepository automationCompositionRepository;
-    private AutomationCompositionElementRepository acElementRepository;
-    private AutomationCompositionRollbackRepository acRollbackRepository;
-
     @BeforeEach
     void beforeSetupDao() throws Exception {
         inputAutomationCompositions = CODER.decode(originalJson, AutomationCompositions.class);
         inputAutomationCompositionsJpa =
             ProviderUtils.getJpaAndValidateList(inputAutomationCompositions.getAutomationCompositionList(),
                 JpaAutomationComposition::new, "automation compositions");
-
-        // set mocks
-        automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        acElementRepository = mock(AutomationCompositionElementRepository.class);
-        acRollbackRepository = mock(AutomationCompositionRollbackRepository.class);
-        automationCompositionProvider =
-            new AutomationCompositionProvider(automationCompositionRepository, acElementRepository,
-                acRollbackRepository);
     }
 
     @Test
     void testAutomationCompositionCreate() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         when(automationCompositionRepository.save(any(JpaAutomationComposition.class)))
             .thenReturn(inputAutomationCompositionsJpa.get(0));
         var inputAc = inputAutomationCompositions.getAutomationCompositionList().get(0);
 
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         var createdAutomationComposition = automationCompositionProvider.createAutomationComposition(inputAc);
         inputAc.setInstanceId(createdAutomationComposition.getInstanceId());
         inputAc.setLastMsg(createdAutomationComposition.getLastMsg());
@@ -104,6 +95,10 @@ class AutomationCompositionProviderTest {
 
     @Test
     void testAutomationCompositionUpdate() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         assertThatThrownBy(() -> automationCompositionProvider.updateAutomationComposition(null))
             .hasMessageMatching(AC_IS_NULL);
 
@@ -118,6 +113,9 @@ class AutomationCompositionProviderTest {
 
     @Test
     void testGetAutomationCompositionsWithNull() {
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                mock(AutomationCompositionRepository.class), mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         assertThatThrownBy(() -> automationCompositionProvider
             .getAutomationCompositions(UUID.randomUUID(), null, null, null))
             .hasMessage("pageable is marked non-null but is null");
@@ -129,6 +127,10 @@ class AutomationCompositionProviderTest {
 
     @Test
     void testGetAutomationCompositions() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         when(automationCompositionRepository
             .findAll(Mockito.any(), any(Pageable.class)))
@@ -152,6 +154,10 @@ class AutomationCompositionProviderTest {
     @Test
     void testGetAutomationComposition() {
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         assertThatThrownBy(
             () -> automationCompositionProvider.getAutomationComposition(automationComposition.getInstanceId()))
             .hasMessageMatching("AutomationComposition not found");
@@ -165,6 +171,10 @@ class AutomationCompositionProviderTest {
     @Test
     void testFindAutomationComposition() {
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         var acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId());
         assertThat(acOpt).isEmpty();
 
@@ -185,8 +195,12 @@ class AutomationCompositionProviderTest {
     @Test
     void testGetAcInstancesByCompositionId() {
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         when(automationCompositionRepository.findByCompositionId(automationComposition.getCompositionId().toString()))
             .thenReturn(inputAutomationCompositionsJpa);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         var acList =
             automationCompositionProvider.getAcInstancesByCompositionId(automationComposition.getCompositionId());
         assertEquals(inputAutomationCompositions.getAutomationCompositionList(), acList);
@@ -202,11 +216,15 @@ class AutomationCompositionProviderTest {
         List<JpaAutomationComposition> res1 = new ArrayList<>();
         res1.add(inputAutomationCompositionsJpa.get(0));
 
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         when(automationCompositionRepository.findByDeployStateIn(List.of(DeployState.DEPLOYING,
             DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING)))
             .thenReturn(res1);
         when(automationCompositionRepository.findByLockStateIn(List.of(LockState.LOCKING, LockState.UNLOCKING)))
             .thenReturn(List.of(inputAutomationCompositionsJpa.get(1)));
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
         var acList = automationCompositionProvider.getAcInstancesInTransition();
         assertThat(acList).hasSize(2)
             .contains(inputAutomationCompositions.getAutomationCompositionList().get(0).getInstanceId())
@@ -215,8 +233,16 @@ class AutomationCompositionProviderTest {
 
     @Test
     void testDeleteAutomationComposition() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var acRollbackRepository = mock(AutomationCompositionRollbackRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                acRollbackRepository);
         assertThatThrownBy(() -> automationCompositionProvider.deleteAutomationComposition(UUID.randomUUID()))
             .hasMessageMatching(".*.failed, automation composition does not exist");
+
+        assertThatThrownBy(() -> automationCompositionProvider.deleteAutomationComposition(null))
+                .hasMessageMatching("instanceId is marked non-null but is null");
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         when(automationCompositionRepository.findById(automationComposition.getInstanceId().toString()))
@@ -225,10 +251,22 @@ class AutomationCompositionProviderTest {
         var deletedAc =
             automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         assertEquals(automationComposition, deletedAc);
+
+        when(acRollbackRepository.existsById(automationComposition.getInstanceId().toString())).thenReturn(true);
+
+        deletedAc =
+                automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
+        assertEquals(automationComposition, deletedAc);
+        verify(acRollbackRepository).deleteById(automationComposition.getInstanceId().toString());
     }
 
     @Test
     void testDeleteElementById() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var acElementRepository = mock(AutomationCompositionElementRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, acElementRepository,
+                mock(AutomationCompositionRollbackRepository.class));
         assertThatThrownBy(() -> automationCompositionProvider.deleteAutomationCompositionElement(null))
             .hasMessageMatching(ACELEMENT_ID_IS_NULL);
         var elementId = UUID.randomUUID();
@@ -240,6 +278,10 @@ class AutomationCompositionProviderTest {
     void testValidateElementIds() {
         var ac = inputAutomationCompositions.getAutomationCompositionList().get(0);
 
+        var acElementRepository = mock(AutomationCompositionElementRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                mock(AutomationCompositionRepository.class), acElementRepository,
+                mock(AutomationCompositionRollbackRepository.class));
         var result = automationCompositionProvider.validateElementIds(ac);
         assertThat(result.isValid()).isTrue();
 
@@ -265,11 +307,17 @@ class AutomationCompositionProviderTest {
     @Test
     void testCopyAcElements() {
         var ac = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var acRollbackRepository = mock(AutomationCompositionRollbackRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                acRollbackRepository);
         automationCompositionProvider.copyAcElementsBeforeUpdate(ac);
 
         verify(acRollbackRepository).save(any(JpaAutomationCompositionRollback.class));
-        assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider // NOSONAR
-            .getAutomationCompositionRollback(ac.getInstanceId().toString()));
+        var instanceId = ac.getInstanceId();
+        assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider
+            .getAutomationCompositionRollback(instanceId));
     }
 
     @Test
@@ -279,17 +327,25 @@ class AutomationCompositionProviderTest {
         rollback.setInstanceId(ac.getInstanceId().toString());
         rollback.setCompositionId(ac.getCompositionId().toString());
 
+        var acRollbackRepository = mock(AutomationCompositionRollbackRepository.class);
         when(acRollbackRepository.findById(anyString())).thenReturn(Optional.of(rollback));
 
-        var rbFromDb = automationCompositionProvider.getAutomationCompositionRollback(ac.getInstanceId()
-            .toString());
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                mock(AutomationCompositionRepository.class), mock(AutomationCompositionElementRepository.class),
+                acRollbackRepository);
+        var rbFromDb = automationCompositionProvider.getAutomationCompositionRollback(ac.getInstanceId());
         assertNotNull(rbFromDb);
     }
 
     @Test
     void testGetRollbackEmpty() {
+        var acRollbackRepository = mock(AutomationCompositionRollbackRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                mock(AutomationCompositionRepository.class), mock(AutomationCompositionElementRepository.class),
+                acRollbackRepository);
         when(acRollbackRepository.findById(anyString())).thenReturn(Optional.empty());
+        var compositionId = UUID.randomUUID();
         assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider
-            .getAutomationCompositionRollback("empty"));
+            .getAutomationCompositionRollback(compositionId));
     }
 }
