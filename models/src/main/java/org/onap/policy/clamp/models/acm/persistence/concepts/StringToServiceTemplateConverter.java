@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021, 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +22,15 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import jakarta.ws.rs.core.Response;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.base.PfModelRuntimeException;
 
 @Converter(autoApply = true)
-public class StringToServiceTemplateConverter implements AttributeConverter<DocToscaServiceTemplate, String> {
-
-    private static final Coder coder = new StandardCoder();
+public class StringToServiceTemplateConverter extends AbstractConverter
+        implements AttributeConverter<DocToscaServiceTemplate, String> {
 
     @Override
     public String convertToDatabaseColumn(DocToscaServiceTemplate serviceTemplate) {
-        try {
-            return serviceTemplate == null ? null : coder.encode(serviceTemplate);
-        } catch (CoderException e) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-        }
+        return encode(serviceTemplate);
     }
 
     @Override
@@ -48,10 +38,6 @@ public class StringToServiceTemplateConverter implements AttributeConverter<DocT
         if (dbData == null) {
             return new DocToscaServiceTemplate();
         }
-        try {
-            return coder.decode(dbData, DocToscaServiceTemplate.class);
-        } catch (CoderException e) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-        }
+        return decode(dbData, DocToscaServiceTemplate.class);
     }
 }

@@ -210,6 +210,9 @@ public class AutomationCompositionProvider {
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
 
+        if (acRollbackRepository.existsById(instanceId.toString())) {
+            acRollbackRepository.deleteById(instanceId.toString());
+        }
         automationCompositionRepository.deleteById(instanceId.toString());
 
         return jpaDeleteAutomationComposition.get().toAuthorative();
@@ -273,11 +276,11 @@ public class AutomationCompositionProvider {
      * @param instanceId the id of the ac instance
      * @return the acRollback object
      */
-    public JpaAutomationCompositionRollback getAutomationCompositionRollback(String instanceId) {
-        var result = acRollbackRepository.findById(instanceId);
+    public AutomationCompositionRollback getAutomationCompositionRollback(UUID instanceId) {
+        var result = acRollbackRepository.findById(instanceId.toString());
         if (result.isEmpty()) {
             throw new PfModelRuntimeException(Status.NOT_FOUND, "Instance not found for rollback");
         }
-        return result.get();
+        return result.get().toAuthorative();
     }
 }

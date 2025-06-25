@@ -23,10 +23,9 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -463,25 +462,21 @@ public class AutomationCompositionInstantiationProvider {
      * Rollback AC Instance.
      *
      * @param instanceId the instanceId
-     * @return the instantiation response
      */
-    public InstantiationResponse rollback(UUID instanceId) {
+    public void rollback(UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         var automationCompositionToRollback =
-            automationCompositionProvider.getAutomationCompositionRollback(instanceId.toString());
+            automationCompositionProvider.getAutomationCompositionRollback(instanceId);
 
         if (DeployState.DEPLOYED.equals(automationComposition.getDeployState())
               && SubState.NONE.equals(automationComposition.getSubState())
               && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setCompositionId(UUID.fromString(automationCompositionToRollback.getCompositionId()));
-            Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
-            automationCompositionToRollback.getElements().forEach((String uuid, Object acElement) ->
-                elements.put(UUID.fromString(uuid), (AutomationCompositionElement) acElement));
-            automationComposition.setElements(elements);
+            automationComposition.setCompositionId(automationCompositionToRollback.getCompositionId());
+            automationComposition.setElements(automationCompositionToRollback.getElements().values().stream()
+                    .collect(Collectors.toMap(AutomationCompositionElement::getId, UnaryOperator.identity())));
             automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
             AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATION_REVERTING, LockState.LOCKED);
             automationCompositionProvider.updateAutomationComposition(automationComposition);
-            return createInstantiationResponse(automationComposition);
         } else {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "Invalid state for rollback");
         }
