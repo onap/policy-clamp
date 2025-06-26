@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.models.base.PfModelException;
 
-public interface AutomationCompositionElementListenerV1 {
+public interface AutomationCompositionElementListenerV1 extends AutomationCompositionElementListener {
 
     void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 

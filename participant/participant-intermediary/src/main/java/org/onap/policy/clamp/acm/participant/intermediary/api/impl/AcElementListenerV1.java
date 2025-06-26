@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
@@ -46,7 +45,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
  * Valid since 7.1.0 release.
  */
 public abstract class AcElementListenerV1 extends AcElementListenerV2
-        implements AutomationCompositionElementListener, AutomationCompositionElementListenerV1 {
+        implements AutomationCompositionElementListenerV1 {
 
     protected AcElementListenerV1(ParticipantIntermediaryApi intermediaryApi) {
         super(intermediaryApi);

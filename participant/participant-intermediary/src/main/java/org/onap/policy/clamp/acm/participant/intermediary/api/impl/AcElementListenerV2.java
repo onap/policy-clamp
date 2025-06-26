@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
 import jakarta.ws.rs.core.Response;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
@@ -37,7 +36,7 @@ import org.onap.policy.models.base.PfModelException;
  * Valid since 7.1.1 release.
  */
 public abstract class AcElementListenerV2 extends AcElementListenerV3
-        implements AutomationCompositionElementListener, AutomationCompositionElementListenerV2 {
+        implements AutomationCompositionElementListenerV2 {
 
     protected static final String NOT_SUPPORTED = "not supported!";
 
