@@ -20,38 +20,15 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.models.base.PfModelException;
 
-public interface AutomationCompositionElementListenerV2 {
-
-    void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
-
-    void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
-
-    void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
-
-    void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
-
-    void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
-
-    void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-            InstanceElementDto instanceElementUpdated) throws PfModelException;
-
-    void prime(CompositionDto composition) throws PfModelException;
-
-    void deprime(CompositionDto composition) throws PfModelException;
+public interface AutomationCompositionElementListenerV2 extends AutomationCompositionElementListener {
 
     void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
             InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
-
-    void migratePrecheck(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
-            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
-
-    void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException;
 
     void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException;

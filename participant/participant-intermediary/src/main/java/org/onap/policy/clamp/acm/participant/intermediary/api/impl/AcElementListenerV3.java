@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
@@ -33,7 +32,7 @@ import org.onap.policy.models.base.PfModelException;
  * Valid since 8.0.1 release.
  */
 public abstract class AcElementListenerV3 extends AcElementListenerV4
-        implements AutomationCompositionElementListener, AutomationCompositionElementListenerV3 {
+        implements AutomationCompositionElementListenerV3 {
 
     protected AcElementListenerV3(ParticipantIntermediaryApi intermediaryApi) {
         super(intermediaryApi);
