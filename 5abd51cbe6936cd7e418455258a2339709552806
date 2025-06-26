@@ -22,6 +22,30 @@
       },
       "revId": "5abd51cbe6936cd7e418455258a2339709552806",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2745f94f_e529c43e",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-26T13:35:07Z",
+      "side": 0,
+      "message": "tests have to be isolated to each other. maybe I can add a method",
+      "parentUuid": "2361bdcb_74cfc91d",
+      "range": {
+        "startLine": 85,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 38
+      },
+      "revId": "5abd51cbe6936cd7e418455258a2339709552806",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
