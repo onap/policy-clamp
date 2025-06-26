@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2361bdcb_74cfc91d",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-06-26T13:31:44Z",
+      "side": 0,
+      "message": "this was to avoid the code duplication that is being reintroduced with this change.",
+      "range": {
+        "startLine": 85,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 38
+      },
+      "revId": "5abd51cbe6936cd7e418455258a2339709552806",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
