@@ -59,7 +59,8 @@ public abstract class AbstractScanner {
                 automationComposition.getSubState());
 
         var deployState = automationComposition.getDeployState();
-        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
             // migration scenario
             automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
             automationComposition.setCompositionTargetId(null);

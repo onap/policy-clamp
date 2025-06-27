@@ -79,6 +79,7 @@ public class StageScanner extends AbstractScanner {
                 var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                         .get(element.getDefinition().getName());
                 var stageSet = DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                            || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
                         ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
                         : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
                 var minStage = stageSet.stream().min(Comparator.comparing(Integer::valueOf)).orElse(0);
@@ -109,7 +110,8 @@ public class StageScanner extends AbstractScanner {
     }
 
     private void sendNextStage(final AutomationComposition automationComposition, int minStageNotCompleted) {
-        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionMigration");
             acMigrationPublisher.send(automationComposition, minStageNotCompleted);
         }

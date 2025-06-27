@@ -157,7 +157,8 @@ public class AutomationCompositionProvider {
     @Transactional(readOnly = true)
     public Set<UUID> getAcInstancesInTransition() {
         var jpaList = automationCompositionRepository.findByDeployStateIn(List.of(DeployState.DEPLOYING,
-            DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING));
+            DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING,
+            DeployState.MIGRATION_REVERTING));
         jpaList.addAll(automationCompositionRepository.findByLockStateIn(
             List.of(LockState.LOCKING, LockState.UNLOCKING)));
         jpaList.addAll(automationCompositionRepository.findBySubStateIn(
