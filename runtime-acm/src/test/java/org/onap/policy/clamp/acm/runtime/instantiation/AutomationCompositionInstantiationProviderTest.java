@@ -576,7 +576,7 @@ class AutomationCompositionInstantiationProviderTest {
             encryptionUtils);
 
         var instanceId = automationComposition.getInstanceId();
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(compositionId, instanceId));
 
         // DeployState != MIGRATION_REVERTING
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
@@ -584,18 +584,22 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.getAutomationCompositionRollback(any(UUID.class))).thenReturn(rollbackRecord.toAuthorative());
 
         automationComposition.setDeployState(DeployState.DELETING);
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(compositionId, instanceId));
 
         // SubState != NONE
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setSubState(SubState.PREPARING);
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(compositionId, instanceId));
 
         // StateChangeResult != NO_ERROR
         automationComposition.setSubState(SubState.NONE);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(instanceId));
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(compositionId, instanceId));
 
+        // !compositionId.equals(compId)
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.setCompositionId(UUID.randomUUID());
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider.rollback(compositionId, instanceId));
         verify(acProvider, never()).updateAutomationComposition(any());
     }
 
@@ -631,7 +635,7 @@ class AutomationCompositionInstantiationProviderTest {
             .thenReturn(automationComposition);
         when(acProvider.getAutomationCompositionRollback(any(UUID.class))).thenReturn(rollbackRecord.toAuthorative());
 
-        instantiationProvider.rollback(automationComposition.getInstanceId());
+        instantiationProvider.rollback(compositionId, automationComposition.getInstanceId());
 
         verify(acProvider).updateAutomationComposition(automationComposition);
         assertEquals(DeployState.MIGRATION_REVERTING, automationComposition.getDeployState());

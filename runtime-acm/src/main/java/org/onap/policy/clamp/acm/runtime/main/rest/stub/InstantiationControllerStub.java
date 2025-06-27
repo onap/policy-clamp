@@ -92,7 +92,7 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     }
 
     @Override
-    public ResponseEntity<Void> rollbackCompositionInstance(UUID instanceId) {
+    public ResponseEntity<Void> rollbackCompositionInstance(UUID compositionId, UUID instanceId) {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
