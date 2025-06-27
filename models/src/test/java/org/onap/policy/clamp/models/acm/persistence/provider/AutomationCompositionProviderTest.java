@@ -218,7 +218,8 @@ class AutomationCompositionProviderTest {
 
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         when(automationCompositionRepository.findByDeployStateIn(List.of(DeployState.DEPLOYING,
-            DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING)))
+            DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING,
+                DeployState.MIGRATION_REVERTING)))
             .thenReturn(res1);
         when(automationCompositionRepository.findByLockStateIn(List.of(LockState.LOCKING, LockState.UNLOCKING)))
             .thenReturn(List.of(inputAutomationCompositionsJpa.get(1)));

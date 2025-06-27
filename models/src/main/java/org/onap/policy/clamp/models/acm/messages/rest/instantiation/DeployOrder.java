@@ -27,5 +27,6 @@ public enum DeployOrder {
     DELETE,
     UPDATE,
     RESTARTING,
-    MIGRATE
+    MIGRATE,
+    MIGRATION_REVERT
 }

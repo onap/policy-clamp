@@ -50,7 +50,7 @@ public class AutomationCompositionRollback {
     public AutomationCompositionRollback(final AutomationCompositionRollback otherAcmRollback) {
         this.instanceId = otherAcmRollback.instanceId;
         this.compositionId = otherAcmRollback.compositionId;
-        this.elements = PfUtils.mapMap(otherAcmRollback.elements, UnaryOperator.identity());
+        this.elements = PfUtils.mapMap(otherAcmRollback.elements, AutomationCompositionElement::new);
     }
 
     /**
@@ -61,6 +61,6 @@ public class AutomationCompositionRollback {
     public AutomationCompositionRollback(final AutomationComposition automationComposition) {
         this.instanceId = automationComposition.getInstanceId();
         this.compositionId = automationComposition.getCompositionId();
-        this.elements = PfUtils.mapMap(automationComposition.getElements(), UnaryOperator.identity());
+        this.elements = PfUtils.mapMap(automationComposition.getElements(), AutomationCompositionElement::new);
     }
 }

@@ -228,7 +228,7 @@ public class AutomationCompositionInstantiationProvider {
         var elementsRemoved = updateElementsProperties(automationComposition, acToBeUpdated);
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
 
-        updateAcForMigration(acToBeUpdated, acDefinition);
+        updateAcForMigration(acToBeUpdated, acDefinition, DeployState.MIGRATING);
 
         var acToPublish = new AutomationComposition(acToBeUpdated);
 
@@ -243,8 +243,8 @@ public class AutomationCompositionInstantiationProvider {
     }
 
     private void updateAcForMigration(AutomationComposition acToBeUpdated,
-                                      AutomationCompositionDefinition acDefinition) {
-        AcmUtils.setCascadedState(acToBeUpdated, DeployState.MIGRATING, LockState.LOCKED);
+                                      AutomationCompositionDefinition acDefinition, DeployState deployState) {
+        AcmUtils.setCascadedState(acToBeUpdated, deployState, LockState.LOCKED);
         acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
         var stage = ParticipantUtils.getFirstStage(acToBeUpdated, acDefinition.getServiceTemplate());
         acToBeUpdated.setPhase(stage);
@@ -461,26 +461,39 @@ public class AutomationCompositionInstantiationProvider {
     /**
      * Rollback AC Instance.
      *
-     * @param instanceId the instanceId
+     * @param compositionId The UUID of the automation composition definition
+     * @param instanceId    The UUID of the automation composition instance
      */
     public void rollback(UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         validateCompositionRequested(compositionId, automationComposition);
-        var automationCompositionToRollback =
-            automationCompositionProvider.getAutomationCompositionRollback(instanceId);
 
-        if (DeployState.DEPLOYED.equals(automationComposition.getDeployState())
-              && SubState.NONE.equals(automationComposition.getSubState())
-              && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setCompositionId(automationCompositionToRollback.getCompositionId());
-            automationComposition.setElements(automationCompositionToRollback.getElements().values().stream()
-                    .collect(Collectors.toMap(AutomationCompositionElement::getId, UnaryOperator.identity())));
-            automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-            AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATION_REVERTING, LockState.LOCKED);
-            automationCompositionProvider.updateAutomationComposition(automationComposition);
-        } else {
+        if (!DeployOrder.MIGRATION_REVERT.name().equals(acInstanceStateResolver.resolve(
+                DeployOrder.MIGRATION_REVERT, LockOrder.NONE,
+                SubOrder.NONE, automationComposition.getDeployState(), automationComposition.getLockState(),
+                automationComposition.getSubState(), automationComposition.getStateChangeResult()))) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "Invalid state for rollback");
         }
+
+        var automationCompositionToRollback =
+                automationCompositionProvider.getAutomationCompositionRollback(instanceId);
+        var acToBeUpdated = new AutomationComposition(automationComposition);
+        acToBeUpdated.setCompositionTargetId(automationCompositionToRollback.getCompositionId());
+        acToBeUpdated.setElements(automationCompositionToRollback.getElements().values().stream()
+                .collect(Collectors.toMap(AutomationCompositionElement::getId, AutomationCompositionElement::new)));
+
+        var acDefinition = acDefinitionProvider.getAcDefinition(acToBeUpdated.getCompositionTargetId());
+        var validationResult =
+                validateAutomationComposition(acToBeUpdated, acToBeUpdated.getCompositionTargetId());
+        if (!validationResult.isValid()) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
+        }
+
+        updateAcForMigration(acToBeUpdated, acDefinition, DeployState.MIGRATION_REVERTING);
+        var elementsRemoved = getElementRemoved(automationComposition, acToBeUpdated);
+        automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
+        elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
+        supervisionAcHandler.migrate(acToBeUpdated);
     }
 
     private List<UUID> updateElementsProperties(AutomationComposition automationComposition,

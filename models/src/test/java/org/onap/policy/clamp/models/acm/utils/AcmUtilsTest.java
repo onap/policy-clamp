@@ -74,6 +74,8 @@ class AcmUtilsTest {
         assertThat(AcmUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE, SubState.NONE)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED, SubState.NONE)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATING, LockState.LOCKED, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATION_REVERTING, LockState.LOCKED,
+                SubState.NONE)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED,
                 SubState.MIGRATION_PRECHECKING)).isTrue();
     }
