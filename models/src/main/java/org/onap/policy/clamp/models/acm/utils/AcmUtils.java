@@ -290,7 +290,8 @@ public final class AcmUtils {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
                 || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
                 || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState)
-                || DeployState.MIGRATING.equals(deployState) || !SubState.NONE.equals(subState);
+                || DeployState.MIGRATING.equals(deployState) || DeployState.MIGRATION_REVERTING.equals(deployState)
+                || !SubState.NONE.equals(subState);
     }
 
     /**
@@ -331,7 +332,7 @@ public final class AcmUtils {
      */
     public static DeployState deployCompleted(DeployState deployState) {
         return switch (deployState) {
-            case MIGRATING, UPDATING, DEPLOYING -> DeployState.DEPLOYED;
+            case MIGRATING, MIGRATION_REVERTING, UPDATING, DEPLOYING -> DeployState.DEPLOYED;
             case UNDEPLOYING -> DeployState.UNDEPLOYED;
             case DELETING -> DeployState.DELETED;
             default -> deployState;

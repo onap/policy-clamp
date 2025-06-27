@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 public class AcInstanceStateResolver {
     private final StateDefinition<String> graph;
 
+    // DeployState
     private static final String DEPLOYED = DeployState.DEPLOYED.name();
     private static final String DEPLOYING = DeployState.DEPLOYING.name();
     private static final String UNDEPLOYED = DeployState.UNDEPLOYED.name();
@@ -41,37 +42,48 @@ public class AcInstanceStateResolver {
     private static final String UPDATING = DeployState.UPDATING.name();
     private static final String DELETING = DeployState.DELETING.name();
     private static final String MIGRATING = DeployState.MIGRATING.name();
-    private static final String MIGRATION_PRECHECKING = SubState.MIGRATION_PRECHECKING.name();
     private static final String MIGRATION_REVERTING = DeployState.MIGRATION_REVERTING.name();
+
+    // SubState
+    private static final String MIGRATION_PRECHECKING = SubState.MIGRATION_PRECHECKING.name();
     private static final String SUB_STATE_NONE = SubState.NONE.name();
     private static final String PREPARING = SubState.PREPARING.name();
     private static final String REVIEWING = SubState.REVIEWING.name();
 
+    // LockState
     private static final String LOCKED = LockState.LOCKED.name();
     private static final String LOCKING = LockState.LOCKING.name();
     private static final String UNLOCKED = LockState.UNLOCKED.name();
     private static final String UNLOCKING = LockState.UNLOCKING.name();
     private static final String STATE_LOCKED_NONE = LockState.NONE.name();
 
+    // NONE Order
     private static final String DEPLOY_NONE = DeployOrder.NONE.name();
     private static final String LOCK_NONE = LockOrder.NONE.name();
     private static final String SUB_NONE = SubOrder.NONE.name();
 
+    // DeployOrder
+    public static final String DEPLOY = DeployOrder.DEPLOY.name();
+    public static final String UNDEPLOY = DeployOrder.UNDEPLOY.name();
+    public static final String DELETE = DeployOrder.DELETE.name();
+    public static final String MIGRATE = DeployOrder.MIGRATE.name();
+    public static final String MIGRATION_REVERT = DeployOrder.MIGRATION_REVERT.name();
+    public static final String UPDATE = DeployOrder.UPDATE.name();
+
+    // LockOrder
+    public static final String LOCK = LockOrder.LOCK.name();
+    public static final String UNLOCK = LockOrder.UNLOCK.name();
+
+    // SubOrder
+    public static final String MIGRATE_PRECHECK = SubOrder.MIGRATE_PRECHECK.name();
+    public static final String PREPARE = SubOrder.PREPARE.name();
+    public static final String REVIEW = SubOrder.REVIEW.name();
+
+    // StateChangeResult
     private static final String NO_ERROR = StateChangeResult.NO_ERROR.name();
     private static final String FAILED = StateChangeResult.FAILED.name();
     private static final String TIMEOUT = StateChangeResult.TIMEOUT.name();
 
-    // list of results
-    public static final String DEPLOY = DeployOrder.DEPLOY.name();
-    public static final String UNDEPLOY = DeployOrder.UNDEPLOY.name();
-    public static final String DELETE = DeployOrder.DELETE.name();
-    public static final String LOCK = LockOrder.LOCK.name();
-    public static final String UNLOCK = LockOrder.UNLOCK.name();
-    public static final String MIGRATE = DeployOrder.MIGRATE.name();
-    public static final String MIGRATE_PRECHECK = SubOrder.MIGRATE_PRECHECK.name();
-    public static final String PREPARE = SubOrder.PREPARE.name();
-    public static final String REVIEW = SubOrder.REVIEW.name();
-    public static final String UPDATE = DeployOrder.UPDATE.name();
     public static final String NONE = "NONE";
 
     /**
@@ -129,7 +141,7 @@ public class AcInstanceStateResolver {
         addSubOrderWithFail(REVIEW, DEPLOYED, LOCKED, REVIEWING);
 
         // rollback
-        addDeployOrderWithFail(MIGRATION_REVERTING, MIGRATING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(MIGRATION_REVERT, MIGRATING, LOCKED, SUB_STATE_NONE);
         addDeployOrderWithFail(UNDEPLOY, MIGRATION_REVERTING, LOCKED, SUB_STATE_NONE);
     }
 

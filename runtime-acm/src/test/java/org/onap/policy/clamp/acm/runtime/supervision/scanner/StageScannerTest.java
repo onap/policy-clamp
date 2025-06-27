@@ -102,6 +102,57 @@ class StageScannerTest {
     }
 
     @Test
+    void testSendAutomationCompositionMigrationReverting() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        var compositionTargetId = UUID.randomUUID();
+        automationComposition.setCompositionTargetId(compositionTargetId);
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(0);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DEPLOYED);
+            element.setLockState(LockState.LOCKED);
+        }
+        // first element is not migrated yet
+        var element = automationComposition.getElements().entrySet().iterator().next().getValue();
+        element.setDeployState(DeployState.MIGRATION_REVERTING);
+
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.updateAutomationComposition(any())).thenReturn(automationComposition);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
+        var supervisionScanner = new StageScanner(acProvider, mock(ParticipantSyncPublisher.class),
+                mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
+                acRuntimeParameterGroup, encryptionUtils);
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        verify(acProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(DeployState.MIGRATION_REVERTING, automationComposition.getDeployState());
+
+        // send message for next stage
+        clearInvocations(acProvider);
+        var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                .get(element.getDefinition().getName());
+        toscaNodeTemplate.setProperties(Map.of("stage", List.of(1)));
+
+        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(DeployState.MIGRATION_REVERTING, automationComposition.getDeployState());
+
+        // first element is migrated
+        clearInvocations(acProvider);
+        element.setDeployState(DeployState.DEPLOYED);
+        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+
+        assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
+        assertEquals(compositionTargetId, automationComposition.getCompositionId());
+    }
+
+    @Test
     void testSendAutomationCompositionPrepare() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.UNDEPLOYED);

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,9 +77,9 @@ class AcInstanceStateResolverTest {
         assertThat(result).isEqualTo(AcInstanceStateResolver.REVIEW);
 
         // rollback
-        result = acTypeStateResolver.resolve(DeployOrder.MIGRATE, LockOrder.NONE, SubOrder.REVIEW,
-            DeployState.MIGRATION_REVERTING, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
-        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+        result = acTypeStateResolver.resolve(DeployOrder.MIGRATION_REVERT, LockOrder.NONE, SubOrder.NONE,
+                DeployState.MIGRATING, LockState.LOCKED, SubState.NONE, StateChangeResult.FAILED);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.MIGRATION_REVERT);
 
         result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, SubOrder.NONE,
             DeployState.MIGRATION_REVERTING, LockState.LOCKED, SubState.NONE, StateChangeResult.FAILED);
