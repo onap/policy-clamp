@@ -1623,6 +1623,13 @@ paths:
       description: Triggers a rollback of the specified instance.
       operationId: rollbackCompositionInstance
       parameters:
+        - name: compositionId
+          in: path
+          description: The UUID of the composition definition on which to rollback
+          required: true
+          schema:
+            type: string
+            format: uuid
         - name: instanceId
           in: path
           description: The UUID of the automation composition definition on which to rollback

@@ -463,8 +463,9 @@ public class AutomationCompositionInstantiationProvider {
      *
      * @param instanceId the instanceId
      */
-    public void rollback(UUID instanceId) {
+    public void rollback(UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
+        validateCompositionRequested(compositionId, automationComposition);
         var automationCompositionToRollback =
             automationCompositionProvider.getAutomationCompositionRollback(instanceId);
 
