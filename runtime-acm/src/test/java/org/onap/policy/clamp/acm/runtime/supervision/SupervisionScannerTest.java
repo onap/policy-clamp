@@ -293,6 +293,49 @@ class SupervisionScannerTest {
     }
 
     @Test
+    void testSendAutomationCompositionMigrationReverting() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        var compositionTargetId = UUID.randomUUID();
+        automationComposition.setCompositionTargetId(compositionTargetId);
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(0);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DEPLOYED);
+            element.setLockState(LockState.LOCKED);
+        }
+
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
+        when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(Optional.of(automationComposition));
+
+        var definitionTarget = createAutomationCompositionDefinition(AcTypeState.PRIMED);
+        definitionTarget.setCompositionId(compositionTargetId);
+        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMED);
+        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(definitionTarget);
+        var stageScanner = mock(StageScanner.class);
+
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+        var monitoringScanner = new MonitoringScanner(automationCompositionProvider, acDefinitionProvider,
+                mock(AcDefinitionScanner.class), stageScanner, mock(SimpleScanner.class), mock(PhaseScanner.class),
+                messageProvider);
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+                messageProvider, monitoringScanner);
+
+        supervisionScanner.run();
+        verify(stageScanner).scanStage(automationComposition, definitionTarget.getServiceTemplate(),
+                new UpdateSync());
+        verify(messageProvider).removeJob(JOB_ID);
+    }
+
+    @Test
     void testSendAutomationCompositionSimpleScan() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setLockState(LockState.LOCKED);

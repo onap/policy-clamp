@@ -110,6 +110,7 @@ public class MonitoringScanner {
         }
 
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
                 || SubState.PREPARING.equals(automationComposition.getSubState())) {
             stageScanner.scanStage(automationComposition, serviceTemplate, updateSync);
         } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())

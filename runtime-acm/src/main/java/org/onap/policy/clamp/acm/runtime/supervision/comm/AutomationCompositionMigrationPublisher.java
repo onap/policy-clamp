@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -43,6 +44,7 @@ public class AutomationCompositionMigrationPublisher
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
     public void send(AutomationComposition automationComposition, int stage) {
         var acMigration = new AutomationCompositionMigration();
+        acMigration.setRollback(DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()));
         acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
         acMigration.setCompositionId(automationComposition.getCompositionId());
         acMigration.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -51,7 +53,7 @@ public class AutomationCompositionMigrationPublisher
         acMigration.setStage(stage);
         acMigration.setParticipantUpdatesList(
                 AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE));
-
+        acMigration.setRollback(DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()));
         super.send(acMigration);
     }
 }
