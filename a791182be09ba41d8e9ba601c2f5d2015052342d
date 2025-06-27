@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e95e7c6_893f035c",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-27T13:10:35Z",
+      "side": 1,
+      "message": "validateCompositionRequested(compositionId, automationComposition);",
+      "revId": "a791182be09ba41d8e9ba601c2f5d2015052342d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b59fca3_fa9749ff",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-06-27T13:10:35Z",
+      "side": 1,
+      "message": "already implemented in validateCompositionRequested",
+      "range": {
+        "startLine": 474,
+        "startChar": 14,
+        "endLine": 474,
+        "endChar": 78
+      },
+      "revId": "a791182be09ba41d8e9ba601c2f5d2015052342d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
