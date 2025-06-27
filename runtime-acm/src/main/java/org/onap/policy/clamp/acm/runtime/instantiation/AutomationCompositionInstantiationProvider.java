@@ -463,14 +463,15 @@ public class AutomationCompositionInstantiationProvider {
      *
      * @param instanceId the instanceId
      */
-    public void rollback(UUID instanceId) {
+    public void rollback(UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         var automationCompositionToRollback =
             automationCompositionProvider.getAutomationCompositionRollback(instanceId);
 
         if (DeployState.DEPLOYED.equals(automationComposition.getDeployState())
               && SubState.NONE.equals(automationComposition.getSubState())
-              && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
+              && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())
+              && compositionId.equals(automationComposition.getCompositionId())) {
             automationComposition.setCompositionId(automationCompositionToRollback.getCompositionId());
             automationComposition.setElements(automationCompositionToRollback.getElements().values().stream()
                     .collect(Collectors.toMap(AutomationCompositionElement::getId, UnaryOperator.identity())));

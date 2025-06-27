@@ -121,8 +121,8 @@ public class InstantiationController extends AbstractRestController implements A
     }
 
     @Override
-    public ResponseEntity<Void> rollbackCompositionInstance(UUID instanceId) {
-        provider.rollback(instanceId);
+    public ResponseEntity<Void> rollbackCompositionInstance(UUID compositionId, UUID instanceId) {
+        provider.rollback(compositionId, instanceId);
         return ResponseEntity.accepted().build();
     }
 }
