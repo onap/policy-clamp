@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionInstanceApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollbackInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
@@ -92,7 +93,8 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     }
 
     @Override
-    public ResponseEntity<Void> rollbackCompositionInstance(UUID compositionId, UUID instanceId) {
+    public ResponseEntity<Void> rollbackCompositionInstance(UUID compositionId, UUID instanceId,
+            AutomationCompositionRollbackInfo body) {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

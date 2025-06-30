@@ -20,15 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -372,35 +365,88 @@ class AutomationCompositionElementHandlerTest {
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
-
-        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, INSTANCE_ELEMENT, DeployState.DEPLOYED.ordinal());
+        var compositionElementRollback = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceElementRollback = new InstanceElementDto(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                Map.of("key", "value"), new HashMap<>());
+        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, compositionElementRollback, INSTANCE_ELEMENT,
+                instanceElementRollback, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
-            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
-            null, StateChangeResult.NO_ERROR, "Migration rollback done");
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Migration rollback done");
 
         config.setRollback(false);
-        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, INSTANCE_ELEMENT, DeployState.DEPLOYED.ordinal());
+        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, compositionElementRollback, INSTANCE_ELEMENT,
+                instanceElementRollback, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
             null, StateChangeResult.FAILED, "Migration rollback failed");
     }
 
+
     @Test
-    void testRollbackTimeout() {
+    void testRollbackStage() {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var simulatorService = mock(SimulatorService.class, withSettings().useConstructor(intermediaryApi));
-
-        when(simulatorService.getConfig()).thenReturn(config);
-        when(simulatorService.isInterrupted(anyInt(), anyString(), any())).thenReturn(true);
-        doCallRealMethod().when(simulatorService).rollback(INSTANCE_ELEMENT.instanceId(),
-            INSTANCE_ELEMENT.elementId());
-
+        var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
-        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, INSTANCE_ELEMENT, DeployState.DEPLOYED.ordinal());
-        verify(simulatorService).rollback(INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId());
-        verify(intermediaryApi, times(0)).updateAutomationCompositionElementState(
-            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
-            null, StateChangeResult.NO_ERROR, "Migration rollback done");
+        simulatorService.setConfig(config);
+        var compositionElementRollback = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of("stage", List.of(1, 2)), Map.of());
+        var instanceElementRollback = new InstanceElementDto(INSTANCE_ELEMENT.instanceId(),
+                INSTANCE_ELEMENT.elementId(), Map.of(), new HashMap<>());
+        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, compositionElementRollback, INSTANCE_ELEMENT,
+                instanceElementRollback, 1);
+        verify(intermediaryApi).updateAutomationCompositionElementStage(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                StateChangeResult.NO_ERROR, 2, "stage 1 Migration rollback");
+    }
+
+    @Test
+    void testRollbackAdd() {
+        var config = CommonTestData.createSimConfig();
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
+        simulatorService.setConfig(config);
+        var compositionElement = new CompositionElementDto(
+                UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+
+        var instanceElement = new InstanceElementDto(
+                UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+
+        var compoElRollbackAdd = new CompositionElementDto(
+                UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NEW);
+        var inElRollbackAdd = new InstanceElementDto(instanceElement.instanceId(), instanceElement.elementId(),
+                Map.of(), new HashMap<>(), ElementState.NEW);
+        acElementHandler
+                .rollbackMigration(compositionElement, compoElRollbackAdd, instanceElement, inElRollbackAdd, 0);
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migration rollback done");
+    }
+
+    @Test
+    void testRollbackRemove() {
+        var config = CommonTestData.createSimConfig();
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
+        simulatorService.setConfig(config);
+
+        var compoElRollbackRemove = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of(), ElementState.REMOVED);
+        var inElRollbackRemove = new InstanceElementDto(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                Map.of("key", "value"), Map.of(), ElementState.REMOVED);
+        acElementHandler
+                .rollbackMigration(COMPOSITION_ELEMENT, compoElRollbackRemove, INSTANCE_ELEMENT, inElRollbackRemove, 0);
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
     }
 }

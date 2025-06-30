@@ -42,6 +42,7 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollbackInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
@@ -287,6 +288,7 @@ class InstantiationControllerTest extends CommonRestController {
         var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var automationCompositionGet = rawresp.readEntity(AutomationComposition.class);
+        rawresp.close();
         assertNotNull(automationCompositionGet);
         automationComposition.setLastMsg(automationCompositionGet.getLastMsg());
         assertEquals(automationComposition, automationCompositionGet);
@@ -309,12 +311,12 @@ class InstantiationControllerTest extends CommonRestController {
                 .forEach(element -> element.setParticipantId(CommonTestData.getParticipantId()));
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
-        var resp = invocationBuilder.post(Entity.json(automationComposition));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        try (var resp = invocationBuilder.post(Entity.json(automationComposition))) {
+            assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
-        var instResponse = resp.readEntity(InstantiationResponse.class);
-        InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
-
+            var instResponse = resp.readEntity(InstantiationResponse.class);
+            InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
+        }
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
                 compositionId, automationComposition.getKey().getName(),
                 automationComposition.getKey().getVersion(), Pageable.unpaged());
@@ -337,9 +339,10 @@ class InstantiationControllerTest extends CommonRestController {
                 instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
-        var resp = invocationBuilder.delete();
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
-        instResponse = resp.readEntity(InstantiationResponse.class);
+        try (var resp = invocationBuilder.delete()) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
+            instResponse = resp.readEntity(InstantiationResponse.class);
+        }
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
@@ -359,16 +362,42 @@ class InstantiationControllerTest extends CommonRestController {
         instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, UUID.randomUUID()));
-        var resp = invocationBuilder.delete();
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+        try (var resp = invocationBuilder.delete()) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+        }
+    }
+
+    @Test
+    void testRollbackNotValid() {
+        var compositionId = createAcDefinitionInDB("RollbackNotFound");
+
+        // instance not found
+        var url = getInstanceEndPoint(compositionId, UUID.randomUUID()) + "/rollback";
+        var invocationBuilder = super.sendRequest(url);
+        try (var resp = invocationBuilder.post(Entity.json(new AutomationCompositionRollbackInfo()))) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+        }
+
+        // instance not valid state
+        var automationCompositionFromRsc =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "NotValid");
+        automationCompositionFromRsc.setCompositionId(compositionId);
+        var instanceResponce =
+                instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
+        url = getInstanceEndPoint(compositionId, instanceResponce.getInstanceId()) + "/rollback";
+        invocationBuilder = super.sendRequest(url);
+        try (var resp = invocationBuilder.post(Entity.json(new AutomationCompositionRollbackInfo()))) {
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
+        }
     }
 
     @Test
     void testDeploy_NotFound() {
         var compositionId = createAcDefinitionInDB("Deploy_NotFound");
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, UUID.randomUUID()));
-        var resp = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+        try (var resp = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()))) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+        }
     }
 
     @Test
@@ -385,8 +414,9 @@ class InstantiationControllerTest extends CommonRestController {
         command.setLockOrder(null);
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
-        var resp = invocationBuilder.put(Entity.json(command));
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
+        try (var resp = invocationBuilder.put(Entity.json(command))) {
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
+        }
     }
 
     @Test
@@ -402,8 +432,9 @@ class InstantiationControllerTest extends CommonRestController {
         instantiationUpdate.setLockOrder(null);
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
-        var resp = invocationBuilder.put(Entity.json(instantiationUpdate));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
+        try (var resp = invocationBuilder.put(Entity.json(instantiationUpdate))) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
+        }
     }
 
     private UUID createAcDefinitionInDB(String name) {

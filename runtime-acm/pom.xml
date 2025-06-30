@@ -339,6 +339,7 @@
                                 ToscaServiceTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate,
                                 ToscaNodeTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate,
                                 AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
+                                AutomationCompositionRollbackInfo=org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollbackInfo,
                                 SimpleResponse=org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse,
                                 AcTypeStateUpdate=org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate,
                                 AcInstanceStateUpdate=org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate,

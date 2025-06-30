@@ -1638,13 +1638,15 @@ paths:
             type: string
             format: uuid
       requestBody:
-        description: Parameters for the rollback (e.g., target version)
+        description: Parameters for the rollback
         required: true
         content:
           application/json:
             schema:
+              $ref: '#/components/schemas/AutomationCompositionRollbackInfo'
           application/yaml:
             schema:
+              $ref: '#/components/schemas/AutomationCompositionRollbackInfo'
       responses:
         202:
           description: Rollback initiated
@@ -1780,6 +1782,9 @@ components:
       type: object
     InstantiationResponse:
       title: InstantiationResponse
+      type: object
+    AutomationCompositionRollbackInfo:
+      title: AutomationCompositionRollbackInfo
       type: object
   headers:
     X-LatestVersion:

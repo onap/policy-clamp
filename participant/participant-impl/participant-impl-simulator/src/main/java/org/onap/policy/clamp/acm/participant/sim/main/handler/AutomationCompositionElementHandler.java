@@ -159,8 +159,22 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
 
     @Override
     public void rollbackMigration(CompositionElementDto compositionElement,
-                                  InstanceElementDto instanceElement, int nextStage) {
-        LOGGER.debug("rollback call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.rollback(instanceElement.instanceId(), instanceElement.elementId());
+            CompositionElementDto compositionElementRollback, InstanceElementDto instanceElement,
+            InstanceElementDto instanceElementRollback, int stage) {
+        LOGGER.debug("rollback call compositionElement: {}, compositionElementRollback: {}, instanceElement: {},"
+                        + " instanceElementRollback: {}, stage: {}",
+                compositionElement, compositionElementRollback, instanceElement, instanceElementRollback, stage);
+
+        if (ElementState.NEW.equals(instanceElementRollback.state())) {
+            LOGGER.debug("new element scenario");
+        }
+        if (ElementState.REMOVED.equals(instanceElementRollback.state())) {
+            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
+                    instanceElement.outProperties());
+            simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
+        } else {
+            simulatorService.rollback(instanceElementRollback.instanceId(), instanceElementRollback.elementId(), stage,
+                    compositionElementRollback.inProperties(), instanceElementRollback.outProperties());
+        }
     }
 }

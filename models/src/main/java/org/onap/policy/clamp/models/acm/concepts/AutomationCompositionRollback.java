@@ -23,7 +23,6 @@ package org.onap.policy.clamp.models.acm.concepts;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

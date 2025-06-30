@@ -393,7 +393,7 @@ class AutomationCompositionHandlerTest {
         if (!rollback) {
             verify(listener, times(expectedMigrated)).migrate(any(), any(), any(), any(), any(), anyInt());
         } else {
-            verify(listener, times(expectedMigrated)).rollback(any(), any(), any(), anyInt());
+            verify(listener, times(expectedMigrated)).rollback(any(), any(), any(), any(), any(), anyInt());
         }
     }
 }
