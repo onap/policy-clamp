@@ -1,0 +1,10 @@
+Verified+1: ONAP Bypass GHA <releng+onap.bypass.gha@linuxfoundation.org>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Francesco Fiora <francesco.fiora@est.tech>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Mon, 30 Jun 2025 08:11:02 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/141393
+Project: policy/clamp
+Branch: refs/heads/master
