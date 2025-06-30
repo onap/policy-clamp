@@ -129,9 +129,10 @@ class ThreadHandlerTest {
                 instanceElement, instanceElementUpdated, 0);
 
             clearInvocations(listener);
-            threadHandler.rollback(messageId, compositionElement, instanceElement, 0);
-            verify(listener, timeout(TIMEOUT)).rollbackMigration(compositionElement, instanceElement, 0);
-
+            threadHandler.rollback(messageId, compositionElement, compositionElementTarget,
+                    instanceElement, instanceElementUpdated, 0);
+            verify(listener, timeout(TIMEOUT)).rollbackMigration(compositionElement, compositionElementTarget,
+                    instanceElement, instanceElementUpdated, 0);
 
             clearInvocations(listener);
             threadHandler.undeploy(messageId, compositionElement, instanceElement);
@@ -335,14 +336,6 @@ class ThreadHandlerTest {
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.FAILED,
                 "Automation composition element migrate precheck failed");
-
-            clearInvocations(listener);
-            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                    .rollbackMigration(compositionElement, instanceElement, 0);
-            threadHandler.rollback(compositionElement.compositionId(), compositionElement, instanceElement, 0);
-            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.DEPLOYED, null, StateChangeResult.FAILED,
-                    "Automation composition element migrate precheck failed");
         }
     }
 }

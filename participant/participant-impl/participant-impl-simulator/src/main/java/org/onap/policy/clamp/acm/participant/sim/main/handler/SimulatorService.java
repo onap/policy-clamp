@@ -57,7 +57,9 @@ public class SimulatorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulatorService.class);
     private static final String INTERNAL_STATE = "InternalState";
     private static final String MIGRATION_PROPERTY = "stage";
+    private static final String ROLLBACK_PROPERTY = "rollbackStage";
     private static final String PREPARE_PROPERTY = "prepareStage";
+    private static final String STAGE_MSG = "stage %d %s";
 
     @Getter
     @Setter
@@ -391,7 +393,7 @@ public class SimulatorService {
             } else {
                 intermediaryApi.updateAutomationCompositionElementStage(
                     instanceId, elementId,
-                    StateChangeResult.NO_ERROR, nextStage, "stage " + stage + " Migrated");
+                    StateChangeResult.NO_ERROR, nextStage, String.format(STAGE_MSG, stage, "Migrated"));
             }
         } else {
             intermediaryApi.updateAutomationCompositionElementState(
@@ -456,7 +458,7 @@ public class SimulatorService {
             } else {
                 intermediaryApi.updateAutomationCompositionElementStage(
                     instanceId, elementId,
-                    StateChangeResult.NO_ERROR, nextStage, "stage " + stage + " Prepared");
+                    StateChangeResult.NO_ERROR, nextStage, String.format(STAGE_MSG, stage, "Prepared"));
             }
         } else {
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
@@ -488,10 +490,14 @@ public class SimulatorService {
     /**
      * Handle rollback of an automation composition.
      *
-     * @param instanceId AC instance ID
-     * @param elementId  AC element ID
+     * @param instanceId              the instanceId
+     * @param elementId               the elementId
+     * @param stage                   the stage
+     * @param compositionInProperties in Properties from composition definition element
+     * @param instanceOutProperties   in Properties from instance element
      */
-    public void rollback(UUID instanceId, UUID elementId) {
+    public void rollback(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
+            Map<String, Object> instanceOutProperties) {
         if (isInterrupted(getConfig().getRollbackTimerMs(),
             "Current Thread for rollback was Interrupted during execution {}", instanceId)) {
             LOGGER.debug("Rollback interrupted");
@@ -499,11 +505,31 @@ public class SimulatorService {
         }
 
         if (config.isRollback()) {
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Migration rollback done");
+            var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
+            var nextStage = 1000;
+            for (var s : stageSet) {
+                if (s > stage) {
+                    nextStage = Math.min(s, nextStage);
+                }
+            }
+            instanceOutProperties.putIfAbsent(ROLLBACK_PROPERTY, new ArrayList<>());
+            @SuppressWarnings("unchecked")
+            var stageList = (List<Integer>) instanceOutProperties.get(ROLLBACK_PROPERTY);
+            stageList.add(stage);
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
+            if (nextStage == 1000) {
+                intermediaryApi.updateAutomationCompositionElementState(
+                        instanceId, elementId,
+                        DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migration rollback done");
+            } else {
+                intermediaryApi.updateAutomationCompositionElementStage(
+                        instanceId, elementId,
+                        StateChangeResult.NO_ERROR, nextStage, String.format(STAGE_MSG, stage, "Migration rollback"));
+            }
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED, null,
-                StateChangeResult.FAILED, "Migration rollback failed");
+            intermediaryApi.updateAutomationCompositionElementState(
+                    instanceId, elementId,
+                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migration rollback failed");
         }
     }
 }

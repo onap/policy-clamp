@@ -42,11 +42,11 @@ class AcElementListenerV3Test {
     @Test
     void lockTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV2.lock(compositionElement, instanceElement);
+        acElementListener.lock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
     }
@@ -54,11 +54,11 @@ class AcElementListenerV3Test {
     @Test
     void deleteTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV2.delete(compositionElement, instanceElement);
+        acElementListener.delete(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
     }
@@ -66,11 +66,11 @@ class AcElementListenerV3Test {
     @Test
     void updateTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV2.update(compositionElement, instanceElement, instanceElement);
+        acElementListener.update(compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
             StateChangeResult.NO_ERROR, "Update not supported");
@@ -79,11 +79,11 @@ class AcElementListenerV3Test {
     @Test
     void unlockTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV2.unlock(compositionElement, instanceElement);
+        acElementListener.unlock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
     }
@@ -91,11 +91,11 @@ class AcElementListenerV3Test {
     @Test
     void primeTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionId = UUID.randomUUID();
         var toscaConceptIdentifier = new ToscaConceptIdentifier();
         var composition = new CompositionDto(compositionId, Map.of(toscaConceptIdentifier, Map.of()), Map.of());
-        acElementListenerV2.prime(composition);
+        acElementListener.prime(composition);
         verify(intermediaryApi)
             .updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
     }
@@ -103,11 +103,11 @@ class AcElementListenerV3Test {
     @Test
     void deprimeTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionId = UUID.randomUUID();
         var toscaConceptIdentifier = new ToscaConceptIdentifier();
         var composition = new CompositionDto(compositionId, Map.of(toscaConceptIdentifier, Map.of()), Map.of());
-        acElementListenerV2.deprime(composition);
+        acElementListener.deprime(composition);
         verify(intermediaryApi)
             .updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR, "Deprimed");
     }
@@ -115,11 +115,11 @@ class AcElementListenerV3Test {
     @Test
     void migrateTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV2.migrate(compositionElement, compositionElement, instanceElement, instanceElement, 0);
+        acElementListener.migrate(compositionElement, compositionElement, instanceElement, instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
             StateChangeResult.NO_ERROR, "Migrated");
@@ -128,11 +128,11 @@ class AcElementListenerV3Test {
     @Test
     void migratePrecheckTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV1 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV1.migratePrecheck(compositionElement, compositionElement, instanceElement, instanceElement);
+        acElementListener.migratePrecheck(compositionElement, compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
                 StateChangeResult.NO_ERROR, "Migration Precheck completed");
@@ -141,11 +141,11 @@ class AcElementListenerV3Test {
     @Test
     void reviewTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV1 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV1.review(compositionElement, instanceElement);
+        acElementListener.review(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
                 StateChangeResult.NO_ERROR, "Review completed");
@@ -154,11 +154,11 @@ class AcElementListenerV3Test {
     @Test
     void prepareTest() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV1 = createAcElementListenerV3(intermediaryApi);
+        var acElementListener = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV1.prepare(compositionElement, instanceElement);
+        acElementListener.prepare(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null,
                 StateChangeResult.NO_ERROR, "Prepare completed");
@@ -171,10 +171,11 @@ class AcElementListenerV3Test {
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListenerV3.rollbackMigration(compositionElement, instanceElement, 1);
+        acElementListenerV3.rollbackMigration(compositionElement, compositionElement, instanceElement,
+                instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Migration rollback done");
+                instanceElement.elementId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Migration rollback done");
     }
 
     private AcElementListenerV3 createAcElementListenerV3(ParticipantIntermediaryApi intermediaryApi) {

@@ -438,25 +438,28 @@ public class ThreadHandler implements Closeable {
     /**
      * Handles AutomationComposition Rollback.
      *
-     * @param messageId the messageId
      * @param compositionElement the information of the Automation Composition Definition Element
+     * @param compositionElementRollback the information of the Automation Composition Definition Element Target
      * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElementRollback the information of the Automation Composition Instance Element updated
      * @param stage the stage
      */
     public void rollback(UUID messageId, CompositionElementDto compositionElement,
-                         InstanceElementDto instanceElement,
-                         int stage) {
+            CompositionElementDto compositionElementRollback, InstanceElementDto instanceElement,
+            InstanceElementDto instanceElementRollback, int stage) {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() ->
-                this.rollbackProcess(compositionElement,
-                        instanceElement, stage));
+                this.rollbackProcess(compositionElement, compositionElementRollback, instanceElement,
+                        instanceElementRollback, stage));
         executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void rollbackProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-                                 int stage) {
+    private void rollbackProcess(CompositionElementDto compositionElement,
+            CompositionElementDto compositionElementRollback, InstanceElementDto instanceElement,
+            InstanceElementDto instanceElementRollback, int stage) {
         try {
-            listener.rollbackMigration(compositionElement, instanceElement, stage);
+            listener.rollbackMigration(compositionElement, compositionElementRollback, instanceElement,
+                    instanceElementRollback, stage);
         } catch (PfModelException e) {
             LOGGER.error("Automation composition element rollback failed {} {}",
                     instanceElement.elementId(), e.getMessage());

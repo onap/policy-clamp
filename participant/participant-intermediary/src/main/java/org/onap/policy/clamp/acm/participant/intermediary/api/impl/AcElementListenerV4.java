@@ -119,9 +119,10 @@ public abstract class AcElementListenerV4 implements AutomationCompositionElemen
 
     @Override
     public void rollbackMigration(CompositionElementDto compositionElement,
-                                  InstanceElementDto instanceElement, int nextStage) {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, null,
+            CompositionElementDto compositionElementRollback, InstanceElementDto instanceElement,
+            InstanceElementDto instanceElementRollback, int stage) {
+        intermediaryApi.updateAutomationCompositionElementState(instanceElementRollback.instanceId(),
+            instanceElementRollback.elementId(), DeployState.DEPLOYED, null,
             StateChangeResult.NO_ERROR, "Migration rollback done");
     }
 }

@@ -89,10 +89,10 @@ public interface AutomationCompositionElementListener {
     /**
      * Handle an update on an automation composition element.
      *
-     * @param compositionElement       the information of the Automation Composition Definition Element
-     * @param compositionElementTarget the information of the Automation Composition Definition Element Target
-     * @param instanceElement          the information of the Automation Composition Instance Element
-     * @param instanceElementMigrate   the information of the Automation Composition Instance Element updated
+     * @param compositionElement       the information of the Composition Definition Element
+     * @param compositionElementTarget the information of the Composition Definition Element Target
+     * @param instanceElement          the information of the Instance Element
+     * @param instanceElementMigrate   the information of the Instance Element updated
      * @param nextStage                the next stage
      * @throws PfModelException from Policy framework
      */
@@ -113,12 +113,14 @@ public interface AutomationCompositionElementListener {
     /**
      * Rollback migration changes done to a composition.
      *
-     * @param compositionElement the composition to roll back the changes
-     * @param instanceElement    instance to roll back the changes
-     * @param nextStage         in which stage should the instance be after the rollback
-     * @throws PfModelException if anything goes wrong
+     * @param compositionElement       the information of the Automation Composition Definition Element
+     * @param compositionElementRollback the information of the Automation Composition Definition Element Target
+     * @param instanceElement          the information of the Automation Composition Instance Element
+     * @param instanceElementRollback   the information of the Automation Composition Instance Element updated
+     * @param stage                    the stage
+     * @throws PfModelException from Policy framework
      */
-    void rollbackMigration(CompositionElementDto compositionElement,
-                           InstanceElementDto instanceElement, int nextStage)
+    void rollbackMigration(CompositionElementDto compositionElement, CompositionElementDto compositionElementRollback,
+            InstanceElementDto instanceElement, InstanceElementDto instanceElementRollback, int stage)
         throws PfModelException;
 }

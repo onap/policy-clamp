@@ -25,7 +25,6 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -476,7 +475,7 @@ public class AutomationCompositionInstantiationProvider {
         }
 
         var automationCompositionToRollback =
-                automationCompositionProvider.getAutomationCompositionRollback(instanceId);
+            automationCompositionProvider.getAutomationCompositionRollback(instanceId);
         var acToBeUpdated = new AutomationComposition(automationComposition);
         acToBeUpdated.setCompositionTargetId(automationCompositionToRollback.getCompositionId());
         acToBeUpdated.setElements(automationCompositionToRollback.getElements().values().stream()
