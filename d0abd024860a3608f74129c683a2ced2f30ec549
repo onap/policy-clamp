@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcc6570e_3fe09a52",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/DeployOrder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-01T12:00:42Z",
+      "side": 1,
+      "message": ",2025 OpenInfra Foundation Europe. All rights reserved.",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 41
+      },
+      "revId": "d0abd024860a3608f74129c683a2ced2f30ec549",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd263ec9_a8ffeff8",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AcInstanceStateResolverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-01T12:00:42Z",
+      "side": 1,
+      "message": "-2025 OpenInfra Foundation Europe. All rights reserved.",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 46
+      },
+      "revId": "d0abd024860a3608f74129c683a2ced2f30ec549",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "376c9750_39e29fcf",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/AutomationCompositionMigrationPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-01T12:00:42Z",
+      "side": 1,
+      "message": "you can remove this duplication",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 112
+      },
+      "revId": "d0abd024860a3608f74129c683a2ced2f30ec549",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
