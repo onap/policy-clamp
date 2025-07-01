@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f69418a0_15da6424",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/DeployOrder.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-07-01T12:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcc6570e_3fe09a52",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 41
+      },
+      "revId": "d0abd024860a3608f74129c683a2ced2f30ec549",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd263ec9_a8ffeff8",
@@ -47,6 +71,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f71a72b4_86efb104",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/AcInstanceStateResolverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-07-01T12:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd263ec9_a8ffeff8",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 46
+      },
+      "revId": "d0abd024860a3608f74129c683a2ced2f30ec549",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "376c9750_39e29fcf",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-07-01T12:00:42Z",
       "side": 1,
       "message": "you can remove this duplication",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 112
+      },
+      "revId": "d0abd024860a3608f74129c683a2ced2f30ec549",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12449350_2d30a16a",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/AutomationCompositionMigrationPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-07-01T12:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "376c9750_39e29fcf",
       "range": {
         "startLine": 56,
         "startChar": 8,
