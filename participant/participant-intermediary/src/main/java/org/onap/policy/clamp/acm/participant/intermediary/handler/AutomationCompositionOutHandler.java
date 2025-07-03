@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -361,12 +363,12 @@ public class AutomationCompositionOutHandler {
         var statusMsg = createParticipantStatus();
         statusMsg.setCompositionId(compositionId);
         var acElementDefsMap = cacheProvider.getAcElementsDefinitions();
-        var acElementsDefinitions = acElementDefsMap.get(compositionId);
-        if (acElementsDefinitions == null) {
+        var acDefinition = acElementDefsMap.get(compositionId);
+        if (acDefinition == null) {
             LOGGER.error("Cannot send Composition outProperties, id {} is null", compositionId);
             return;
         }
-        var acElementDefinition = getAutomationCompositionElementDefinition(acElementsDefinitions, elementId);
+        var acElementDefinition = getAutomationCompositionElementDefinition(acDefinition, elementId);
         if (acElementDefinition == null) {
             LOGGER.error("Cannot send Composition outProperties, elementId {} not present", elementId);
             return;
@@ -380,16 +382,16 @@ public class AutomationCompositionOutHandler {
     }
 
     private AutomationCompositionElementDefinition getAutomationCompositionElementDefinition(
-            Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> acElementsDefinition,
+            AcDefinition acElementsDefinition,
             ToscaConceptIdentifier elementId) {
 
         if (elementId == null) {
-            if (acElementsDefinition.size() == 1) {
-                return acElementsDefinition.values().iterator().next();
+            if (acElementsDefinition.getElements().size() == 1) {
+                return acElementsDefinition.getElements().values().iterator().next();
             }
             return null;
         }
-        return acElementsDefinition.get(elementId);
+        return acElementsDefinition.getElements().get(elementId);
     }
 
     private ParticipantStatus createParticipantStatus() {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -268,9 +270,10 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
         var compositionId = UUID.randomUUID();
         var elementId = new ToscaConceptIdentifier("code", "1.0.0");
-        var mapAcElementsDefinitions =
-                Map.of(compositionId, Map.of(elementId, new AutomationCompositionElementDefinition()));
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(mapAcElementsDefinitions);
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(compositionId);
+        acDefinition.getElements().put(elementId, new AutomationCompositionElementDefinition());
+        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionId, acDefinition));
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
@@ -301,7 +304,7 @@ class AutomationCompositionOutHandlerTest {
         var compositionTarget = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTarget);
         automationComposition.setDeployState(DeployState.DEPLOYED);
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionTarget, Map.of()));
+        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionTarget, new AcDefinition()));
 
         for (var element : automationComposition.getElements().values()) {
             acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), element.getId(),

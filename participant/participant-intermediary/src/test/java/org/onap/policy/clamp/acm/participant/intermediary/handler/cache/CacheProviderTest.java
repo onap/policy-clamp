@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.handler;
+package org.onap.policy.clamp.acm.participant.intermediary.handler.cache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -52,22 +52,23 @@ class CacheProviderTest {
         var instanceId = UUID.randomUUID();
         var participantDeploy = new ParticipantDeploy();
 
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, instanceId, participantDeploy))
+        assertThatThrownBy(() -> cacheProvider
+                .initializeAutomationComposition(null, instanceId, participantDeploy, null))
                 .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, participantDeploy))
+        assertThatThrownBy(() -> cacheProvider
+                .initializeAutomationComposition(instanceId, null, participantDeploy, null))
                 .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, instanceId, null))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, null))
+        assertThatThrownBy(() -> cacheProvider
+                .initializeAutomationComposition(instanceId, instanceId, null, null))
                 .isInstanceOf(NullPointerException.class);
 
         var deployState = DeployState.DEPLOYED;
         var subState = SubState.NONE;
 
         assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, instanceId, participantDeploy,
-                deployState, subState)).isInstanceOf(NullPointerException.class);
+                deployState, subState, null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, participantDeploy,
-                deployState, subState)).isInstanceOf(NullPointerException.class);
+                deployState, subState, null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -76,9 +77,9 @@ class CacheProviderTest {
         var cacheProvider = new CacheProvider(parameter);
         var instanceId = UUID.randomUUID();
 
-        assertThatThrownBy(() -> cacheProvider.addElementDefinition(null, null))
+        assertThatThrownBy(() -> cacheProvider.addElementDefinition(null, null, null))
                 .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.addElementDefinition(instanceId, null))
+        assertThatThrownBy(() -> cacheProvider.addElementDefinition(instanceId, null, null))
                 .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.getAutomationComposition(null)).isInstanceOf(NullPointerException.class);
@@ -109,12 +110,12 @@ class CacheProviderTest {
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
-        cacheProvider.addElementDefinition(compositionId, definitions);
+        cacheProvider.addElementDefinition(compositionId, definitions, UUID.randomUUID());
 
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
-                participantDeploy);
+                participantDeploy, UUID.randomUUID());
 
         for (var element : automationComposition.getElements().values()) {
             var commonProperties =
@@ -150,7 +151,7 @@ class CacheProviderTest {
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
-                participantDeploy);
+                participantDeploy, UUID.randomUUID());
 
         var ac = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
         for (var element : ac.getElements().values()) {
@@ -161,7 +162,7 @@ class CacheProviderTest {
 
         // deploy again
         cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
-                participantDeploy);
+                participantDeploy, UUID.randomUUID());
 
         // check UseState, OperationalState and OutProperties have not changed
         ac = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
@@ -203,9 +204,10 @@ class CacheProviderTest {
                 CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
         automationComposition.setCompositionId(compositionId);
         cacheProvider.addElementDefinition(compositionId,
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition));
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition),
+                UUID.randomUUID());
         for (var element : automationComposition.getElements().values()) {
-            var result = cacheProvider.createCompositionElementDto(compositionId, element, Map.of());
+            var result = cacheProvider.createCompositionElementDto(compositionId, element);
             assertEquals(compositionId, result.compositionId());
             assertEquals(element.getDefinition(), result.elementDefinitionId());
         }
@@ -220,7 +222,8 @@ class CacheProviderTest {
                 CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
         automationComposition.setCompositionId(compositionId);
         cacheProvider.addElementDefinition(compositionId,
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition));
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition),
+                UUID.randomUUID());
         var result = cacheProvider.getCompositionElementDtoMap(automationComposition);
         for (var element : automationComposition.getElements().values()) {
             var compositionElementDto = result.get(element.getId());

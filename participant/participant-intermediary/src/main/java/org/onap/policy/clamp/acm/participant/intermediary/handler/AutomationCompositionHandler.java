@@ -30,6 +30,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElement
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -146,7 +147,8 @@ public class AutomationCompositionHandler {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
                 if (deployMsg.isFirstStartPhase()) {
                     cacheProvider.initializeAutomationComposition(deployMsg.getCompositionId(),
-                            deployMsg.getAutomationCompositionId(), participantDeploy);
+                            deployMsg.getAutomationCompositionId(), participantDeploy,
+                            deployMsg.getRevisionIdInstance());
                 }
                 callParticipanDeploy(deployMsg.getMessageId(), participantDeploy.getAcElementList(),
                         deployMsg.getStartPhase(), deployMsg.getAutomationCompositionId());
@@ -165,8 +167,7 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
                 var compositionElement =
-                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element,
-                                compositionInProperties);
+                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element);
                 var instanceElement =
                         new InstanceElementDto(instanceId, elementDeploy.getId(), elementDeploy.getProperties(),
                                 element.getOutProperties());
@@ -257,8 +258,7 @@ public class AutomationCompositionHandler {
             if (startPhaseMsg.equals(startPhase)) {
                 element.setDeployState(DeployState.UNDEPLOYING);
                 var compositionElement =
-                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element,
-                                compositionInProperties);
+                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                         element.getProperties(), element.getOutProperties());
                 listener.undeploy(messageId, compositionElement, instanceElement);
@@ -277,8 +277,7 @@ public class AutomationCompositionHandler {
                 element.setDeployState(DeployState.DELETING);
                 element.setSubState(SubState.NONE);
                 var compositionElement =
-                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element,
-                                compositionInProperties);
+                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                         element.getProperties(), element.getOutProperties());
                 listener.delete(messageId, compositionElement, instanceElement);

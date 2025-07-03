@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,13 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
@@ -56,7 +56,8 @@ public class AcDefinitionHandler {
             // prime
             var list = collectAcElementDefinition(participantPrimeMsg.getParticipantDefinitionUpdates());
             if (!list.isEmpty()) {
-                cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list);
+                cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list,
+                        participantPrimeMsg.getRevisionIdComposition());
                 prime(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId(), list);
             }
         } else {
@@ -67,13 +68,12 @@ public class AcDefinitionHandler {
 
     private List<AutomationCompositionElementDefinition> collectAcElementDefinition(
             List<ParticipantDefinition> participantDefinitionList) {
-        List<AutomationCompositionElementDefinition> list = new ArrayList<>();
-        for (var participantDefinition : participantDefinitionList) {
-            if (participantDefinition.getParticipantId().equals(cacheProvider.getParticipantId())) {
-                list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
-            }
-        }
-        return list;
+        return participantDefinitionList.stream()
+                .filter(participantDefinition -> participantDefinition.getParticipantId()
+                        .equals(cacheProvider.getParticipantId()))
+                .map(ParticipantDefinition::getAutomationCompositionElementDefinitionList)
+                .flatMap(List::stream)
+                .toList();
     }
 
     private void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
@@ -87,8 +87,8 @@ public class AcDefinitionHandler {
     }
 
     private void deprime(UUID messageId, UUID compositionId) {
-        var acElementsDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acElementsDefinitions == null) {
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        if (acDefinition == null) {
             // this participant does not handle this composition
             var participantPrimeAck = new ParticipantPrimeAck();
             participantPrimeAck.setCompositionId(compositionId);
@@ -103,7 +103,7 @@ public class AcDefinitionHandler {
             publisher.sendParticipantPrimeAck(participantPrimeAck);
             return;
         }
-        var list = new ArrayList<>(acElementsDefinitions.values());
+        var list = acDefinition.getElements().values();
         var inPropertiesMap = list.stream().collect(Collectors.toMap(
                 AutomationCompositionElementDefinition::getAcElementDefinitionId,
                 el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
@@ -132,13 +132,14 @@ public class AcDefinitionHandler {
 
             var list = collectAcElementDefinition(participantSyncMsg.getParticipantDefinitionUpdates());
             if (!list.isEmpty()) {
-                cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list);
+                cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list,
+                        participantSyncMsg.getRevisionIdComposition());
             }
         }
 
         for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
-            cacheProvider
-                    .initializeAutomationComposition(participantSyncMsg.getCompositionId(), automationcomposition);
+            cacheProvider.initializeAutomationComposition(
+                    participantSyncMsg.getCompositionId(), automationcomposition);
             if (StateChangeResult.TIMEOUT.equals(automationcomposition.getStateChangeResult())) {
                 for (var element : automationcomposition.getAcElementList()) {
                     listener.cleanExecution(element.getId(), participantSyncMsg.getMessageId());
