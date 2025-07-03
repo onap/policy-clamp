@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.handler;
+package org.onap.policy.clamp.acm.participant.intermediary.handler.cache;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -67,11 +67,13 @@ public class CacheProvider {
     private final Map<UUID, AutomationComposition> automationCompositions = new ConcurrentHashMap<>();
 
     @Getter
-    private final Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> acElementsDefinitions =
-            new ConcurrentHashMap<>();
+    private final Map<UUID, AcDefinition> acElementsDefinitions = new ConcurrentHashMap<>();
 
     @Getter
     private final Map<UUID, UUID> msgIdentification = new ConcurrentHashMap<>();
+
+    @Getter
+    private final Map<UUID, AutomationCompositionMsg<?>> messagesOnHold = new HashMap<>();
 
     /**
      * Constructor.
@@ -112,13 +114,23 @@ public class CacheProvider {
      *
      * @param compositionId the composition Id
      * @param list the list of AutomationCompositionElementDefinition to add
+     * @param revisionId the last Update
      */
-    public void addElementDefinition(@NonNull UUID compositionId, List<AutomationCompositionElementDefinition> list) {
-        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+    public void addElementDefinition(@NonNull UUID compositionId, List<AutomationCompositionElementDefinition> list,
+            UUID revisionId) {
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(compositionId);
+        acDefinition.setRevisionId(revisionId);
         for (var acElementDefinition : list) {
-            map.put(acElementDefinition.getAcElementDefinitionId(), acElementDefinition);
+            if (acElementDefinition.getAutomationCompositionElementToscaNodeTemplate() == null) {
+                acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
+            }
+            if (acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().getProperties() == null) {
+                acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(new HashMap<>());
+            }
+            acDefinition.getElements().put(acElementDefinition.getAcElementDefinitionId(), acElementDefinition);
         }
-        acElementsDefinitions.put(compositionId, map);
+        acElementsDefinitions.put(compositionId, acDefinition);
     }
 
     public void removeElementDefinition(@NonNull UUID compositionId) {
@@ -134,10 +146,8 @@ public class CacheProvider {
      */
     public Map<String, Object> getCommonProperties(@NonNull UUID instanceId, @NonNull UUID acElementId) {
         var automationComposition = automationCompositions.get(instanceId);
-        var map = acElementsDefinitions.get(automationComposition.getCompositionId());
         var element = automationComposition.getElements().get(acElementId);
-        return getAcElementDefinition(map, element.getDefinition())
-                .getAutomationCompositionElementToscaNodeTemplate().getProperties();
+        return getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
     }
 
     /**
@@ -149,20 +159,8 @@ public class CacheProvider {
      */
     public Map<String, Object> getCommonProperties(@NonNull UUID compositionId,
         @NonNull ToscaConceptIdentifier definition) {
-        return getAcElementDefinition(acElementsDefinitions.get(compositionId), definition)
-                .getAutomationCompositionElementToscaNodeTemplate().getProperties();
-    }
-
-    private AutomationCompositionElementDefinition getAcElementDefinition(
-            Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map,
-            ToscaConceptIdentifier definition) {
-        var nodeTemplate = map.get(definition);
-        if (nodeTemplate == null) {
-            nodeTemplate = new AutomationCompositionElementDefinition();
-            nodeTemplate.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-            nodeTemplate.getAutomationCompositionElementToscaNodeTemplate().setProperties(new HashMap<>());
-        }
-        return nodeTemplate;
+        var map = acElementsDefinitions.get(compositionId).getElements().get(definition);
+        return map != null ? map.getAutomationCompositionElementToscaNodeTemplate().getProperties() : new HashMap<>();
     }
 
     /**
@@ -171,11 +169,12 @@ public class CacheProvider {
      * @param compositionId the composition Id
      * @param instanceId the Automation Composition Id
      * @param participantDeploy the ParticipantDeploy
+     * @param revisionId the identification of the last update
      */
     public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
-            ParticipantDeploy participantDeploy) {
+            ParticipantDeploy participantDeploy, UUID revisionId) {
         initializeAutomationComposition(compositionId, instanceId, participantDeploy,
-            DeployState.DEPLOYING, SubState.NONE);
+            DeployState.DEPLOYING, SubState.NONE, revisionId);
     }
 
     /**
@@ -186,9 +185,10 @@ public class CacheProvider {
      * @param participantDeploy the ParticipantDeploy
      * @param deployState the DeployState
      * @param subState the SubState
+     * @param revisionId the identification of the last update
      */
     public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
-            ParticipantDeploy participantDeploy, DeployState deployState, SubState subState) {
+            ParticipantDeploy participantDeploy, DeployState deployState, SubState subState, UUID revisionId) {
         var acLast = automationCompositions.get(instanceId);
         Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
         for (var element : participantDeploy.getAcElementList()) {
@@ -210,6 +210,7 @@ public class CacheProvider {
         automationComposition.setElements(acElementMap);
         automationComposition.setDeployState(deployState);
         automationComposition.setSubState(subState);
+        automationComposition.setRevisionId(revisionId);
         automationCompositions.put(instanceId, automationComposition);
     }
 
@@ -247,6 +248,7 @@ public class CacheProvider {
         automationComposition.setInstanceId(participantRestartAc.getAutomationCompositionId());
         automationComposition.setElements(acElementMap);
         automationComposition.setStateChangeResult(participantRestartAc.getStateChangeResult());
+        automationComposition.setRevisionId(participantRestartAc.getRevisionId());
         automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
     }
 
@@ -271,15 +273,17 @@ public class CacheProvider {
      *
      * @param compositionId the composition Id
      * @param element AutomationComposition Element
-     * @param compositionInProperties composition definition InProperties
      * @return the CompositionElementDto
      */
-    public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element,
-            Map<String, Object> compositionInProperties) {
-        var compositionOutProperties = getAcElementDefinition(acElementsDefinitions
-                .get(compositionId), element.getDefinition()).getOutProperties();
-        return new CompositionElementDto(compositionId,
-                element.getDefinition(), compositionInProperties, compositionOutProperties);
+    public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element) {
+        var acDefinition = acElementsDefinitions.get(compositionId);
+        var acDefinitionElement = acDefinition.getElements().get(element.getDefinition());
+
+        return (acDefinitionElement != null) ? new CompositionElementDto(compositionId, element.getDefinition(),
+                acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
+                acDefinitionElement.getOutProperties()) :
+            new CompositionElementDto(compositionId, element.getDefinition(),
+                Map.of(), Map.of(), ElementState.NOT_PRESENT);
     }
 
     /**
@@ -291,14 +295,14 @@ public class CacheProvider {
      */
     public Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
             UUID compositionId) {
-        var definitions = acElementsDefinitions.get(compositionId);
+        var acDefinition = acElementsDefinitions.get(compositionId);
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var definition = definitions.get(element.getDefinition());
-            var compositionElement = (definition != null)
+            var acDefinitionElement = acDefinition.getElements().get(element.getDefinition());
+            var compositionElement = (acDefinitionElement != null)
                     ? new CompositionElementDto(compositionId, element.getDefinition(),
-                            definition.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
-                            definition.getOutProperties()) :
+                    acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
+                    acDefinitionElement.getOutProperties()) :
                     new CompositionElementDto(compositionId, element.getDefinition(),
                             Map.of(), Map.of(), ElementState.NOT_PRESENT);
             map.put(element.getId(), compositionElement);
@@ -346,5 +350,43 @@ public class CacheProvider {
     public static CompositionElementDto changeStateToNew(CompositionElementDto compositionElement) {
         return new CompositionElementDto(compositionElement.compositionId(), compositionElement.elementDefinitionId(),
                 compositionElement.inProperties(), compositionElement.outProperties(), ElementState.NEW);
+    }
+
+    /**
+     * Check composition is present and compare the last update.
+     *
+     * @param compositionId the instanceId
+     * @param revisionId the last Update
+     * @return true if the composition is updated
+     */
+    public boolean isCompositionDefinitionUpdated(UUID compositionId, UUID revisionId) {
+        if (revisionId == null) {
+            // old ACM-r
+            return true;
+        }
+        var acDefinition = acElementsDefinitions.get(compositionId);
+        if (acDefinition == null) {
+            return false;
+        }
+        return revisionId.equals(acDefinition.getRevisionId());
+    }
+
+    /**
+     * Check instance is present and compare the last update.
+     *
+     * @param instanceId the instanceId
+     * @param revisionId the last Update
+     * @return true if the instance is updated
+     */
+    public boolean isInstanceUpdated(UUID instanceId, UUID revisionId) {
+        if (revisionId == null) {
+            // old ACM-r
+            return true;
+        }
+        var automationComposition = automationCompositions.get(instanceId);
+        if (automationComposition == null) {
+            return false;
+        }
+        return revisionId.equals(automationComposition.getRevisionId());
     }
 }

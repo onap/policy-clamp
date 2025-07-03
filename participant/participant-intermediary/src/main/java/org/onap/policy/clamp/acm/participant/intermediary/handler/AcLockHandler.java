@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
@@ -80,7 +81,7 @@ public class AcLockHandler {
                 element.setLockState(LockState.LOCKING);
                 element.setSubState(SubState.NONE);
                 var compositionElement = cacheProvider.createCompositionElementDto(
-                        automationComposition.getCompositionId(), element, compositionInProperties);
+                        automationComposition.getCompositionId(), element);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                         element.getProperties(), element.getOutProperties());
                 listener.lock(messageId, compositionElement, instanceElement);
@@ -99,7 +100,7 @@ public class AcLockHandler {
                 element.setLockState(LockState.UNLOCKING);
                 element.setSubState(SubState.NONE);
                 var compositionElement = cacheProvider.createCompositionElementDto(
-                        automationComposition.getCompositionId(), element, compositionInProperties);
+                        automationComposition.getCompositionId(), element);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                         element.getProperties(), element.getOutProperties());
                 listener.unlock(messageId, compositionElement, instanceElement);

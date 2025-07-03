@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -123,23 +124,27 @@ class ParticipantIntermediaryApiImplTest {
 
     @Test
     void testGetAcElementsDefinitions() {
-        var cacheProvider = mock(CacheProvider.class);
         var acElementDefinition = new AutomationCompositionElementDefinition();
         acElementDefinition.setAcElementDefinitionId(DEFINITION_ELEMENT_ID);
         acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-        var elementsDefinitions = Map.of(DEFINITION_ELEMENT_ID, acElementDefinition);
-        var map = Map.of(COMPOSITION_ID, elementsDefinitions);
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(COMPOSITION_ID);
+        acDefinition.getElements().put(DEFINITION_ELEMENT_ID, acElementDefinition);
+        var map = Map.of(COMPOSITION_ID, acDefinition);
+        var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getAcElementsDefinitions()).thenReturn(map);
         var automationComposiitonHandler = mock(AutomationCompositionOutHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler, cacheProvider);
         var mapResult = apiImpl.getAcElementsDefinitions();
-        assertEquals(map, mapResult);
+        assertThat(map).hasSameSizeAs(mapResult);
+        assertThat(mapResult.get(COMPOSITION_ID)).isNotEmpty();
+        assertEquals(mapResult.get(COMPOSITION_ID), acDefinition.getElements());
 
         var result = apiImpl.getAcElementsDefinitions(UUID.randomUUID());
         assertThat(result).isEmpty();
 
         result = apiImpl.getAcElementsDefinitions(COMPOSITION_ID);
-        assertEquals(elementsDefinitions, result);
+        assertEquals(acDefinition.getElements(), result);
 
         var element = apiImpl.getAcElementDefinition(UUID.randomUUID(), new ToscaConceptIdentifier("wrong", "0.0.1"));
         assertThat(element).isNull();
