@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed826154_f1c50a85",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionRollbackInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-03T07:38:50Z",
+      "side": 1,
+      "message": "I see this class added in for openapi, but it\u0027s never used, what is the purpose of this?",
+      "range": {
+        "startLine": 23,
+        "startChar": 13,
+        "endLine": 23,
+        "endChar": 46
+      },
+      "revId": "6fae4e81686d75f0b785634f2fcf5d4f2e4200eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
