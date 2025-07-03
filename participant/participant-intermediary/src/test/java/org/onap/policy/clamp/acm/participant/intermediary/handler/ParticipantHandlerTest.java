@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,11 +34,13 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
@@ -61,9 +64,10 @@ class ParticipantHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         when(publisher.isActive()).thenReturn(true);
         var cacheProvider = mock(CacheProvider.class);
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class),
-            publisher, cacheProvider);
+            publisher, cacheProvider, msgExecutor);
         participantHandler.handleParticipantStatusReq(new ParticipantStatusReq());
         verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
 
@@ -75,25 +79,37 @@ class ParticipantHandlerTest {
 
     @Test
     void handleAutomationCompositionDeployTest() {
-        var acHandler = mock(AutomationCompositionHandler.class);
-        var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
-            mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
-            mock(CacheProvider.class));
+        var cacheProvider = mock(CacheProvider.class);
         var automationCompositionDeploy = new AutomationCompositionDeploy();
+        automationCompositionDeploy.setAutomationCompositionId(UUID.randomUUID());
+        automationCompositionDeploy.setRevisionIdInstance(UUID.randomUUID());
+        when(cacheProvider.isInstanceUpdated(automationCompositionDeploy.getAutomationCompositionId(),
+                automationCompositionDeploy.getRevisionIdInstance())).thenReturn(true);
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
+        var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
+                mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
+                cacheProvider, msgExecutor);
         participantHandler.handleAutomationCompositionDeploy(automationCompositionDeploy);
         verify(acHandler).handleAutomationCompositionDeploy(automationCompositionDeploy);
     }
 
     @Test
     void handleAutomationCompositionStateChangeTest() {
-        var acHandler = mock(AutomationCompositionHandler.class);
-        var acLockHandler = mock(AcLockHandler.class);
-        var participantHandler = new ParticipantHandler(acHandler, acLockHandler, mock(AcSubStateHandler.class),
-            mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class), mock(CacheProvider.class));
         var acStateChange = new AutomationCompositionStateChange();
+        acStateChange.setCompositionId(UUID.randomUUID());
+        acStateChange.setRevisionIdComposition(UUID.randomUUID());
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.isCompositionDefinitionUpdated(acStateChange.getCompositionId(),
+                acStateChange.getRevisionIdComposition())).thenReturn(true);
 
         acStateChange.setDeployOrderedState(DeployOrder.DEPLOY);
         acStateChange.setLockOrderedState(LockOrder.NONE);
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var acLockHandler = mock(AcLockHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
+        var participantHandler = new ParticipantHandler(acHandler, acLockHandler, mock(AcSubStateHandler.class),
+                mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class), cacheProvider, msgExecutor);
         participantHandler.handleAutomationCompositionStateChange(acStateChange);
         verify(acHandler).handleAutomationCompositionStateChange(acStateChange);
 
@@ -105,12 +121,29 @@ class ParticipantHandlerTest {
 
     @Test
     void handleAutomationCompositionMigrationTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        var migrationMsg = new AutomationCompositionMigration();
+        migrationMsg.setCompositionId(UUID.randomUUID());
+        migrationMsg.setRevisionIdComposition(UUID.randomUUID());
+        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionId(),
+                migrationMsg.getRevisionIdComposition())).thenReturn(true);
+
+        migrationMsg.setAutomationCompositionId(UUID.randomUUID());
+        migrationMsg.setRevisionIdInstance(UUID.randomUUID());
+        when(cacheProvider.isInstanceUpdated(migrationMsg.getAutomationCompositionId(),
+                migrationMsg.getRevisionIdInstance())).thenReturn(true);
+
+        migrationMsg.setCompositionTargetId(UUID.randomUUID());
+        migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
+        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionTargetId(),
+                migrationMsg.getRevisionIdCompositionTarget())).thenReturn(true);
+
         var acHandler = mock(AutomationCompositionHandler.class);
         var acSubStateHandler = mock(AcSubStateHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
         var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
-            acSubStateHandler, mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
-            mock(CacheProvider.class));
-        var migrationMsg = new AutomationCompositionMigration();
+                acSubStateHandler, mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
+                cacheProvider, msgExecutor);
         participantHandler.handleAutomationCompositionMigration(migrationMsg);
         verify(acHandler).handleAutomationCompositionMigration(migrationMsg);
 
@@ -121,13 +154,43 @@ class ParticipantHandlerTest {
 
     @Test
     void handleAcPropertyUpdateTest() {
-        var acHandler = mock(AutomationCompositionHandler.class);
-        var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
-            mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
-            mock(CacheProvider.class));
         var propertyUpdateMsg = new PropertiesUpdate();
+        propertyUpdateMsg.setCompositionId(UUID.randomUUID());
+        propertyUpdateMsg.setRevisionIdComposition(UUID.randomUUID());
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.isCompositionDefinitionUpdated(propertyUpdateMsg.getCompositionId(),
+                propertyUpdateMsg.getRevisionIdComposition())).thenReturn(true);
+
+        propertyUpdateMsg.setAutomationCompositionId(UUID.randomUUID());
+        propertyUpdateMsg.setRevisionIdInstance(UUID.randomUUID());
+        when(cacheProvider.isInstanceUpdated(propertyUpdateMsg.getAutomationCompositionId(),
+                propertyUpdateMsg.getRevisionIdInstance())).thenReturn(true);
+
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
+        var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
+                mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
+                cacheProvider, msgExecutor);
         participantHandler.handleAcPropertyUpdate(propertyUpdateMsg);
         verify(acHandler).handleAcPropertyUpdate(propertyUpdateMsg);
+    }
+
+    @Test
+    void sendHandleAutomationCompositionPrepare() {
+        var acPrepareMsg = new AutomationCompositionPrepare();
+        acPrepareMsg.setParticipantId(UUID.randomUUID());
+        acPrepareMsg.setRevisionIdComposition(UUID.randomUUID());
+        acPrepareMsg.setPreDeploy(false);
+
+        var cacheProvider = mock(CacheProvider.class);
+        var acSubStateHandler = mock(AcSubStateHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AcLockHandler.class), acSubStateHandler, mock(AcDefinitionHandler.class),
+                mock(ParticipantMessagePublisher.class), cacheProvider, msgExecutor);
+
+        participantHandler.handleAutomationCompositionPrepare(acPrepareMsg);
+        verify(acSubStateHandler).handleAcPrepare(acPrepareMsg);
     }
 
     @Test
@@ -135,9 +198,10 @@ class ParticipantHandlerTest {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getReplicaId()).thenReturn(CommonTestData.getReplicaId());
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class),
-            mock(ParticipantMessagePublisher.class), cacheProvider);
+            mock(ParticipantMessagePublisher.class), cacheProvider, msgExecutor);
 
         var participantAckMsg = new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertTrue(participantHandler.appliesTo(participantAckMsg));
@@ -155,9 +219,10 @@ class ParticipantHandlerTest {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getSupportedAcElementTypes()).thenReturn(List.of(new ParticipantSupportedElementType()));
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), publisher,
-            cacheProvider);
+            cacheProvider, msgExecutor);
 
         participantHandler.sendParticipantRegister();
         verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
@@ -168,9 +233,10 @@ class ParticipantHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), publisher,
-            cacheProvider);
+            cacheProvider, msgExecutor);
 
         participantHandler.handleParticipantRegisterAck(new ParticipantRegisterAck());
         verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
@@ -181,9 +247,10 @@ class ParticipantHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class), publisher,
-            cacheProvider);
+            cacheProvider, msgExecutor);
 
         participantHandler.sendParticipantDeregister();
         verify(publisher).sendParticipantDeregister(any(ParticipantDeregister.class));
@@ -191,9 +258,10 @@ class ParticipantHandlerTest {
 
     @Test
     void handleParticipantDeregisterAckTest() {
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class),
-            mock(ParticipantMessagePublisher.class), mock(CacheProvider.class));
+            mock(ParticipantMessagePublisher.class), mock(CacheProvider.class), msgExecutor);
         var participantDeregisterAck = new ParticipantDeregisterAck();
         assertDoesNotThrow(() -> participantHandler.handleParticipantDeregisterAck(participantDeregisterAck));
     }
@@ -205,9 +273,10 @@ class ParticipantHandlerTest {
         participantPrime.setMessageId(UUID.randomUUID());
 
         var acHandler = mock(AcDefinitionHandler.class);
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), acHandler,
-            mock(ParticipantMessagePublisher.class), mock(CacheProvider.class));
+            mock(ParticipantMessagePublisher.class), mock(CacheProvider.class), msgExecutor);
 
         participantHandler.handleParticipantPrime(participantPrime);
         verify(acHandler).handlePrime(participantPrime);
@@ -224,9 +293,16 @@ class ParticipantHandlerTest {
         when(cacheProvider.getReplicaId()).thenReturn(CommonTestData.getReplicaId());
         var publisher = mock(ParticipantMessagePublisher.class);
         var acHandler = mock(AcDefinitionHandler.class);
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
-            mock(AcLockHandler.class), mock(AcSubStateHandler.class), acHandler, publisher, cacheProvider);
+            mock(AcLockHandler.class), mock(AcSubStateHandler.class), acHandler, publisher, cacheProvider,
+            msgExecutor);
 
+        participantSyncMsg.getExcludeReplicas().add(cacheProvider.getReplicaId());
+        participantHandler.handleParticipantSync(participantSyncMsg);
+        verify(acHandler, times(0)).handleParticipantSync(participantSyncMsg);
+
+        participantSyncMsg.getExcludeReplicas().clear();
         participantHandler.handleParticipantSync(participantSyncMsg);
         verify(acHandler).handleParticipantSync(participantSyncMsg);
     }
@@ -240,8 +316,10 @@ class ParticipantHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         when(publisher.isActive()).thenReturn(true);
         var acHandler = mock(AcDefinitionHandler.class);
+        var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
-            mock(AcLockHandler.class), mock(AcSubStateHandler.class), acHandler, publisher, cacheProvider);
+            mock(AcLockHandler.class), mock(AcSubStateHandler.class), acHandler, publisher, cacheProvider,
+            msgExecutor);
         participantHandler.sendHeartbeat();
         verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
 

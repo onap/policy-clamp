@@ -28,11 +28,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -74,12 +75,13 @@ class AcSubStateHandlerTest {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionTargetId(), definitions);
+        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions, UUID.randomUUID());
+        cacheProvider.addElementDefinition(
+                automationComposition.getCompositionTargetId(), definitions, UUID.randomUUID());
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
-                automationComposition.getInstanceId(), participantDeploy);
+                automationComposition.getInstanceId(), participantDeploy, UUID.randomUUID());
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(0);
         migrationMsg.setCompositionId(automationComposition.getCompositionId());
@@ -102,11 +104,11 @@ class AcSubStateHandlerTest {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions);
+        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions, UUID.randomUUID());
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
-                automationComposition.getInstanceId(), participantDeploy);
+                automationComposition.getInstanceId(), participantDeploy, UUID.randomUUID());
 
         var acMigrate = new AutomationComposition(automationComposition);
         acMigrate.setCompositionTargetId(UUID.randomUUID());
@@ -118,7 +120,7 @@ class AcSubStateHandlerTest {
 
         var migrateDefinitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(acMigrate);
-        cacheProvider.addElementDefinition(acMigrate.getCompositionTargetId(), migrateDefinitions);
+        cacheProvider.addElementDefinition(acMigrate.getCompositionTargetId(), migrateDefinitions, UUID.randomUUID());
 
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(0);
@@ -155,16 +157,17 @@ class AcSubStateHandlerTest {
         acPrepareMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = new AcElementDeploy();
             acElementDeploy.setProperties(Map.of());
             acElementDeploy.setId(element.getId());
             participantDeploy.getAcElementList().add(acElementDeploy);
-            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
         when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+            .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
 
         ach.handleAcPrepare(acPrepareMsg);
         verify(listener, times(automationComposition.getElements().size())).prepare(any(), any(), any(), anyInt());
@@ -183,15 +186,16 @@ class AcSubStateHandlerTest {
         acPrepareMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
             .thenReturn(automationComposition);
-        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = new AcElementDeploy();
             acElementDeploy.setProperties(Map.of());
             acElementDeploy.setId(element.getId());
-            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
         when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+            .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
 
         var listener = mock(ThreadHandler.class);
         var ach = new AcSubStateHandler(cacheProvider, listener);

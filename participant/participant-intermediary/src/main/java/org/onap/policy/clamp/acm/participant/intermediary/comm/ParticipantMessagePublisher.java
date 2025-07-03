@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.common.message.bus.event.TopicSink;
 import org.onap.policy.common.message.bus.event.client.TopicSinkClient;
@@ -63,6 +64,18 @@ public class ParticipantMessagePublisher implements Publisher {
         }
         this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
         active = true;
+    }
+
+    /**
+     * Method to send Participant Request Sync message to clamp.
+     *
+     * @param participantReqSync the Participant Request Sync
+     */
+    @Timed(value = "publisher.participant_req_sync", description = "PARTICIPANT_REQ_SYNC_MSG messages published")
+    public void sendParticipantReqSync(final ParticipantReqSync participantReqSync) {
+        validate();
+        topicSinkClient.send(participantReqSync);
+        LOGGER.info("Sent Participant Request Sync to CLAMP - {}", participantReqSync);
     }
 
     /**

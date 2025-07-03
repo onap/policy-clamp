@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -154,7 +155,7 @@ public class AcSubStateHandler {
                 if (cacheProvider.getParticipantId().equals(participantPrepare.getParticipantId())) {
                     cacheProvider.initializeAutomationComposition(acPrepareMsg.getCompositionId(),
                         acPrepareMsg.getAutomationCompositionId(), participantPrepare, DeployState.UNDEPLOYED,
-                        SubState.PREPARING);
+                        SubState.PREPARING, acPrepareMsg.getRevisionIdInstance());
                     callParticipanPrepare(acPrepareMsg.getMessageId(), participantPrepare.getAcElementList(),
                         acPrepareMsg.getStage(), acPrepareMsg.getAutomationCompositionId());
                 }
@@ -175,7 +176,7 @@ public class AcSubStateHandler {
             var compositionInProperties = cacheProvider
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
             var compositionElement = cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(),
-                element, compositionInProperties);
+                element);
             var stageSet = ParticipantUtils.findStageSetPrepare(compositionInProperties);
             if (stageSet.contains(stageMsg)) {
                 var instanceElement =
@@ -188,11 +189,9 @@ public class AcSubStateHandler {
 
     private void callParticipanReview(UUID messageId, AutomationComposition automationComposition) {
         for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider
-                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
             element.setSubState(SubState.REVIEWING);
             var compositionElement = cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(),
-                element, compositionInProperties);
+                element);
             var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                 element.getProperties(), element.getOutProperties());
             listener.review(messageId, compositionElement, instanceElement);
