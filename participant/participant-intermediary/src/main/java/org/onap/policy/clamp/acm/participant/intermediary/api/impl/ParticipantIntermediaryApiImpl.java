@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -106,7 +106,7 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> getAcElementsDefinitions() {
         return PfUtils.mapMap(cacheProvider.getAcElementsDefinitions(),
-                map -> PfUtils.mapMap(map, AutomationCompositionElementDefinition::new));
+            acDefinition -> PfUtils.mapMap(acDefinition.getElements(), AutomationCompositionElementDefinition::new));
     }
 
     @Override
@@ -116,17 +116,17 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
         if (acElementDefinitions == null) {
             return Map.of();
         }
-        return PfUtils.mapMap(acElementDefinitions, AutomationCompositionElementDefinition::new);
+        return PfUtils.mapMap(acElementDefinitions.getElements(), AutomationCompositionElementDefinition::new);
     }
 
     @Override
     public AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId,
             ToscaConceptIdentifier elementId) {
-        var acElementDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acElementDefinitions == null) {
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        if (acDefinition == null) {
             return null;
         }
-        var acElementDefinition = acElementDefinitions.get(elementId);
+        var acElementDefinition = acDefinition.getElements().get(elementId);
         return acElementDefinition != null ? new AutomationCompositionElementDefinition(acElementDefinition) : null;
     }
 }
