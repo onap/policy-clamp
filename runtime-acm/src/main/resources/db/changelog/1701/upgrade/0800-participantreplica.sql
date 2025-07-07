@@ -20,9 +20,8 @@
 update participantreplica set lastMsg = now() where lastMsg is null;
 update participantreplica set participantState = '1' where participantState is null;
 
-ALTER TABLE participantreplica
- ALTER COLUMN lastMsg SET NOT NULL,
- ALTER COLUMN participantId SET NOT NULL,
- ALTER COLUMN participantId SET DEFAULT '',
- ALTER COLUMN participantState SET NOT NULL,
- ALTER COLUMN participantState SET DEFAULT 1;
+ALTER TABLE participantreplica ALTER COLUMN lastMsg SET NOT NULL;
+ALTER TABLE participantreplica ALTER COLUMN participantId SET NOT NULL;
+ALTER TABLE participantreplica ALTER COLUMN participantId SET DEFAULT '';
+ALTER TABLE participantreplica ALTER COLUMN participantState SET NOT NULL;
+ALTER TABLE participantreplica ALTER COLUMN participantState SET DEFAULT 1;

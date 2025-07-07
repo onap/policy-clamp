@@ -22,12 +22,11 @@ update nodetemplatestate set nodeTemplate_version = '1.0.0' where nodeTemplate_v
 update nodetemplatestate set outProperties = '{}' where outProperties is null;
 update nodetemplatestate set state = 0 where state is null;
 
-ALTER TABLE nodetemplatestate
- ALTER COLUMN nodeTemplate_name SET NOT NULL,
- ALTER COLUMN nodeTemplate_name SET DEFAULT '',
- ALTER COLUMN nodeTemplate_version SET NOT NULL,
- ALTER COLUMN nodeTemplate_version SET DEFAULT '1.0.0',
- ALTER COLUMN outProperties SET NOT NULL,
- ALTER COLUMN outProperties SET DEFAULT '{}',
- ALTER COLUMN state SET NOT NULL,
- ALTER COLUMN state SET DEFAULT 0;
+ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET NOT NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET DEFAULT '';
+ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET NOT NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET DEFAULT '1.0.0';
+ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET NOT NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET DEFAULT '{}';
+ALTER TABLE nodetemplatestate ALTER COLUMN state SET NOT NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN state SET DEFAULT 0;

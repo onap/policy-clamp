@@ -17,4 +17,5 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE automationcompositionelement ADD subState SMALLINT DEFAULT NULL, ADD stage SMALLINT DEFAULT NULL;
+ALTER TABLE automationcompositionelement ADD subState SMALLINT DEFAULT NULL;
+ALTER TABLE automationcompositionelement ADD stage SMALLINT DEFAULT NULL;
