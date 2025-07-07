@@ -17,4 +17,4 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE IF NOT EXISTS messagejob (jobId varchar(255) NOT NULL, identificationId varchar(255) NOT NULL, jobStarted timestamp without time zone NOT NULL DEFAULT now(), CONSTRAINT PK_MESSAGE_JOB PRIMARY KEY (jobId));
+CREATE TABLE messagejob (jobId varchar(255) NOT NULL, identificationId varchar(255) NOT NULL, jobStarted timestamp without time zone NOT NULL DEFAULT now(), CONSTRAINT PK_MESSAGE_JOB PRIMARY KEY (jobId));
