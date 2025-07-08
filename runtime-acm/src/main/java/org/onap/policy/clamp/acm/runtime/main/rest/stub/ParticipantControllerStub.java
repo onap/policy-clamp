@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -64,8 +63,6 @@ public class ParticipantControllerStub extends AbstractRestController implements
     @Override
     public ResponseEntity<List<ParticipantInformation>> queryParticipants(String name, String version,
         Integer page, Integer size, UUID xonaprequestid) {
-        List<ParticipantInformation> participantInformationList = new ArrayList<>();
-        return (ResponseEntity<List<ParticipantInformation>>) stubUtils
-            .getResponse(pathToParticipantList, participantInformationList.getClass());
+        return stubUtils.getResponseList(pathToParticipantList);
     }
 }

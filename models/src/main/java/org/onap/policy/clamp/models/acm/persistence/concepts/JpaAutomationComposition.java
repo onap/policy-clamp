@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.base.Validated;
 
 /**
- * Class to represent a automation composition in the database.
+ * Class to represent an automation composition in the database.
  *
  * @author Liam Fallon (liam.fallon@est.tech)
  */

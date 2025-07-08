@@ -101,7 +101,7 @@ class AutomationCompositionInstantiationProviderTest {
     private static ToscaServiceTemplate serviceTemplateMigration = new ToscaServiceTemplate();
 
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         var st = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var jpa = ProviderUtils.getJpaAndValidate(st, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
         serviceTemplate = jpa.toAuthorative();

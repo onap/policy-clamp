@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 class SupervisionAspectTest {
 
     @Test
-    void testSchedule() throws Exception {
+    void testSchedule() {
         var supervisionScanner = mock(SupervisionScanner.class);
         var participantScanner = mock(SupervisionParticipantScanner.class);
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner, participantScanner)) {
@@ -41,7 +41,7 @@ class SupervisionAspectTest {
     }
 
     @Test
-    void testDoCheck() throws Exception {
+    void testDoCheck() {
         var supervisionScanner = mock(SupervisionScanner.class);
         var participantScanner = mock(SupervisionParticipantScanner.class);
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner, participantScanner)) {
