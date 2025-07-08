@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022, 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -61,6 +63,19 @@ public class StubUtils {
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             }
         } catch (IOException | CoderException exception) {
+            log.error("Error reading the file.", exception);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    <T> ResponseEntity<List<T>> getResponseList(String path) {
+        final var resource = new ClassPathResource(path);
+        try (var inputStream = resource.getInputStream()) {
+            final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            var targetObject = JSON_TRANSLATOR.fromJson(string, ArrayList.class);
+            return new ResponseEntity<>(targetObject, HttpStatus.OK);
+        } catch (IOException exception) {
             log.error("Error reading the file.", exception);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

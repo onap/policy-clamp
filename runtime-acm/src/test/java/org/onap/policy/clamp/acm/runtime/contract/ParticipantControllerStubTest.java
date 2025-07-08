@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023, 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class ParticipantControllerStubTest extends CommonRestController {
     private int randomServerPort;
 
     @BeforeEach
-    public void setUpPort() {
+    void setUpPort() {
         super.setHttpPrefix(randomServerPort);
     }
 
@@ -67,17 +67,19 @@ class ParticipantControllerStubTest extends CommonRestController {
     void testOrderReport() {
         var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/" + PARTICIPANT_ID);
 
-        var respPost = invocationBuilder.header("Content-Length", 0).put(Entity.entity(""
-            + "", MediaType.APPLICATION_JSON));
+        var respPost = invocationBuilder.header("Content-Length", 0)
+            .put(Entity.entity("", MediaType.APPLICATION_JSON));
         assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
     }
 
     @Test
     void testOrderAllReport() {
         var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT);
 
-        var respPost = invocationBuilder.header("Content-Length", 0).put(Entity.entity(""
-            + "", MediaType.APPLICATION_JSON));
+        var respPost = invocationBuilder.header("Content-Length", 0)
+            .put(Entity.entity("", MediaType.APPLICATION_JSON));
         assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
     }
 }

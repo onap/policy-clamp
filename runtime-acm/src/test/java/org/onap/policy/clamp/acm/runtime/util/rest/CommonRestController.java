@@ -162,7 +162,7 @@ public class CommonRestController {
      *
      * @param port the port
      */
-    protected void setHttpPrefix(int port) {
+    public void setHttpPrefix(int port) {
         httpPrefix = "http://" + SELF + ":" + port + "/";
     }
 

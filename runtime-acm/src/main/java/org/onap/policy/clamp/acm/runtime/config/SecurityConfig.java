@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023-2024 Nordix Foundation.
+ *  Copyright (C) 2021,2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,11 +47,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         if (useBasicAuth) {
             http
-                    .httpBasic(Customizer.withDefaults())
-                    .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+                .httpBasic(Customizer.withDefaults())
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
         } else {
-            http
-                    .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+            http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         }
 
         http.csrf(AbstractHttpConfigurer::disable);

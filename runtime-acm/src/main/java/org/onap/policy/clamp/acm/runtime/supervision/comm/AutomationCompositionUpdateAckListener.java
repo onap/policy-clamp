@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2023-2025 Nordix Foundation.
+ * Copyright (C) 2021,2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,8 +29,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMe
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,7 +37,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutomationCompositionUpdateAckListener extends ScoListener<AutomationCompositionDeployAck>
     implements Listener<AutomationCompositionDeployAck> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionUpdateAckListener.class);
 
     private final SupervisionAcHandler supervisionHandler;
 

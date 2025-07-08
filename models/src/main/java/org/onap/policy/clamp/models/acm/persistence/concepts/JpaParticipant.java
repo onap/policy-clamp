@@ -41,8 +41,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -81,7 +79,6 @@ public class JpaParticipant extends Validated
 
     @NotNull
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "participantId", referencedColumnName = "participantId",
             foreignKey = @ForeignKey(name = "participant_replica_fk"))
     @SuppressWarnings("squid:S1948")

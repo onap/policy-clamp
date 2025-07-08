@@ -543,6 +543,7 @@ public final class AcmUtils {
      * @param map1 Map where to merge
      * @param map2 Map
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void recursiveMerge(Map<String, Object> map1, Map<String, Object> map2) {
         Deque<Pair<Map<String, Object>, Map<String, Object>>> stack = new ArrayDeque<>();
         stack.push(Pair.of(map1, map2));
@@ -565,6 +566,7 @@ public final class AcmUtils {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static void recursiveMerge(List<Object> list1, List<Object> list2) {
         for (var i = 0; i < list1.size(); i++) {
             var valueLeft = list1.get(i);

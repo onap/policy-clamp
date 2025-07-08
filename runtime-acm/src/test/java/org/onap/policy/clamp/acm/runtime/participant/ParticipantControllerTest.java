@@ -98,7 +98,7 @@ class ParticipantControllerTest extends CommonRestController {
      * Adds participants to the db from json file.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws CoderException {
+    static void setUpBeforeClass() throws CoderException {
         inputParticipants.add(CODER.decode(ORIGINAL_JSON, Participant.class));
         inputParticipants.add(CODER.decode(ORIGINAL_JSON2, Participant.class));
         serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
@@ -107,7 +107,7 @@ class ParticipantControllerTest extends CommonRestController {
     }
 
     @BeforeEach
-    public void setUpPort() {
+    void setUpPort() {
         super.setHttpPrefix(randomServerPort);
     }
 
