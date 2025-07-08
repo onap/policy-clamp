@@ -17,4 +17,9 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE participantsupportedacelements ADD CONSTRAINT supported_element_fk FOREIGN KEY (participantId) REFERENCES participant (participantId) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE participantsupportedacelements
+  ADD CONSTRAINT supported_element_fk
+  FOREIGN KEY (participantId)
+  REFERENCES participant (participantId)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT;

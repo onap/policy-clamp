@@ -17,4 +17,16 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE automationcomposition (instanceId VARCHAR(255) NOT NULL, compositionId VARCHAR(255), compositionTargetId VARCHAR(255), deployState SMALLINT DEFAULT NULL, description VARCHAR(255), lockState SMALLINT DEFAULT NULL, name VARCHAR(255), restarting BOOLEAN, stateChangeResult SMALLINT DEFAULT NULL, version VARCHAR(255), CONSTRAINT PK_AUTOMATIONCOMPOSITION PRIMARY KEY (instanceId));
+CREATE TABLE automationcomposition (
+  instanceId VARCHAR(255) NOT NULL,
+  compositionId VARCHAR(255),
+  compositionTargetId VARCHAR(255),
+  deployState SMALLINT DEFAULT NULL,
+  description VARCHAR(255),
+  lockState SMALLINT DEFAULT NULL,
+  name VARCHAR(255),
+  restarting BOOLEAN,
+  stateChangeResult SMALLINT DEFAULT NULL,
+  version VARCHAR(255),
+  CONSTRAINT PK_AUTOMATIONCOMPOSITION PRIMARY KEY (instanceId)
+);

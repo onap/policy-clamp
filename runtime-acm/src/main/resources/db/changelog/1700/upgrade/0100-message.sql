@@ -17,4 +17,11 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE message (messageId varchar(255) NOT NULL, identificationId varchar(255) NOT NULL, lastMsg timestamp without time zone NOT NULL DEFAULT now(), docMessage text NOT NULL, CONSTRAINT PK_MESSAGE PRIMARY KEY (messageId));
+CREATE TABLE message (
+  messageId varchar(255) NOT NULL,
+  identificationId varchar(255) NOT NULL,
+  lastMsg timestamp without time zone NOT NULL DEFAULT now(),
+  docMessage text NOT NULL,
+  CONSTRAINT PK_MESSAGE PRIMARY KEY (messageId)
+);
+

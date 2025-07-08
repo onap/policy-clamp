@@ -17,4 +17,10 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE participantsupportedacelements (id VARCHAR(255) NOT NULL, participantId VARCHAR(255), typeName VARCHAR(255), typeVersion VARCHAR(255), CONSTRAINT PK_PARTICIPANTSUPPORTEDACELEMENTS PRIMARY KEY (id));
+CREATE TABLE participantsupportedacelements (
+  id VARCHAR(255) NOT NULL,
+  participantId VARCHAR(255),
+  typeName VARCHAR(255),
+  typeVersion VARCHAR(255),
+  CONSTRAINT PK_PARTICIPANTSUPPORTEDACELEMENTS PRIMARY KEY (id)
+);

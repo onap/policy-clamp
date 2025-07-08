@@ -17,4 +17,15 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE nodetemplatestate (nodeTemplateStateId VARCHAR(255) NOT NULL, compositionId VARCHAR(255), message VARCHAR(255), nodeTemplate_name VARCHAR(255), nodeTemplate_version VARCHAR(255), outProperties TEXT, participantId VARCHAR(255), restarting BOOLEAN, state SMALLINT DEFAULT NULL, CONSTRAINT PK_NODETEMPLATESTATE PRIMARY KEY (nodeTemplateStateId));
+CREATE TABLE nodetemplatestate (
+  nodeTemplateStateId VARCHAR(255) NOT NULL,
+  compositionId VARCHAR(255),
+  message VARCHAR(255),
+  nodeTemplate_name VARCHAR(255),
+  nodeTemplate_version VARCHAR(255),
+  outProperties TEXT,
+  participantId VARCHAR(255),
+  restarting BOOLEAN,
+  state SMALLINT DEFAULT NULL,
+  CONSTRAINT PK_NODETEMPLATESTATE PRIMARY KEY (nodeTemplateStateId)
+);

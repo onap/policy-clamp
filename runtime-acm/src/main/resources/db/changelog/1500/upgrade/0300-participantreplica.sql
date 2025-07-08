@@ -17,4 +17,11 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE participantreplica (replicaId varchar(255) NOT NULL, lastMsg timestamp without time zone DEFAULT Now(), participantId varchar(255) DEFAULT NULL, participantState SMALLINT DEFAULT NULL, CONSTRAINT PK_PARTICIPANT_REPLICA PRIMARY KEY (replicaId));
+CREATE TABLE participantreplica (
+  replicaId varchar(255) NOT NULL,
+  lastMsg timestamp without time zone DEFAULT Now(),
+  participantId varchar(255) DEFAULT NULL,
+  participantState SMALLINT DEFAULT NULL,
+  CONSTRAINT PK_PARTICIPANT_REPLICA PRIMARY KEY (replicaId)
+);
+

@@ -17,4 +17,9 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE automationcompositionrollback (instanceId VARCHAR(255) NOT NULL, compositionId VARCHAR(255) NOT NULL, elements TEXT NOT NULL, CONSTRAINT PK_AUTOMATIONCOMPOSITION_ROLLBACK PRIMARY KEY (instanceId));
+CREATE TABLE automationcompositionrollback (
+  instanceId VARCHAR(255) NOT NULL,
+  compositionId VARCHAR(255) NOT NULL,
+  elements TEXT NOT NULL,
+  CONSTRAINT PK_AUTOMATIONCOMPOSITION_ROLLBACK PRIMARY KEY (instanceId)
+);

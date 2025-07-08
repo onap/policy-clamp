@@ -17,4 +17,9 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE automationcomposition ADD CONSTRAINT ac_composition_fk FOREIGN KEY (compositionId) REFERENCES automationcompositiondefinition (compositionId) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE automationcomposition
+  ADD CONSTRAINT ac_composition_fk
+  FOREIGN KEY (compositionId)
+  REFERENCES automationcompositiondefinition (compositionId)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT;

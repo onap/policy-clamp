@@ -17,4 +17,9 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE participantreplica ADD CONSTRAINT participant_replica_fk FOREIGN KEY (participantId) REFERENCES participant (participantId) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE participantreplica
+  ADD CONSTRAINT participant_replica_fk
+  FOREIGN KEY (participantId)
+  REFERENCES participant (participantId)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT;

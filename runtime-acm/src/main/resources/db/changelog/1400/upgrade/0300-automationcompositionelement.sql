@@ -17,4 +17,20 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE automationcompositionelement (elementId VARCHAR(255) NOT NULL, definition_name VARCHAR(255), definition_version VARCHAR(255), deployState SMALLINT DEFAULT NULL, description VARCHAR(255), instanceId VARCHAR(255), lockState SMALLINT DEFAULT NULL, message VARCHAR(255), operationalState VARCHAR(255), outProperties TEXT, participantId VARCHAR(255), properties TEXT, restarting BOOLEAN, useState VARCHAR(255), CONSTRAINT PK_AUTOMATIONCOMPOSITIONELEMENT PRIMARY KEY (elementId));
+CREATE TABLE automationcompositionelement (
+  elementId VARCHAR(255) NOT NULL,
+  definition_name VARCHAR(255),
+  definition_version VARCHAR(255),
+  deployState SMALLINT DEFAULT NULL,
+  description VARCHAR(255),
+  instanceId VARCHAR(255),
+  lockState SMALLINT DEFAULT NULL,
+  message VARCHAR(255),
+  operationalState VARCHAR(255),
+  outProperties TEXT,
+  participantId VARCHAR(255),
+  properties TEXT,
+  restarting BOOLEAN,
+  useState VARCHAR(255),
+  CONSTRAINT PK_AUTOMATIONCOMPOSITIONELEMENT PRIMARY KEY (elementId)
+);
