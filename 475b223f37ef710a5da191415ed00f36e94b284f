@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f94efc1d_adf3561f",
+        "filename": "packages/policy-clamp-docker/src/main/docker/kserve-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-08T16:17:13Z",
+      "side": 1,
+      "message": ", 2025 OpenInfra Foundation Europe. All rights reserved.",
+      "range": {
+        "startLine": 4,
+        "startChar": 21,
+        "endLine": 4,
+        "endChar": 40
+      },
+      "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86249d7c_be87b847",
+        "filename": "packages/policy-clamp-docker/src/main/docker/kubernetes-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-08T16:17:13Z",
+      "side": 1,
+      "message": ", 2025 OpenInfra Foundation Europe. All rights reserved.",
+      "range": {
+        "startLine": 4,
+        "startChar": 26,
+        "endLine": 4,
+        "endChar": 45
+      },
+      "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9535702d_ddfd0c36",
+        "filename": "packages/policy-clamp-docker/src/main/docker/policy-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-08T16:17:13Z",
+      "side": 1,
+      "message": ", 2025 OpenInfra Foundation Europe. All rights reserved.",
+      "range": {
+        "startLine": 4,
+        "startChar": 26,
+        "endLine": 4,
+        "endChar": 45
+      },
+      "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5b27093_515385bf",
+        "filename": "packages/policy-clamp-docker/src/main/docker/sim-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-08T16:17:13Z",
+      "side": 1,
+      "message": ", 2025 OpenInfra Foundation Europe. All rights reserved.",
+      "range": {
+        "startLine": 4,
+        "startChar": 21,
+        "endLine": 4,
+        "endChar": 40
+      },
+      "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
