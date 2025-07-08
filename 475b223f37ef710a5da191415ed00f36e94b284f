@@ -204,6 +204,24 @@
       "message": "Hmm, this seems 100% identical to the above. I\u0027d almost prefer adding a suppression for whatever warning (unchecked cast?) rather than duplicate whole method",
       "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1328e5a6_76c757eb",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/StubUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-08T16:47:43Z",
+      "side": 1,
+      "message": "no, they are not the same, they return different types and one of them just directly process as json as an arraylist, no class ref. the method using the previous implementation was doing some extra layer that sonar considered major issue.",
+      "parentUuid": "6db32286_2a91b872",
+      "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
