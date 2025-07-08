@@ -17,22 +17,27 @@
  *  ============LICENSE_END=========================================================
  */
 
-update automationcomposition set deployState = 2 where deployState is null;
-update automationcomposition set lockState = 4 where lockState is null;
-update automationcomposition set name = '' where name is null;
-update automationcomposition set version = '1.0.0' where version is null;
-update automationcomposition set lastMsg = now() where lastMsg is null;
-update automationcomposition set subState = 0 where subState is null;
-
 ALTER TABLE automationcomposition ALTER COLUMN compositionid SET NOT NULL;
+
 ALTER TABLE automationcomposition ALTER COLUMN name SET DEFAULT '';
+UPDATE automationcomposition SET name = '' WHERE name IS NULL;
 ALTER TABLE automationcomposition ALTER COLUMN name SET NOT NULL;
+
 ALTER TABLE automationcomposition ALTER COLUMN version SET DEFAULT '1.0.0';
+UPDATE automationcomposition SET version = '1.0.0' WHERE version IS NULL;
 ALTER TABLE automationcomposition ALTER COLUMN version SET NOT NULL;
+
 ALTER TABLE automationcomposition ALTER COLUMN deployState SET DEFAULT 2;
+UPDATE automationcomposition SET deployState = 2 WHERE deployState IS NULL;
 ALTER TABLE automationcomposition ALTER COLUMN deployState SET NOT NULL;
+
 ALTER TABLE automationcomposition ALTER COLUMN lockState SET DEFAULT 4;
+UPDATE automationcomposition SET lockState = 4 WHERE lockState IS NULL;
 ALTER TABLE automationcomposition ALTER COLUMN lockState SET NOT NULL;
+
 ALTER TABLE automationcomposition ALTER COLUMN SubState SET DEFAULT 0;
+UPDATE automationcomposition SET subState = 0 WHERE subState IS NULL;
 ALTER TABLE automationcomposition ALTER COLUMN SubState SET NOT NULL;
+
+UPDATE automationcomposition SET lastMsg = now() WHERE lastMsg IS NULL;
 ALTER TABLE automationcomposition ALTER COLUMN lastMsg SET NOT NULL;

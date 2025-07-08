@@ -17,16 +17,18 @@
  *  ============LICENSE_END=========================================================
  */
 
-update nodetemplatestate set nodeTemplate_name  = '' where nodeTemplate_name is null;
-update nodetemplatestate set nodeTemplate_version = '1.0.0' where nodeTemplate_version is null;
-update nodetemplatestate set outProperties = '{}' where outProperties is null;
-update nodetemplatestate set state = 0 where state is null;
-
-ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET NOT NULL;
 ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET DEFAULT '';
-ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET NOT NULL;
+UPDATE nodetemplatestate SET nodeTemplate_name  = '' WHERE nodeTemplate_name IS NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET NOT NULL;
+
 ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET DEFAULT '1.0.0';
-ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET NOT NULL;
+UPDATE nodetemplatestate SET nodeTemplate_version = '1.0.0' WHERE nodeTemplate_version IS NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET NOT NULL;
+
 ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET DEFAULT '{}';
-ALTER TABLE nodetemplatestate ALTER COLUMN state SET NOT NULL;
+UPDATE nodetemplatestate SET outProperties = '{}' WHERE outProperties IS NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET NOT NULL;
+
 ALTER TABLE nodetemplatestate ALTER COLUMN state SET DEFAULT 0;
+UPDATE nodetemplatestate SET state = 0 WHERE state IS NULL;
+ALTER TABLE nodetemplatestate ALTER COLUMN state SET NOT NULL;
