@@ -222,6 +222,24 @@
       "parentUuid": "6db32286_2a91b872",
       "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e54a43fd_6074ce75",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/StubUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-07-09T09:45:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1328e5a6_76c757eb",
+      "revId": "475b223f37ef710a5da191415ed00f36e94b284f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
