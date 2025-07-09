@@ -21,10 +21,8 @@
 package org.onap.policy.clamp.models.acm.utils;
 
 import jakarta.ws.rs.core.Response;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +35,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -538,47 +535,52 @@ public final class AcmUtils {
     }
 
     /**
-     * Recursive Merge.
+     * Recursive Merge - checks if keys in map2 should update the values in map1.
      *
      * @param map1 Map where to merge
-     * @param map2 Map
+     * @param map2 Map with new values
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("unchecked")
     public static void recursiveMerge(Map<String, Object> map1, Map<String, Object> map2) {
-        Deque<Pair<Map<String, Object>, Map<String, Object>>> stack = new ArrayDeque<>();
-        stack.push(Pair.of(map1, map2));
-        while (!stack.isEmpty()) {
-            var pair = stack.pop();
-            var mapLeft = pair.getLeft();
-            var mapRight = pair.getRight();
-            for (var entryRight : mapRight.entrySet()) {
-                var valueLeft = mapLeft.get(entryRight.getKey());
-                var valueRight = entryRight.getValue();
-                if (valueLeft instanceof Map subMapLeft && valueRight instanceof Map subMapRight) {
-                    stack.push(Pair.of(subMapLeft, subMapRight));
-                } else if ((valueLeft instanceof List subListLeft && valueRight instanceof List subListRight)
-                        && (subListLeft.size() == subListRight.size())) {
-                    recursiveMerge(subListLeft, subListRight);
-                } else {
-                    mapLeft.put(entryRight.getKey(), valueRight);
-                }
+        for (Map.Entry<String, Object> entry : map2.entrySet()) {
+            String key = entry.getKey();
+            var value2 = entry.getValue();
+            var value1 = map1.get(key);
+
+            if (value1 instanceof Map && value2 instanceof Map) {
+                recursiveMerge((Map<String, Object>) value1, (Map<String, Object>) value2);
+            } else if (value1 instanceof List && value2 instanceof List) {
+                recursiveMerge((List<Object>) value1, (List<Object>) value2);
+            } else {
+                map1.put(key, value2);
             }
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    /**
+     * Recursive merge - checks if list2 has new values to be added to list1.
+     *
+     * @param list1 where to merge
+     * @param list2 new values to merge
+     */
+    @SuppressWarnings("unchecked")
     private static void recursiveMerge(List<Object> list1, List<Object> list2) {
-        for (var i = 0; i < list1.size(); i++) {
-            var valueLeft = list1.get(i);
-            var valueRight = list2.get(i);
-            if (valueLeft instanceof Map subMapLeft && valueRight instanceof Map subMapRight) {
-                recursiveMerge(subMapLeft, subMapRight);
-            } else if ((valueLeft instanceof List subListLeft && valueRight instanceof List subListRight)
-                    && (subListLeft.size() == subListRight.size())) {
-                recursiveMerge(subListLeft, subListRight);
+        var minsize = Math.min(list1.size(), list2.size());
+        for (var i = 0; i < minsize; i++) {
+            var value1 = list1.get(i);
+            var value2 = list2.get(i);
+
+            if (value1 instanceof Map && value2 instanceof Map) {
+                recursiveMerge((Map<String, Object>) value1, (Map<String, Object>) value2);
+            } else if (value1 instanceof List && value2 instanceof List) {
+                recursiveMerge((List<Object>) value1, (List<Object>) value2);
             } else {
-                list1.set(i, valueRight);
+                list1.set(i, value2);
             }
+        }
+
+        for (int i = minsize; i < list2.size(); i++) {
+            list1.add(list2.get(i));
         }
     }
 
