@@ -53,6 +53,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
+@SuppressWarnings("unchecked")
 class AcmUtilsTest {
 
     private static final String POLICY_AUTOMATION_COMPOSITION_ELEMENT =
@@ -101,6 +102,7 @@ class AcmUtilsTest {
     void testPrepareParticipantPriming() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
 
+        assertNotNull(serviceTemplate);
         var acElements =
                 AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, AUTOMATION_COMPOSITION_ELEMENT);
         Map<ToscaConceptIdentifier, UUID> map = new HashMap<>();
@@ -125,6 +127,7 @@ class AcmUtilsTest {
                 AUTOMATION_COMPOSITION_NODE_TYPE);
         assertTrue(result.isValid());
 
+        assertNotNull(automationComposition);
         var element = automationComposition.getElements().values().iterator().next();
         automationComposition.getElements().remove(element.getId());
         result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
@@ -241,6 +244,7 @@ class AcmUtilsTest {
         assertEquals(message, AcmUtils.validatedMessage(message));
 
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        assertNotNull(serviceTemplate);
         message = serviceTemplate.toString();
         assertEquals(message.substring(0, 255), AcmUtils.validatedMessage(message));
     }
@@ -301,7 +305,7 @@ class AcmUtilsTest {
     }
 
     @Test
-    void testcreateAcRestart() {
+    void testCreateAcRestart() {
         var automationComposition = getDummyAutomationComposition();
         automationComposition.setInstanceId(UUID.randomUUID());
         var element = automationComposition.getElements().values().iterator().next();
@@ -317,6 +321,7 @@ class AcmUtilsTest {
     @Test
     void testPrepareParticipantRestarting() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        assertNotNull(serviceTemplate);
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setElementStateMap(Map.of());
         acmDefinition.setServiceTemplate(serviceTemplate);
@@ -356,7 +361,9 @@ class AcmUtilsTest {
         Map<String, Object> map = CommonTestData.getObject(oldProperties, Map.class);
         Map<String, Object> mapMigrate = CommonTestData.getObject(newProperties, Map.class);
 
+        assertNotNull(mapMigrate);
         AcmUtils.recursiveMerge(map, mapMigrate);
+        assertNotNull(map);
         assertEquals("default", ((Map<String, Object>) map.get("chart")).get("namespace"));
         assertEquals("acm-starter-new", ((Map<String, Object>) map.get("chart")).get("releaseName"));
         assertNotNull(((Map<String, Object>) map.get("chart")).get("chartId"));
@@ -380,6 +387,16 @@ class AcmUtilsTest {
                       version: 1.0.1
                 myParameterToUpdate: 9
                 myParameterToRemove: 8
+            myListOfLists:
+              -
+                - name: name1
+                  version: 1.0.0
+              -
+                - name: name3
+                  version: 1.0.0
+            anotherList:
+              - item1
+              - item2
             """;
 
         var newProperties = """
@@ -387,12 +404,25 @@ class AcmUtilsTest {
               - myParameterToUpdate: "90"
                 myParameterToRemove: null
                 myParameter: "I am new"
+            myListOfLists:
+              -
+                - name: newName2
+                  version: 1.0.0
+              -
+                - name: newName3
+                  version: 1.0.0
+            anotherList:
+              - item1
+              - item2
+              - item3
             """;
 
         Map<String, Object> map = CommonTestData.getObject(oldProperties, Map.class);
         Map<String, Object> mapMigrate = CommonTestData.getObject(newProperties, Map.class);
 
+        assertNotNull(mapMigrate);
         AcmUtils.recursiveMerge(map, mapMigrate);
+        assertNotNull(map);
         assertEquals("http://{{address}}:30800", map.get("baseUrl"));
         assertEquals("application/json", ((Map<String, Object>) map.get("httpHeaders")).get("Content-Type"));
         var configurationEntities = (List<Object>) map.get("configurationEntities");
@@ -403,6 +433,13 @@ class AcmUtilsTest {
         assertEquals("90", subMap.get("myParameterToUpdate"));
         assertNull(subMap.get("myParameterToRemove"));
         assertEquals("I am new", subMap.get("myParameter"));
+
+        var mainList = (List<Object>) map.get("myListOfLists");
+        assertEquals(2, mainList.size());
+        var subList = (List<Object>) mainList.get(0);
+        assertEquals("newName2", ((Map<String, Object>) subList.get(0)).get("name"));
+        var list2 = (List<Object>) map.get("anotherList");
+        assertEquals("item3", list2.get(2));
     }
 
     @Test
