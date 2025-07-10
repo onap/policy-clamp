@@ -34,6 +34,23 @@
       "parentUuid": "72f6b3a7_fa1426a6",
       "revId": "9c6e43dfff932454fc569222db9ad272b305196a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f21f1842_3ef3ca90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-07-10T10:24:14Z",
+      "side": 1,
+      "message": "is OK but not really happy about recursive algorithms",
+      "revId": "9c6e43dfff932454fc569222db9ad272b305196a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
