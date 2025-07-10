@@ -51,6 +51,24 @@
       "message": "is OK but not really happy about recursive algorithms",
       "revId": "9c6e43dfff932454fc569222db9ad272b305196a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52999a47_3b445633",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-10T11:21:00Z",
+      "side": 1,
+      "message": "May be we can explore options to use the same approach without the rawtypes. Although we don\u0027t get very deeply nested structure in Acmr usecases, it is still beneficial to use the own call stack as Francesco mentioned.",
+      "parentUuid": "f21f1842_3ef3ca90",
+      "revId": "9c6e43dfff932454fc569222db9ad272b305196a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
