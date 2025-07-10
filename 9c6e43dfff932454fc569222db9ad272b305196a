@@ -16,6 +16,24 @@
       "message": "Have we tested CSIT with this change?",
       "revId": "9c6e43dfff932454fc569222db9ad272b305196a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d15bb21a_0d8dd660",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-10T09:45:52Z",
+      "side": 1,
+      "message": "yes, always check CSIT before raising a review :D",
+      "parentUuid": "72f6b3a7_fa1426a6",
+      "revId": "9c6e43dfff932454fc569222db9ad272b305196a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
