@@ -17,5 +17,6 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE automationcomposition ADD lastMsg timestamp without time zone DEFAULT Now(), ADD phase SMALLINT DEFAULT 0;
+ALTER TABLE automationcomposition ADD lastMsg timestamp without time zone DEFAULT Now();
+ALTER TABLE automationcomposition ADD phase SMALLINT DEFAULT 0;
 UPDATE automationcomposition SET restarting = NULL;

@@ -23,13 +23,12 @@ UPDATE automationcompositiondefinition SET state  = 0 WHERE state IS NULL;
 UPDATE automationcompositiondefinition SET lastMsg = now() WHERE lastMsg IS NULL;
 UPDATE automationcompositiondefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
 
-ALTER TABLE automationcompositiondefinition
- ALTER COLUMN name SET NOT NULL,
- ALTER COLUMN name SET DEFAULT '',
- ALTER COLUMN version SET NOT NULL,
- ALTER COLUMN version SET DEFAULT '1.0.0',
- ALTER COLUMN state SET NOT NULL,
- ALTER COLUMN state SET DEFAULT 0,
- ALTER COLUMN serviceTemplate SET NOT NULL,
- ALTER COLUMN serviceTemplate SET DEFAULT '',
- ALTER COLUMN lastMsg SET NOT NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET NOT NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET DEFAULT '';
+ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET NOT NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET DEFAULT '1.0.0';
+ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET NOT NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET DEFAULT 0;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET NOT NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET DEFAULT '';
+ALTER TABLE automationcompositiondefinition ALTER COLUMN lastMsg SET NOT NULL;

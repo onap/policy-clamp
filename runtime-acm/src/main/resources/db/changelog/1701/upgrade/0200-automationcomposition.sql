@@ -24,16 +24,15 @@ UPDATE automationcomposition SET version = '1.0.0' WHERE version IS NULL;
 UPDATE automationcomposition SET lastMsg = now() WHERE lastMsg IS NULL;
 UPDATE automationcomposition SET subState = 0 WHERE subState IS NULL;
 
-ALTER TABLE automationcomposition
- ALTER COLUMN compositionid SET NOT NULL,
- ALTER COLUMN name SET DEFAULT '',
- ALTER COLUMN name SET NOT NULL,
- ALTER COLUMN version SET DEFAULT '1.0.0',
- ALTER COLUMN version SET NOT NULL,
- ALTER COLUMN deployState SET DEFAULT 2,
- ALTER COLUMN deployState SET NOT NULL,
- ALTER COLUMN lockState SET DEFAULT 4,
- ALTER COLUMN lockState SET NOT NULL,
- ALTER COLUMN SubState SET DEFAULT 0,
- ALTER COLUMN SubState SET NOT NULL,
- ALTER COLUMN lastMsg SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN compositionid SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN name SET DEFAULT '';
+ALTER TABLE automationcomposition ALTER COLUMN name SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN version SET DEFAULT '1.0.0';
+ALTER TABLE automationcomposition ALTER COLUMN version SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN deployState SET DEFAULT 2;
+ALTER TABLE automationcomposition ALTER COLUMN deployState SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN lockState SET DEFAULT 4;
+ALTER TABLE automationcomposition ALTER COLUMN lockState SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN SubState SET DEFAULT 0;
+ALTER TABLE automationcomposition ALTER COLUMN SubState SET NOT NULL;
+ALTER TABLE automationcomposition ALTER COLUMN lastMsg SET NOT NULL;

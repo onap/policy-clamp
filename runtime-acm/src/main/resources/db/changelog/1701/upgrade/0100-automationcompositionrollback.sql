@@ -22,4 +22,4 @@ CREATE TABLE automationcompositionrollback (
   compositionId VARCHAR(255) NOT NULL,
   elements TEXT NOT NULL,
   CONSTRAINT PK_AUTOMATIONCOMPOSITION_ROLLBACK PRIMARY KEY (instanceId)
-) WITHOUT OIDS;
+);

@@ -20,10 +20,9 @@
 UPDATE participantsupportedacelements SET typeName = '' WHERE typeName IS NULL;
 UPDATE participantsupportedacelements SET typeVersion = '1.0.0' WHERE typeVersion IS NULL;
 
-ALTER TABLE participantsupportedacelements
- ALTER COLUMN participantId SET NOT NULL,
- ALTER COLUMN participantId SET DEFAULT '',
- ALTER COLUMN typeName SET NOT NULL,
- ALTER COLUMN typeName SET DEFAULT '',
- ALTER COLUMN typeVersion SET NOT NULL,
- ALTER COLUMN typeVersion SET DEFAULT '1.0.0';
+ALTER TABLE participantsupportedacelements ALTER COLUMN participantId SET NOT NULL;
+ALTER TABLE participantsupportedacelements ALTER COLUMN participantId SET DEFAULT '';
+ALTER TABLE participantsupportedacelements ALTER COLUMN typeName SET NOT NULL;
+ALTER TABLE participantsupportedacelements ALTER COLUMN typeName SET DEFAULT '';
+ALTER TABLE participantsupportedacelements ALTER COLUMN typeVersion SET NOT NULL;
+ALTER TABLE participantsupportedacelements ALTER COLUMN typeVersion SET DEFAULT '1.0.0';
