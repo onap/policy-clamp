@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,4 +17,10 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE participantsupportedacelements (id VARCHAR(255) NOT NULL, participantId VARCHAR(255), typeName VARCHAR(255), typeVersion VARCHAR(255), CONSTRAINT PK_PARTICIPANTSUPPORTEDACELEMENTS PRIMARY KEY (id));
+CREATE TABLE participantsupportedacelements (
+  id VARCHAR(255) NOT NULL,
+  participantId VARCHAR(255),
+  typeName VARCHAR(255),
+  typeVersion VARCHAR(255),
+  CONSTRAINT PK_PARTICIPANTSUPPORTEDACELEMENTS PRIMARY KEY (id)
+);

@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,4 +17,9 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE IF NOT EXISTS messagejob (jobId varchar(255) NOT NULL, identificationId varchar(255) NOT NULL, jobStarted timestamp without time zone NOT NULL DEFAULT now(), CONSTRAINT PK_MESSAGE_JOB PRIMARY KEY (jobId));
+CREATE TABLE IF NOT EXISTS messagejob (
+  jobId varchar(255) NOT NULL,
+  identificationId varchar(255) NOT NULL,
+  jobStarted timestamp without time zone NOT NULL DEFAULT now(),
+  CONSTRAINT PK_MESSAGE_JOB PRIMARY KEY (jobId)
+);

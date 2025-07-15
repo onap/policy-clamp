@@ -17,10 +17,10 @@
  *  ============LICENSE_END=========================================================
  */
 
-update nodetemplatestate set nodeTemplate_name  = '' where nodeTemplate_name is null;
-update nodetemplatestate set nodeTemplate_version = '1.0.0' where nodeTemplate_version is null;
-update nodetemplatestate set outProperties = '{}' where outProperties is null;
-update nodetemplatestate set state = 0 where state is null;
+UPDATE nodetemplatestate SET nodeTemplate_name  = '' WHERE nodeTemplate_name IS NULL;
+UPDATE nodetemplatestate SET nodeTemplate_version = '1.0.0' WHERE nodeTemplate_version IS NULL;
+UPDATE nodetemplatestate SET outProperties = '{}' WHERE outProperties IS NULL;
+UPDATE nodetemplatestate SET state = 0 WHERE state IS NULL;
 
 ALTER TABLE nodetemplatestate
  ALTER COLUMN nodeTemplate_name SET NOT NULL,

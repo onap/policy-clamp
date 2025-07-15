@@ -17,8 +17,8 @@
  *  ============LICENSE_END=========================================================
  */
 
-update participantsupportedacelements set typeName = '' where typeName is null;
-update participantsupportedacelements set typeVersion = '1.0.0' where typeVersion is null;
+UPDATE participantsupportedacelements SET typeName = '' WHERE typeName IS NULL;
+UPDATE participantsupportedacelements SET typeVersion = '1.0.0' WHERE typeVersion IS NULL;
 
 ALTER TABLE participantsupportedacelements
  ALTER COLUMN participantId SET NOT NULL,

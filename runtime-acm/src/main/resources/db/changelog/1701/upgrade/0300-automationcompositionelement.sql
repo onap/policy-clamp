@@ -17,11 +17,11 @@
  *  ============LICENSE_END=========================================================
  */
 
-update automationcompositionelement set definition_name = '' where definition_name is null;
-update automationcompositionelement set definition_version = '0.0.0' where definition_version is null;
-update automationcompositionelement set deploystate = 2 where deploystate is null;
-update automationcompositionelement set lockState = 4 where lockState is null;
-update automationcompositionelement set subState = 0 where subState is null;
+UPDATE automationcompositionelement SET definition_name = '' WHERE definition_name IS NULL;
+UPDATE automationcompositionelement SET definition_version = '0.0.0' WHERE definition_version IS NULL;
+UPDATE automationcompositionelement SET deploystate = 2 WHERE deploystate IS NULL;
+UPDATE automationcompositionelement SET lockState = 4 WHERE lockState IS NULL;
+UPDATE automationcompositionelement SET subState = 0 WHERE subState IS NULL;
 
 ALTER TABLE automationcompositionelement
  ALTER COLUMN definition_name SET NOT NULL,

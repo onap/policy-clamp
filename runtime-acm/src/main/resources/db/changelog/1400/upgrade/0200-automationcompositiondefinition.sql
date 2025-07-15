@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,4 +17,13 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE automationcompositiondefinition (compositionId VARCHAR(255) NOT NULL, name VARCHAR(255), restarting BOOLEAN, serviceTemplate TEXT, state SMALLINT DEFAULT NULL, stateChangeResult SMALLINT DEFAULT NULL, version VARCHAR(255), CONSTRAINT PK_AUTOMATIONCOMPOSITIONDEFINITION PRIMARY KEY (compositionId));
+CREATE TABLE automationcompositiondefinition (
+  compositionId VARCHAR(255) NOT NULL,
+  name VARCHAR(255),
+  restarting BOOLEAN,
+  serviceTemplate TEXT,
+  state SMALLINT DEFAULT NULL,
+  stateChangeResult SMALLINT DEFAULT NULL,
+  version VARCHAR(255),
+  CONSTRAINT PK_AUTOMATIONCOMPOSITIONDEFINITION PRIMARY KEY (compositionId)
+);
