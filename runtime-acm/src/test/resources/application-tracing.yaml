@@ -7,7 +7,7 @@ spring:
       maximumPoolSize: 3
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     open-in-view: false
 
 management:
