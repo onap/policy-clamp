@@ -17,18 +17,21 @@
  *  ============LICENSE_END=========================================================
  */
 
-UPDATE automationcompositiondefinition SET name = '' WHERE name IS NULL;
-UPDATE automationcompositiondefinition SET version  = '1.0.0' WHERE version IS NULL;
-UPDATE automationcompositiondefinition SET state  = 0 WHERE state IS NULL;
-UPDATE automationcompositiondefinition SET lastMsg = now() WHERE lastMsg IS NULL;
-UPDATE automationcompositiondefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
-
-ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET NOT NULL;
 ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET DEFAULT '';
-ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET NOT NULL;
+UPDATE automationcompositiondefinition SET name = '' WHERE name IS NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET NOT NULL;
+
 ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET DEFAULT '1.0.0';
-ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET NOT NULL;
+UPDATE automationcompositiondefinition SET version  = '1.0.0' WHERE version IS NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET NOT NULL;
+
 ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET DEFAULT 0;
-ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET NOT NULL;
+UPDATE automationcompositiondefinition SET state = 0 WHERE state IS NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET NOT NULL;
+
 ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET DEFAULT '';
+UPDATE automationcompositiondefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
+ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET NOT NULL;
+
+UPDATE automationcompositiondefinition SET lastMsg = now() WHERE lastMsg IS NULL;
 ALTER TABLE automationcompositiondefinition ALTER COLUMN lastMsg SET NOT NULL;

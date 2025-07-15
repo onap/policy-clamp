@@ -17,23 +17,30 @@
  *  ============LICENSE_END=========================================================
  */
 
-UPDATE automationcompositionelement SET definition_name = '' WHERE definition_name IS NULL;
-UPDATE automationcompositionelement SET definition_version = '0.0.0' WHERE definition_version IS NULL;
-UPDATE automationcompositionelement SET deploystate = 2 WHERE deploystate IS NULL;
-UPDATE automationcompositionelement SET lockState = 4 WHERE lockState IS NULL;
-UPDATE automationcompositionelement SET subState = 0 WHERE subState IS NULL;
-
-ALTER TABLE automationcompositionelement ALTER COLUMN definition_name SET NOT NULL;
 ALTER TABLE automationcompositionelement ALTER COLUMN definition_name SET DEFAULT '';
-ALTER TABLE automationcompositionelement ALTER COLUMN definition_version SET NOT NULL;
+UPDATE automationcompositionelement SET definition_name = '' WHERE definition_name IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN definition_name SET NOT NULL;
+
 ALTER TABLE automationcompositionelement ALTER COLUMN definition_version SET DEFAULT '0.0.0';
-ALTER TABLE automationcompositionelement ALTER COLUMN deploystate SET NOT NULL;
+UPDATE automationcompositionelement SET definition_version = '0.0.0' WHERE definition_version IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN definition_version SET NOT NULL;
+
 ALTER TABLE automationcompositionelement ALTER COLUMN deployState SET DEFAULT 2;
-ALTER TABLE automationcompositionelement ALTER COLUMN lockState SET NOT NULL;
+UPDATE automationcompositionelement SET deployState = 2 WHERE deployState IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN deployState SET NOT NULL;
+
 ALTER TABLE automationcompositionelement ALTER COLUMN lockState SET DEFAULT 4;
-ALTER TABLE automationcompositionelement ALTER COLUMN substate SET NOT NULL;
-ALTER TABLE automationcompositionelement ALTER COLUMN substate SET DEFAULT 0;
-ALTER TABLE automationcompositionelement ALTER COLUMN outproperties SET NOT NULL;
-ALTER TABLE automationcompositionelement ALTER COLUMN outproperties SET DEFAULT '{}';
-ALTER TABLE automationcompositionelement ALTER COLUMN properties SET NOT NULL;
+UPDATE automationcompositionelement SET lockState = 4 WHERE lockState IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN lockState SET NOT NULL;
+
+ALTER TABLE automationcompositionelement ALTER COLUMN subState SET DEFAULT 0;
+UPDATE automationcompositionelement SET subState = 0 WHERE subState IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN subState SET NOT NULL;
+
+ALTER TABLE automationcompositionelement ALTER COLUMN outProperties SET DEFAULT '{}';
+UPDATE automationcompositionelement SET outProperties = '{}' WHERE outProperties IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN outProperties SET NOT NULL;
+
 ALTER TABLE automationcompositionelement ALTER COLUMN properties SET DEFAULT '{}';
+UPDATE automationcompositionelement SET properties = '{}' WHERE properties IS NULL;
+ALTER TABLE automationcompositionelement ALTER COLUMN properties SET NOT NULL;
