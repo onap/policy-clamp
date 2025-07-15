@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,4 +17,9 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE participantreplica ADD CONSTRAINT participant_replica_fk FOREIGN KEY (participantId) REFERENCES participant (participantId) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE participantreplica
+  ADD CONSTRAINT participant_replica_fk
+  FOREIGN KEY (participantId)
+  REFERENCES participant (participantId)
+  ON UPDATE RESTRICT
+  ON DELETE RESTRICT;

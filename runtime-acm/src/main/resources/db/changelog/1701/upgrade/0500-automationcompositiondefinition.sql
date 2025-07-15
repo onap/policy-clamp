@@ -17,11 +17,11 @@
  *  ============LICENSE_END=========================================================
  */
 
-update automationcompositiondefinition set name = '' where name is null;
-update automationcompositiondefinition set version  = '1.0.0' where version is null;
-update automationcompositiondefinition set state  = 0 where state is null;
-update automationcompositiondefinition set lastMsg = now() where lastMsg is null;
-update automationcompositiondefinition set serviceTemplate = '' where serviceTemplate is null;
+UPDATE automationcompositiondefinition SET name = '' WHERE name IS NULL;
+UPDATE automationcompositiondefinition SET version  = '1.0.0' WHERE version IS NULL;
+UPDATE automationcompositiondefinition SET state  = 0 WHERE state IS NULL;
+UPDATE automationcompositiondefinition SET lastMsg = now() WHERE lastMsg IS NULL;
+UPDATE automationcompositiondefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
 
 ALTER TABLE automationcompositiondefinition
  ALTER COLUMN name SET NOT NULL,

@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,4 +17,10 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE IF NOT EXISTS message (messageId varchar(255) NOT NULL, identificationId varchar(255) NOT NULL, lastMsg timestamp without time zone NOT NULL DEFAULT now(), docMessage text NOT NULL, CONSTRAINT PK_MESSAGE PRIMARY KEY (messageId));
+CREATE TABLE IF NOT EXISTS message (
+  messageId varchar(255) NOT NULL,
+  identificationId varchar(255) NOT NULL,
+  lastMsg timestamp without time zone NOT NULL DEFAULT now(),
+  docMessage text NOT NULL,
+  CONSTRAINT PK_MESSAGE PRIMARY KEY (messageId)
+);

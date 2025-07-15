@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,4 +17,11 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE participantreplica (replicaId varchar(255) NOT NULL, lastMsg timestamp without time zone DEFAULT Now(), participantId varchar(255) DEFAULT NULL, participantState SMALLINT DEFAULT NULL, CONSTRAINT PK_PARTICIPANT_REPLICA PRIMARY KEY (replicaId));
+CREATE TABLE participantreplica (
+  replicaId varchar(255) NOT NULL,
+  lastMsg timestamp without time zone DEFAULT Now(),
+  participantId varchar(255) DEFAULT NULL,
+  participantState SMALLINT DEFAULT NULL,
+  CONSTRAINT PK_PARTICIPANT_REPLICA PRIMARY KEY (replicaId)
+);
+

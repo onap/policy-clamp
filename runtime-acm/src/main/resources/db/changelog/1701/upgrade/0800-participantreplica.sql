@@ -17,8 +17,8 @@
  *  ============LICENSE_END=========================================================
  */
 
-update participantreplica set lastMsg = now() where lastMsg is null;
-update participantreplica set participantState = '1' where participantState is null;
+UPDATE participantreplica SET lastMsg = now() WHERE lastMsg IS NULL;
+UPDATE participantreplica SET participantState = '1' WHERE participantState IS NULL;
 
 ALTER TABLE participantreplica
  ALTER COLUMN lastMsg SET NOT NULL,

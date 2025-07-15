@@ -17,12 +17,12 @@
  *  ============LICENSE_END=========================================================
  */
 
-update automationcomposition set deployState = 2 where deployState is null;
-update automationcomposition set lockState = 4 where lockState is null;
-update automationcomposition set name = '' where name is null;
-update automationcomposition set version = '1.0.0' where version is null;
-update automationcomposition set lastMsg = now() where lastMsg is null;
-update automationcomposition set subState = 0 where subState is null;
+UPDATE automationcomposition SET deployState = 2 WHERE deployState IS NULL;
+UPDATE automationcomposition SET lockState = 4 WHERE lockState IS NULL;
+UPDATE automationcomposition SET name = '' WHERE name IS NULL;
+UPDATE automationcomposition SET version = '1.0.0' WHERE version IS NULL;
+UPDATE automationcomposition SET lastMsg = now() WHERE lastMsg IS NULL;
+UPDATE automationcomposition SET subState = 0 WHERE subState IS NULL;
 
 ALTER TABLE automationcomposition
  ALTER COLUMN compositionid SET NOT NULL,
