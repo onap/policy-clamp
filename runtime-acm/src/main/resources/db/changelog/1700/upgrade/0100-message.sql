@@ -17,7 +17,7 @@
  *  ============LICENSE_END=========================================================
  */
 
-CREATE TABLE IF NOT EXISTS message (
+CREATE TABLE message (
   messageId varchar(255) NOT NULL,
   identificationId varchar(255) NOT NULL,
   lastMsg timestamp without time zone NOT NULL DEFAULT now(),
