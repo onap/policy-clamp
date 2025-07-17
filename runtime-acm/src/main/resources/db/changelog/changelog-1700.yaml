@@ -18,18 +18,39 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
+      id: 1700-1
       author: policy
-      id: 1700
       preConditions:
-        not:
-          tableExists:
-            tableName: message
-        onFail: MARK_RAN
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: message
       changes:
         - sqlFile:
             path: db/changelog/1700/upgrade/0100-message.sql
+
+  - changeSet:
+      id: 1700-2
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: messagejob
+      changes:
         - sqlFile:
             path: db/changelog/1700/upgrade/0200-messagejob.sql
+
+  - changeSet:
+      id: 1700-3
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: messagejob_identificationId_index
+      changes:
         - sqlFile:
             path: db/changelog/1700/upgrade/0300-messagejob_identificationId_index.sql

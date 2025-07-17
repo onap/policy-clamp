@@ -18,11 +18,17 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
+      id: 1601-1
       author: policy
-      id: 1601
       changes:
         - sqlFile:
             path: db/changelog/1601/upgrade/0100-automationcomposition.sql
+
+  - changeSet:
+      id: 1601-2
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1601/upgrade/0200-automationcompositionelement.sql

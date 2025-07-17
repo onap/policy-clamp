@@ -18,38 +18,162 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
+      id: 1400-1
       author: policy
-      id: 1400
       preConditions:
-        not:
-          tableExists:
-            tableName: automationcomposition
-        onFail: MARK_RAN
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: automationcomposition
       changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0100-automationcomposition.sql
+
+  - changeSet:
+      id: 1400-2
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: automationcompositiondefinition
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0200-automationcompositiondefinition.sql
+
+  - changeSet:
+      id: 1400-3
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: automationcompositionelement
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0300-automationcompositionelement.sql
+
+  - changeSet:
+      id: 1400-4
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: nodetemplatestate
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0400-nodetemplatestate.sql
+
+  - changeSet:
+      id: 1400-5
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: participant
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0500-participant.sql
+
+  - changeSet:
+      id: 1400-6
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: participantsupportedacelements
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0600-participantsupportedelements.sql
+
+  - changeSet:
+      id: 1400-7
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: ac_compositionId
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0700-ac_compositionId_index.sql
+
+  - changeSet:
+      id: 1400-8
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: ac_element_fk
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0800-ac_element_fk_index.sql
+
+  - changeSet:
+      id: 1400-9
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: dt_element_fk
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/0900-dt_element_fk_index.sql
+
+  - changeSet:
+      id: 1400-10
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: supported_element_fk
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/1000-supported_element_fk_index.sql
+
+  - changeSet:
+      id: 1400-11
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: ac_element_fk
+                foreignKeyTableName: automationcompositionelement
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/1100-automationcompositionelement_fk.sql
+
+  - changeSet:
+      id: 1400-12
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: dt_element_fk
+                foreignKeyTableName: nodetemplatestate
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/1200-nodetemplate_fk.sql
+
+  - changeSet:
+      id: 1400-13
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: supported_element_fk
+                foreignKeyTableName: participantsupportedacelements
+      changes:
         - sqlFile:
             path: db/changelog/1400/upgrade/1300-participantsupportedelements_fk.sql

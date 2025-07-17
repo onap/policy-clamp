@@ -18,30 +18,82 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
+      id: 1701-1
       author: policy
-      id: 1701
       preConditions:
-        not:
-          tableExists:
-            tableName: automationcompositionrollback
-        onFail: MARK_RAN
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: automationcompositionrollback
       changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0100-automationcompositionrollback.sql
+
+  - changeSet:
+      id: 1701-2
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0200-automationcomposition.sql
+
+  - changeSet:
+      id: 1701-3
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0300-automationcompositionelement.sql
+
+  - changeSet:
+      id: 1701-4
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: ac_composition_fk
+                foreignKeyTableName: automationcomposition
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0400-automationcomposition_fk.sql
+
+  - changeSet:
+      id: 1701-5
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0500-automationcompositiondefinition.sql
+
+  - changeSet:
+      id: 1701-6
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0600-nodetemplatestate.sql
+
+  - changeSet:
+      id: 1701-7
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: mb_identificationId_index
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0700-mb_identificationId_index.sql
+
+  - changeSet:
+      id: 1701-8
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0800-participantreplica.sql
+
+  - changeSet:
+      id: 1701-9
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1701/upgrade/0900-participantsupportedacelements.sql

@@ -18,28 +18,93 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
+      id: 1500-1
       author: policy
-      id: 1500
       preConditions:
-        not:
-          tableExists:
-            tableName: participantreplica
-        onFail: MARK_RAN
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcomposition
+                columnName: lastMsg
       changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0100-automationcomposition.sql
+
+  - changeSet:
+      id: 1500-2
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcompositiondefinition
+                columnName: lastMsg
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0200-automationcompositiondefinition.sql
+
+  - changeSet:
+      id: 1500-3
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: participantreplica
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0300-participantreplica.sql
+
+  - changeSet:
+      id: 1500-4
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: participant
+                columnName: lastMsg
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0400-participant.sql
+
+  - changeSet:
+      id: 1500-5
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                indexName: participant_replica_fk
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0500-participant_replica_fk_index.sql
+
+  - changeSet:
+      id: 1500-6
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: participant_replica_fk
+                foreignKeyTableName: participantreplica
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0600-participant_replica_fk.sql
+
+  - changeSet:
+      id: 1500-7
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0700-automationcompositionelement.sql
+
+  - changeSet:
+      id: 1500-8
+      author: policy
+      changes:
         - sqlFile:
             path: db/changelog/1500/upgrade/0800-nodetemplatestate.sql

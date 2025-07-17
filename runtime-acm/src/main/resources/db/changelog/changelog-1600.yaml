@@ -18,17 +18,29 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
+      id: 1600-1
       author: policy
-      id: 1600
       preConditions:
-        not:
-          columnExists:
-            tableName: automationcomposition
-            columnName: subState
-        onFail: MARK_RAN
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcomposition
+                columnName: subState
       changes:
         - sqlFile:
             path: db/changelog/1600/upgrade/0100-automationcomposition.sql
+
+  - changeSet:
+      id: 1600-2
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcompositionelement
+                columnName: subState
+      changes:
         - sqlFile:
             path: db/changelog/1600/upgrade/0200-automationcompositionelement.sql
