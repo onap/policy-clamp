@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,6 +40,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -51,7 +53,9 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -178,17 +182,9 @@ class AutomationCompositionProviderTest {
         var acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId());
         assertThat(acOpt).isEmpty();
 
-        acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
-        assertThat(acOpt).isEmpty();
-
         when(automationCompositionRepository.findById(automationComposition.getInstanceId().toString()))
-            .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
+                .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
         acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId());
-        assertEquals(automationComposition, acOpt.get());
-
-        when(automationCompositionRepository.findOne(Mockito.any()))
-            .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
-        acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
         assertEquals(automationComposition, acOpt.get());
     }
 
@@ -348,5 +344,72 @@ class AutomationCompositionProviderTest {
         var compositionId = UUID.randomUUID();
         assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider
             .getAutomationCompositionRollback(compositionId));
+    }
+
+    @Test
+    void testVersionCompatibility() {
+        // Identical
+        var newDefinition = new PfConceptKey("policy.clamp.element", "1.2.3");
+        var oldDefinition = new PfConceptKey("policy.clamp.element", "1.2.3");
+
+        var instanceId = UUID.randomUUID();
+        assertDoesNotThrow(() ->
+                AutomationCompositionProvider.checkCompatibility(newDefinition, oldDefinition, instanceId));
+
+        // Patch
+        newDefinition.setVersion("1.2.4");
+        assertDoesNotThrow(() ->
+                AutomationCompositionProvider.checkCompatibility(newDefinition, oldDefinition, instanceId));
+
+        // Minor
+        newDefinition.setVersion("1.3.1");
+        assertDoesNotThrow(() ->
+                AutomationCompositionProvider.checkCompatibility(newDefinition, oldDefinition, instanceId));
+
+        // Major
+        newDefinition.setVersion("2.1.1");
+        assertDoesNotThrow(() ->
+                AutomationCompositionProvider.checkCompatibility(newDefinition, oldDefinition, instanceId));
+
+        // Not compatible
+        newDefinition.setName("policy.clamp.newElement");
+        newDefinition.setVersion("2.2.4");
+        assertThatThrownBy(() -> AutomationCompositionProvider
+                .checkCompatibility(newDefinition, oldDefinition, instanceId))
+                .hasMessageContaining("is not compatible");
+    }
+
+    @Test
+    void testValidateNameVersion() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
+
+        var acIdentifier = new ToscaConceptIdentifier();
+        assertDoesNotThrow(() -> {
+            automationCompositionProvider.validateNameVersion(acIdentifier);
+        });
+
+        when(automationCompositionRepository.findOne(Mockito.any()))
+                .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
+        assertThatThrownBy(() -> {
+            automationCompositionProvider.validateNameVersion(acIdentifier);
+        }).hasMessageContaining("already defined");
+    }
+
+    @Test
+    void testValidateInstanceEndpoint() {
+        var automationComposition = new AutomationComposition();
+        automationComposition.setCompositionId(UUID.randomUUID());
+
+        var compositionId = automationComposition.getCompositionId();
+        assertDoesNotThrow(() -> AutomationCompositionProvider
+                .validateInstanceEndpoint(compositionId, automationComposition));
+
+        var wrongCompositionId = UUID.randomUUID();
+        assertThatThrownBy(() -> AutomationCompositionProvider
+                .validateInstanceEndpoint(wrongCompositionId, automationComposition))
+                .hasMessageContaining("do not match with");
     }
 }

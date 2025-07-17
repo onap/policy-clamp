@@ -55,8 +55,6 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,13 +93,8 @@ public class AutomationCompositionInstantiationProvider {
      */
     public InstantiationResponse createAutomationComposition(UUID compositionId,
                                                              AutomationComposition automationComposition) {
-        validateCompositionRequested(compositionId, automationComposition);
-        var checkAutomationCompositionOpt =
-            automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
-        if (checkAutomationCompositionOpt.isPresent()) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                automationComposition.getKey().asIdentifier() + " already defined");
-        }
+        AutomationCompositionProvider.validateInstanceEndpoint(compositionId, automationComposition);
+        automationCompositionProvider.validateNameVersion(automationComposition.getKey().asIdentifier());
 
         var validationResult = validateAutomationComposition(automationComposition);
         if (!validationResult.isValid()) {
@@ -131,7 +124,7 @@ public class AutomationCompositionInstantiationProvider {
                                                              AutomationComposition automationComposition) {
         var instanceId = automationComposition.getInstanceId();
         var acToUpdate = automationCompositionProvider.getAutomationComposition(instanceId);
-        validateCompositionRequested(compositionId, acToUpdate);
+        AutomationCompositionProvider.validateInstanceEndpoint(compositionId, acToUpdate);
         if (DeployState.UNDEPLOYED.equals(acToUpdate.getDeployState())) {
             acToUpdate.setElements(automationComposition.getElements());
             acToUpdate.setName(automationComposition.getName());
@@ -257,20 +250,6 @@ public class AutomationCompositionInstantiationProvider {
     private List<UUID> getElementRemoved(AutomationComposition acFromDb, AutomationComposition acFromMigration) {
         return acFromDb.getElements().keySet().stream()
             .filter(id -> acFromMigration.getElements().get(id) == null).toList();
-    }
-
-    void checkCompatibility(PfConceptKey newDefinition, PfConceptKey dbElementDefinition,
-                            UUID instanceId) {
-        var compatibility = newDefinition.getCompatibility(dbElementDefinition);
-        if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                dbElementDefinition + " is not compatible with " + newDefinition);
-        }
-        if (PfKey.Compatibility.MAJOR.equals(compatibility) || PfKey.Compatibility.MINOR
-            .equals(compatibility)) {
-            LOGGER.warn("Migrate {}: Version {} has {} compatibility with {} ", instanceId, newDefinition,
-                compatibility, dbElementDefinition);
-        }
     }
 
     private InstantiationResponse migratePrecheckAc(
@@ -465,7 +444,7 @@ public class AutomationCompositionInstantiationProvider {
      */
     public void rollback(UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
-        validateCompositionRequested(compositionId, automationComposition);
+        AutomationCompositionProvider.validateInstanceEndpoint(compositionId, automationComposition);
 
         if (!DeployOrder.MIGRATION_REVERT.name().equals(acInstanceStateResolver.resolve(
                 DeployOrder.MIGRATION_REVERT, LockOrder.NONE,
@@ -508,7 +487,8 @@ public class AutomationCompositionInstantiationProvider {
                 AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
                 var newDefinition = element.getValue().getDefinition().asConceptKey();
                 var dbElementDefinition = dbAcElement.getDefinition().asConceptKey();
-                checkCompatibility(newDefinition, dbElementDefinition, automationComposition.getInstanceId());
+                AutomationCompositionProvider
+                        .checkCompatibility(newDefinition, dbElementDefinition, automationComposition.getInstanceId());
                 dbAcElement.setDefinition(element.getValue().getDefinition());
             }
         }
@@ -525,23 +505,11 @@ public class AutomationCompositionInstantiationProvider {
         return elementsRemoved;
     }
 
-    private static void validateCompositionRequested(UUID compositionId,
-                                                     AutomationComposition automationComposition) {
-        if (!compositionId.equals(automationComposition.getCompositionId())) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
-        }
-    }
-
     private AutomationCompositionDefinition getAcDefinition(UUID compositionId,
                                                             AutomationComposition automationComposition) {
-        validateCompositionRequested(compositionId, automationComposition);
+        AutomationCompositionProvider.validateInstanceEndpoint(compositionId, automationComposition);
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
-
-        var participantIds = acDefinition.getElementStateMap().values().stream()
-            .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
-
-        participantProvider.verifyParticipantState(participantIds);
+        participantProvider.checkRegisteredParticipant(acDefinition);
         return acDefinition;
     }
 }

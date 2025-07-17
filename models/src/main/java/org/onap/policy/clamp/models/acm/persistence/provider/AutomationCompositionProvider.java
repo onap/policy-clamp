@@ -45,8 +45,12 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,6 +64,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class AutomationCompositionProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionProvider.class);
+    private static final String DO_NOT_MATCH = " do not match with ";
 
     private final AutomationCompositionRepository automationCompositionRepository;
     private final AutomationCompositionElementRepository acElementRepository;
@@ -92,19 +98,6 @@ public class AutomationCompositionProvider {
         return result.stream().map(JpaAutomationComposition::toAuthorative).findFirst();
     }
 
-    /**
-     * Find automation composition by automationCompositionId.
-     *
-     * @param automationCompositionId the ID of the automation composition to get
-     * @return the automation composition found
-     */
-    @Transactional(readOnly = true)
-    public Optional<AutomationComposition> findAutomationComposition(
-        final ToscaConceptIdentifier automationCompositionId) {
-        return automationCompositionRepository
-            .findOne(createExample(null, automationCompositionId.getName(), automationCompositionId.getVersion()))
-            .map(JpaAutomationComposition::toAuthorative);
-    }
 
     /**
      * Create automation composition.
@@ -283,5 +276,56 @@ public class AutomationCompositionProvider {
             throw new PfModelRuntimeException(Status.NOT_FOUND, "Instance not found for rollback");
         }
         return result.get().toAuthorative();
+    }
+
+    /**
+     * validate that compositionId into the Instance Endpoint is correct.
+     *
+     * @param compositionId the compositionId
+     * @param automationComposition the AutomationComposition
+     */
+    public static void validateInstanceEndpoint(UUID compositionId,
+            AutomationComposition automationComposition) {
+
+        if (!compositionId.equals(automationComposition.getCompositionId())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
+        }
+    }
+
+    /**
+     * Validate that name and version of an AutomationComposition is not already used.
+     *
+     * @param acIdentifier the name and version of an AutomationComposition
+     */
+    @Transactional(readOnly = true)
+    public void validateNameVersion(ToscaConceptIdentifier acIdentifier) {
+        var acOpt = automationCompositionRepository
+                .findOne(createExample(null, acIdentifier.getName(), acIdentifier.getVersion()))
+                .map(JpaAutomationComposition::toAuthorative);
+        if (acOpt.isPresent()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, acIdentifier + " already defined");
+        }
+    }
+
+    /**
+     * Check Compatibility of name version between elements.
+     *
+     * @param newDefinition the new name version
+     * @param dbElementDefinition the name version from db
+     * @param instanceId the instanceId
+     */
+    public static void checkCompatibility(PfConceptKey newDefinition, PfConceptKey dbElementDefinition,
+            UUID instanceId) {
+        var compatibility = newDefinition.getCompatibility(dbElementDefinition);
+        if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    dbElementDefinition + " is not compatible with " + newDefinition);
+        }
+        if (PfKey.Compatibility.MAJOR.equals(compatibility) || PfKey.Compatibility.MINOR
+                .equals(compatibility)) {
+            LOGGER.warn("Migrate {}: Version {} has {} compatibility with {} ", instanceId, newDefinition,
+                    compatibility, dbElementDefinition);
+        }
     }
 }

@@ -325,6 +325,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
         var acFromDb = automationCompositionsFromDb.getAutomationCompositionList().get(0);
         automationComposition.setLastMsg(acFromDb.getLastMsg());
+        automationComposition.setLastUpdate(acFromDb.getLastUpdate());
         assertEquals(automationComposition, acFromDb);
     }
 

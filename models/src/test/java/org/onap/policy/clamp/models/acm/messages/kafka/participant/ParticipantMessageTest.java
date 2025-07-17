@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializable;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
@@ -70,14 +71,32 @@ class ParticipantMessageTest {
 
         // ParticipantId matches
         assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
-        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId(), CommonTestData.getReplicaId()));
+
+        message.setReplicaId(CommonTestData.getReplicaId());
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
+
+        message.setParticipantIds(Set.of());
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
+
+        message.setParticipantIds(Set.of(CommonTestData.getParticipantId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
+
+        message.setParticipantId(null);
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
     }
 
     @Test
     void testAppliesTo_ParticipantIdNoMatch() {
         var message = makeMessage();
         assertFalse(message.appliesTo(CommonTestData.getRndParticipantId(), CommonTestData.getReplicaId()));
-        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
+
+        message.setReplicaId(CommonTestData.getReplicaId());
+        assertFalse(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getRndParticipantId()));
+
+        message.setReplicaId(null);
+        message.setParticipantId(null);
+        message.setParticipantIds(Set.of(CommonTestData.getRndParticipantId(), CommonTestData.getRndParticipantId()));
+        assertFalse(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
     }
 
     private ParticipantMessage makeMessage() {

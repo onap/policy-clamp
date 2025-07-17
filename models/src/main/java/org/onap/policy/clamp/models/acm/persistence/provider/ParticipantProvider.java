@@ -31,6 +31,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -240,5 +241,16 @@ public class ParticipantProvider {
                         "Participant: " + participantId + " is OFFLINE");
             }
         }
+    }
+
+    /**
+     * Check if the Participant defined into an AutomationCompositionDefinition has been registered.
+     *
+     * @param acDefinition the AutomationCompositionDefinition
+     */
+    public void checkRegisteredParticipant(AutomationCompositionDefinition acDefinition) {
+        var participantIds = acDefinition.getElementStateMap().values().stream()
+                .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
+        verifyParticipantState(participantIds);
     }
 }

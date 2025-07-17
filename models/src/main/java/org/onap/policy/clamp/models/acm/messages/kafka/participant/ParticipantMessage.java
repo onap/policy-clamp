@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -60,6 +62,14 @@ public class ParticipantMessage {
 
     private UUID compositionId;
 
+    private UUID lastUpdateComposition;
+    private UUID lastUpdateInstance;
+
+    /**
+     * List of participantId that should receive the message.
+     */
+    private Set<UUID> participantIds = new HashSet<>();
+
     /**
      * Constructor for instantiating a participant message class.
      *
@@ -75,11 +85,16 @@ public class ParticipantMessage {
      * @param source source from which to copy
      */
     public ParticipantMessage(final ParticipantMessage source) {
+        this.messageId = source.messageId;
+        this.timestamp = source.timestamp;
         this.messageType = source.messageType;
         this.participantId = source.participantId;
         this.replicaId = source.replicaId;
         this.automationCompositionId = source.automationCompositionId;
         this.compositionId = source.compositionId;
+        this.lastUpdateComposition = source.lastUpdateComposition;
+        this.lastUpdateInstance = source.lastUpdateInstance;
+        this.participantIds = new HashSet<>(source.participantIds);
     }
 
     /**
@@ -90,6 +105,10 @@ public class ParticipantMessage {
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
     public boolean appliesTo(@NonNull final UUID participantId, @NonNull final UUID replicaId) {
+        // Broadcast message to specific participants
+        if (participantIds != null && !participantIds.isEmpty() && !participantIds.contains(participantId)) {
+            return false;
+        }
         // Broadcast message to all participants
         if ((this.participantId == null)
                 || (participantId.equals(this.participantId) && this.replicaId == null)) {
