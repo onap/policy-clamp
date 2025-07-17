@@ -17,6 +17,7 @@
 # ============LICENSE_END=========================================================
 
 databaseChangeLog:
+  - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
   - changeSet:
       author: policy
       id: 1700
