@@ -28,8 +28,15 @@ databaseChangeLog:
             - tableExists:
                 tableName: message
       changes:
-        - sqlFile:
-            path: db/changelog/1700/upgrade/0100-message.sql
+        - sql:
+            sql: |
+              CREATE TABLE message (
+                messageId varchar(255) NOT NULL,
+                identificationId varchar(255) NOT NULL,
+                lastMsg timestamp without time zone NOT NULL DEFAULT now(),
+                docMessage text NOT NULL,
+                CONSTRAINT PK_MESSAGE PRIMARY KEY (messageId)
+              );
 
   - changeSet:
       id: 1700-2
@@ -40,8 +47,14 @@ databaseChangeLog:
             - tableExists:
                 tableName: messagejob
       changes:
-        - sqlFile:
-            path: db/changelog/1700/upgrade/0200-messagejob.sql
+        - sql:
+            sql: |
+              CREATE TABLE messagejob (
+                jobId varchar(255) NOT NULL,
+                identificationId varchar(255) NOT NULL,
+                jobStarted timestamp without time zone NOT NULL DEFAULT now(),
+                CONSTRAINT PK_MESSAGE_JOB PRIMARY KEY (jobId)
+              );
 
   - changeSet:
       id: 1700-3
@@ -52,5 +65,5 @@ databaseChangeLog:
             - indexExists:
                 indexName: messagejob_identificationId_index
       changes:
-        - sqlFile:
-            path: db/changelog/1700/upgrade/0300-messagejob_identificationId_index.sql
+        - sql:
+            sql: CREATE UNIQUE INDEX messagejob_identificationId_index ON messagejob(identificationId);

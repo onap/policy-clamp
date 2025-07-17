@@ -29,8 +29,11 @@ databaseChangeLog:
                 tableName: automationcomposition
                 columnName: lastMsg
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0100-automationcomposition.sql
+        - sql:
+            sql: |
+              ALTER TABLE automationcomposition ADD lastMsg timestamp without time zone DEFAULT Now();
+              ALTER TABLE automationcomposition ADD phase SMALLINT DEFAULT 0;
+              UPDATE automationcomposition SET restarting = NULL;
 
   - changeSet:
       id: 1500-2
@@ -42,8 +45,10 @@ databaseChangeLog:
                 tableName: automationcompositiondefinition
                 columnName: lastMsg
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0200-automationcompositiondefinition.sql
+        - sql:
+            sql: |
+              ALTER TABLE automationcompositiondefinition ADD lastMsg timestamp without time zone DEFAULT Now();
+              UPDATE automationcompositiondefinition SET restarting = NULL;
 
   - changeSet:
       id: 1500-3
@@ -54,8 +59,15 @@ databaseChangeLog:
             - tableExists:
                 tableName: participantreplica
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0300-participantreplica.sql
+        - sql:
+            sql: |
+              CREATE TABLE participantreplica (
+                replicaId varchar(255) NOT NULL,
+                lastMsg timestamp without time zone DEFAULT Now(),
+                participantId varchar(255) DEFAULT NULL,
+                participantState SMALLINT DEFAULT NULL,
+                CONSTRAINT PK_PARTICIPANT_REPLICA PRIMARY KEY (replicaId)
+              );
 
   - changeSet:
       id: 1500-4
@@ -67,8 +79,8 @@ databaseChangeLog:
                 tableName: participant
                 columnName: lastMsg
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0400-participant.sql
+        - sql:
+            sql: ALTER TABLE participant ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
       id: 1500-5
@@ -79,8 +91,8 @@ databaseChangeLog:
             - indexExists:
                 indexName: participant_replica_fk
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0500-participant_replica_fk_index.sql
+        - sql:
+            sql: CREATE INDEX participant_replica_fk ON participantreplica(participantId);
 
   - changeSet:
       id: 1500-6
@@ -92,19 +104,25 @@ databaseChangeLog:
                 foreignKeyName: participant_replica_fk
                 foreignKeyTableName: participantreplica
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0600-participant_replica_fk.sql
+        - sql:
+            sql: |
+              ALTER TABLE participantreplica
+                ADD CONSTRAINT participant_replica_fk
+                FOREIGN KEY (participantId)
+                REFERENCES participant (participantId)
+                ON UPDATE RESTRICT
+                ON DELETE RESTRICT;
 
   - changeSet:
       id: 1500-7
       author: policy
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0700-automationcompositionelement.sql
+        - sql:
+            sql: UPDATE automationcompositionelement SET restarting = NULL;
 
   - changeSet:
       id: 1500-8
       author: policy
       changes:
-        - sqlFile:
-            path: db/changelog/1500/upgrade/0800-nodetemplatestate.sql
+        - sql:
+            sql: UPDATE nodetemplatestate SET restarting = NULL;

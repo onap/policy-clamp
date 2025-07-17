@@ -29,8 +29,8 @@ databaseChangeLog:
                 tableName: automationcomposition
                 columnName: subState
       changes:
-        - sqlFile:
-            path: db/changelog/1600/upgrade/0100-automationcomposition.sql
+        - sql:
+            sql: ALTER TABLE automationcomposition ADD subState SMALLINT DEFAULT NULL;
 
   - changeSet:
       id: 1600-2
@@ -42,5 +42,7 @@ databaseChangeLog:
                 tableName: automationcompositionelement
                 columnName: subState
       changes:
-        - sqlFile:
-            path: db/changelog/1600/upgrade/0200-automationcompositionelement.sql
+        - sql:
+            sql: |
+              ALTER TABLE automationcompositionelement ADD subState SMALLINT DEFAULT NULL;
+              ALTER TABLE automationcompositionelement ADD stage SMALLINT DEFAULT NULL;

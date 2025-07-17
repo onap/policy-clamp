@@ -28,8 +28,21 @@ databaseChangeLog:
             - tableExists:
                 tableName: automationcomposition
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0100-automationcomposition.sql
+        - sql:
+            sql: |
+              CREATE TABLE automationcomposition (
+                instanceId VARCHAR(255) NOT NULL,
+                compositionId VARCHAR(255),
+                compositionTargetId VARCHAR(255),
+                deployState SMALLINT DEFAULT NULL,
+                description VARCHAR(255),
+                lockState SMALLINT DEFAULT NULL,
+                name VARCHAR(255),
+                restarting BOOLEAN,
+                stateChangeResult SMALLINT DEFAULT NULL,
+                version VARCHAR(255),
+                CONSTRAINT PK_AUTOMATIONCOMPOSITION PRIMARY KEY (instanceId)
+              );
 
   - changeSet:
       id: 1400-2
@@ -40,8 +53,18 @@ databaseChangeLog:
             - tableExists:
                 tableName: automationcompositiondefinition
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0200-automationcompositiondefinition.sql
+        - sql:
+            sql: |
+              CREATE TABLE automationcompositiondefinition (
+                compositionId VARCHAR(255) NOT NULL,
+                name VARCHAR(255),
+                restarting BOOLEAN,
+                serviceTemplate TEXT,
+                state SMALLINT DEFAULT NULL,
+                stateChangeResult SMALLINT DEFAULT NULL,
+                version VARCHAR(255),
+                CONSTRAINT PK_AUTOMATIONCOMPOSITIONDEFINITION PRIMARY KEY (compositionId)
+              );
 
   - changeSet:
       id: 1400-3
@@ -52,8 +75,25 @@ databaseChangeLog:
             - tableExists:
                 tableName: automationcompositionelement
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0300-automationcompositionelement.sql
+        - sql:
+            sql: |
+              CREATE TABLE automationcompositionelement (
+                elementId VARCHAR(255) NOT NULL,
+                definition_name VARCHAR(255),
+                definition_version VARCHAR(255),
+                deployState SMALLINT DEFAULT NULL,
+                description VARCHAR(255),
+                instanceId VARCHAR(255),
+                lockState SMALLINT DEFAULT NULL,
+                message VARCHAR(255),
+                operationalState VARCHAR(255),
+                outProperties TEXT,
+                participantId VARCHAR(255),
+                properties TEXT,
+                restarting BOOLEAN,
+                useState VARCHAR(255),
+                CONSTRAINT PK_AUTOMATIONCOMPOSITIONELEMENT PRIMARY KEY (elementId)
+              );
 
   - changeSet:
       id: 1400-4
@@ -64,8 +104,20 @@ databaseChangeLog:
             - tableExists:
                 tableName: nodetemplatestate
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0400-nodetemplatestate.sql
+        - sql:
+            sql: |
+              CREATE TABLE nodetemplatestate (
+                nodeTemplateStateId VARCHAR(255) NOT NULL,
+                compositionId VARCHAR(255),
+                message VARCHAR(255),
+                nodeTemplate_name VARCHAR(255),
+                nodeTemplate_version VARCHAR(255),
+                outProperties TEXT,
+                participantId VARCHAR(255),
+                restarting BOOLEAN,
+                state SMALLINT DEFAULT NULL,
+                CONSTRAINT PK_NODETEMPLATESTATE PRIMARY KEY (nodeTemplateStateId)
+              );
 
   - changeSet:
       id: 1400-5
@@ -76,8 +128,14 @@ databaseChangeLog:
             - tableExists:
                 tableName: participant
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0500-participant.sql
+        - sql:
+            sql: |
+              CREATE TABLE participant (
+                participantId VARCHAR(255) NOT NULL,
+                description VARCHAR(255),
+                participantState SMALLINT DEFAULT NULL,
+                CONSTRAINT PK_PARTICIPANT PRIMARY KEY (participantId)
+              );
 
   - changeSet:
       id: 1400-6
@@ -88,8 +146,15 @@ databaseChangeLog:
             - tableExists:
                 tableName: participantsupportedacelements
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0600-participantsupportedelements.sql
+        - sql:
+            sql: |
+              CREATE TABLE participantsupportedacelements (
+                id VARCHAR(255) NOT NULL,
+                participantId VARCHAR(255),
+                typeName VARCHAR(255),
+                typeVersion VARCHAR(255),
+                CONSTRAINT PK_PARTICIPANTSUPPORTEDACELEMENTS PRIMARY KEY (id)
+              );
 
   - changeSet:
       id: 1400-7
@@ -100,8 +165,8 @@ databaseChangeLog:
             - indexExists:
                 indexName: ac_compositionId
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0700-ac_compositionId_index.sql
+        - sql:
+            sql: CREATE INDEX ac_compositionId ON automationcomposition(compositionId);
 
   - changeSet:
       id: 1400-8
@@ -112,8 +177,8 @@ databaseChangeLog:
             - indexExists:
                 indexName: ac_element_fk
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0800-ac_element_fk_index.sql
+        - sql:
+            sql: CREATE INDEX ac_element_fk ON automationcompositionelement(instanceId);
 
   - changeSet:
       id: 1400-9
@@ -124,8 +189,8 @@ databaseChangeLog:
             - indexExists:
                 indexName: dt_element_fk
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/0900-dt_element_fk_index.sql
+        - sql:
+            sql: CREATE INDEX dt_element_fk ON nodetemplatestate(compositionId);
 
   - changeSet:
       id: 1400-10
@@ -136,8 +201,8 @@ databaseChangeLog:
             - indexExists:
                 indexName: supported_element_fk
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/1000-supported_element_fk_index.sql
+        - sql:
+            sql: CREATE INDEX supported_element_fk ON participantsupportedacelements(participantId);
 
   - changeSet:
       id: 1400-11
@@ -149,8 +214,14 @@ databaseChangeLog:
                 foreignKeyName: ac_element_fk
                 foreignKeyTableName: automationcompositionelement
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/1100-automationcompositionelement_fk.sql
+        - sql:
+            sql: |
+              ALTER TABLE automationcompositionelement
+                ADD CONSTRAINT ac_element_fk
+                FOREIGN KEY (instanceId)
+                REFERENCES automationcomposition (instanceId)
+                ON UPDATE RESTRICT
+                ON DELETE RESTRICT;
 
   - changeSet:
       id: 1400-12
@@ -162,8 +233,14 @@ databaseChangeLog:
                 foreignKeyName: dt_element_fk
                 foreignKeyTableName: nodetemplatestate
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/1200-nodetemplate_fk.sql
+        - sql:
+            sql: |
+              ALTER TABLE nodetemplatestate
+                ADD CONSTRAINT dt_element_fk
+                FOREIGN KEY (compositionId)
+                REFERENCES automationcompositiondefinition (compositionId)
+                ON UPDATE RESTRICT
+                ON DELETE RESTRICT;
 
   - changeSet:
       id: 1400-13
@@ -175,5 +252,11 @@ databaseChangeLog:
                 foreignKeyName: supported_element_fk
                 foreignKeyTableName: participantsupportedacelements
       changes:
-        - sqlFile:
-            path: db/changelog/1400/upgrade/1300-participantsupportedelements_fk.sql
+        - sql:
+            sql: |
+              ALTER TABLE participantsupportedacelements
+                ADD CONSTRAINT supported_element_fk
+                FOREIGN KEY (participantId)
+                REFERENCES participant (participantId)
+                ON UPDATE RESTRICT
+                ON DELETE RESTRICT;

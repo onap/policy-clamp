@@ -18,23 +18,64 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+
   - changeSet:
       author: policy
-      id: 1702
+      id: 1702-1
       preConditions:
-        not:
-          columnExists:
-            tableName: automationcomposition
-            columnName: revisionId
-        onFail: MARK_RAN
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcomposition
+                columnName: revisionId
       changes:
-        - sqlFile:
-            path: db/changelog/1702/upgrade/0100-automationcomposition.sql
-        - sqlFile:
-            path: db/changelog/1702/upgrade/0200-automationcompositiondefinition.sql
-        - sqlFile:
-            path: db/changelog/1702/upgrade/0300-automationcompositionelement.sql
-        - sqlFile:
-            path: db/changelog/1702/upgrade/0400-participant.sql
-        - sqlFile:
-            path: db/changelog/1702/upgrade/0500-participantreplica.sql
+        - sql:
+            sql: |
+              ALTER TABLE automationcomposition
+               ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+              ALTER TABLE automationcomposition ALTER COLUMN phase TYPE INTEGER;
+              ALTER TABLE automationcomposition DROP COLUMN restarting;
+
+  - changeSet:
+      author: policy
+      id: 1702-2
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcompositiondefinition
+                columnName: revisionId
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE automationcompositiondefinition
+               ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+              ALTER TABLE automationcompositiondefinition DROP COLUMN restarting;
+
+  - changeSet:
+      author: policy
+      id: 1702-3
+      changes:
+        - sql:
+            sql: ALTER TABLE automationcompositionelement ALTER COLUMN stage TYPE INTEGER;
+
+  - changeSet:
+      author: policy
+      id: 1702-4
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: participant
+            columnName: participantState
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE participant DROP COLUMN participantState;
+              ALTER TABLE participant DROP COLUMN lastMsg;
+
+  - changeSet:
+      author: policy
+      id: 1702-5
+      changes:
+        - sql:
+            sql: ALTER TABLE participantreplica ALTER COLUMN participantId DROP DEFAULT;
