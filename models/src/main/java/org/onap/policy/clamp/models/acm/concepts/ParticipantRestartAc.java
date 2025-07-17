@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class ParticipantRestartAc {
     private DeployState deployState;
     private LockState lockState;
     private StateChangeResult stateChangeResult;
+    private UUID revisionId;
 
     private List<AcElementRestart> acElementList = new ArrayList<>();
 
@@ -53,6 +54,7 @@ public class ParticipantRestartAc {
         this.deployState = copyConstructor.deployState;
         this.lockState = copyConstructor.lockState;
         this.stateChangeResult = copyConstructor.stateChangeResult;
+        this.revisionId = copyConstructor.revisionId;
         this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementRestart::new);
     }
 }

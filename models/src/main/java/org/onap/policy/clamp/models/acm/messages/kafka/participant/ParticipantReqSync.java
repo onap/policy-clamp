@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,29 +20,19 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class AutomationCompositionMigration extends ParticipantMessage {
+public class ParticipantReqSync extends ParticipantMessage {
 
     private UUID compositionTargetId;
-    private UUID revisionIdCompositionTarget;
-    // A list of updates to AC element properties
-    private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
 
-    private Boolean precheck = false;
-    private Boolean rollback = false;
-    private Integer stage = 0;
-
-    public AutomationCompositionMigration() {
-        super(ParticipantMessageType.AUTOMATION_COMPOSITION_MIGRATION);
+    public ParticipantReqSync() {
+        super(ParticipantMessageType.PARTICIPANT_REQ_SYNC_MSG);
     }
 }

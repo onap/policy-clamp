@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,5 +120,10 @@ public enum ParticipantMessageType {
     /**
      * Used by the acm runtime to ask for a preparation check to participants.
      */
-    AUTOMATION_COMPOSITION_PREPARE
+    AUTOMATION_COMPOSITION_PREPARE,
+
+    /**
+     * Used by participant to request for PARTICIPANT_SYNC_MSG message immediately.
+     */
+    PARTICIPANT_REQ_SYNC_MSG
 }
