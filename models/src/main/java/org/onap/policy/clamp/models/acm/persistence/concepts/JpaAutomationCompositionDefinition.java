@@ -38,13 +38,11 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Pattern;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -88,6 +86,10 @@ public class JpaAutomationCompositionDefinition extends Validated
     @NotNull
     private Timestamp lastMsg;
 
+    @Column
+    @NotNull
+    private String revisionId;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
     private Set<JpaNodeTemplateState> elements = new HashSet<>();
@@ -105,6 +107,7 @@ public class JpaAutomationCompositionDefinition extends Validated
         acmDefinition.setState(this.state);
         acmDefinition.setStateChangeResult(this.stateChangeResult);
         acmDefinition.setLastMsg(this.lastMsg.toString());
+        acmDefinition.setRevisionId(UUID.fromString(this.revisionId));
         acmDefinition.setServiceTemplate(this.serviceTemplate.toAuthorative());
         for (var element : this.elements) {
             var key = element.getNodeTemplateId().getName();
@@ -119,6 +122,7 @@ public class JpaAutomationCompositionDefinition extends Validated
         this.state = copyConcept.getState();
         this.stateChangeResult = copyConcept.getStateChangeResult();
         this.lastMsg = TimestampHelper.toTimestamp(copyConcept.getLastMsg());
+        this.revisionId = copyConcept.getRevisionId().toString();
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
         setName(this.serviceTemplate.getName());
         setVersion(this.serviceTemplate.getVersion());
@@ -137,15 +141,5 @@ public class JpaAutomationCompositionDefinition extends Validated
 
     public JpaAutomationCompositionDefinition() {
         super();
-    }
-
-    @Override
-    public BeanValidationResult validate(@NonNull String fieldName) {
-        var result = super.validate(fieldName);
-        if (!result.isValid()) {
-            return result;
-        }
-
-        return result;
     }
 }

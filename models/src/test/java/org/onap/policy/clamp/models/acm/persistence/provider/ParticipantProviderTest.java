@@ -32,12 +32,14 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -54,6 +56,7 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -358,5 +361,26 @@ class ParticipantProviderTest {
         when(participantRepository.getReferenceById(participantId)).thenReturn(jpaParticipantList.get(0));
         participantProvider.verifyParticipantState(set);
         verify(participantRepository, times(2)).getReferenceById(participantId);
+    }
+
+    @Test
+    void testCheckRegisteredParticipant() {
+        var jpaParticipant = new JpaParticipant(jpaParticipantList.get(0));
+        var participantId = jpaParticipant.getParticipantId();
+        var participantRepository = mock(ParticipantRepository.class);
+        when(participantRepository.getReferenceById(participantId)).thenReturn(jpaParticipant);
+
+        var acDefinition = new AutomationCompositionDefinition();
+        var nodeTemplateState = new NodeTemplateState();
+        nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier("name", "0.0.0"));
+        nodeTemplateState.setParticipantId(UUID.fromString(participantId));
+        acDefinition.setElementStateMap(Map.of(nodeTemplateState.getNodeTemplateId().getName(), nodeTemplateState));
+
+        var replicaRepository = mock(ParticipantReplicaRepository.class);
+        var participantProvider = new ParticipantProvider(participantRepository,
+                mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
+                replicaRepository);
+        participantProvider.checkRegisteredParticipant(acDefinition);
+        verify(participantRepository).getReferenceById(participantId);
     }
 }

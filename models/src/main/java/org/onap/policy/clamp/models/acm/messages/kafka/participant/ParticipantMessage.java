@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -60,6 +62,14 @@ public class ParticipantMessage {
 
     private UUID compositionId;
 
+    private UUID revisionIdComposition;
+    private UUID revisionIdInstance;
+
+    /**
+     * List of participantId that should receive the message.
+     */
+    private Set<UUID> participantIdList = new HashSet<>();
+
     /**
      * Constructor for instantiating a participant message class.
      *
@@ -75,28 +85,40 @@ public class ParticipantMessage {
      * @param source source from which to copy
      */
     public ParticipantMessage(final ParticipantMessage source) {
+        this.messageId = source.messageId;
+        this.timestamp = source.timestamp;
         this.messageType = source.messageType;
         this.participantId = source.participantId;
         this.replicaId = source.replicaId;
         this.automationCompositionId = source.automationCompositionId;
         this.compositionId = source.compositionId;
+        this.revisionIdComposition = source.revisionIdComposition;
+        this.revisionIdInstance = source.revisionIdInstance;
+        this.participantIdList = new HashSet<>(source.participantIdList);
     }
 
     /**
      * Determines if this message applies to this participant type.
      *
-     * @param participantId id of the participant to match against
-     * @param replicaId id of the participant to match against
+     * @param refParticipantId id of the participant from properties file to match against
+     * @param refReplicaId id of the replica from properties file to match against
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
-    public boolean appliesTo(@NonNull final UUID participantId, @NonNull final UUID replicaId) {
-        // Broadcast message to all participants
+    public boolean appliesTo(@NonNull final UUID refParticipantId, @NonNull final UUID refReplicaId) {
+        // Broadcast message to specific list of participants
+        // or all participants when participantIdList is empty
+        // filter backward compatible with old ACM-r
+        if (participantIdList != null && !participantIdList.isEmpty()
+                && !participantIdList.contains(refParticipantId)) {
+            return false;
+        }
+        // Broadcast message to all participants and all replicas or specific participant and all replicas,
+        // filter backward compatible with old ACM-r
         if ((this.participantId == null)
-                || (participantId.equals(this.participantId) && this.replicaId == null)) {
+                || (refParticipantId.equals(this.participantId) && this.replicaId == null)) {
             return true;
         }
-
-        // Targeted message at this specific participant
-        return replicaId.equals(this.replicaId);
+        // Targeted message at a specific participant and replica
+        return refReplicaId.equals(this.replicaId);
     }
 }

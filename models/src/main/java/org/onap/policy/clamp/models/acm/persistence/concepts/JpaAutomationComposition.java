@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -50,7 +51,6 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.base.Validated;
 
@@ -64,6 +64,7 @@ import org.onap.policy.models.base.Validated;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
 public class JpaAutomationComposition extends Validated
         implements PfAuthorative<AutomationComposition>, Comparable<JpaAutomationComposition> {
 
@@ -111,43 +112,14 @@ public class JpaAutomationComposition extends Validated
     @Column
     private String description;
 
+    @Column
+    @NotNull
+    private String revisionId;
+
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "instanceId", foreignKey = @ForeignKey(name = "ac_element_fk"))
-    private List<@NotNull @Valid JpaAutomationCompositionElement> elements;
-
-    /**
-     * The Default Constructor creates a {@link JpaAutomationComposition} object with a null key.
-     */
-    public JpaAutomationComposition() {
-        this(UUID.randomUUID().toString(), new PfConceptKey(), UUID.randomUUID().toString(), new ArrayList<>(),
-                DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE);
-    }
-
-    /**
-     * The Key Constructor creates a {@link JpaAutomationComposition} object with all mandatory fields.
-     *
-     * @param instanceId The UUID of the automation composition instance
-     * @param key the key
-     * @param compositionId the TOSCA compositionId of the automation composition definition
-     * @param elements the elements of the automation composition in participants
-     * @param deployState the Deploy State
-     * @param lockState the Lock State
-     * @param subState the Sub State
-     */
-    public JpaAutomationComposition(@NonNull final String instanceId, @NonNull final PfConceptKey key,
-            @NonNull final String compositionId, @NonNull final List<JpaAutomationCompositionElement> elements,
-            @NonNull final DeployState deployState, @NonNull final LockState lockState,
-            @NonNull final SubState subState) {
-        this.instanceId = instanceId;
-        this.name = key.getName();
-        this.version = key.getVersion();
-        this.compositionId = compositionId;
-        this.deployState = deployState;
-        this.lockState = lockState;
-        this.elements = elements;
-        this.subState = subState;
-    }
+    private List<@NotNull @Valid JpaAutomationCompositionElement> elements = new ArrayList<>();
 
     /**
      * Copy constructor.
@@ -167,6 +139,7 @@ public class JpaAutomationComposition extends Validated
         this.subState = copyConcept.subState;
         this.description = copyConcept.description;
         this.stateChangeResult = copyConcept.stateChangeResult;
+        this.revisionId = copyConcept.revisionId;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
     }
 
@@ -197,6 +170,7 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setSubState(subState);
         automationComposition.setDescription(description);
         automationComposition.setStateChangeResult(stateChangeResult);
+        automationComposition.setRevisionId(UUID.fromString(this.revisionId));
         automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
         for (var element : this.elements) {
             automationComposition.getElements().put(UUID.fromString(element.getElementId()), element.toAuthorative());
@@ -221,6 +195,7 @@ public class JpaAutomationComposition extends Validated
         this.subState = automationComposition.getSubState();
         this.description = automationComposition.getDescription();
         this.stateChangeResult = automationComposition.getStateChangeResult();
+        this.revisionId = automationComposition.getRevisionId().toString();
         this.elements = new ArrayList<>(automationComposition.getElements().size());
         for (var elementEntry : automationComposition.getElements().entrySet()) {
             var jpaAutomationCompositionElement =
@@ -295,6 +270,10 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(stateChangeResult, other.stateChangeResult);
+        if (result != 0) {
+            return result;
+        }
+        result = ObjectUtils.compare(revisionId, other.revisionId);
         if (result != 0) {
             return result;
         }

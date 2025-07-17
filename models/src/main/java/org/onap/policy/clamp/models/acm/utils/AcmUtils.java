@@ -456,6 +456,7 @@ public final class AcmUtils {
     public static ParticipantRestartAc createAcRestart(AutomationComposition automationComposition,
             UUID participantId) {
         var syncAc = new ParticipantRestartAc();
+        syncAc.setRevisionId(automationComposition.getRevisionId());
         syncAc.setDeployState(automationComposition.getDeployState());
         syncAc.setLockState(automationComposition.getLockState());
         syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
