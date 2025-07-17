@@ -53,6 +53,8 @@ public class AutomationCompositionDefinition {
     // Map used to store prime state with key as NodeTemplate Name and value as NodeTemplateState
     private Map<String, NodeTemplateState> elementStateMap = new HashMap<>();
 
+    private UUID lastUpdate = UUID.randomUUID();
+
     /**
      * Copy constructor, does a deep copy.
      *
@@ -65,5 +67,6 @@ public class AutomationCompositionDefinition {
         this.lastMsg = otherAcmDefinition.lastMsg;
         this.elementStateMap = PfUtils.mapMap(otherAcmDefinition.elementStateMap, NodeTemplateState::new);
         this.stateChangeResult = otherAcmDefinition.stateChangeResult;
+        this.lastUpdate = otherAcmDefinition.lastUpdate;
     }
 }

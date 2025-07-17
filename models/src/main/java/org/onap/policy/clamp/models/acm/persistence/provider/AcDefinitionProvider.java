@@ -229,4 +229,16 @@ public class AcDefinitionProvider {
         return jpaList.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
                 .map(DocToscaServiceTemplate::toAuthorative).toList();
     }
+
+    /**
+     * Check if the Composition Definition is primed.
+     *
+     * @param acDefinition the AutomationCompositionDefinition
+     */
+    public static void checkPrimedComposition(AutomationCompositionDefinition acDefinition) {
+        if (!AcTypeState.PRIMED.equals(acDefinition.getState())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    acDefinition.getCompositionId() + " Commissioned automation composition definition not primed");
+        }
+    }
 }

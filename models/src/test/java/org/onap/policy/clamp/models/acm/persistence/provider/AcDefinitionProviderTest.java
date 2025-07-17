@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -347,5 +348,16 @@ class AcDefinitionProviderTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
+    }
+
+    @Test
+    void testCheckPrimedComposition() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        assertThatThrownBy(() -> AcDefinitionProvider.checkPrimedComposition(acmDefinition)).hasMessage(
+                acmDefinition.getCompositionId() + " Commissioned automation composition definition not primed");
+
+        acmDefinition.setState(AcTypeState.PRIMED);
+        assertDoesNotThrow(() -> AcDefinitionProvider.checkPrimedComposition(acmDefinition));
     }
 }

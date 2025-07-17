@@ -23,16 +23,17 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +63,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositi
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
@@ -312,32 +312,6 @@ class AutomationCompositionInstantiationProviderTest {
 
         verify(supervisionAcHandler).migrate(any());
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionTarget);
-    }
-
-    @Test
-    void testVersionCompatibility() {
-        var acProvider = mock(AutomationCompositionProvider.class);
-        var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var participantProvider = mock(ParticipantProvider.class);
-        var newDefinition = new PfConceptKey("policy.clamp.element", "1.2.3");
-        var oldDefinition = new PfConceptKey("policy.clamp.element", "2.2.3");
-
-        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
-                new AcRuntimeParameterGroup(), null);
-        var instanceId = UUID.randomUUID();
-        assertDoesNotThrow(() -> {
-            instantiationProvider.checkCompatibility(newDefinition, oldDefinition, instanceId);
-        }, "No exception for major version update");
-
-        // Not compatible
-        newDefinition.setName("policy.clamp.newElement");
-        newDefinition.setVersion("2.2.4");
-
-        assertThatThrownBy(() -> instantiationProvider
-                .checkCompatibility(newDefinition, oldDefinition, instanceId))
-                .hasMessageContaining("is not compatible");
     }
 
     @Test
@@ -702,9 +676,9 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider.createAutomationComposition(
                 automationCompositionCreate.getCompositionId(), automationCompositionCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionCreate);
-
-        when(acProvider.findAutomationComposition(automationCompositionCreate.getKey().asIdentifier()))
-                .thenReturn(Optional.of(automationCompositionCreate));
+        var acIdentifier = automationCompositionCreate.getKey().asIdentifier();
+        doThrow(new PfModelRuntimeException(Status.BAD_REQUEST, acIdentifier + " already defined"))
+                .when(acProvider).validateNameVersion(acIdentifier);
 
         assertThatThrownBy(
                 () -> instantiationProvider.createAutomationComposition(compositionId, automationCompositionCreate))
