@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f4b413_f3f0c723",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-21T07:57:07Z",
+      "side": 1,
+      "message": "seems to be a duplicate of https://gerrit.onap.org/r/c/policy/clamp/+/141550",
+      "revId": "0362fde651bd8cd5d15cb2faf0ebf81dfa248dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
