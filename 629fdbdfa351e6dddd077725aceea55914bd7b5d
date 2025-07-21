@@ -118,6 +118,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "10b5fece_dc8f9b26",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-07-21T10:45:19Z",
+      "side": 1,
+      "message": "Can be simplified:\n\n    if (!participantIds.contains(participantId)) {\n\nsince:\n- participantIds is never null\n- the contains(participantId) will implictly handle the isEmpty() case",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 109
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f4e9f537_73f877fe",
         "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantReqSync.java",
         "patchSetId": 3
