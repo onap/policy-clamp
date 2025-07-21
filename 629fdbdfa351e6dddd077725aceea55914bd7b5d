@@ -285,6 +285,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "89a88aa9_dbde6052",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-21T12:30:48Z",
+      "side": 1,
+      "message": "the @NonNull annotation makes sure of it never being null. if it\u0027s null, the annotation throws an exception and the code is never executed.",
+      "parentUuid": "34323e57_b5a0de83",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 109
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f4e9f537_73f877fe",
         "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantReqSync.java",
         "patchSetId": 3
@@ -379,6 +403,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "22f141f7_37144e31",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationComposition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-21T12:30:48Z",
+      "side": 1,
+      "message": "don\u0027t forget to change this in docker as well.",
+      "parentUuid": "de24aa35_8712643b",
+      "range": {
+        "startLine": 117,
+        "startChar": 19,
+        "endLine": 117,
+        "endChar": 29
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a589bbc0_4bf108fa",
         "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionDefinition.java",
         "patchSetId": 3
@@ -414,6 +462,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "a589bbc0_4bf108fa",
+      "range": {
+        "startLine": 91,
+        "startChar": 19,
+        "endLine": 91,
+        "endChar": 29
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8187cbd_0a8c220b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionDefinition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-21T12:30:48Z",
+      "side": 1,
+      "message": "don\u0027t forget to change this in docker as well.",
+      "parentUuid": "bbbfecc5_4cd8596a",
       "range": {
         "startLine": 91,
         "startChar": 19,
