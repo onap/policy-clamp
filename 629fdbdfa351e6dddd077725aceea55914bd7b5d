@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ab4a462_ea8958f1",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "Just a thought, Can this be named as \"changeId\" or \"revisionId\" which is more descriptive to understand ? Since we have \"lastMsg\" field in the db tables, it might be confused with it.",
+      "range": {
+        "startLine": 66,
+        "startChar": 17,
+        "endLine": 66,
+        "endChar": 28
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f89e8b50_4f875134",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "\"changeId\" or \"revisionId\" ?",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 28
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "398fd11a_10a50dee",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/AutomationCompositionMigration.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "This is for sending the instance data to participant in case of mismatch in the uuid?",
+      "range": {
+        "startLine": 37,
+        "startChar": 17,
+        "endLine": 37,
+        "endChar": 44
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21e8d1c8_21ec04f6",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "may be we can name them as compositionChangeId ?",
+      "range": {
+        "startLine": 65,
+        "startChar": 17,
+        "endLine": 65,
+        "endChar": 38
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2c84633_fb217881",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "instanceChangeId?",
+      "range": {
+        "startLine": 66,
+        "startChar": 17,
+        "endLine": 66,
+        "endChar": 35
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4e9f537_73f877fe",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/kafka/participant/ParticipantReqSync.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "Is this to refer the existing id in the participant cache? Good to consider renaming just to not get confused with the targetCompositionId used in the migration operation.",
+      "range": {
+        "startLine": 33,
+        "startChar": 17,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e009558c_e03b4f6d",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationComposition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 117,
+        "startChar": 19,
+        "endLine": 117,
+        "endChar": 29
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a589bbc0_4bf108fa",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionDefinition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "same comment",
+      "range": {
+        "startLine": 91,
+        "startChar": 19,
+        "endLine": 91,
+        "endChar": 29
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e6c67e1_4423fb80",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "why do we have this new validations added for automatic sync up? Is this part of a different requirement?",
+      "range": {
+        "startLine": 96,
+        "startChar": 7,
+        "endLine": 97,
+        "endChar": 100
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acec76c8_f8ac51ae",
+        "filename": "runtime-acm/src/main/resources/db/changelog/1702/upgrade/0100-automationcomposition.sql",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "variable name change needed if the jpa files are changed",
+      "range": {
+        "startLine": 21,
+        "startChar": 12,
+        "endLine": 21,
+        "endChar": 23
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3caedf06_7e12adb4",
+        "filename": "runtime-acm/src/main/resources/db/changelog/1702/upgrade/0200-automationcompositiondefinition.sql",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-07-21T09:18:25Z",
+      "side": 1,
+      "message": "changes needed if jpa is changed",
+      "range": {
+        "startLine": 21,
+        "startChar": 12,
+        "endLine": 21,
+        "endChar": 23
+      },
+      "revId": "629fdbdfa351e6dddd077725aceea55914bd7b5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
