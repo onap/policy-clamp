@@ -21,18 +21,19 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.Comparator;
+import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -66,17 +67,18 @@ public class StageScanner extends AbstractScanner {
      * Scan with stage: MIGRATE.
      *
      * @param automationComposition the AutomationComposition
-     * @param serviceTemplate the ToscaServiceTemplate
+     * @param acDefinition the Composition Definition and for migration is the Composition target
      * @param updateSync the update/sync information
+     * @param revisionIdComposition the last Update from Composition
      */
-    public void scanStage(final AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate,
-            UpdateSync updateSync) {
+    public void scanStage(final AutomationComposition automationComposition,
+            AutomationCompositionDefinition acDefinition, UpdateSync updateSync, UUID revisionIdComposition) {
         var completed = true;
         var minStageNotCompleted = 1000; // min stage not completed
         for (var element : automationComposition.getElements().values()) {
             if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
                     element.getSubState())) {
-                var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
                         .get(element.getDefinition().getName());
                 var stageSet = DeployState.MIGRATING.equals(automationComposition.getDeployState())
                             || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
@@ -102,22 +104,25 @@ public class StageScanner extends AbstractScanner {
                 LOGGER.debug("retry message AutomationCompositionMigration");
                 var acToSend = new AutomationComposition(automationComposition);
                 decryptInstanceProperties(acToSend);
-                sendNextStage(acToSend, minStageNotCompleted);
+                sendNextStage(acToSend, minStageNotCompleted, revisionIdComposition, acDefinition);
             } else {
                 handleTimeout(automationComposition, updateSync);
             }
         }
     }
 
-    private void sendNextStage(final AutomationComposition automationComposition, int minStageNotCompleted) {
+    private void sendNextStage(final AutomationComposition automationComposition, int minStageNotCompleted,
+            UUID revisionIdComposition, AutomationCompositionDefinition acDefinition) {
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
                 || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionMigration");
-            acMigrationPublisher.send(automationComposition, minStageNotCompleted);
+            // acDefinition for migration is the Composition target
+            acMigrationPublisher.send(automationComposition, minStageNotCompleted, revisionIdComposition,
+                    acDefinition.getRevisionId());
         }
         if (SubState.PREPARING.equals(automationComposition.getSubState())) {
             LOGGER.debug("retry message AutomationCompositionPrepare");
-            acPreparePublisher.sendPrepare(automationComposition, minStageNotCompleted);
+            acPreparePublisher.sendPrepare(automationComposition, minStageNotCompleted, acDefinition.getRevisionId());
         }
     }
 }

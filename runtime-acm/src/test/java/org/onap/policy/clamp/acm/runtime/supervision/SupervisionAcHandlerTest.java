@@ -45,6 +45,7 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -282,7 +283,7 @@ class SupervisionAcHandlerTest {
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         handler.deploy(automationComposition, acDefinition);
         verify(acProvider).updateAutomationComposition(automationComposition);
-        verify(acDeployPublisher, timeout(1000)).send(automationComposition, 0, true);
+        verify(acDeployPublisher, timeout(1000)).send(automationComposition, 0, true, acDefinition.getRevisionId());
     }
 
     @Test
@@ -308,7 +309,8 @@ class SupervisionAcHandlerTest {
         handler.undeploy(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000))
+                .send(any(AutomationComposition.class), anyInt(), anyBoolean(), any(UUID.class));
     }
 
     @Test
@@ -366,7 +368,8 @@ class SupervisionAcHandlerTest {
         handler.unlock(automationComposition, acDefinition);
 
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000))
+                .send(any(AutomationComposition.class), anyInt(), anyBoolean(), any(UUID.class));
     }
 
     @Test
@@ -421,7 +424,8 @@ class SupervisionAcHandlerTest {
         handler.lock(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000))
+                .send(any(AutomationComposition.class), anyInt(), anyBoolean(), any(UUID.class));
     }
 
     @Test
@@ -492,8 +496,9 @@ class SupervisionAcHandlerTest {
                 mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
-        handler.update(automationComposition);
-        verify(acElementPropertiesPublisher, timeout(1000)).send(any(AutomationComposition.class));
+        handler.update(automationComposition, UUID.randomUUID());
+        verify(acElementPropertiesPublisher, timeout(1000)).send(any(AutomationComposition.class),
+                any(UUID.class));
     }
 
     @Test
@@ -508,8 +513,9 @@ class SupervisionAcHandlerTest {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         assert automationComposition != null;
         automationComposition.setPhase(0);
-        handler.migrate(automationComposition);
-        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt());
+        handler.migrate(automationComposition, UUID.randomUUID(), UUID.randomUUID());
+        verify(acCompositionMigrationPublisher, timeout(1000))
+                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class));
     }
 
     @Test
@@ -522,8 +528,9 @@ class SupervisionAcHandlerTest {
                 mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
-        handler.migratePrecheck(automationComposition);
-        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt());
+        handler.migratePrecheck(automationComposition, UUID.randomUUID(), UUID.randomUUID());
+        verify(acCompositionMigrationPublisher, timeout(1000))
+                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class));
     }
 
     @Test
@@ -539,7 +546,8 @@ class SupervisionAcHandlerTest {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         handler.prepare(automationComposition, acDefinition);
-        verify(acPreparePublisher, timeout(1000)).sendPrepare(any(AutomationComposition.class), anyInt());
+        verify(acPreparePublisher, timeout(1000)).sendPrepare(any(AutomationComposition.class), anyInt(),
+                any(UUID.class));
     }
 
     @Test
@@ -552,7 +560,7 @@ class SupervisionAcHandlerTest {
                 acPreparePublisher, mock(MessageProvider.class), mock(EncryptionUtils.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
-        handler.review(automationComposition);
-        verify(acPreparePublisher, timeout(1000)).sendRevew(any(AutomationComposition.class));
+        handler.review(automationComposition, new AutomationCompositionDefinition());
+        verify(acPreparePublisher, timeout(1000)).sendReview(any(AutomationComposition.class), any(UUID.class));
     }
 }

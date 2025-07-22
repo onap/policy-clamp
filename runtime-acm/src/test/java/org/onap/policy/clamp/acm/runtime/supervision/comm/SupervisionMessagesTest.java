@@ -32,6 +32,7 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
@@ -124,7 +125,8 @@ class SupervisionMessagesTest {
     @Test
     void testSendAutomationCompositionStateChangePublisherNotActive() {
         var publisher = new AutomationCompositionStateChangePublisher();
-        assertThatThrownBy(() -> publisher.send(getAutomationComposition(), 0, true)).hasMessage(NOT_ACTIVE);
+        assertThatThrownBy(() -> publisher.send(getAutomationComposition(), 0, true, UUID.randomUUID()))
+                .hasMessage(NOT_ACTIVE);
     }
 
     private AutomationComposition getAutomationComposition() {
@@ -133,6 +135,7 @@ class SupervisionMessagesTest {
         automationComposition.setVersion("0.0.1");
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.UNLOCKING);
+        automationComposition.setElements(new HashMap<>());
         return automationComposition;
     }
 
@@ -141,7 +144,7 @@ class SupervisionMessagesTest {
         var publisher = new AutomationCompositionStateChangePublisher();
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
-        publisher.send(getAutomationComposition(), 0, true);
+        publisher.send(getAutomationComposition(), 0, true, UUID.randomUUID());
         verify(topicSink).send(anyString());
         publisher.stop();
     }
@@ -152,7 +155,7 @@ class SupervisionMessagesTest {
                 mock(AcRuntimeParameterGroup.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
-        publisher.sendDepriming(UUID.randomUUID());
+        publisher.sendDepriming(UUID.randomUUID(), Set.of(UUID.randomUUID()), UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 
@@ -183,7 +186,7 @@ class SupervisionMessagesTest {
                 .extractAcElementsFromServiceTemplate(serviceTemplate, TOSCA_ELEMENT_NAME);
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         var preparation = publisher.prepareParticipantPriming(acmDefinition);
-        publisher.sendPriming(preparation, acmDefinition.getCompositionId(), null);
+        publisher.sendPriming(preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId());
         verify(topicSink).send(anyString());
     }
 
@@ -221,7 +224,7 @@ class SupervisionMessagesTest {
         publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.send(automationComposition);
+        publisher.send(automationComposition, UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 
@@ -232,7 +235,7 @@ class SupervisionMessagesTest {
         publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.send(automationComposition, 0);
+        publisher.send(automationComposition, 0, UUID.randomUUID(), UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 
@@ -243,7 +246,7 @@ class SupervisionMessagesTest {
         publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.sendPrepare(automationComposition, 0);
+        publisher.sendPrepare(automationComposition, 0, UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 
@@ -254,7 +257,7 @@ class SupervisionMessagesTest {
         publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.sendRevew(automationComposition);
+        publisher.sendReview(automationComposition, UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 

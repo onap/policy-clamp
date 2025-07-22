@@ -215,7 +215,8 @@ public class CommissioningProvider {
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
         executor.execute(
-                () -> participantPrimePublisher.sendPriming(preparation, acmDefinition.getCompositionId(), null));
+                () -> participantPrimePublisher.sendPriming(
+                        preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId()));
     }
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
@@ -236,7 +237,7 @@ public class CommissioningProvider {
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
-        executor.execute(() -> participantPrimePublisher.sendDepriming(acmDefinition.getCompositionId()));
+        executor.execute(() -> participantPrimePublisher.sendDepriming(
+                acmDefinition.getCompositionId(), participantIds, acmDefinition.getRevisionId()));
     }
-
 }

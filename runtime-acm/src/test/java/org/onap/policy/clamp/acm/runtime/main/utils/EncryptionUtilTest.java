@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.InvalidAlgorithmParameterException;
+import java.util.List;
 import javax.crypto.Cipher;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,19 +36,17 @@ import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeEx
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
 class EncryptionUtilTest {
 
-    private static ToscaServiceTemplate serviceTemplateEncrypt;
-    public static final String TOSCA_TEMPLATE_YAML = "src/test/resources/providers/AcDefinitionEncryptTest.yaml";
-    public static final String INSTANTIATE_JSON = "src/test/resources/providers/AcInstantiateEncryptTest.json";
+    private static final String TOSCA_TEMPLATE_YAML = "src/test/resources/providers/AcDefinitionEncryptTest.yaml";
+    private static final String INSTANTIATE_JSON = "src/test/resources/providers/AcInstantiateEncryptTest.json";
     private static AutomationCompositionDefinition acDefinition;
 
     @BeforeAll
     static void setUpBeforeClass() {
-        serviceTemplateEncrypt = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        var serviceTemplateEncrypt = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
         var jpa2 = ProviderUtils.getJpaAndValidate(serviceTemplateEncrypt, JpaToscaServiceTemplate::new,
                 "toscaServiceTemplate");
         serviceTemplateEncrypt = jpa2.toAuthorative();
@@ -60,22 +59,17 @@ class EncryptionUtilTest {
                 InstantiationUtils.getAutomationCompositionFromResource(INSTANTIATE_JSON, "Crud");
         var encryptionUtils = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup());
         assertTrue(encryptionUtils.encryptionEnabled());
-        assertDoesNotThrow(()
-                -> {
-            assert automationComposition != null;
-            encryptionUtils.findAndEncryptSensitiveData(acDefinition, automationComposition);
-        });
-
         assert automationComposition != null;
+        assertDoesNotThrow(() -> encryptionUtils.findAndEncryptSensitiveData(acDefinition, automationComposition));
+
         automationComposition.getElements().values().forEach(element -> {
             assertTrue(element.getProperties().get("secret").toString().startsWith("ENCRYPTED:"));
             assertTrue(element.getProperties().get("password").toString().startsWith("ENCRYPTED:"));
         });
 
         var encryptionUtil2 = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup());
-        assertDoesNotThrow(() -> {
-            encryptionUtil2.findAndDecryptSensitiveData(automationComposition);
-        });
+        assertDoesNotThrow(() -> encryptionUtil2.decryptInstanceProperties(automationComposition));
+        assertDoesNotThrow(() -> encryptionUtil2.decryptInstanceProperties(List.of(automationComposition)));
         automationComposition.getElements().values().forEach(element -> {
             assertEquals("mysecret", element.getProperties().get("secret").toString());
             assertEquals("mypass", element.getProperties().get("password").toString());
@@ -99,8 +93,7 @@ class EncryptionUtilTest {
 
         assert automationComposition != null;
         assertThrows(AutomationCompositionRuntimeException.class,
-                () -> encryptionUtils.findAndDecryptSensitiveData(automationComposition));
-
+                () -> encryptionUtils.decryptInstanceProperties(automationComposition));
     }
 
 }

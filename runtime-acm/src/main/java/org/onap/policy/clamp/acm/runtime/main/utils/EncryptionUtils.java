@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,12 +141,7 @@ public class EncryptionUtils {
         }
     }
 
-
-    /**
-     * Find and decrypt sensitive fields in an AC instance.
-     * @param automationComposition acInstance
-     */
-    public void findAndDecryptSensitiveData(AutomationComposition automationComposition) {
+    private void findAndDecryptSensitiveData(AutomationComposition automationComposition) {
         for (var acInstanceElement: automationComposition.getElements().values()) {
             for (var property : acInstanceElement.getProperties().entrySet()) {
                 var propertyVal = property.getValue();
@@ -308,5 +303,27 @@ public class EncryptionUtils {
                     "Failed to decrypt instance field ", e);
         }
 
+    }
+
+    /**
+     * Find and decrypt sensitive fields in an AC instance.
+     *
+     * @param automationComposition acInstance
+     */
+    public void decryptInstanceProperties(AutomationComposition automationComposition) {
+        if (encryptionEnabled()) {
+            findAndDecryptSensitiveData(automationComposition);
+        }
+    }
+
+    /**
+     * Find and decrypt sensitive fields in an AC instance list.
+     *
+     * @param automationCompositionList acInstance list
+     */
+    public void decryptInstanceProperties(List<AutomationComposition> automationCompositionList) {
+        if (encryptionEnabled()) {
+            automationCompositionList.forEach(this::findAndDecryptSensitiveData);
+        }
     }
 }

@@ -41,6 +41,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionS
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -73,8 +74,9 @@ class PhaseScannerTest {
 
         var phaseScanner = new PhaseScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
                 acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
     }
@@ -94,8 +96,9 @@ class PhaseScannerTest {
 
         var phaseScanner = new PhaseScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
                 acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
 
         verify(automationCompositionProvider).deleteAutomationComposition(automationComposition.getInstanceId());
     }
@@ -117,21 +120,22 @@ class PhaseScannerTest {
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.updateAutomationComposition(any())).thenReturn(automationComposition);
-        var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
-        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         acRuntimeParameterGroup.getParticipantParameters().setMaxOperationWaitMs(-1);
-        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         // verify timeout scenario
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
+        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
+        var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
         var phaseScanner = new PhaseScanner(automationCompositionProvider, participantSyncPublisher,
                 acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
 
-        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        automationComposition.setLastMsg(TimestampHelper.now());
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
         verify(participantSyncPublisher).sendSync(any(AutomationComposition.class));
         assertEquals(StateChangeResult.TIMEOUT, automationComposition.getStateChangeResult());
@@ -139,7 +143,7 @@ class PhaseScannerTest {
         //already in TIMEOUT
         clearInvocations(automationCompositionProvider);
         clearInvocations(participantSyncPublisher);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
         verify(participantSyncPublisher, times(0))
                 .sendSync(any(AutomationComposition.class));
@@ -149,7 +153,7 @@ class PhaseScannerTest {
         for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
             entry.getValue().setDeployState(DeployState.DEPLOYED);
         }
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
         verify(participantSyncPublisher).sendSync(any(AutomationComposition.class));
         assertEquals(StateChangeResult.NO_ERROR, automationComposition.getStateChangeResult());
@@ -182,10 +186,11 @@ class PhaseScannerTest {
         var phaseScanner = new PhaseScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
                 acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
 
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
 
-        verify(acDeployPublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acDeployPublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean(), any(UUID.class));
     }
 
     @Test
@@ -218,11 +223,12 @@ class PhaseScannerTest {
                 mock(AutomationCompositionStateChangePublisher.class), acDeployPublisher,
                 acRuntimeParameterGroup, encryptionUtils);
 
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
 
         verify(acDeployPublisher, times(0))
-                .send(any(AutomationComposition.class), anyInt(), anyBoolean());
+                .send(any(AutomationComposition.class), anyInt(), anyBoolean(), any(UUID.class));
     }
 
     @Test
@@ -252,10 +258,11 @@ class PhaseScannerTest {
         var phaseScanner = new PhaseScanner(acProvider, mock(ParticipantSyncPublisher.class),
                 acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
 
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        phaseScanner.scanWithPhase(automationComposition, acDefinition, new UpdateSync());
 
         verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(),
-                anyBoolean());
+                anyBoolean(), any(UUID.class));
     }
 }

@@ -206,7 +206,7 @@ class SupervisionScannerTest {
 
     private void verifyNoInteraction(
             StageScanner stageScanner, SimpleScanner simpleScanner, PhaseScanner phaseScanner) {
-        verify(stageScanner, times(0)).scanStage(any(), any(), any());
+        verify(stageScanner, times(0)).scanStage(any(), any(), any(), any());
         verify(simpleScanner, times(0)).simpleScan(any(), any());
         verify(phaseScanner, times(0)).scanWithPhase(any(), any(), any());
     }
@@ -242,7 +242,7 @@ class SupervisionScannerTest {
                 messageProvider, monitoringScanner);
 
         supervisionScanner.run();
-        verify(stageScanner, times(0)).scanStage(any(), any(), any());
+        verify(stageScanner, times(0)).scanStage(any(), any(), any(), any());
         verify(simpleScanner, times(0)).simpleScan(any(), any());
         verify(phaseScanner).scanWithPhase(any(), any(), any());
         verify(messageProvider).removeMessage(message.getMessageId());
@@ -272,10 +272,13 @@ class SupervisionScannerTest {
         when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(Optional.of(automationComposition));
 
-        var definitionTarget = createAutomationCompositionDefinition(AcTypeState.PRIMED);
-        definitionTarget.setCompositionId(compositionTargetId);
+        var acDefinitionTarget = createAutomationCompositionDefinition(AcTypeState.PRIMED);
+        acDefinitionTarget.setCompositionId(compositionTargetId);
         var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMED);
-        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(definitionTarget);
+        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(acDefinitionTarget);
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(COMPOSITION_ID);
+        when(acDefinitionProvider.getAcDefinition(COMPOSITION_ID)).thenReturn(acDefinition);
         var stageScanner = mock(StageScanner.class);
 
         var messageProvider = mock(MessageProvider.class);
@@ -287,8 +290,8 @@ class SupervisionScannerTest {
                 messageProvider, monitoringScanner);
 
         supervisionScanner.run();
-        verify(stageScanner).scanStage(automationComposition, definitionTarget.getServiceTemplate(),
-                new UpdateSync());
+        verify(stageScanner).scanStage(automationComposition, acDefinitionTarget, new UpdateSync(),
+                acDefinition.getRevisionId());
         verify(messageProvider).removeJob(JOB_ID);
     }
 
@@ -319,6 +322,9 @@ class SupervisionScannerTest {
         definitionTarget.setCompositionId(compositionTargetId);
         var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMED);
         when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(definitionTarget);
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(COMPOSITION_ID);
+        when(acDefinitionProvider.getAcDefinition(COMPOSITION_ID)).thenReturn(acDefinition);
         var stageScanner = mock(StageScanner.class);
 
         var messageProvider = mock(MessageProvider.class);
@@ -330,8 +336,8 @@ class SupervisionScannerTest {
                 messageProvider, monitoringScanner);
 
         supervisionScanner.run();
-        verify(stageScanner).scanStage(automationComposition, definitionTarget.getServiceTemplate(),
-                new UpdateSync());
+        verify(stageScanner).scanStage(automationComposition, definitionTarget, new UpdateSync(),
+                acDefinition.getRevisionId());
         verify(messageProvider).removeJob(JOB_ID);
     }
 

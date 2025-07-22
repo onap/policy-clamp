@@ -24,6 +24,7 @@ import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
@@ -100,8 +101,8 @@ public class SupervisionAcHandler {
         executor.execute(
             () -> {
                 var acToSend = new AutomationComposition(automationComposition);
-                decryptInstanceProperties(acToSend);
-                automationCompositionDeployPublisher.send(acToSend, startPhase, true);
+                encryptionUtils.decryptInstanceProperties(acToSend);
+                automationCompositionDeployPublisher.send(acToSend, startPhase, true, acDefinition.getRevisionId());
             });
     }
 
@@ -131,7 +132,8 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
+            () -> automationCompositionStateChangePublisher.send(
+                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
@@ -158,7 +160,8 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
+            () -> automationCompositionStateChangePublisher.send(
+                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
@@ -175,8 +178,8 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> {
             var acToSend = new AutomationComposition(automationComposition);
-            decryptInstanceProperties(acToSend);
-            acPreparePublisher.sendPrepare(acToSend, stage);
+            encryptionUtils.decryptInstanceProperties(acToSend);
+            acPreparePublisher.sendPrepare(acToSend, stage, acDefinition.getRevisionId());
         });
     }
 
@@ -184,12 +187,13 @@ public class SupervisionAcHandler {
      * Handle prepare Post Deploy an AutomationComposition instance.
      *
      * @param automationComposition the AutomationComposition
+     * @param acDefinition the AutomationCompositionDefinition
      */
-    public void review(AutomationComposition automationComposition) {
+    public void review(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> acPreparePublisher.sendRevew(automationComposition));
+        executor.execute(() -> acPreparePublisher.sendReview(automationComposition, acDefinition.getRevisionId()));
     }
 
     /**
@@ -216,19 +220,21 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
+            () -> automationCompositionStateChangePublisher.send(
+                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
      * Handle Element property update on a deployed instance.
      *
      * @param automationComposition the AutomationComposition
+     * @param revisionIdComposition the last Update from Composition
      */
-    public void update(AutomationComposition automationComposition) {
+    public void update(AutomationComposition automationComposition, UUID revisionIdComposition) {
         executor.execute(
             () -> {
-                decryptInstanceProperties(automationComposition);
-                acElementPropertiesPublisher.send(automationComposition);
+                encryptionUtils.decryptInstanceProperties(automationComposition);
+                acElementPropertiesPublisher.send(automationComposition, revisionIdComposition);
             });
     }
 
@@ -245,7 +251,8 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
+            () -> automationCompositionStateChangePublisher.send(
+                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
@@ -334,11 +341,15 @@ public class SupervisionAcHandler {
      * Handle Migration of an AutomationComposition instance to other ACM Definition.
      *
      * @param automationComposition the AutomationComposition
+     * @param revisionIdComposition the last Update from Composition
+     * @param revisionIdCompositionTarget the last Update from Composition Target
      */
-    public void migrate(AutomationComposition automationComposition) {
+    public void migrate(AutomationComposition automationComposition, UUID revisionIdComposition,
+            UUID revisionIdCompositionTarget) {
         executor.execute(() -> {
-            decryptInstanceProperties(automationComposition);
-            acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase());
+            encryptionUtils.decryptInstanceProperties(automationComposition);
+            acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase(),
+                    revisionIdComposition, revisionIdCompositionTarget);
         });
     }
 
@@ -346,14 +357,12 @@ public class SupervisionAcHandler {
      * Handle Migration precheck of an AutomationComposition instance to other ACM Definition.
      *
      * @param automationComposition the AutomationComposition
+     * @param revisionIdComposition the last Update from Composition
+     * @param revisionIdCompositionTarget the last Update from Composition Target
      */
-    public void migratePrecheck(AutomationComposition automationComposition) {
-        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0));
-    }
-
-    private void decryptInstanceProperties(AutomationComposition automationComposition) {
-        if (encryptionUtils.encryptionEnabled()) {
-            encryptionUtils.findAndDecryptSensitiveData(automationComposition);
-        }
+    public void migratePrecheck(AutomationComposition automationComposition, UUID revisionIdComposition,
+            UUID revisionIdCompositionTarget) {
+        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0,
+                revisionIdComposition, revisionIdCompositionTarget));
     }
 }

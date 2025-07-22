@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
+import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -122,6 +123,9 @@ public abstract class AbstractScanner {
      */
     public void saveAndSync(AutomationComposition automationComposition, UpdateSync updateSync) {
         if (updateSync.isUpdated()) {
+            if (updateSync.isToBeSync()) {
+                automationComposition.setRevisionId(UUID.randomUUID());
+            }
             acProvider.updateAutomationComposition(automationComposition);
         }
         if (updateSync.isToBeDelete()) {
@@ -134,8 +138,6 @@ public abstract class AbstractScanner {
     }
 
     protected void decryptInstanceProperties(AutomationComposition automationComposition) {
-        if (encryptionUtils.encryptionEnabled()) {
-            encryptionUtils.findAndDecryptSensitiveData(automationComposition);
-        }
+        encryptionUtils.decryptInstanceProperties(automationComposition);
     }
 }
