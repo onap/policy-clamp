@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2023-2024 Nordix Foundation.
+ * Copyright (C) 2021,2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -55,10 +55,12 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
      * @param automationComposition the AutomationComposition
      * @param startPhase the Start Phase
      * @param firstStartPhase true if the first StartPhase
+     * @param revisionIdComposition the last Update from Composition
      */
     @Timed(value = "publisher.automation_composition_deploy",
             description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
-    public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase) {
+    public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase,
+            UUID revisionIdComposition) {
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = AcmUtils.createAcElementDeploy(element, DeployOrder.DEPLOY);
@@ -66,20 +68,23 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
             map.get(element.getParticipantId()).add(acElementDeploy);
         }
         List<ParticipantDeploy> participantDeploys = new ArrayList<>();
+        var acDeployMsg = new AutomationCompositionDeploy();
         for (var entry : map.entrySet()) {
             var participantDeploy = new ParticipantDeploy();
             participantDeploy.setParticipantId(entry.getKey());
+            acDeployMsg.getParticipantIdList().add(entry.getKey());
             participantDeploy.setAcElementList(entry.getValue());
             participantDeploys.add(participantDeploy);
         }
 
-        var acDeployMsg = new AutomationCompositionDeploy();
         acDeployMsg.setCompositionId(automationComposition.getCompositionId());
         acDeployMsg.setStartPhase(startPhase);
         acDeployMsg.setFirstStartPhase(firstStartPhase);
         acDeployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         acDeployMsg.setMessageId(UUID.randomUUID());
         acDeployMsg.setTimestamp(Instant.now());
+        acDeployMsg.setRevisionIdInstance(automationComposition.getRevisionId());
+        acDeployMsg.setRevisionIdComposition(revisionIdComposition);
         acDeployMsg.setParticipantUpdatesList(participantDeploys);
 
         LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg.getMessageId());

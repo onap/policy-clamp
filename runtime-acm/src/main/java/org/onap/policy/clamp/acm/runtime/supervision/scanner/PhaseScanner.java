@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 Nordix OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionD
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -64,18 +64,18 @@ public class PhaseScanner extends AbstractScanner {
      * Scan with startPhase: DEPLOY, UNDEPLOY, LOCK and UNLOCK.
      *
      * @param automationComposition the AutomationComposition
-     * @param serviceTemplate the ToscaServiceTemplate
+     * @param acDefinition the AutomationComposition Definition
      * @param updateSync the update/sync information
      */
     public void scanWithPhase(final AutomationComposition automationComposition,
-            ToscaServiceTemplate serviceTemplate, UpdateSync updateSync) {
+            AutomationCompositionDefinition acDefinition, UpdateSync updateSync) {
         var completed = true;
         var minSpNotCompleted = 1000; // min startPhase not completed
         var maxSpNotCompleted = 0; // max startPhase not completed
         var defaultMin = 1000; // min startPhase
         var defaultMax = 0; // max startPhase
         for (var element : automationComposition.getElements().values()) {
-            var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+            var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
                     .get(element.getDefinition().getName());
             int startPhase = toscaNodeTemplate != null
                     && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
@@ -102,7 +102,7 @@ public class PhaseScanner extends AbstractScanner {
             var nextSpNotCompleted = isForward ? minSpNotCompleted : maxSpNotCompleted;
 
             if (nextSpNotCompleted != automationComposition.getPhase()) {
-                sendAutomationCompositionMsg(automationComposition, nextSpNotCompleted, updateSync);
+                sendAutomationCompositionMsg(automationComposition, nextSpNotCompleted, updateSync, acDefinition);
             } else {
                 handleTimeout(automationComposition, updateSync);
             }
@@ -110,7 +110,7 @@ public class PhaseScanner extends AbstractScanner {
     }
 
     private void sendAutomationCompositionMsg(AutomationComposition automationComposition, int startPhase,
-            UpdateSync updateSync) {
+            UpdateSync updateSync, AutomationCompositionDefinition acDefinition) {
         savePhase(automationComposition, startPhase);
         updateSync.setUpdated(true);
         saveAndSync(automationComposition, updateSync);
@@ -119,10 +119,10 @@ public class PhaseScanner extends AbstractScanner {
             LOGGER.debug("retry message AutomationCompositionDeploy");
             var acToSend = new AutomationComposition(automationComposition);
             decryptInstanceProperties(acToSend);
-            acDeployPublisher.send(acToSend, startPhase, false);
+            acDeployPublisher.send(acToSend, startPhase, false, acDefinition.getRevisionId());
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(automationComposition, startPhase, false);
+            acStateChangePublisher.send(automationComposition, startPhase, false, acDefinition.getRevisionId());
         }
     }
 }

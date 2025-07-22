@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
+import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -161,6 +162,7 @@ public class AcDefinitionScanner {
     private void updateAcDefinitionState(AutomationCompositionDefinition acDefinition,
             UpdateSync updateSync) {
         if (updateSync.isUpdated()) {
+            acDefinition.setRevisionId(UUID.randomUUID());
             acDefinitionProvider.updateAcDefinitionState(acDefinition);
         }
         if (updateSync.isToBeSync()) {

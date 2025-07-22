@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -28,7 +28,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -62,15 +64,17 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
      *
      * @param participantDefinitions the list of ParticipantDefinition to send
      * @param compositionId the compositionId
-     * @param participantId the ParticipantId
+     * @param revisionId last update
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendPriming(List<ParticipantDefinition> participantDefinitions, UUID compositionId,
-            UUID participantId) {
+            UUID revisionId) {
         var message = new ParticipantPrime();
         message.setCompositionId(compositionId);
-        message.setParticipantId(participantId);
+        message.setParticipantIdList(participantDefinitions.stream()
+                .map(ParticipantDefinition::getParticipantId).collect(Collectors.toSet()));
         message.setTimestamp(Instant.now());
+        message.setRevisionIdComposition(revisionId);
         message.setParticipantDefinitionUpdates(participantDefinitions);
         LOGGER.debug("Participant Update sent {}", message.getMessageId());
         super.send(message);
@@ -86,6 +90,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
     public List<ParticipantDefinition> prepareParticipantPriming(AutomationCompositionDefinition acmDefinition) {
         acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         acmDefinition.setState(AcTypeState.PRIMING);
+        acmDefinition.setRevisionId(UUID.randomUUID());
         acmDefinition.setLastMsg(TimestampHelper.now());
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
@@ -120,10 +125,12 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
      * Send ParticipantPrime to Participant after that commissioning has been removed.
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
-    public void sendDepriming(UUID compositionId) {
+    public void sendDepriming(UUID compositionId, Set<UUID> participantIds, UUID revisionId) {
         var message = new ParticipantPrime();
         message.setCompositionId(compositionId);
+        message.setParticipantIdList(participantIds);
         message.setTimestamp(Instant.now());
+        message.setRevisionIdComposition(revisionId);
         // DeCommission the automation composition but deleting participantdefinitions on participants
         message.setParticipantDefinitionUpdates(null);
 

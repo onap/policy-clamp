@@ -22,8 +22,10 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -38,11 +40,14 @@ public class AutomationCompositionMigrationPublisher
      *
      * @param automationComposition the AutomationComposition
      * @param stage the stage to execute
+     * @param revisionIdComposition the last Update from Composition
+     * @param revisionIdCompositionTarget the last Update from Composition Target
      */
     @Timed(
             value = "publisher.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
-    public void send(AutomationComposition automationComposition, int stage) {
+    public void send(AutomationComposition automationComposition, int stage, UUID revisionIdComposition,
+            UUID revisionIdCompositionTarget) {
         var acMigration = new AutomationCompositionMigration();
         acMigration.setRollback(DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()));
         acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
@@ -51,8 +56,14 @@ public class AutomationCompositionMigrationPublisher
         acMigration.setMessageId(UUID.randomUUID());
         acMigration.setCompositionTargetId(automationComposition.getCompositionTargetId());
         acMigration.setStage(stage);
-        acMigration.setParticipantUpdatesList(
-                AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE));
+        acMigration.setRevisionIdInstance(automationComposition.getRevisionId());
+        acMigration.setRevisionIdComposition(revisionIdComposition);
+        acMigration.setRevisionIdCompositionTarget(revisionIdCompositionTarget);
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE);
+        acMigration.setParticipantUpdatesList(participantUpdatesList);
+        acMigration.setParticipantIdList(participantUpdatesList.stream()
+                .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
+
         super.send(acMigration);
     }
 }

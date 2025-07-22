@@ -40,6 +40,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionM
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
@@ -77,7 +78,9 @@ class StageScannerTest {
                 mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
                 acRuntimeParameterGroup, encryptionUtils);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(serviceTemplate);
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(DeployState.MIGRATING, automationComposition.getDeployState());
 
@@ -87,14 +90,14 @@ class StageScannerTest {
                 .get(element.getDefinition().getName());
         toscaNodeTemplate.setProperties(Map.of("stage", List.of(1)));
 
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(DeployState.MIGRATING, automationComposition.getDeployState());
 
         // first element is migrated
         clearInvocations(acProvider);
         element.setDeployState(DeployState.DEPLOYED);
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
 
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
@@ -128,7 +131,9 @@ class StageScannerTest {
                 mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
                 acRuntimeParameterGroup, encryptionUtils);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(serviceTemplate);
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(DeployState.MIGRATION_REVERTING, automationComposition.getDeployState());
 
@@ -138,14 +143,14 @@ class StageScannerTest {
                 .get(element.getDefinition().getName());
         toscaNodeTemplate.setProperties(Map.of("stage", List.of(1)));
 
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(DeployState.MIGRATION_REVERTING, automationComposition.getDeployState());
 
         // first element is migrated
         clearInvocations(acProvider);
         element.setDeployState(DeployState.DEPLOYED);
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
 
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
@@ -180,7 +185,9 @@ class StageScannerTest {
                 acRuntimeParameterGroup, encryptionUtils);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setServiceTemplate(serviceTemplate);
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(SubState.PREPARING, automationComposition.getSubState());
 
@@ -191,14 +198,14 @@ class StageScannerTest {
         var prepare = Map.of("prepare", List.of(1));
         toscaNodeTemplate.setProperties(Map.of("stage", prepare));
 
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(SubState.PREPARING, automationComposition.getSubState());
 
         // first element is prepared
         clearInvocations(acProvider);
         element.setSubState(SubState.NONE);
-        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
 
         assertEquals(SubState.NONE, automationComposition.getSubState());

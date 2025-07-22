@@ -35,7 +35,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -90,15 +89,24 @@ public class MonitoringScanner {
         }
         if (automationCompositionOpt.isPresent()) {
             var automationComposition = automationCompositionOpt.get();
-            var compositionId = automationComposition.getCompositionTargetId() != null
-                    ? automationComposition.getCompositionTargetId() : automationComposition.getCompositionId();
-            var acDefinition = acDefinitionMap.computeIfAbsent(compositionId, acDefinitionProvider::getAcDefinition);
-            scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate(), updateSync);
+            if (automationComposition.getCompositionTargetId() != null) {
+                var acDefinitionTarget = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionTargetId(),
+                        acDefinitionProvider::getAcDefinition);
+                var acDefinition = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionId(),
+                        acDefinitionProvider::getAcDefinition);
+                scanAutomationComposition(automationComposition, acDefinitionTarget, updateSync,
+                        acDefinition.getRevisionId());
+            } else {
+                var acDefinition = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionId(),
+                        acDefinitionProvider::getAcDefinition);
+                scanAutomationComposition(automationComposition, acDefinition, updateSync,
+                        acDefinition.getRevisionId());
+            }
         }
     }
 
     private void scanAutomationComposition(final AutomationComposition automationComposition,
-            ToscaServiceTemplate serviceTemplate, UpdateSync updateSync) {
+            AutomationCompositionDefinition acDefinition, UpdateSync updateSync, UUID revisionIdComposition) {
         LOGGER.debug("scanning automation composition {} . . .", automationComposition.getInstanceId());
 
         if (!AcmUtils.isInTransitionalState(automationComposition.getDeployState(),
@@ -112,13 +120,13 @@ public class MonitoringScanner {
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
                 || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
                 || SubState.PREPARING.equals(automationComposition.getSubState())) {
-            stageScanner.scanStage(automationComposition, serviceTemplate, updateSync);
+            stageScanner.scanStage(automationComposition, acDefinition, updateSync, revisionIdComposition);
         } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())
                 || SubState.REVIEWING.equals(automationComposition.getSubState())
                 || SubState.MIGRATION_PRECHECKING.equals(automationComposition.getSubState())) {
             simpleScanner.simpleScan(automationComposition, updateSync);
         } else {
-            phaseScanner.scanWithPhase(automationComposition, serviceTemplate, updateSync);
+            phaseScanner.scanWithPhase(automationComposition, acDefinition, updateSync);
         }
     }
 }

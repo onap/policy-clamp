@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
         message.setState(acmDefinition.getState());
+        message.setRevisionIdComposition(acmDefinition.getRevisionId());
         message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
 
@@ -102,6 +103,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.setStateChangeResult(acDefinition.getStateChangeResult());
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
+        message.setRevisionIdComposition(acDefinition.getRevisionId());
         if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
             message.setDelete(true);
         } else {
@@ -127,6 +129,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.setTimestamp(Instant.now());
         var syncAc = new ParticipantRestartAc();
         syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
+        syncAc.setRevisionId(automationComposition.getRevisionId());
         syncAc.setDeployState(automationComposition.getDeployState());
         syncAc.setLockState(automationComposition.getLockState());
         syncAc.setStateChangeResult(automationComposition.getStateChangeResult());

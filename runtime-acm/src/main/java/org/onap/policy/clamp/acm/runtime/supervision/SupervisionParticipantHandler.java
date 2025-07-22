@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,19 +29,24 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -67,6 +72,7 @@ public class SupervisionParticipantHandler {
     private final AcDefinitionProvider acDefinitionProvider;
     private final ParticipantSyncPublisher participantSyncPublisher;
     private final MessageProvider messageProvider;
+    private final EncryptionUtils encryptionUtils;
 
     /**
      * Handle a ParticipantRegister message from a participant.
@@ -75,8 +81,7 @@ public class SupervisionParticipantHandler {
      */
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
-        saveIfNotPresent(participantRegisterMsg.getReplicaId(),
-                participantRegisterMsg.getParticipantId(),
+        saveIfNotPresent(participantRegisterMsg.getReplicaId(), participantRegisterMsg.getParticipantId(),
                 participantRegisterMsg.getParticipantSupportedElementType(), true);
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
@@ -118,9 +123,8 @@ public class SupervisionParticipantHandler {
                 && participantStatusMsg.getCompositionId() != null) {
             var acDefinition = acDefinitionProvider.findAcDefinition(participantStatusMsg.getCompositionId());
             if (acDefinition.isPresent()) {
-                var map = acDefinition.get().getElementStateMap()
-                        .values().stream().collect(Collectors.toMap(NodeTemplateState::getNodeTemplateId,
-                                UnaryOperator.identity()));
+                var map = acDefinition.get().getElementStateMap().values().stream()
+                        .collect(Collectors.toMap(NodeTemplateState::getNodeTemplateId, UnaryOperator.identity()));
                 messageProvider.saveCompositionOutProperties(participantStatusMsg, map);
             } else {
                 LOGGER.error("Not valid ParticipantStatus message");
@@ -186,8 +190,9 @@ public class SupervisionParticipantHandler {
         LOGGER.debug("Composition to be send in Restart message {}", acDefinition.getCompositionId());
         var automationCompositionList =
                 automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
-        var automationCompositions = automationCompositionList.stream()
-                .filter(ac -> isAcToBeSyncRestarted(participantId, ac)).toList();
+        encryptionUtils.decryptInstanceProperties(automationCompositionList);
+        var automationCompositions =
+                automationCompositionList.stream().filter(ac -> isAcToBeSyncRestarted(participantId, ac)).toList();
         participantSyncPublisher.sendRestartMsg(participantId, replicaId, acDefinition, automationCompositions);
     }
 
@@ -212,5 +217,52 @@ public class SupervisionParticipantHandler {
         Map<UUID, ParticipantSupportedElementType> map = new HashMap<>();
         MapUtils.populateMap(map, elementList, ParticipantSupportedElementType::getId);
         return map;
+    }
+
+    /**
+     * Handle a participantReqSync message from a participant.
+     *
+     * @param participantReqSync the message received from a participant
+     */
+    @Timed(value = "listener.participant_req_sync", description = "PARTICIPANT_REQ_SYNC_MSG messages received")
+    public void handleParticipantReqSync(ParticipantReqSync participantReqSync) {
+        if (participantReqSync.getCompositionTargetId() != null) {
+            // outdated Composition Target
+            var acDefinition = acDefinitionProvider.getAcDefinition(participantReqSync.getCompositionTargetId());
+            participantSyncPublisher.sendRestartMsg(participantReqSync.getParticipantId(),
+                    participantReqSync.getReplicaId(), acDefinition, List.of());
+        }
+        if (participantReqSync.getCompositionId() == null
+                && participantReqSync.getAutomationCompositionId() != null) {
+            // outdated AutomationComposition
+            var automationComposition =
+                    getAutomationCompositionForSync(participantReqSync.getAutomationCompositionId());
+            participantSyncPublisher.sendSync(automationComposition);
+        }
+        if (participantReqSync.getCompositionId() != null) {
+            // outdated Composition
+            var acDefinition = acDefinitionProvider.getAcDefinition(participantReqSync.getCompositionId());
+            var automationCompositions = participantReqSync.getAutomationCompositionId() != null
+                    ? List.of(getAutomationCompositionForSync(participantReqSync.getAutomationCompositionId())) :
+                    List.<AutomationComposition>of();
+            participantSyncPublisher.sendRestartMsg(participantReqSync.getParticipantId(),
+                    participantReqSync.getReplicaId(), acDefinition, automationCompositions);
+        }
+    }
+
+    private AutomationComposition getAutomationCompositionForSync(UUID automationCompositionId) {
+        var automationComposition = automationCompositionProvider.getAutomationComposition(automationCompositionId);
+        encryptionUtils.decryptInstanceProperties(automationComposition);
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
+            var stage = ParticipantUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
+            if (automationComposition.getPhase().equals(stage)) {
+                // scenario first stage migration
+                var rollback = automationCompositionProvider.getAutomationCompositionRollback(automationCompositionId);
+                automationComposition.setElements(rollback.getElements().values().stream()
+                    .collect(Collectors.toMap(AutomationCompositionElement::getId, AutomationCompositionElement::new)));
+            }
+        }
+        return automationComposition;
     }
 }

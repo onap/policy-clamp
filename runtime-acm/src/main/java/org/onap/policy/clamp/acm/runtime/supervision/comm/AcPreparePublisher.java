@@ -23,8 +23,11 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -43,14 +46,19 @@ public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationC
      *
      * @param automationComposition the AutomationComposition
      * @param stage the stage
+     * @param revisionIdComposition the last Update from Composition
      */
     @Timed(value = "publisher.prepare", description = "AC Prepare Pre Deploy published")
-    public void sendPrepare(AutomationComposition automationComposition, int stage) {
+    public void sendPrepare(AutomationComposition automationComposition, int stage, UUID revisionIdComposition) {
         var acPrepare = createAutomationCompositionPrepare(automationComposition.getCompositionId(),
             automationComposition.getInstanceId());
         acPrepare.setStage(stage);
-        acPrepare.setParticipantList(
-            AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.NONE));
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.NONE);
+        acPrepare.setParticipantList(participantUpdatesList);
+        acPrepare.setParticipantIdList(participantUpdatesList.stream()
+                .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
+        acPrepare.setRevisionIdInstance(automationComposition.getRevisionId());
+        acPrepare.setRevisionIdComposition(revisionIdComposition);
         LOGGER.debug("AC Prepare sent {}", acPrepare);
         super.send(acPrepare);
     }
@@ -59,12 +67,17 @@ public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationC
      * Send AutomationCompositionPrepare Review message to Participant.
      *
      * @param automationComposition the AutomationComposition
+     * @param revisionIdComposition the last Update from Composition
      */
     @Timed(value = "publisher.review", description = "AC Review Post Deploy published")
-    public void sendRevew(AutomationComposition automationComposition) {
+    public void sendReview(AutomationComposition automationComposition, UUID revisionIdComposition) {
         var acPrepare = createAutomationCompositionPrepare(automationComposition.getCompositionId(),
             automationComposition.getInstanceId());
         acPrepare.setPreDeploy(false);
+        acPrepare.setParticipantIdList(automationComposition.getElements().values().stream()
+                .map(AutomationCompositionElement::getParticipantId).collect(Collectors.toSet()));
+        acPrepare.setRevisionIdComposition(revisionIdComposition);
+        acPrepare.setRevisionIdInstance(automationComposition.getRevisionId());
         LOGGER.debug("AC Review sent {}", acPrepare);
         super.send(acPrepare);
     }

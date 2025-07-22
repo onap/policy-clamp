@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,10 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -45,17 +47,21 @@ public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<P
      * Send ACElementPropertiesUpdate to Participant.
      *
      * @param automationComposition the AutomationComposition
+     * @param revisionIdComposition the last Update from Composition
      */
     @Timed(value = "publisher.properties_update", description = "AC Element Properties Update published")
-    public void send(AutomationComposition automationComposition) {
+    public void send(AutomationComposition automationComposition, UUID revisionIdComposition) {
         var propertiesUpdate = new PropertiesUpdate();
         propertiesUpdate.setCompositionId(automationComposition.getCompositionId());
         propertiesUpdate.setAutomationCompositionId(automationComposition.getInstanceId());
         propertiesUpdate.setMessageId(UUID.randomUUID());
         propertiesUpdate.setTimestamp(Instant.now());
-        propertiesUpdate.setParticipantUpdatesList(
-                AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE));
-
+        propertiesUpdate.setRevisionIdInstance(automationComposition.getRevisionId());
+        propertiesUpdate.setRevisionIdComposition(revisionIdComposition);
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE);
+        propertiesUpdate.setParticipantUpdatesList(participantUpdatesList);
+        propertiesUpdate.setParticipantIdList(participantUpdatesList.stream()
+                .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
         LOGGER.debug("AC Element properties update sent {}", propertiesUpdate.getMessageId());
         super.send(propertiesUpdate);
     }

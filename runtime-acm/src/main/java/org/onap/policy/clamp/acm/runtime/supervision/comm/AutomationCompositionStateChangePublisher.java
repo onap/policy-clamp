@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.springframework.stereotype.Component;
@@ -39,11 +41,13 @@ public class AutomationCompositionStateChangePublisher
      *
      * @param automationComposition the AutomationComposition
      * @param startPhase the startPhase
+     * @param revisionIdComposition the last Update from Composition
      */
     @Timed(
             value = "publisher.automation_composition_state_change",
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages published")
-    public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase) {
+    public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase,
+            UUID revisionIdComposition) {
         var acsc = new AutomationCompositionStateChange();
         acsc.setCompositionId(automationComposition.getCompositionId());
         acsc.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -52,6 +56,10 @@ public class AutomationCompositionStateChangePublisher
         acsc.setLockOrderedState(AcmUtils.stateLockToOrder(automationComposition.getLockState()));
         acsc.setStartPhase(startPhase);
         acsc.setFirstStartPhase(firstStartPhase);
+        acsc.setRevisionIdInstance(automationComposition.getRevisionId());
+        acsc.setRevisionIdComposition(revisionIdComposition);
+        acsc.setParticipantIdList(automationComposition.getElements().values().stream()
+                .map(AutomationCompositionElement::getParticipantId).collect(Collectors.toSet()));
 
         super.send(acsc);
     }
