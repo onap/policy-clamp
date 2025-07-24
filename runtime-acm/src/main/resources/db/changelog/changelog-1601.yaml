@@ -31,6 +31,11 @@ databaseChangeLog:
       author: policy
       changes:
         - sql:
-            sql: |
-              UPDATE automationcompositionelement SET subState=0 WHERE subState is NULL;
-              UPDATE automationcompositionelement SET stage=0 WHERE stage is NULL;
+            sql: UPDATE automationcompositionelement SET subState=0 WHERE subState is NULL;
+
+  - changeSet:
+      id: 1601-3
+      author: policy
+      changes:
+        - sql:
+            sql: UPDATE automationcompositionelement SET stage=0 WHERE stage is NULL;

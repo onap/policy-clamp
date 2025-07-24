@@ -43,6 +43,17 @@ databaseChangeLog:
                 columnName: subState
       changes:
         - sql:
-            sql: |
-              ALTER TABLE automationcompositionelement ADD subState SMALLINT DEFAULT NULL;
-              ALTER TABLE automationcompositionelement ADD stage SMALLINT DEFAULT NULL;
+            sql: ALTER TABLE automationcompositionelement ADD subState SMALLINT DEFAULT NULL;
+
+  - changeSet:
+      id: 1600-3
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcompositionelement
+                columnName: stage
+      changes:
+        - sql:
+            sql: ALTER TABLE automationcompositionelement ADD stage SMALLINT DEFAULT NULL;

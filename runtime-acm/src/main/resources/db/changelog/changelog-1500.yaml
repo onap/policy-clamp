@@ -30,13 +30,23 @@ databaseChangeLog:
                 columnName: lastMsg
       changes:
         - sql:
-            sql: |
-              ALTER TABLE automationcomposition ADD lastMsg timestamp without time zone DEFAULT Now();
-              ALTER TABLE automationcomposition ADD phase SMALLINT DEFAULT 0;
-              UPDATE automationcomposition SET restarting = NULL;
+            sql: ALTER TABLE automationcomposition ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
       id: 1500-2
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: automationcomposition
+                columnName: phase
+      changes:
+        - sql:
+            sql: ALTER TABLE automationcomposition ADD phase SMALLINT DEFAULT 0;
+
+  - changeSet:
+      id: 1500-3
       author: policy
       preConditions:
         - onFail: MARK_RAN
@@ -46,12 +56,10 @@ databaseChangeLog:
                 columnName: lastMsg
       changes:
         - sql:
-            sql: |
-              ALTER TABLE automationcompositiondefinition ADD lastMsg timestamp without time zone DEFAULT Now();
-              UPDATE automationcompositiondefinition SET restarting = NULL;
+            sql: ALTER TABLE automationcompositiondefinition ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
-      id: 1500-3
+      id: 1500-4
       author: policy
       preConditions:
         - onFail: MARK_RAN
@@ -70,7 +78,7 @@ databaseChangeLog:
               );
 
   - changeSet:
-      id: 1500-4
+      id: 1500-5
       author: policy
       preConditions:
         - onFail: MARK_RAN
@@ -83,7 +91,7 @@ databaseChangeLog:
             sql: ALTER TABLE participant ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
-      id: 1500-5
+      id: 1500-6
       author: policy
       preConditions:
         - onFail: MARK_RAN
@@ -95,7 +103,7 @@ databaseChangeLog:
             sql: CREATE INDEX participant_replica_fk ON participantreplica(participantId);
 
   - changeSet:
-      id: 1500-6
+      id: 1500-7
       author: policy
       preConditions:
         - onFail: MARK_RAN
@@ -114,15 +122,49 @@ databaseChangeLog:
                 ON DELETE RESTRICT;
 
   - changeSet:
-      id: 1500-7
+      id: 1500-8
       author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: automationcomposition
+            columnName: restarting
+      changes:
+        - sql:
+            sql: UPDATE automationcomposition SET restarting = NULL;
+
+  - changeSet:
+      id: 1500-9
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: automationcompositiondefinition
+            columnName: restarting
+      changes:
+        - sql:
+            sql: UPDATE automationcompositiondefinition SET restarting = NULL;
+
+  - changeSet:
+      id: 1500-10
+      author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: automationcompositionelement
+            columnName: restarting
       changes:
         - sql:
             sql: UPDATE automationcompositionelement SET restarting = NULL;
 
   - changeSet:
-      id: 1500-8
+      id: 1500-11
       author: policy
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: nodetemplatestate
+            columnName: restarting
       changes:
         - sql:
             sql: UPDATE nodetemplatestate SET restarting = NULL;
