@@ -33,8 +33,6 @@ databaseChangeLog:
             sql: |
               ALTER TABLE automationcomposition
                ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
-              ALTER TABLE automationcomposition ALTER COLUMN phase TYPE INTEGER;
-              ALTER TABLE automationcomposition DROP COLUMN restarting;
 
   - changeSet:
       author: policy
@@ -50,28 +48,20 @@ databaseChangeLog:
             sql: |
               ALTER TABLE automationcompositiondefinition
                ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
-              ALTER TABLE automationcompositiondefinition DROP COLUMN restarting;
 
   - changeSet:
       author: policy
       id: 1702-3
       changes:
         - sql:
-            sql: ALTER TABLE automationcompositionelement ALTER COLUMN stage TYPE INTEGER;
+            sql: ALTER TABLE automationcomposition ALTER COLUMN phase TYPE INTEGER;
 
   - changeSet:
       author: policy
       id: 1702-4
-      preConditions:
-        - onFail: MARK_RAN
-        - columnExists:
-            tableName: participant
-            columnName: participantState
       changes:
         - sql:
-            sql: |
-              ALTER TABLE participant DROP COLUMN participantState;
-              ALTER TABLE participant DROP COLUMN lastMsg;
+            sql: ALTER TABLE automationcompositionelement ALTER COLUMN stage TYPE INTEGER;
 
   - changeSet:
       author: policy
@@ -79,3 +69,51 @@ databaseChangeLog:
       changes:
         - sql:
             sql: ALTER TABLE participantreplica ALTER COLUMN participantId DROP DEFAULT;
+
+  - changeSet:
+      author: policy
+      id: 1702-6
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: automationcomposition
+            columnName: restarting
+      changes:
+        - sql:
+            sql: ALTER TABLE automationcomposition DROP COLUMN restarting;
+
+  - changeSet:
+      author: policy
+      id: 1702-7
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: automationcompositiondefinition
+            columnName: restarting
+      changes:
+        - sql:
+            sql: ALTER TABLE automationcompositiondefinition DROP COLUMN restarting;
+
+  - changeSet:
+      author: policy
+      id: 1702-8
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: participant
+            columnName: participantState
+      changes:
+        - sql:
+            sql: ALTER TABLE participant DROP COLUMN participantState;
+
+  - changeSet:
+      author: policy
+      id: 1702-9
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: participant
+            columnName: lastMsg
+      changes:
+        - sql:
+            sql: ALTER TABLE participant DROP COLUMN lastMsg;
