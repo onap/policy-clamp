@@ -32,3 +32,9 @@ databaseChangeLog:
             path: db/changelog/1702/upgrade/0100-automationcomposition.sql
         - sqlFile:
             path: db/changelog/1702/upgrade/0200-automationcompositiondefinition.sql
+        - sqlFile:
+            path: db/changelog/1702/upgrade/0300-automationcompositionelement.sql
+        - sqlFile:
+            path: db/changelog/1702/upgrade/0400-participant.sql
+        - sqlFile:
+            path: db/changelog/1702/upgrade/0500-participantreplica.sql

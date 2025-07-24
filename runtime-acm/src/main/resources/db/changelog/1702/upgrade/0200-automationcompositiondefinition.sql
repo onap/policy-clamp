@@ -19,3 +19,4 @@
 
 ALTER TABLE automationcompositiondefinition
  ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+ALTER TABLE automationcompositiondefinition DROP COLUMN restarting;

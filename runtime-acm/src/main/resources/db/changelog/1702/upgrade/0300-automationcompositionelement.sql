@@ -17,7 +17,4 @@
  *  ============LICENSE_END=========================================================
  */
 
-ALTER TABLE automationcomposition
- ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
-ALTER TABLE automationcomposition ALTER COLUMN phase TYPE INTEGER;
-ALTER TABLE automationcomposition DROP COLUMN restarting;
+ALTER TABLE automationcompositionelement ALTER COLUMN stage TYPE INTEGER;
