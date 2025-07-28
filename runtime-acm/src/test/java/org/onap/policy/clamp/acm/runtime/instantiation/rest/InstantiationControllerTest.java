@@ -56,6 +56,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -66,9 +67,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "default" })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class InstantiationControllerTest extends CommonRestController {
 
-    private static final int NUMBER_ISTANCES = 10;
+    private static final int NUMBER_INSTANCES = 10;
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
     private static final String AC_VERSIONING_YAML = "src/test/resources/rest/acm/AutomationCompositionVersioning.yaml";
 
@@ -147,6 +149,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Create");
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Create");
+        assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
 
         var instResponse = createAutomationComposition(compositionId, automationCompositionFromRsc,
@@ -178,6 +181,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("CreateBadRequest");
         var automationCompositionFromRsc = InstantiationUtils
                 .getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
+        assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
 
         createAutomationComposition(compositionId, automationCompositionFromRsc, Response.Status.CREATED);
@@ -195,6 +199,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB(serviceTemplateVer);
         var automationCompositionFromRsc = InstantiationUtils
             .getAutomationCompositionFromYaml(AC_VERSIONING_YAML, "Versioning");
+        assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
         var instResponse =
             createAutomationComposition(compositionId, automationCompositionFromRsc, Response.Status.CREATED);
@@ -217,6 +222,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Query");
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
+        assertNotNull(automationComposition);
         automationComposition.setCompositionId(compositionId);
 
         instantiationProvider.createAutomationComposition(compositionId, automationComposition);
@@ -239,8 +245,9 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Query");
         var automationComposition =
             InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
+        assertNotNull(automationComposition);
         automationComposition.setCompositionId(compositionId);
-        for (var i = 0; i < NUMBER_ISTANCES; i++) {
+        for (var i = 0; i < NUMBER_INSTANCES; i++) {
             automationComposition.setName("acm_" + i);
             instantiationProvider.createAutomationComposition(compositionId, automationComposition);
         }
@@ -260,7 +267,7 @@ class InstantiationControllerTest extends CommonRestController {
             assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
             var resultList = response.readEntity(AutomationCompositions.class);
             assertNotNull(resultList);
-            assertThat(resultList.getAutomationCompositionList()).hasSizeGreaterThanOrEqualTo(NUMBER_ISTANCES);
+            assertThat(resultList.getAutomationCompositionList()).hasSizeGreaterThanOrEqualTo(NUMBER_INSTANCES);
         }
     }
 
@@ -279,6 +286,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Get");
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Get");
+        assertNotNull(automationComposition);
         automationComposition.setCompositionId(compositionId);
 
         instantiationProvider.createAutomationComposition(compositionId, automationComposition);
@@ -299,12 +307,14 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Update");
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Update");
+        assertNotNull(automationCompositionCreate);
         automationCompositionCreate.setCompositionId(compositionId);
 
         var response = instantiationProvider.createAutomationComposition(compositionId, automationCompositionCreate);
 
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Update");
+        assertNotNull(automationComposition);
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(response.getInstanceId());
         automationComposition.getElements().values()
@@ -334,6 +344,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Delete");
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Delete");
+        assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
 
         var instResponse =
@@ -358,6 +369,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("DeleteNotFound");
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "DelNotFound");
+        assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
 
         instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
@@ -382,10 +394,11 @@ class InstantiationControllerTest extends CommonRestController {
         // instance not valid state
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "NotValid");
+        assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
-        var instanceResponce =
+        var instanceResponse =
                 instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
-        url = getInstanceEndPoint(compositionId, instanceResponce.getInstanceId()) + "/rollback";
+        url = getInstanceEndPoint(compositionId, instanceResponse.getInstanceId()) + "/rollback";
         invocationBuilder = super.sendRequest(url);
         try (var resp = invocationBuilder.post(Entity.entity("", MediaType.APPLICATION_JSON))) {
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
@@ -406,6 +419,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Deploy_BadRequest");
         var acFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "BadRequest");
+        assertNotNull(acFromRsc);
         acFromRsc.setCompositionId(compositionId);
 
         var instResponse = instantiationProvider.createAutomationComposition(compositionId, acFromRsc);
@@ -425,6 +439,7 @@ class InstantiationControllerTest extends CommonRestController {
         var compositionId = createAcDefinitionInDB("Deploy");
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Command");
+        assertNotNull(automationComposition);
         automationComposition.setCompositionId(compositionId);
         var instResponse = instantiationProvider.createAutomationComposition(compositionId, automationComposition);
 
@@ -436,6 +451,28 @@ class InstantiationControllerTest extends CommonRestController {
         try (var resp = invocationBuilder.put(Entity.json(instantiationUpdate))) {
             assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
         }
+    }
+
+    @Test
+    void test_QueryCompositionInstancesByStateChangeDeployState() {
+        // test setup
+        var compositionId = createAcDefinitionInDB("Query");
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
+        assertNotNull(automationComposition);
+        automationComposition.setCompositionId(compositionId);
+        for (var i = 0; i < NUMBER_INSTANCES; i++) {
+            automationComposition.setName("acmr_" + i);
+            instantiationProvider.createAutomationComposition(compositionId, automationComposition);
+        }
+
+        validateQueryPageable("instances", 10);
+        validateQueryPageable("instances?page=1&size=4", 4);
+        validateQueryPageable("instances?size=4", 10); // only works if page is also informed, so listAll
+        validateQueryPageable("instances?stateChangeResult=FAILED,TIMEOUT", 0);
+        validateQueryPageable("instances?deployState=UNDEPLOYED", 10);
+        validateQueryPageable("instances?stateChangeResult=NO_ERROR&deployState=UNDEPLOYED", 0);
+        validateQueryPageable("instances?sort=name&sortOrder=DESC", 10);
     }
 
     private UUID createAcDefinitionInDB(String name) {

@@ -99,6 +99,26 @@ public class InstantiationController extends AbstractRestController implements A
     }
 
     /**
+     * Queries automation composition instances based on deployment state and state change results.
+     *
+     * @param deployStates the deployment states to filter automation compositions
+     * @param stateChangeResults the state change results to filter automation compositions
+     * @param page the page number for pagination; may be null
+     * @param size the size of the page for pagination; may be null
+     * @param sort the field to sort by; may be null
+     * @param sortOrder the sorting order (ASC or DESC); may be null
+     * @param requestId request ID used in ONAP logging
+     * @return a {@link ResponseEntity} containing an {@link AutomationCompositions} object
+     */
+    @Override
+    public ResponseEntity<AutomationCompositions> queryCompositionInstancesByStateChangeDeployState(String deployStates,
+         String stateChangeResults, Integer page, Integer size, String sort, String sortOrder, UUID requestId) {
+        var pageable = getPageableWithSorting(page, size, sort, sortOrder);
+        var instances = provider.getAcInstancesByStateResultDeployState(stateChangeResults, deployStates, pageable);
+        return ResponseEntity.ok().body(instances);
+    }
+
+    /**
      * Deletes an automation composition.
      *
      * @param compositionId The UUID of the automation composition definition

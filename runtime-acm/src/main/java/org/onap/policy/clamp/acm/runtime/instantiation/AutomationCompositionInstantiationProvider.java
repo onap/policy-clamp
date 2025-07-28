@@ -23,6 +23,8 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,12 +51,14 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -495,5 +499,35 @@ public class AutomationCompositionInstantiationProvider {
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
         participantProvider.checkRegisteredParticipant(acDefinition);
         return acDefinition;
+    }
+
+    /**
+     * Retrieves a list of AutomationComposition instances filtered by the specified state change results
+     * and deployment states. The result can be paginated and sorted based on the provided parameters.
+     *
+     * @param stateChangeResults a list of StateChangeResult values to filter the AutomationComposition instances
+     * @param deployStates a list of DeployState values to filter the AutomationComposition instances
+     * @param pageable the pagination information including page size and page number
+     * @return a list of AutomationComposition instances that match the specified filters
+     */
+    public AutomationCompositions getAcInstancesByStateResultDeployState(
+        final String stateChangeResults, final String deployStates,
+        final Pageable pageable) {
+
+        List<StateChangeResult> stateChangeResultList = new ArrayList<>();
+        if (stateChangeResults != null) {
+            Arrays.stream(stateChangeResults.split(","))
+                .forEach(stateChangeResult -> stateChangeResultList.add(StateChangeResult.valueOf(stateChangeResult)));
+        }
+
+        List<DeployState> deployStateList = new ArrayList<>();
+        if (deployStates != null) {
+            Arrays.stream(deployStates.split(","))
+                .forEach(deployState -> deployStateList.add(DeployState.valueOf(deployState)));
+        }
+
+        var instances = automationCompositionProvider.getAcInstancesByStateResultDeployState(stateChangeResultList,
+            deployStateList, pageable);
+        return new AutomationCompositions(instances);
     }
 }

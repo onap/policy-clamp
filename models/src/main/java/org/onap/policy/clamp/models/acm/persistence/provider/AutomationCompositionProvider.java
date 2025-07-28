@@ -36,6 +36,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionRollback;
@@ -52,6 +53,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -327,5 +329,33 @@ public class AutomationCompositionProvider {
             LOGGER.warn("Migrate {}: Version {} has {} compatibility with {} ", instanceId, newDefinition,
                     compatibility, dbElementDefinition);
         }
+    }
+
+    /**
+     * Retrieves a list of AutomationComposition instances filtered by the specified state change results
+     * and deployment states. The result can be paginated and sorted based on the provided parameters.
+     *
+     * @param stateChangeResults a list of StateChangeResult values to filter the AutomationComposition instances
+     * @param deployStates a list of DeployState values to filter the AutomationComposition instances
+     * @param pageable the pagination information including page size and page number
+     * @return a list of AutomationComposition instances that match the specified filters
+     */
+    public List<AutomationComposition> getAcInstancesByStateResultDeployState(
+            @NonNull final List<StateChangeResult> stateChangeResults,
+            @NonNull final List<DeployState> deployStates,
+            @NonNull final Pageable pageable) {
+        Page<JpaAutomationComposition> page;
+        if (stateChangeResults.isEmpty() && deployStates.isEmpty()) {
+            page = automationCompositionRepository.findAll(pageable);
+        } else if (!stateChangeResults.isEmpty() && deployStates.isEmpty()) {
+            page = automationCompositionRepository.findByStateChangeResultIn(stateChangeResults, pageable);
+        } else if (stateChangeResults.isEmpty()) {
+            page = automationCompositionRepository.findByDeployStateIn(deployStates, pageable);
+        } else {
+            page = automationCompositionRepository.findByStateChangeResultInAndDeployStateIn(
+                stateChangeResults, deployStates, pageable);
+        }
+
+        return ProviderUtils.asEntityList(page.toList());
     }
 }
