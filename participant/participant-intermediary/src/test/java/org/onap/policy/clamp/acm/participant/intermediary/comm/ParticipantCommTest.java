@@ -40,6 +40,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.common.message.bus.event.TopicSink;
@@ -111,6 +112,9 @@ class ParticipantCommTest {
 
         var automationCompositionAck = mock(AutomationCompositionDeployAck.class);
         assertDoesNotThrow(() -> publisher.sendAutomationCompositionAck(automationCompositionAck));
+
+        var participantReqSync = mock(ParticipantReqSync.class);
+        assertDoesNotThrow(() -> publisher.sendParticipantReqSync(participantReqSync));
     }
 
     @Test

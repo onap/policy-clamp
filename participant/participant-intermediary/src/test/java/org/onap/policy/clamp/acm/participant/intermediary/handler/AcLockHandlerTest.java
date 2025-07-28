@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -40,7 +41,6 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AcLockHandlerTest {
 
@@ -67,16 +67,17 @@ class AcLockHandlerTest {
                 .thenReturn(automationComposition);
         when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var listener = mock(ThreadHandler.class);
-        var ach = new AcLockHandler(cacheProvider, listener);
-        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
-            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
         when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+                .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).lock(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
@@ -99,16 +100,17 @@ class AcLockHandlerTest {
                 .thenReturn(automationComposition);
         when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var listener = mock(ThreadHandler.class);
-        var ach = new AcLockHandler(cacheProvider, listener);
-        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
-            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
         when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+                .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).unlock(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
