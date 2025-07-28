@@ -60,8 +60,8 @@ class InstantiationControllerStubTest extends CommonRestController {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT);
-        var respPost = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        var response = invocationBuilder.get();
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
     }
 
     @Test
@@ -70,8 +70,8 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var respPost = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        var response = invocationBuilder.get();
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
     }
 
     @Test
@@ -80,8 +80,9 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var respPost = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
+        var put = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
+        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(put.getStatus());
+        put.close();
     }
 
     @Test
@@ -91,6 +92,7 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + INSTANTIATION_ENDPOINT);
         var respPost = invocationBuilder.post(Entity.json(new AutomationComposition()));
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
     }
 
     @Test
@@ -99,8 +101,9 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var respPost = invocationBuilder.delete();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        var delete = invocationBuilder.delete();
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(delete.getStatus());
+        delete.close();
     }
 
     @Test
@@ -112,5 +115,13 @@ class InstantiationControllerStubTest extends CommonRestController {
             + "/" + ROLLBACK);
         var respPost = invocationBuilder.post(Entity.json(new AcInstanceStateUpdate()));
         assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
+    }
+
+    @Test
+    void testGetInstances() {
+        var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
+        var response = invocationBuilder.get();
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
     }
 }

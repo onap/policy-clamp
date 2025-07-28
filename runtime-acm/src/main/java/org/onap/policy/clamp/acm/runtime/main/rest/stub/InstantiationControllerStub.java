@@ -95,4 +95,10 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     public ResponseEntity<Void> rollbackCompositionInstance(UUID compositionId, UUID instanceId) {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @Override
+    public ResponseEntity<AutomationCompositions> queryCompositionInstancesByStateChangeDeployState(String deployState,
+            String stateChangeResult, Integer page, Integer size, String sort, String sortOrder, UUID onapRequestId) {
+        return stubUtils.getResponse(pathToAllInstances, AutomationCompositions.class);
+    }
 }

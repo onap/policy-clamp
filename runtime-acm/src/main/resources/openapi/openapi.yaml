@@ -1734,6 +1734,134 @@ paths:
             api-version: 8.2.1
             last-mod-release: Paris
           x-codegen-request-body-name: body
+  /instances:
+    get:
+      tags:
+        - Automation Composition Instance
+      summary: Query a list of automation composition instances
+      description: Query a list of automation composition instances based on the query filter
+      operationId: queryCompositionInstancesByStateChangeDeployState
+      parameters:
+        - name: deployState
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter to get instances by deployState (two or more to be comma-separated)
+        - name: stateChangeResult
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter to get instances by stateChangeResult (two or more to be comma-separated)
+        - name: page
+          in: query
+          required: false
+          description: Zero-based page number, must not be negative.
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: false
+          description: The size of the page to be returned, must be greater than 0.
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          required: false
+          description: Sort the list by a property
+          schema:
+            type: string
+        - name: sortOrder
+          in: query
+          required: false
+          description: Order to sort the list - ASC or DESC
+          schema:
+            type: string
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [AutomationCompositions](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositions.java)
+            containing a list of automation composition instances found
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionInstancesResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionInstancesResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: The specified automation composition definition was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 8.2.1
+        last-mod-release: Paris
 components:
   securitySchemes:
     basicAuth:

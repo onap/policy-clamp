@@ -24,9 +24,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -53,5 +55,33 @@ public abstract class AbstractRestController {
 
     protected Pageable getPageable(Integer page, Integer size) {
         return page != null && size != null ? PageRequest.of(page, size) : Pageable.unpaged();
+    }
+
+    /**
+     * Retrieves a {@link Pageable} object with sorting capabilities based on the given page, size, sort field,
+     * and sort direction.
+     * If the sort field is not provided or is blank, it defaults to "lastMsg".
+     * If the sort direction is not provided or is blank, it defaults to "DESC".
+     * If either the page or size is null, an unpaged {@link Pageable} is returned.
+     *
+     * @param page the page number to be retrieved (zero-based indexing); if null, the result will be unpaged
+     * @param size the size of the page to be retrieved; if null, the result will be unpaged
+     * @param sort the field by which to sort; defaults to "lastMsg" if blank
+     * @param sortOrder the direction of sorting, either "ASC" or "DESC"; defaults to "DESC" if blank
+     * @return a {@link Pageable} object with the specified paging and sorting parameters,
+     *      or unpaged if page or size is null
+     */
+    protected Pageable getPageableWithSorting(Integer page, Integer size, String sort, String sortOrder) {
+        if (StringUtils.isBlank(sort)) {
+            sort = "lastMsg";
+        }
+
+        if (StringUtils.isBlank(sortOrder)) {
+            sortOrder = "DESC";
+        }
+
+        var sorting = Sort.by(Sort.Direction.fromString(sortOrder), sort);
+
+        return page != null && size != null ? PageRequest.of(page, size).withSort(sorting) : Pageable.unpaged();
     }
 }

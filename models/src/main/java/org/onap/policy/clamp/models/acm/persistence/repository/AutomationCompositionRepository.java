@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022,2024 Nordix Foundation.
+ *  Copyright (C) 2021-2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,11 @@ import java.util.Collection;
 import java.util.List;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -36,7 +39,17 @@ public interface AutomationCompositionRepository extends JpaRepository<JpaAutoma
 
     List<JpaAutomationComposition> findByDeployStateIn(Collection<DeployState> deployStates);
 
+    Page<JpaAutomationComposition> findByDeployStateIn(Collection<DeployState> deployStates,
+                                                       Pageable pageable);
+
     List<JpaAutomationComposition> findByLockStateIn(Collection<LockState> lockStates);
 
     List<JpaAutomationComposition> findBySubStateIn(Collection<SubState> subStates);
+
+    Page<JpaAutomationComposition> findByStateChangeResultInAndDeployStateIn(
+            Collection<StateChangeResult> stateChangeResults, Collection<DeployState> deployStates,
+            Pageable pageable);
+
+    Page<JpaAutomationComposition> findByStateChangeResultIn(Collection<StateChangeResult> stateChangeResults,
+                                                             Pageable pageable);
 }
