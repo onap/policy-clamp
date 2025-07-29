@@ -172,7 +172,13 @@ public class SupervisionParticipantHandler {
         participantProvider.saveParticipantReplica(replica);
     }
 
-    private void handleRestart(UUID participantId, UUID replicaId) {
+    /**
+     * Handle restart of a participant.
+     *
+     * @param participantId     ID of the participant to restart
+     * @param replicaId         ID of the participant replica
+     */
+    public void handleRestart(UUID participantId, UUID replicaId) {
         var compositionIds = participantProvider.getCompositionIds(participantId);
         for (var compositionId : compositionIds) {
             var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
@@ -194,6 +200,16 @@ public class SupervisionParticipantHandler {
         var automationCompositions =
                 automationCompositionList.stream().filter(ac -> isAcToBeSyncRestarted(participantId, ac)).toList();
         participantSyncPublisher.sendRestartMsg(participantId, replicaId, acDefinition, automationCompositions);
+    }
+
+    /**
+     * Handle restart of all participants.
+     */
+    public void handleRestartOfAllParticipants() {
+        var participants = participantProvider.getParticipants();
+        for (var participant:participants) {
+            handleRestart(participant.getParticipantId(), null);
+        }
     }
 
     private boolean isAcToBeSyncRestarted(UUID participantId, AutomationComposition automationComposition) {
