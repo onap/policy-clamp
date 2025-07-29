@@ -66,4 +66,16 @@ public class ParticipantController extends AbstractRestController implements Par
         var participantInformationList = acmParticipantProvider.getAllParticipants(pageable);
         return ResponseEntity.ok().body(participantInformationList);
     }
+
+    @Override
+    public ResponseEntity<Void> manualRestartAllParticipants(UUID onapRequestId) {
+        acmParticipantProvider.restartAllParticipants();
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<Void> manualRestartParticipant(UUID participantId, UUID requestId) {
+        acmParticipantProvider.restartParticipant(participantId);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 }

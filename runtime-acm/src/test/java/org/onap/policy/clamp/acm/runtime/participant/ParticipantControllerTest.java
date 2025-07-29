@@ -277,4 +277,36 @@ class ParticipantControllerTest extends CommonRestController {
             assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
         }
     }
+
+    @Test
+    void testRestartParticipants() {
+        inputParticipants.forEach(participantProvider::saveParticipant);
+        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/sync");
+        try (var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        }
+    }
+
+    @Test
+    void testRestartParticipantById() {
+        inputParticipants.forEach(participantProvider::saveParticipant);
+        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/sync/"
+            + "82fd8ef9-1d1e-4343-9b28-7f9564ee3de6");
+        try (var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        }
+    }
+
+    @Test
+    void testRestartParticipantFailure() {
+        inputParticipants.forEach(participantProvider::saveParticipant);
+        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/sync/"
+                + UUID.randomUUID());
+        try (var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        }
+    }
 }
