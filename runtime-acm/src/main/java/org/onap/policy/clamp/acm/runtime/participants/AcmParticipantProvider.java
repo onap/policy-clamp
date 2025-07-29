@@ -20,18 +20,21 @@
 
 package org.onap.policy.clamp.acm.runtime.participants;
 
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +48,7 @@ public class AcmParticipantProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AcmParticipantProvider.class);
     private final ParticipantProvider participantProvider;
+    private final SupervisionParticipantHandler supervisionParticipantHandler;
     private final ParticipantStatusReqPublisher participantStatusReqPublisher;
 
     /**
@@ -112,5 +116,28 @@ public class AcmParticipantProvider {
         var acNodeTemplateStates = participantProvider.getAcNodeTemplateStates(participantId, pageable);
         return acNodeTemplateStates
             .stream().collect(Collectors.toMap(NodeTemplateState::getNodeTemplateStateId, Function.identity()));
+    }
+
+    /**
+     * Restart specific participant.
+     *
+     * @param participantId     ID of participant to restart
+     */
+    public void restartParticipant(UUID participantId) {
+        if (participantProvider.findParticipant(participantId).isEmpty()) {
+            throw new PfModelRuntimeException(Response.Status.NOT_FOUND,
+                    "Participant Not Found with ID: " + participantId);
+        }
+        supervisionParticipantHandler.handleRestart(participantId, null);
+        LOGGER.debug("Restarting participant with ID: {}", participantId.toString());
+    }
+
+
+    /**
+     * Restart all participants.
+     */
+    public void restartAllParticipants() {
+        supervisionParticipantHandler.handleRestartOfAllParticipants();
+        LOGGER.debug("Restarting all participants");
     }
 }

@@ -65,4 +65,14 @@ public class ParticipantControllerStub extends AbstractRestController implements
         Integer page, Integer size, UUID xonaprequestid) {
         return stubUtils.getResponseList(pathToParticipantList);
     }
+
+    @Override
+    public ResponseEntity<Void> manualRestartAllParticipants(UUID xonaprequestid) {
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<Void> manualRestartParticipant(UUID participantId, UUID xonaprequestid) {
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 }
