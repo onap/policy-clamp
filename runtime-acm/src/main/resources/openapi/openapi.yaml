@@ -447,6 +447,189 @@ paths:
         api-version: 8.2.1
         last-mod-release: Paris
       x-codegen-request-body-name: body
+  /participants/sync:
+    put:
+      tags:
+        - Participant Monitoring
+      summary: Manually restart (sync) all registered participants
+      description: Initiates a manual sync (restart) operation for all registered participants.
+        Each participant will restart and report its status and the status of its AC element types and instances.
+        The result will be available through subsequent GET requests to the "participants" endpoint.
+      operationId: manualRestartAllParticipants
+      parameters:
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        202:
+          description: Accepted, sync request has been accepted and forwarded to all participants
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 8.2.1
+        last-mod-release: Paris
+      x-codegen-request-body-name: body
+
+  /participants/sync/{participantId}:
+    put:
+      tags:
+        - Participant Monitoring
+      summary: Manually restart (sync) the specified participant
+      description: Initiates a manual sync (restart) operation for the specified participant.
+        The participant will restart and report its status and the status of its AC element types and instances.
+        The result will be available through subsequent GET requests to the "participants" endpoint.
+      operationId: manualRestartParticipant
+      parameters:
+        - name: participantId
+          in: path
+          description: The UUID of the participant to manually sync
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        202:
+          description: Accepted, sync request has been accepted and forwarded to the participant
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: Specified participant not found, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of SimpleResponse
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 8.2.1
+        last-mod-release: Paris
+      x-codegen-request-body-name: body
   /compositions:
     get:
       tags:

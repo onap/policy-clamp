@@ -21,10 +21,12 @@
 package org.onap.policy.clamp.acm.runtime.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,5 +83,24 @@ class ParticipantControllerStubTest extends CommonRestController {
             .put(Entity.entity("", MediaType.APPLICATION_JSON));
         assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
         respPost.close();
+    }
+
+    @Test
+    void testRestartParticipants() {
+        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/sync");
+
+        var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON));
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    void testRestartParticipantById() {
+        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/sync/"
+            + UUID.randomUUID());
+
+        var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON));
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
     }
 }
