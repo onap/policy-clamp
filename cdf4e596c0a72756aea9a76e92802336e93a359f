@@ -22,6 +22,30 @@
       },
       "revId": "cdf4e596c0a72756aea9a76e92802336e93a359f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d2b8965_cbbba153",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-07-30T11:53:40Z",
+      "side": 1,
+      "message": "I don\u0027t believe there is a release coming with this fixed. I could not find any information online indicating there will be a fix for this in an upcoming release.",
+      "parentUuid": "01636656_1269281b",
+      "range": {
+        "startLine": 77,
+        "startChar": 12,
+        "endLine": 83,
+        "endChar": 25
+      },
+      "revId": "cdf4e596c0a72756aea9a76e92802336e93a359f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
