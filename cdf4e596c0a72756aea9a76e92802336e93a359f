@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01636656_1269281b",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-07-30T09:42:12Z",
+      "side": 1,
+      "message": "Can you check if spring has a release soon with this fixed? If not, then should be ok. It was a medium CVE so we can wait for a spring release for Q4 sprint 1",
+      "range": {
+        "startLine": 77,
+        "startChar": 12,
+        "endLine": 83,
+        "endChar": 25
+      },
+      "revId": "cdf4e596c0a72756aea9a76e92802336e93a359f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
