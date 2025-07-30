@@ -46,6 +46,30 @@
       },
       "revId": "cdf4e596c0a72756aea9a76e92802336e93a359f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1314761e_24ba7416",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-07-30T12:33:35Z",
+      "side": 1,
+      "message": "I will move this change into the parent/integration pom. Abandoning this review.",
+      "parentUuid": "6d2b8965_cbbba153",
+      "range": {
+        "startLine": 77,
+        "startChar": 12,
+        "endLine": 83,
+        "endChar": 25
+      },
+      "revId": "cdf4e596c0a72756aea9a76e92802336e93a359f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
