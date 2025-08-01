@@ -24,18 +24,18 @@ databaseChangeLog:
       author: policy
       changes:
         - sql:
-            sql: UPDATE automationcomposition SET subState=0 WHERE subState is NULL;
+            sql: UPDATE AutomationComposition SET subState=0 WHERE subState is NULL;
 
   - changeSet:
       id: 1601-2
       author: policy
       changes:
         - sql:
-            sql: UPDATE automationcompositionelement SET subState=0 WHERE subState is NULL;
+            sql: UPDATE AutomationCompositionElement SET subState=0 WHERE subState is NULL;
 
   - changeSet:
       id: 1601-3
       author: policy
       changes:
         - sql:
-            sql: UPDATE automationcompositionelement SET stage=0 WHERE stage is NULL;
+            sql: UPDATE AutomationCompositionElement SET stage=0 WHERE stage is NULL;

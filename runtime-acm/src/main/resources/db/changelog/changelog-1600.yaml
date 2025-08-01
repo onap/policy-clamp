@@ -26,11 +26,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: automationcomposition
+                tableName: AutomationComposition
                 columnName: subState
       changes:
         - sql:
-            sql: ALTER TABLE automationcomposition ADD subState SMALLINT DEFAULT NULL;
+            sql: ALTER TABLE AutomationComposition ADD subState SMALLINT DEFAULT NULL;
 
   - changeSet:
       id: 1600-2
@@ -39,11 +39,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: automationcompositionelement
+                tableName: AutomationCompositionElement
                 columnName: subState
       changes:
         - sql:
-            sql: ALTER TABLE automationcompositionelement ADD subState SMALLINT DEFAULT NULL;
+            sql: ALTER TABLE AutomationCompositionElement ADD subState SMALLINT DEFAULT NULL;
 
   - changeSet:
       id: 1600-3
@@ -52,8 +52,8 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: automationcompositionelement
+                tableName: AutomationCompositionElement
                 columnName: stage
       changes:
         - sql:
-            sql: ALTER TABLE automationcompositionelement ADD stage SMALLINT DEFAULT NULL;
+            sql: ALTER TABLE AutomationCompositionElement ADD stage SMALLINT DEFAULT NULL;

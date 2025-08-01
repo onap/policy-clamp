@@ -26,11 +26,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: automationcomposition
+                tableName: AutomationComposition
       changes:
         - sql:
             sql: |
-              CREATE TABLE automationcomposition (
+              CREATE TABLE AutomationComposition (
                 instanceId VARCHAR(255) NOT NULL,
                 compositionId VARCHAR(255),
                 compositionTargetId VARCHAR(255),
@@ -51,11 +51,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: automationcompositiondefinition
+                tableName: AutomationCompositionDefinition
       changes:
         - sql:
             sql: |
-              CREATE TABLE automationcompositiondefinition (
+              CREATE TABLE AutomationCompositionDefinition (
                 compositionId VARCHAR(255) NOT NULL,
                 name VARCHAR(255),
                 restarting BOOLEAN,
@@ -73,11 +73,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: automationcompositionelement
+                tableName: AutomationCompositionElement
       changes:
         - sql:
             sql: |
-              CREATE TABLE automationcompositionelement (
+              CREATE TABLE AutomationCompositionElement (
                 elementId VARCHAR(255) NOT NULL,
                 definition_name VARCHAR(255),
                 definition_version VARCHAR(255),
@@ -102,11 +102,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: nodetemplatestate
+                tableName: NodeTemplateState
       changes:
         - sql:
             sql: |
-              CREATE TABLE nodetemplatestate (
+              CREATE TABLE NodeTemplateState (
                 nodeTemplateStateId VARCHAR(255) NOT NULL,
                 compositionId VARCHAR(255),
                 message VARCHAR(255),
@@ -126,11 +126,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: participant
+                tableName: Participant
       changes:
         - sql:
             sql: |
-              CREATE TABLE participant (
+              CREATE TABLE Participant (
                 participantId VARCHAR(255) NOT NULL,
                 description VARCHAR(255),
                 participantState SMALLINT DEFAULT NULL,
@@ -144,11 +144,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: participantsupportedacelements
+                tableName: ParticipantSupportedAcElements
       changes:
         - sql:
             sql: |
-              CREATE TABLE participantsupportedacelements (
+              CREATE TABLE ParticipantSupportedAcElements (
                 id VARCHAR(255) NOT NULL,
                 participantId VARCHAR(255),
                 typeName VARCHAR(255),
@@ -166,7 +166,7 @@ databaseChangeLog:
                 indexName: ac_compositionId
       changes:
         - sql:
-            sql: CREATE INDEX ac_compositionId ON automationcomposition(compositionId);
+            sql: CREATE INDEX ac_compositionId ON AutomationComposition(compositionId);
 
   - changeSet:
       id: 1400-8
@@ -178,7 +178,7 @@ databaseChangeLog:
                 indexName: ac_element_fk
       changes:
         - sql:
-            sql: CREATE INDEX ac_element_fk ON automationcompositionelement(instanceId);
+            sql: CREATE INDEX ac_element_fk ON AutomationCompositionElement(instanceId);
 
   - changeSet:
       id: 1400-9
@@ -190,7 +190,7 @@ databaseChangeLog:
                 indexName: dt_element_fk
       changes:
         - sql:
-            sql: CREATE INDEX dt_element_fk ON nodetemplatestate(compositionId);
+            sql: CREATE INDEX dt_element_fk ON NodeTemplateState(compositionId);
 
   - changeSet:
       id: 1400-10
@@ -202,7 +202,7 @@ databaseChangeLog:
                 indexName: supported_element_fk
       changes:
         - sql:
-            sql: CREATE INDEX supported_element_fk ON participantsupportedacelements(participantId);
+            sql: CREATE INDEX supported_element_fk ON ParticipantSupportedAcElements(participantId);
 
   - changeSet:
       id: 1400-11
@@ -212,14 +212,14 @@ databaseChangeLog:
         - not:
             - foreignKeyConstraintExists:
                 foreignKeyName: ac_element_fk
-                foreignKeyTableName: automationcompositionelement
+                foreignKeyTableName: AutomationCompositionElement
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement
+              ALTER TABLE AutomationCompositionElement
                 ADD CONSTRAINT ac_element_fk
                 FOREIGN KEY (instanceId)
-                REFERENCES automationcomposition (instanceId)
+                REFERENCES AutomationComposition (instanceId)
                 ON UPDATE RESTRICT
                 ON DELETE RESTRICT;
 
@@ -231,14 +231,14 @@ databaseChangeLog:
         - not:
             - foreignKeyConstraintExists:
                 foreignKeyName: dt_element_fk
-                foreignKeyTableName: nodetemplatestate
+                foreignKeyTableName: NodeTemplateState
       changes:
         - sql:
             sql: |
-              ALTER TABLE nodetemplatestate
+              ALTER TABLE NodeTemplateState
                 ADD CONSTRAINT dt_element_fk
                 FOREIGN KEY (compositionId)
-                REFERENCES automationcompositiondefinition (compositionId)
+                REFERENCES AutomationCompositionDefinition (compositionId)
                 ON UPDATE RESTRICT
                 ON DELETE RESTRICT;
 
@@ -250,13 +250,13 @@ databaseChangeLog:
         - not:
             - foreignKeyConstraintExists:
                 foreignKeyName: supported_element_fk
-                foreignKeyTableName: participantsupportedacelements
+                foreignKeyTableName: ParticipantSupportedAcElements
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantsupportedacelements
+              ALTER TABLE ParticipantSupportedAcElements
                 ADD CONSTRAINT supported_element_fk
                 FOREIGN KEY (participantId)
-                REFERENCES participant (participantId)
+                REFERENCES Participant (participantId)
                 ON UPDATE RESTRICT
                 ON DELETE RESTRICT;

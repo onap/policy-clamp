@@ -26,11 +26,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: automationcomposition
+                tableName: AutomationComposition
                 columnName: lastMsg
       changes:
         - sql:
-            sql: ALTER TABLE automationcomposition ADD lastMsg timestamp without time zone DEFAULT Now();
+            sql: ALTER TABLE AutomationComposition ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
       id: 1500-2
@@ -39,11 +39,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: automationcomposition
+                tableName: AutomationComposition
                 columnName: phase
       changes:
         - sql:
-            sql: ALTER TABLE automationcomposition ADD phase SMALLINT DEFAULT 0;
+            sql: ALTER TABLE AutomationComposition ADD phase SMALLINT DEFAULT 0;
 
   - changeSet:
       id: 1500-3
@@ -52,11 +52,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: automationcompositiondefinition
+                tableName: AutomationCompositionDefinition
                 columnName: lastMsg
       changes:
         - sql:
-            sql: ALTER TABLE automationcompositiondefinition ADD lastMsg timestamp without time zone DEFAULT Now();
+            sql: ALTER TABLE AutomationCompositionDefinition ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
       id: 1500-4
@@ -65,11 +65,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: participantreplica
+                tableName: ParticipantReplica
       changes:
         - sql:
             sql: |
-              CREATE TABLE participantreplica (
+              CREATE TABLE ParticipantReplica (
                 replicaId varchar(255) NOT NULL,
                 lastMsg timestamp without time zone DEFAULT Now(),
                 participantId varchar(255) DEFAULT NULL,
@@ -84,11 +84,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - columnExists:
-                tableName: participant
+                tableName: Participant
                 columnName: lastMsg
       changes:
         - sql:
-            sql: ALTER TABLE participant ADD lastMsg timestamp without time zone DEFAULT Now();
+            sql: ALTER TABLE Participant ADD lastMsg timestamp without time zone DEFAULT Now();
 
   - changeSet:
       id: 1500-6
@@ -100,7 +100,7 @@ databaseChangeLog:
                 indexName: participant_replica_fk
       changes:
         - sql:
-            sql: CREATE INDEX participant_replica_fk ON participantreplica(participantId);
+            sql: CREATE INDEX participant_replica_fk ON ParticipantReplica(participantId);
 
   - changeSet:
       id: 1500-7
@@ -110,14 +110,14 @@ databaseChangeLog:
         - not:
             - foreignKeyConstraintExists:
                 foreignKeyName: participant_replica_fk
-                foreignKeyTableName: participantreplica
+                foreignKeyTableName: ParticipantReplica
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantreplica
+              ALTER TABLE ParticipantReplica
                 ADD CONSTRAINT participant_replica_fk
                 FOREIGN KEY (participantId)
-                REFERENCES participant (participantId)
+                REFERENCES Participant (participantId)
                 ON UPDATE RESTRICT
                 ON DELETE RESTRICT;
 
@@ -127,11 +127,11 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - columnExists:
-            tableName: automationcomposition
+            tableName: AutomationComposition
             columnName: restarting
       changes:
         - sql:
-            sql: UPDATE automationcomposition SET restarting = NULL;
+            sql: UPDATE AutomationComposition SET restarting = NULL;
 
   - changeSet:
       id: 1500-9
@@ -139,11 +139,11 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - columnExists:
-            tableName: automationcompositiondefinition
+            tableName: AutomationCompositionDefinition
             columnName: restarting
       changes:
         - sql:
-            sql: UPDATE automationcompositiondefinition SET restarting = NULL;
+            sql: UPDATE AutomationCompositionDefinition SET restarting = NULL;
 
   - changeSet:
       id: 1500-10
@@ -151,11 +151,11 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - columnExists:
-            tableName: automationcompositionelement
+            tableName: AutomationCompositionElement
             columnName: restarting
       changes:
         - sql:
-            sql: UPDATE automationcompositionelement SET restarting = NULL;
+            sql: UPDATE AutomationCompositionElement SET restarting = NULL;
 
   - changeSet:
       id: 1500-11
@@ -163,8 +163,8 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - columnExists:
-            tableName: nodetemplatestate
+            tableName: NodeTemplateState
             columnName: restarting
       changes:
         - sql:
-            sql: UPDATE nodetemplatestate SET restarting = NULL;
+            sql: UPDATE NodeTemplateState SET restarting = NULL;

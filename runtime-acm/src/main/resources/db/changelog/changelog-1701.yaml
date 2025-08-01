@@ -26,11 +26,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: automationcompositionrollback
+                tableName: AutomationCompositionRollback
       changes:
         - sql:
             sql: |
-              CREATE TABLE automationcompositionrollback (
+              CREATE TABLE AutomationCompositionRollback (
                 instanceId VARCHAR(255) NOT NULL,
                 compositionId VARCHAR(255) NOT NULL,
                 elements TEXT NOT NULL,
@@ -43,7 +43,7 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition ALTER COLUMN compositionid SET NOT NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN compositionId SET NOT NULL;
 
   - changeSet:
       id: 1701-3
@@ -51,9 +51,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition ALTER COLUMN name SET DEFAULT '';
-              UPDATE automationcomposition SET name = '' WHERE name IS NULL;
-              ALTER TABLE automationcomposition ALTER COLUMN name SET NOT NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN name SET DEFAULT '';
+              UPDATE AutomationComposition SET name = '' WHERE name IS NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN name SET NOT NULL;
 
   - changeSet:
       id: 1701-4
@@ -61,9 +61,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition ALTER COLUMN version SET DEFAULT '1.0.0';
-              UPDATE automationcomposition SET version = '1.0.0' WHERE version IS NULL;
-              ALTER TABLE automationcomposition ALTER COLUMN version SET NOT NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN version SET DEFAULT '1.0.0';
+              UPDATE AutomationComposition SET version = '1.0.0' WHERE version IS NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN version SET NOT NULL;
 
   - changeSet:
       id: 1701-5
@@ -71,9 +71,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition ALTER COLUMN deployState SET DEFAULT 2;
-              UPDATE automationcomposition SET deployState = 2 WHERE deployState IS NULL;
-              ALTER TABLE automationcomposition ALTER COLUMN deployState SET NOT NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN deployState SET DEFAULT 2;
+              UPDATE AutomationComposition SET deployState = 2 WHERE deployState IS NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN deployState SET NOT NULL;
 
   - changeSet:
       id: 1701-6
@@ -81,9 +81,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition ALTER COLUMN lockState SET DEFAULT 4;
-              UPDATE automationcomposition SET lockState = 4 WHERE lockState IS NULL;
-              ALTER TABLE automationcomposition ALTER COLUMN lockState SET NOT NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN lockState SET DEFAULT 4;
+              UPDATE AutomationComposition SET lockState = 4 WHERE lockState IS NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN lockState SET NOT NULL;
 
   - changeSet:
       id: 1701-7
@@ -91,9 +91,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition ALTER COLUMN SubState SET DEFAULT 0;
-              UPDATE automationcomposition SET subState = 0 WHERE subState IS NULL;
-              ALTER TABLE automationcomposition ALTER COLUMN SubState SET NOT NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN subState SET DEFAULT 0;
+              UPDATE AutomationComposition SET subState = 0 WHERE subState IS NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN subState SET NOT NULL;
 
   - changeSet:
       id: 1701-8
@@ -101,8 +101,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              UPDATE automationcomposition SET lastMsg = now() WHERE lastMsg IS NULL;
-              ALTER TABLE automationcomposition ALTER COLUMN lastMsg SET NOT NULL;
+              UPDATE AutomationComposition SET lastMsg = now() WHERE lastMsg IS NULL;
+              ALTER TABLE AutomationComposition ALTER COLUMN lastMsg SET NOT NULL;
 
   - changeSet:
       id: 1701-9
@@ -110,9 +110,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN definition_name SET DEFAULT '';
-              UPDATE automationcompositionelement SET definition_name = '' WHERE definition_name IS NULL;
-              ALTER TABLE automationcompositionelement ALTER COLUMN definition_name SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_name SET DEFAULT '';
+              UPDATE AutomationCompositionElement SET definition_name = '' WHERE definition_name IS NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_name SET NOT NULL;
 
   - changeSet:
       id: 1701-10
@@ -120,9 +120,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN definition_version SET DEFAULT '0.0.0';
-              UPDATE automationcompositionelement SET definition_version = '0.0.0' WHERE definition_version IS NULL;
-              ALTER TABLE automationcompositionelement ALTER COLUMN definition_version SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_version SET DEFAULT '0.0.0';
+              UPDATE AutomationCompositionElement SET definition_version = '0.0.0' WHERE definition_version IS NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_version SET NOT NULL;
 
   - changeSet:
       id: 1701-11
@@ -130,9 +130,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN deployState SET DEFAULT 2;
-              UPDATE automationcompositionelement SET deploystate = 2 WHERE deploystate IS NULL;
-              ALTER TABLE automationcompositionelement ALTER COLUMN deploystate SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN deployState SET DEFAULT 2;
+              UPDATE AutomationCompositionElement SET deployState = 2 WHERE deployState IS NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN deployState SET NOT NULL;
 
   - changeSet:
       id: 1701-12
@@ -140,9 +140,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN lockState SET DEFAULT 4;
-              UPDATE automationcompositionelement SET lockState = 4 WHERE lockState IS NULL;
-              ALTER TABLE automationcompositionelement ALTER COLUMN lockState SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN lockState SET DEFAULT 4;
+              UPDATE AutomationCompositionElement SET lockState = 4 WHERE lockState IS NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN lockState SET NOT NULL;
 
   - changeSet:
       id: 1701-13
@@ -150,9 +150,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN substate SET DEFAULT 0;
-              UPDATE automationcompositionelement SET subState = 0 WHERE subState IS NULL;
-              ALTER TABLE automationcompositionelement ALTER COLUMN substate SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN subState SET DEFAULT 0;
+              UPDATE AutomationCompositionElement SET subState = 0 WHERE subState IS NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN subState SET NOT NULL;
 
   - changeSet:
       id: 1701-14
@@ -160,8 +160,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN outproperties SET DEFAULT '{}';
-              ALTER TABLE automationcompositionelement ALTER COLUMN outproperties SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN outProperties SET DEFAULT '{}';
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN outProperties SET NOT NULL;
 
   - changeSet:
       id: 1701-15
@@ -169,8 +169,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositionelement ALTER COLUMN properties SET DEFAULT '{}';
-              ALTER TABLE automationcompositionelement ALTER COLUMN properties SET NOT NULL;
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN properties SET DEFAULT '{}';
+              ALTER TABLE AutomationCompositionElement ALTER COLUMN properties SET NOT NULL;
 
   - changeSet:
       id: 1701-16
@@ -180,14 +180,14 @@ databaseChangeLog:
         - not:
             - foreignKeyConstraintExists:
                 foreignKeyName: ac_composition_fk
-                foreignKeyTableName: automationcomposition
+                foreignKeyTableName: AutomationComposition
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcomposition
+              ALTER TABLE AutomationComposition
                 ADD CONSTRAINT ac_composition_fk
                 FOREIGN KEY (compositionId)
-                REFERENCES automationcompositiondefinition (compositionId)
+                REFERENCES AutomationCompositionDefinition (compositionId)
                 ON UPDATE RESTRICT
                 ON DELETE RESTRICT;
 
@@ -197,9 +197,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET DEFAULT '';
-              UPDATE automationcompositiondefinition SET name = '' WHERE name IS NULL;
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN name SET NOT NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN name SET DEFAULT '';
+              UPDATE AutomationCompositionDefinition SET name = '' WHERE name IS NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN name SET NOT NULL;
 
   - changeSet:
       id: 1701-18
@@ -207,9 +207,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET DEFAULT '1.0.0';
-              UPDATE automationcompositiondefinition SET version  = '1.0.0' WHERE version IS NULL;
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN version SET NOT NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN version SET DEFAULT '1.0.0';
+              UPDATE AutomationCompositionDefinition SET version  = '1.0.0' WHERE version IS NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN version SET NOT NULL;
 
   - changeSet:
       id: 1701-19
@@ -217,9 +217,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET DEFAULT 0;
-              UPDATE automationcompositiondefinition SET state = 0 WHERE state IS NULL;
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN state SET NOT NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN state SET DEFAULT 0;
+              UPDATE AutomationCompositionDefinition SET state = 0 WHERE state IS NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN state SET NOT NULL;
 
   - changeSet:
       id: 1701-20
@@ -227,9 +227,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET DEFAULT '';
-              UPDATE automationcompositiondefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN serviceTemplate SET NOT NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN serviceTemplate SET DEFAULT '';
+              UPDATE AutomationCompositionDefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN serviceTemplate SET NOT NULL;
 
   - changeSet:
       id: 1701-21
@@ -237,8 +237,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              UPDATE automationcompositiondefinition SET lastMsg = now() WHERE lastMsg IS NULL;
-              ALTER TABLE automationcompositiondefinition ALTER COLUMN lastMsg SET NOT NULL;
+              UPDATE AutomationCompositionDefinition SET lastMsg = now() WHERE lastMsg IS NULL;
+              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN lastMsg SET NOT NULL;
 
   - changeSet:
       id: 1701-22
@@ -246,9 +246,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET DEFAULT '';
-              UPDATE nodetemplatestate SET nodeTemplate_name  = '' WHERE nodeTemplate_name IS NULL;
-              ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_name SET NOT NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_name SET DEFAULT '';
+              UPDATE NodeTemplateState SET nodeTemplate_name  = '' WHERE nodeTemplate_name IS NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_name SET NOT NULL;
 
   - changeSet:
       id: 1701-23
@@ -256,9 +256,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET DEFAULT '1.0.0';
-              UPDATE nodetemplatestate SET nodeTemplate_version = '1.0.0' WHERE nodeTemplate_version IS NULL;
-              ALTER TABLE nodetemplatestate ALTER COLUMN nodeTemplate_version SET NOT NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_version SET DEFAULT '1.0.0';
+              UPDATE NodeTemplateState SET nodeTemplate_version = '1.0.0' WHERE nodeTemplate_version IS NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_version SET NOT NULL;
 
   - changeSet:
       id: 1701-24
@@ -266,9 +266,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET DEFAULT '{}';
-              UPDATE nodetemplatestate SET outProperties = '{}' WHERE outProperties IS NULL;
-              ALTER TABLE nodetemplatestate ALTER COLUMN outProperties SET NOT NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN outProperties SET DEFAULT '{}';
+              UPDATE NodeTemplateState SET outProperties = '{}' WHERE outProperties IS NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN outProperties SET NOT NULL;
 
   - changeSet:
       id: 1701-25
@@ -276,9 +276,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE nodetemplatestate ALTER COLUMN state SET DEFAULT 0;
-              UPDATE nodetemplatestate SET state = 0 WHERE state IS NULL;
-              ALTER TABLE nodetemplatestate ALTER COLUMN state SET NOT NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN state SET DEFAULT 0;
+              UPDATE NodeTemplateState SET state = 0 WHERE state IS NULL;
+              ALTER TABLE NodeTemplateState ALTER COLUMN state SET NOT NULL;
 
   - changeSet:
       id: 1701-26
@@ -290,7 +290,7 @@ databaseChangeLog:
                 indexName: mb_identificationId_index
       changes:
         - sql:
-            sql: CREATE INDEX mb_identificationId_index ON message(identificationId);
+            sql: CREATE INDEX mb_identificationId_index ON Message(identificationId);
 
   - changeSet:
       id: 1701-27
@@ -298,8 +298,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              UPDATE participantreplica SET lastMsg = now() WHERE lastMsg IS NULL;
-              ALTER TABLE participantreplica ALTER COLUMN lastMsg SET NOT NULL;
+              UPDATE ParticipantReplica SET lastMsg = now() WHERE lastMsg IS NULL;
+              ALTER TABLE ParticipantReplica ALTER COLUMN lastMsg SET NOT NULL;
 
   - changeSet:
       id: 1701-28
@@ -307,8 +307,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantreplica ALTER COLUMN participantId SET DEFAULT '';
-              ALTER TABLE participantreplica ALTER COLUMN participantId SET NOT NULL;
+              ALTER TABLE ParticipantReplica ALTER COLUMN participantId SET DEFAULT '';
+              ALTER TABLE ParticipantReplica ALTER COLUMN participantId SET NOT NULL;
 
   - changeSet:
       id: 1701-29
@@ -316,9 +316,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantreplica ALTER COLUMN participantState SET DEFAULT 1;
-              UPDATE participantreplica SET participantState = '1' WHERE participantState IS NULL;
-              ALTER TABLE participantreplica ALTER COLUMN participantState SET NOT NULL;
+              ALTER TABLE ParticipantReplica ALTER COLUMN participantState SET DEFAULT 1;
+              UPDATE ParticipantReplica SET participantState = '1' WHERE participantState IS NULL;
+              ALTER TABLE ParticipantReplica ALTER COLUMN participantState SET NOT NULL;
 
   - changeSet:
       id: 1701-30
@@ -326,8 +326,8 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantsupportedacelements ALTER COLUMN participantId SET DEFAULT '';
-              ALTER TABLE participantsupportedacelements ALTER COLUMN participantId SET NOT NULL;
+              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN participantId SET DEFAULT '';
+              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN participantId SET NOT NULL;
 
   - changeSet:
       id: 1701-31
@@ -335,9 +335,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantsupportedacelements ALTER COLUMN typeName SET DEFAULT '';
-              UPDATE participantsupportedacelements SET typeName = '' WHERE typeName IS NULL;
-              ALTER TABLE participantsupportedacelements ALTER COLUMN typeName SET NOT NULL;
+              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeName SET DEFAULT '';
+              UPDATE ParticipantSupportedAcElements SET typeName = '' WHERE typeName IS NULL;
+              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeName SET NOT NULL;
 
   - changeSet:
       id: 1701-32
@@ -345,6 +345,6 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              ALTER TABLE participantsupportedacelements ALTER COLUMN typeVersion SET DEFAULT '1.0.0';
-              UPDATE participantsupportedacelements SET typeVersion = '1.0.0' WHERE typeVersion IS NULL;
-              ALTER TABLE participantsupportedacelements ALTER COLUMN typeVersion SET NOT NULL;
+              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeVersion SET DEFAULT '1.0.0';
+              UPDATE ParticipantSupportedAcElements SET typeVersion = '1.0.0' WHERE typeVersion IS NULL;
+              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeVersion SET NOT NULL;

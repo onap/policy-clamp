@@ -26,11 +26,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: message
+                tableName: Message
       changes:
         - sql:
             sql: |
-              CREATE TABLE message (
+              CREATE TABLE Message (
                 messageId varchar(255) NOT NULL,
                 identificationId varchar(255) NOT NULL,
                 lastMsg timestamp without time zone NOT NULL DEFAULT now(),
@@ -45,11 +45,11 @@ databaseChangeLog:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: messagejob
+                tableName: MessageJob
       changes:
         - sql:
             sql: |
-              CREATE TABLE messagejob (
+              CREATE TABLE MessageJob (
                 jobId varchar(255) NOT NULL,
                 identificationId varchar(255) NOT NULL,
                 jobStarted timestamp without time zone NOT NULL DEFAULT now(),
@@ -66,4 +66,4 @@ databaseChangeLog:
                 indexName: messagejob_identificationId_index
       changes:
         - sql:
-            sql: CREATE UNIQUE INDEX messagejob_identificationId_index ON messagejob(identificationId);
+            sql: CREATE UNIQUE INDEX messagejob_identificationId_index ON MessageJob(identificationId);
