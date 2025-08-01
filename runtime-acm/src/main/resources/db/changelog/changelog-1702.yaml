@@ -29,10 +29,15 @@ databaseChangeLog:
                 tableName: AutomationComposition
                 columnName: revisionId
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition
-               ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+        - addColumn:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: revisionId
+                  type: VARCHAR(36)
+                  defaultValue: '00000000-0000-0000-0000-000000000000'
+                  constraints:
+                    nullable: false
 
   - changeSet:
       author: policy
@@ -44,31 +49,41 @@ databaseChangeLog:
                 tableName: AutomationCompositionDefinition
                 columnName: revisionId
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionDefinition
-               ADD COLUMN revisionId VARCHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+        - addColumn:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: revisionId
+                  type: VARCHAR(36)
+                  defaultValue: '00000000-0000-0000-0000-000000000000'
+                  constraints:
+                    nullable: false
 
   - changeSet:
       author: policy
       id: 1702-3
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationComposition ALTER COLUMN phase TYPE INTEGER;
+        - modifyDataType:
+            tableName: AutomationComposition
+            columnName: phase
+            newDataType: INT
 
   - changeSet:
       author: policy
       id: 1702-4
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationCompositionElement ALTER COLUMN stage TYPE INTEGER;
+        - modifyDataType:
+            tableName: AutomationCompositionElement
+            columnName: stage
+            newDataType: INT
 
   - changeSet:
       author: policy
       id: 1702-5
       changes:
-        - sql:
-            sql: ALTER TABLE ParticipantReplica ALTER COLUMN participantId DROP DEFAULT;
+        - dropDefaultValue:
+            tableName: ParticipantReplica
+            columnName: participantId
 
   - changeSet:
       author: policy
@@ -79,8 +94,9 @@ databaseChangeLog:
             tableName: AutomationComposition
             columnName: restarting
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationComposition DROP COLUMN restarting;
+        - dropColumn:
+            tableName: AutomationComposition
+            columnName: restarting
 
   - changeSet:
       author: policy
@@ -91,8 +107,9 @@ databaseChangeLog:
             tableName: AutomationCompositionDefinition
             columnName: restarting
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationCompositionDefinition DROP COLUMN restarting;
+        - dropColumn:
+            tableName: AutomationCompositionDefinition
+            columnName: restarting
 
   - changeSet:
       author: policy
@@ -103,8 +120,9 @@ databaseChangeLog:
             tableName: Participant
             columnName: participantState
       changes:
-        - sql:
-            sql: ALTER TABLE Participant DROP COLUMN participantState;
+        - dropColumn:
+            tableName: Participant
+            columnName: participantState
 
   - changeSet:
       author: policy
@@ -115,5 +133,6 @@ databaseChangeLog:
             tableName: Participant
             columnName: lastMsg
       changes:
-        - sql:
-            sql: ALTER TABLE Participant DROP COLUMN lastMsg;
+        - dropColumn:
+            tableName: Participant
+            columnName: lastMsg

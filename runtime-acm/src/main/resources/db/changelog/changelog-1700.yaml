@@ -28,15 +28,32 @@ databaseChangeLog:
             - tableExists:
                 tableName: Message
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE Message (
-                messageId varchar(255) NOT NULL,
-                identificationId varchar(255) NOT NULL,
-                lastMsg timestamp without time zone NOT NULL DEFAULT now(),
-                docMessage text NOT NULL,
-                CONSTRAINT PK_MESSAGE PRIMARY KEY (messageId)
-              );
+        - createTable:
+            tableName: Message
+            columns:
+              - column:
+                  name: messageId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_message
+                    nullable: false
+              - column:
+                  name: identificationId
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lastMsg
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: docMessage
+                  type: TEXT
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: 1700-2
@@ -47,14 +64,27 @@ databaseChangeLog:
             - tableExists:
                 tableName: MessageJob
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE MessageJob (
-                jobId varchar(255) NOT NULL,
-                identificationId varchar(255) NOT NULL,
-                jobStarted timestamp without time zone NOT NULL DEFAULT now(),
-                CONSTRAINT PK_MESSAGE_JOB PRIMARY KEY (jobId)
-              );
+        - createTable:
+            tableName: MessageJob
+            columns:
+              - column:
+                  name: jobId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_message_job
+                    nullable: false
+              - column:
+                  name: identificationId
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: jobStarted
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: 1700-3
@@ -65,5 +95,10 @@ databaseChangeLog:
             - indexExists:
                 indexName: messagejob_identificationId_index
       changes:
-        - sql:
-            sql: CREATE UNIQUE INDEX messagejob_identificationId_index ON MessageJob(identificationId);
+        - createIndex:
+            tableName: MessageJob
+            indexName: messagejob_identificationId_index
+            unique: true
+            columns:
+              - column:
+                  name: identificationId

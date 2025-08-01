@@ -29,8 +29,13 @@ databaseChangeLog:
                 tableName: AutomationComposition
                 columnName: lastMsg
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationComposition ADD lastMsg timestamp without time zone DEFAULT Now();
+        - addColumn:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: lastMsg
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
   - changeSet:
       id: 1500-2
@@ -42,8 +47,13 @@ databaseChangeLog:
                 tableName: AutomationComposition
                 columnName: phase
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationComposition ADD phase SMALLINT DEFAULT 0;
+        - addColumn:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: phase
+                  type: SMALLINT
+                  defaultValueNumeric: 0
 
   - changeSet:
       id: 1500-3
@@ -55,8 +65,13 @@ databaseChangeLog:
                 tableName: AutomationCompositionDefinition
                 columnName: lastMsg
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationCompositionDefinition ADD lastMsg timestamp without time zone DEFAULT Now();
+        - addColumn:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: lastMsg
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
   - changeSet:
       id: 1500-4
@@ -67,15 +82,26 @@ databaseChangeLog:
             - tableExists:
                 tableName: ParticipantReplica
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE ParticipantReplica (
-                replicaId varchar(255) NOT NULL,
-                lastMsg timestamp without time zone DEFAULT Now(),
-                participantId varchar(255) DEFAULT NULL,
-                participantState SMALLINT DEFAULT NULL,
-                CONSTRAINT PK_PARTICIPANT_REPLICA PRIMARY KEY (replicaId)
-              );
+        - createTable:
+            tableName: ParticipantReplica
+            columns:
+              - column:
+                  name: replicaId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_participant_replica
+                    nullable: false
+              - column:
+                  name: lastMsg
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: participantId
+                  type: VARCHAR(255)
+              - column:
+                  name: participantState
+                  type: SMALLINT
 
   - changeSet:
       id: 1500-5
@@ -87,8 +113,13 @@ databaseChangeLog:
                 tableName: Participant
                 columnName: lastMsg
       changes:
-        - sql:
-            sql: ALTER TABLE Participant ADD lastMsg timestamp without time zone DEFAULT Now();
+        - addColumn:
+            tableName: Participant
+            columns:
+              - column:
+                  name: lastMsg
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
   - changeSet:
       id: 1500-6
@@ -99,8 +130,12 @@ databaseChangeLog:
             - indexExists:
                 indexName: participant_replica_fk
       changes:
-        - sql:
-            sql: CREATE INDEX participant_replica_fk ON ParticipantReplica(participantId);
+        - createIndex:
+            indexName: participant_replica_fk
+            tableName: ParticipantReplica
+            columns:
+              - column:
+                  name: participantId
 
   - changeSet:
       id: 1500-7
@@ -112,14 +147,14 @@ databaseChangeLog:
                 foreignKeyName: participant_replica_fk
                 foreignKeyTableName: ParticipantReplica
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantReplica
-                ADD CONSTRAINT participant_replica_fk
-                FOREIGN KEY (participantId)
-                REFERENCES Participant (participantId)
-                ON UPDATE RESTRICT
-                ON DELETE RESTRICT;
+        - addForeignKeyConstraint:
+            baseTableName: ParticipantReplica
+            baseColumnNames: participantId
+            constraintName: participant_replica_fk
+            referencedTableName: Participant
+            referencedColumnNames: participantId
+            onUpdate: RESTRICT
+            onDelete: RESTRICT
 
   - changeSet:
       id: 1500-8
@@ -130,8 +165,12 @@ databaseChangeLog:
             tableName: AutomationComposition
             columnName: restarting
       changes:
-        - sql:
-            sql: UPDATE AutomationComposition SET restarting = NULL;
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: restarting
+                  value: NULL
 
   - changeSet:
       id: 1500-9
@@ -142,8 +181,12 @@ databaseChangeLog:
             tableName: AutomationCompositionDefinition
             columnName: restarting
       changes:
-        - sql:
-            sql: UPDATE AutomationCompositionDefinition SET restarting = NULL;
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: restarting
+                  value: NULL
 
   - changeSet:
       id: 1500-10
@@ -154,8 +197,12 @@ databaseChangeLog:
             tableName: AutomationCompositionElement
             columnName: restarting
       changes:
-        - sql:
-            sql: UPDATE AutomationCompositionElement SET restarting = NULL;
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: restarting
+                  value: NULL
 
   - changeSet:
       id: 1500-11
@@ -166,5 +213,9 @@ databaseChangeLog:
             tableName: NodeTemplateState
             columnName: restarting
       changes:
-        - sql:
-            sql: UPDATE NodeTemplateState SET restarting = NULL;
+        - update:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: restarting
+                  value: NULL

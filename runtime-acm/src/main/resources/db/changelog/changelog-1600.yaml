@@ -29,8 +29,12 @@ databaseChangeLog:
                 tableName: AutomationComposition
                 columnName: subState
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationComposition ADD subState SMALLINT DEFAULT NULL;
+        - addColumn:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: subState
+                  type: SMALLINT
 
   - changeSet:
       id: 1600-2
@@ -42,8 +46,12 @@ databaseChangeLog:
                 tableName: AutomationCompositionElement
                 columnName: subState
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationCompositionElement ADD subState SMALLINT DEFAULT NULL;
+        - addColumn:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: subState
+                  type: SMALLINT
 
   - changeSet:
       id: 1600-3
@@ -55,5 +63,9 @@ databaseChangeLog:
                 tableName: AutomationCompositionElement
                 columnName: stage
       changes:
-        - sql:
-            sql: ALTER TABLE AutomationCompositionElement ADD stage SMALLINT DEFAULT NULL;
+        - addColumn:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: stage
+                  type: SMALLINT

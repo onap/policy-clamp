@@ -28,149 +28,277 @@ databaseChangeLog:
             - tableExists:
                 tableName: AutomationCompositionRollback
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE AutomationCompositionRollback (
-                instanceId VARCHAR(255) NOT NULL,
-                compositionId VARCHAR(255) NOT NULL,
-                elements TEXT NOT NULL,
-                CONSTRAINT PK_AUTOMATIONCOMPOSITION_ROLLBACK PRIMARY KEY (instanceId)
-              );
+        - createTable:
+            tableName: AutomationCompositionRollback
+            columns:
+              - column:
+                  name: instanceId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_automationcomposition_rollback
+                    nullable: false
+              - column:
+                  name: compositionId
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: elements
+                  type: TEXT
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: 1701-2
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition ALTER COLUMN compositionId SET NOT NULL;
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: compositionId
 
   - changeSet:
       id: 1701-3
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition ALTER COLUMN name SET DEFAULT '';
-              UPDATE AutomationComposition SET name = '' WHERE name IS NULL;
-              ALTER TABLE AutomationComposition ALTER COLUMN name SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationComposition
+            columnName: name
+            defaultValue: ''
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: name
+                  value: ''
+            where: name IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: name
 
   - changeSet:
       id: 1701-4
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition ALTER COLUMN version SET DEFAULT '1.0.0';
-              UPDATE AutomationComposition SET version = '1.0.0' WHERE version IS NULL;
-              ALTER TABLE AutomationComposition ALTER COLUMN version SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationComposition
+            columnName: version
+            defaultValue: '1.0.0'
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: version
+                  value: '1.0.0'
+            where: version IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: version
 
   - changeSet:
       id: 1701-5
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition ALTER COLUMN deployState SET DEFAULT 2;
-              UPDATE AutomationComposition SET deployState = 2 WHERE deployState IS NULL;
-              ALTER TABLE AutomationComposition ALTER COLUMN deployState SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationComposition
+            columnName: deployState
+            defaultValueNumeric: 2
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: deployState
+                  valueNumeric: 2
+            where: deployState IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: deployState
 
   - changeSet:
       id: 1701-6
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition ALTER COLUMN lockState SET DEFAULT 4;
-              UPDATE AutomationComposition SET lockState = 4 WHERE lockState IS NULL;
-              ALTER TABLE AutomationComposition ALTER COLUMN lockState SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationComposition
+            columnName: lockState
+            defaultValueNumeric: 4
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: lockState
+                  valueNumeric: 4
+            where: lockState IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: lockState
 
   - changeSet:
       id: 1701-7
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition ALTER COLUMN subState SET DEFAULT 0;
-              UPDATE AutomationComposition SET subState = 0 WHERE subState IS NULL;
-              ALTER TABLE AutomationComposition ALTER COLUMN subState SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationComposition
+            columnName: subState
+            defaultValueNumeric: 0
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: subState
+                  valueNumeric: 0
+            where: subState IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: subState
 
   - changeSet:
       id: 1701-8
       author: policy
       changes:
-        - sql:
-            sql: |
-              UPDATE AutomationComposition SET lastMsg = now() WHERE lastMsg IS NULL;
-              ALTER TABLE AutomationComposition ALTER COLUMN lastMsg SET NOT NULL;
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: lastMsg
+                  valueComputed: CURRENT_TIMESTAMP
+            where: lastMsg IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: lastMsg
 
   - changeSet:
       id: 1701-9
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_name SET DEFAULT '';
-              UPDATE AutomationCompositionElement SET definition_name = '' WHERE definition_name IS NULL;
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_name SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: definition_name
+            defaultValue: ''
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: definition_name
+                  value: ''
+            where: definition_name IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: definition_name
 
   - changeSet:
       id: 1701-10
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_version SET DEFAULT '0.0.0';
-              UPDATE AutomationCompositionElement SET definition_version = '0.0.0' WHERE definition_version IS NULL;
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN definition_version SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: definition_version
+            defaultValue: '0.0.0'
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: definition_version
+                  value: '0.0.0'
+            where: definition_version IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: definition_version
 
   - changeSet:
       id: 1701-11
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN deployState SET DEFAULT 2;
-              UPDATE AutomationCompositionElement SET deployState = 2 WHERE deployState IS NULL;
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN deployState SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: deployState
+            defaultValueNumeric: 2
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: deployState
+                  valueNumeric: 2
+            where: deployState IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: deployState
 
   - changeSet:
       id: 1701-12
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN lockState SET DEFAULT 4;
-              UPDATE AutomationCompositionElement SET lockState = 4 WHERE lockState IS NULL;
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN lockState SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: lockState
+            defaultValueNumeric: 4
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: lockState
+                  valueNumeric: 4
+            where: lockState IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: lockState
 
   - changeSet:
       id: 1701-13
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN subState SET DEFAULT 0;
-              UPDATE AutomationCompositionElement SET subState = 0 WHERE subState IS NULL;
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN subState SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: subState
+            defaultValueNumeric: 0
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: subState
+                  valueNumeric: 0
+            where: subState IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: subState
 
   - changeSet:
       id: 1701-14
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN outProperties SET DEFAULT '{}';
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN outProperties SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: outProperties
+            defaultValue: '{}'
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: outProperties
+                  value: '{}'
+            where: outProperties IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: outProperties
 
   - changeSet:
       id: 1701-15
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN properties SET DEFAULT '{}';
-              ALTER TABLE AutomationCompositionElement ALTER COLUMN properties SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: properties
+            defaultValue: '{}'
+        - update:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: properties
+                  value: '{}'
+            where: properties IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: properties
 
   - changeSet:
       id: 1701-16
@@ -182,103 +310,181 @@ databaseChangeLog:
                 foreignKeyName: ac_composition_fk
                 foreignKeyTableName: AutomationComposition
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationComposition
-                ADD CONSTRAINT ac_composition_fk
-                FOREIGN KEY (compositionId)
-                REFERENCES AutomationCompositionDefinition (compositionId)
-                ON UPDATE RESTRICT
-                ON DELETE RESTRICT;
+        - addForeignKeyConstraint:
+            baseTableName: AutomationComposition
+            baseColumnNames: compositionId
+            constraintName: ac_composition_fk
+            referencedTableName: AutomationCompositionDefinition
+            referencedColumnNames: compositionId
+            onUpdate: RESTRICT
+            onDelete: RESTRICT
 
   - changeSet:
       id: 1701-17
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN name SET DEFAULT '';
-              UPDATE AutomationCompositionDefinition SET name = '' WHERE name IS NULL;
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN name SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: name
+            defaultValue: ''
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: name
+                  value: ''
+            where: name IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: name
 
   - changeSet:
       id: 1701-18
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN version SET DEFAULT '1.0.0';
-              UPDATE AutomationCompositionDefinition SET version  = '1.0.0' WHERE version IS NULL;
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN version SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: version
+            defaultValue: '1.0.0'
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: version
+                  value: '1.0.0'
+            where: version IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: version
 
   - changeSet:
       id: 1701-19
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN state SET DEFAULT 0;
-              UPDATE AutomationCompositionDefinition SET state = 0 WHERE state IS NULL;
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN state SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: state
+            defaultValueNumeric: 0
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: state
+                  valueNumeric: 0
+            where: state IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: state
 
   - changeSet:
       id: 1701-20
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN serviceTemplate SET DEFAULT '';
-              UPDATE AutomationCompositionDefinition SET serviceTemplate = '' WHERE serviceTemplate IS NULL;
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN serviceTemplate SET NOT NULL;
+        - addDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: serviceTemplate
+            defaultValue: ''
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: serviceTemplate
+                  value: ''
+            where: serviceTemplate IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: serviceTemplate
 
   - changeSet:
       id: 1701-21
       author: policy
       changes:
-        - sql:
-            sql: |
-              UPDATE AutomationCompositionDefinition SET lastMsg = now() WHERE lastMsg IS NULL;
-              ALTER TABLE AutomationCompositionDefinition ALTER COLUMN lastMsg SET NOT NULL;
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: lastMsg
+                  valueComputed: CURRENT_TIMESTAMP
+            where: lastMsg IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: lastMsg
 
   - changeSet:
       id: 1701-22
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_name SET DEFAULT '';
-              UPDATE NodeTemplateState SET nodeTemplate_name  = '' WHERE nodeTemplate_name IS NULL;
-              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_name SET NOT NULL;
+        - addDefaultValue:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_name
+            defaultValue: ''
+        - update:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: nodeTemplate_name
+                  value: ''
+            where: nodeTemplate_name IS NULL
+        - addNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_name
 
   - changeSet:
       id: 1701-23
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_version SET DEFAULT '1.0.0';
-              UPDATE NodeTemplateState SET nodeTemplate_version = '1.0.0' WHERE nodeTemplate_version IS NULL;
-              ALTER TABLE NodeTemplateState ALTER COLUMN nodeTemplate_version SET NOT NULL;
+        - addDefaultValue:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_version
+            defaultValue: '1.0.0'
+        - update:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: nodeTemplate_version
+                  value: '1.0.0'
+            where: nodeTemplate_version IS NULL
+        - addNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_version
 
   - changeSet:
       id: 1701-24
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE NodeTemplateState ALTER COLUMN outProperties SET DEFAULT '{}';
-              UPDATE NodeTemplateState SET outProperties = '{}' WHERE outProperties IS NULL;
-              ALTER TABLE NodeTemplateState ALTER COLUMN outProperties SET NOT NULL;
+        - addDefaultValue:
+            tableName: NodeTemplateState
+            columnName: outProperties
+            defaultValue: '{}'
+        - update:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: outProperties
+                  value: '{}'
+            where: outProperties IS NULL
+        - addNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: outProperties
 
   - changeSet:
       id: 1701-25
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE NodeTemplateState ALTER COLUMN state SET DEFAULT 0;
-              UPDATE NodeTemplateState SET state = 0 WHERE state IS NULL;
-              ALTER TABLE NodeTemplateState ALTER COLUMN state SET NOT NULL;
+        - addDefaultValue:
+            tableName: NodeTemplateState
+            columnName: state
+            defaultValueNumeric: 0
+        - update:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: state
+                  valueNumeric: 0
+            where: state IS NULL
+        - addNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: state
 
   - changeSet:
       id: 1701-26
@@ -289,62 +495,105 @@ databaseChangeLog:
             - indexExists:
                 indexName: mb_identificationId_index
       changes:
-        - sql:
-            sql: CREATE INDEX mb_identificationId_index ON Message(identificationId);
+        - createIndex:
+            tableName: Message
+            indexName: mb_identificationId_index
+            columns:
+              - column:
+                  name: identificationId
 
   - changeSet:
       id: 1701-27
       author: policy
       changes:
-        - sql:
-            sql: |
-              UPDATE ParticipantReplica SET lastMsg = now() WHERE lastMsg IS NULL;
-              ALTER TABLE ParticipantReplica ALTER COLUMN lastMsg SET NOT NULL;
+        - update:
+            tableName: ParticipantReplica
+            columns:
+              - column:
+                  name: lastMsg
+                  valueComputed: CURRENT_TIMESTAMP
+            where: lastMsg IS NULL
+        - addNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: lastMsg
 
   - changeSet:
       id: 1701-28
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantReplica ALTER COLUMN participantId SET DEFAULT '';
-              ALTER TABLE ParticipantReplica ALTER COLUMN participantId SET NOT NULL;
+        - addDefaultValue:
+            tableName: ParticipantReplica
+            columnName: participantId
+            defaultValue: ''
+        - addNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: participantId
 
   - changeSet:
       id: 1701-29
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantReplica ALTER COLUMN participantState SET DEFAULT 1;
-              UPDATE ParticipantReplica SET participantState = '1' WHERE participantState IS NULL;
-              ALTER TABLE ParticipantReplica ALTER COLUMN participantState SET NOT NULL;
+        - addDefaultValue:
+            tableName: ParticipantReplica
+            columnName: participantState
+            defaultValueNumeric: 1
+        - update:
+            tableName: ParticipantReplica
+            columns:
+              - column:
+                  name: participantState
+                  valueNumeric: 1
+            where: participantState IS NULL
+        - addNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: participantState
 
   - changeSet:
       id: 1701-30
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN participantId SET DEFAULT '';
-              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN participantId SET NOT NULL;
+        - addDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: participantId
+            defaultValue: ''
+        - addNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: participantId
 
   - changeSet:
       id: 1701-31
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeName SET DEFAULT '';
-              UPDATE ParticipantSupportedAcElements SET typeName = '' WHERE typeName IS NULL;
-              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeName SET NOT NULL;
+        - addDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeName
+            defaultValue: ''
+        - update:
+            tableName: ParticipantSupportedAcElements
+            columns:
+              - column:
+                  name: typeName
+                  value: ''
+            where: typeName IS NULL
+        - addNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeName
 
   - changeSet:
       id: 1701-32
       author: policy
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeVersion SET DEFAULT '1.0.0';
-              UPDATE ParticipantSupportedAcElements SET typeVersion = '1.0.0' WHERE typeVersion IS NULL;
-              ALTER TABLE ParticipantSupportedAcElements ALTER COLUMN typeVersion SET NOT NULL;
+        - addDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeVersion
+            defaultValue: '1.0.0'
+        - update:
+            tableName: ParticipantSupportedAcElements
+            columns:
+              - column:
+                  name: typeVersion
+                  value: '1.0.0'
+            where: typeVersion IS NULL
+        - addNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeVersion

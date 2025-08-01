@@ -28,21 +28,43 @@ databaseChangeLog:
             - tableExists:
                 tableName: AutomationComposition
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE AutomationComposition (
-                instanceId VARCHAR(255) NOT NULL,
-                compositionId VARCHAR(255),
-                compositionTargetId VARCHAR(255),
-                deployState SMALLINT DEFAULT NULL,
-                description VARCHAR(255),
-                lockState SMALLINT DEFAULT NULL,
-                name VARCHAR(255),
-                restarting BOOLEAN,
-                stateChangeResult SMALLINT DEFAULT NULL,
-                version VARCHAR(255),
-                CONSTRAINT PK_AUTOMATIONCOMPOSITION PRIMARY KEY (instanceId)
-              );
+        - createTable:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: instanceId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_automationcomposition
+                    nullable: false
+              - column:
+                  name: compositionId
+                  type: VARCHAR(255)
+              - column:
+                  name: compositionTargetId
+                  type: VARCHAR(255)
+              - column:
+                  name: deployState
+                  type: SMALLINT
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: lockState
+                  type: SMALLINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: restarting
+                  type: BOOLEAN
+              - column:
+                  name: stateChangeResult
+                  type: SMALLINT
+              - column:
+                  name: version
+                  type: VARCHAR(255)
 
   - changeSet:
       id: 1400-2
@@ -53,18 +75,34 @@ databaseChangeLog:
             - tableExists:
                 tableName: AutomationCompositionDefinition
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE AutomationCompositionDefinition (
-                compositionId VARCHAR(255) NOT NULL,
-                name VARCHAR(255),
-                restarting BOOLEAN,
-                serviceTemplate TEXT,
-                state SMALLINT DEFAULT NULL,
-                stateChangeResult SMALLINT DEFAULT NULL,
-                version VARCHAR(255),
-                CONSTRAINT PK_AUTOMATIONCOMPOSITIONDEFINITION PRIMARY KEY (compositionId)
-              );
+        - createTable:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: compositionId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_automationcompositiondefinition
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: restarting
+                  type: BOOLEAN
+              - column:
+                  name: serviceTemplate
+                  type: TEXT
+              - column:
+                  name: state
+                  type: SMALLINT
+              - column:
+                  name: stateChangeResult
+                  type: SMALLINT
+              - column:
+                  name: version
+                  type: VARCHAR(255)
 
   - changeSet:
       id: 1400-3
@@ -75,25 +113,55 @@ databaseChangeLog:
             - tableExists:
                 tableName: AutomationCompositionElement
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE AutomationCompositionElement (
-                elementId VARCHAR(255) NOT NULL,
-                definition_name VARCHAR(255),
-                definition_version VARCHAR(255),
-                deployState SMALLINT DEFAULT NULL,
-                description VARCHAR(255),
-                instanceId VARCHAR(255),
-                lockState SMALLINT DEFAULT NULL,
-                message VARCHAR(255),
-                operationalState VARCHAR(255),
-                outProperties TEXT,
-                participantId VARCHAR(255),
-                properties TEXT,
-                restarting BOOLEAN,
-                useState VARCHAR(255),
-                CONSTRAINT PK_AUTOMATIONCOMPOSITIONELEMENT PRIMARY KEY (elementId)
-              );
+        - createTable:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: elementId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_automationcompositionelement
+                    nullable: false
+              - column:
+                  name: definition_name
+                  type: VARCHAR(255)
+              - column:
+                  name: definition_version
+                  type: VARCHAR(255)
+              - column:
+                  name: deployState
+                  type: SMALLINT
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: instanceId
+                  type: VARCHAR(255)
+              - column:
+                  name: lockState
+                  type: SMALLINT
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+              - column:
+                  name: operationalState
+                  type: VARCHAR(255)
+              - column:
+                  name: outProperties
+                  type: TEXT
+              - column:
+                  name: participantId
+                  type: VARCHAR(255)
+              - column:
+                  name: properties
+                  type: TEXT
+              - column:
+                  name: restarting
+                  type: BOOLEAN
+              - column:
+                  name: useState
+                  type: VARCHAR(255)
 
   - changeSet:
       id: 1400-4
@@ -104,20 +172,40 @@ databaseChangeLog:
             - tableExists:
                 tableName: NodeTemplateState
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE NodeTemplateState (
-                nodeTemplateStateId VARCHAR(255) NOT NULL,
-                compositionId VARCHAR(255),
-                message VARCHAR(255),
-                nodeTemplate_name VARCHAR(255),
-                nodeTemplate_version VARCHAR(255),
-                outProperties TEXT,
-                participantId VARCHAR(255),
-                restarting BOOLEAN,
-                state SMALLINT DEFAULT NULL,
-                CONSTRAINT PK_NODETEMPLATESTATE PRIMARY KEY (nodeTemplateStateId)
-              );
+        - createTable:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: nodeTemplateStateId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_nodetemplatestate
+                    nullable: false
+              - column:
+                  name: compositionId
+                  type: VARCHAR(255)
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+              - column:
+                  name: nodeTemplate_name
+                  type: VARCHAR(255)
+              - column:
+                  name: nodeTemplate_version
+                  type: VARCHAR(255)
+              - column:
+                  name: outProperties
+                  type: TEXT
+              - column:
+                  name: participantId
+                  type: VARCHAR(255)
+              - column:
+                  name: restarting
+                  type: BOOLEAN
+              - column:
+                  name: state
+                  type: SMALLINT
 
   - changeSet:
       id: 1400-5
@@ -128,14 +216,22 @@ databaseChangeLog:
             - tableExists:
                 tableName: Participant
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE Participant (
-                participantId VARCHAR(255) NOT NULL,
-                description VARCHAR(255),
-                participantState SMALLINT DEFAULT NULL,
-                CONSTRAINT PK_PARTICIPANT PRIMARY KEY (participantId)
-              );
+        - createTable:
+            tableName: Participant
+            columns:
+              - column:
+                  name: participantId
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_participant
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: participantState
+                  type: SMALLINT
 
   - changeSet:
       id: 1400-6
@@ -146,15 +242,25 @@ databaseChangeLog:
             - tableExists:
                 tableName: ParticipantSupportedAcElements
       changes:
-        - sql:
-            sql: |
-              CREATE TABLE ParticipantSupportedAcElements (
-                id VARCHAR(255) NOT NULL,
-                participantId VARCHAR(255),
-                typeName VARCHAR(255),
-                typeVersion VARCHAR(255),
-                CONSTRAINT PK_PARTICIPANTSUPPORTEDACELEMENTS PRIMARY KEY (id)
-              );
+        - createTable:
+            tableName: ParticipantSupportedAcElements
+            columns:
+              - column:
+                  name: id
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_participantsupportedacelements
+                    nullable: false
+              - column:
+                  name: participantId
+                  type: VARCHAR(255)
+              - column:
+                  name: typeName
+                  type: VARCHAR(255)
+              - column:
+                  name: typeVersion
+                  type: VARCHAR(255)
 
   - changeSet:
       id: 1400-7
@@ -165,8 +271,12 @@ databaseChangeLog:
             - indexExists:
                 indexName: ac_compositionId
       changes:
-        - sql:
-            sql: CREATE INDEX ac_compositionId ON AutomationComposition(compositionId);
+        - createIndex:
+            indexName: ac_compositionId
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: compositionId
 
   - changeSet:
       id: 1400-8
@@ -177,8 +287,12 @@ databaseChangeLog:
             - indexExists:
                 indexName: ac_element_fk
       changes:
-        - sql:
-            sql: CREATE INDEX ac_element_fk ON AutomationCompositionElement(instanceId);
+        - createIndex:
+            indexName: ac_element_fk
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: instanceId
 
   - changeSet:
       id: 1400-9
@@ -189,8 +303,12 @@ databaseChangeLog:
             - indexExists:
                 indexName: dt_element_fk
       changes:
-        - sql:
-            sql: CREATE INDEX dt_element_fk ON NodeTemplateState(compositionId);
+        - createIndex:
+            indexName: dt_element_fk
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: compositionId
 
   - changeSet:
       id: 1400-10
@@ -201,8 +319,12 @@ databaseChangeLog:
             - indexExists:
                 indexName: supported_element_fk
       changes:
-        - sql:
-            sql: CREATE INDEX supported_element_fk ON ParticipantSupportedAcElements(participantId);
+        - createIndex:
+            indexName: supported_element_fk
+            tableName: ParticipantSupportedAcElements
+            columns:
+              - column:
+                  name: participantId
 
   - changeSet:
       id: 1400-11
@@ -214,14 +336,14 @@ databaseChangeLog:
                 foreignKeyName: ac_element_fk
                 foreignKeyTableName: AutomationCompositionElement
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE AutomationCompositionElement
-                ADD CONSTRAINT ac_element_fk
-                FOREIGN KEY (instanceId)
-                REFERENCES AutomationComposition (instanceId)
-                ON UPDATE RESTRICT
-                ON DELETE RESTRICT;
+        - addForeignKeyConstraint:
+            baseTableName: AutomationCompositionElement
+            baseColumnNames: instanceId
+            constraintName: ac_element_fk
+            referencedTableName: AutomationComposition
+            referencedColumnNames: instanceId
+            onUpdate: RESTRICT
+            onDelete: RESTRICT
 
   - changeSet:
       id: 1400-12
@@ -233,14 +355,14 @@ databaseChangeLog:
                 foreignKeyName: dt_element_fk
                 foreignKeyTableName: NodeTemplateState
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE NodeTemplateState
-                ADD CONSTRAINT dt_element_fk
-                FOREIGN KEY (compositionId)
-                REFERENCES AutomationCompositionDefinition (compositionId)
-                ON UPDATE RESTRICT
-                ON DELETE RESTRICT;
+        - addForeignKeyConstraint:
+            baseTableName: NodeTemplateState
+            baseColumnNames: compositionId
+            constraintName: dt_element_fk
+            referencedTableName: AutomationCompositionDefinition
+            referencedColumnNames: compositionId
+            onUpdate: RESTRICT
+            onDelete: RESTRICT
 
   - changeSet:
       id: 1400-13
@@ -252,11 +374,11 @@ databaseChangeLog:
                 foreignKeyName: supported_element_fk
                 foreignKeyTableName: ParticipantSupportedAcElements
       changes:
-        - sql:
-            sql: |
-              ALTER TABLE ParticipantSupportedAcElements
-                ADD CONSTRAINT supported_element_fk
-                FOREIGN KEY (participantId)
-                REFERENCES Participant (participantId)
-                ON UPDATE RESTRICT
-                ON DELETE RESTRICT;
+        - addForeignKeyConstraint:
+            baseTableName: ParticipantSupportedAcElements
+            baseColumnNames: participantId
+            constraintName: supported_element_fk
+            referencedTableName: Participant
+            referencedColumnNames: participantId
+            onUpdate: RESTRICT
+            onDelete: RESTRICT
