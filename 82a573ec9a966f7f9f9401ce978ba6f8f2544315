@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32549cef_11feb12d",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/participants/AcmParticipantProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-08-01T09:23:56Z",
+      "side": 1,
+      "message": "No need to call \"toString()\" method as formatting and string conversion is done by the Formatter",
+      "range": {
+        "startLine": 132,
+        "startChar": 72,
+        "endLine": 132,
+        "endChar": 83
+      },
+      "revId": "82a573ec9a966f7f9f9401ce978ba6f8f2544315",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
