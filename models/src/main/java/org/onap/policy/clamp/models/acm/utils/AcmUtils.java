@@ -429,7 +429,7 @@ public final class AcmUtils {
      * @param deployOrder the DeployOrder
      */
     public static List<ParticipantDeploy> createParticipantDeployList(AutomationComposition automationComposition,
-            DeployOrder deployOrder) {
+            DeployOrder deployOrder, List<AutomationCompositionElement> removedElements) {
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = createAcElementDeploy(element, deployOrder);
@@ -442,6 +442,16 @@ public final class AcmUtils {
             participantDeploy.setParticipantId(entry.getKey());
             participantDeploy.setAcElementList(entry.getValue());
             participantDeploys.add(participantDeploy);
+        }
+        // Include the participantIds for the removed elements
+        for (var element : removedElements) {
+            if (map.get(element.getParticipantId()) == null) {
+                var participantDeploy = new ParticipantDeploy();
+                participantDeploy.setParticipantId(element.getParticipantId());
+                participantDeploys.add(participantDeploy);
+                map.put(element.getParticipantId(), new ArrayList<>());
+            }
+
         }
         return participantDeploys;
     }

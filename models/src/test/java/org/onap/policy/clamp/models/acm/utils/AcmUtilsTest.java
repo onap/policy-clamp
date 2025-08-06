@@ -41,6 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -212,13 +213,33 @@ class AcmUtilsTest {
     @Test
     void testCreateAcElementDeployList() {
         var automationComposition = getDummyAutomationComposition();
-        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY);
+        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY, List.of());
         assertThat(result).hasSameSizeAs(automationComposition.getElements().values());
         for (var participantDeploy : result) {
             for (var element : participantDeploy.getAcElementList()) {
                 assertEquals(DeployOrder.DEPLOY, element.getOrderedState());
             }
         }
+    }
+
+    @Test
+    void testAcDeployListWithRemovedElements() {
+        var removedElement1 = CommonTestData.getJsonObject(
+                "src/test/resources/json/AutomationCompositionElementNoOrderedState.json",
+                AutomationCompositionElement.class);
+        var participantId1 = UUID.randomUUID();
+        var participantId2 = UUID.randomUUID();
+        assert removedElement1 != null;
+        removedElement1.setParticipantId(participantId1);
+        var removedElement2 = new AutomationCompositionElement(removedElement1);
+        removedElement2.setParticipantId(participantId2);
+
+        var automationComposition = getDummyAutomationComposition();
+        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY,
+                List.of(removedElement1, removedElement2));
+        assertThat(result).hasSize(automationComposition.getElements().values().size() + 2);
+        var participantIds = result.stream().map(ParticipantDeploy::getParticipantId).toList();
+        assertThat(participantIds).containsAll(List.of(participantId1, participantId2));
     }
 
     @Test

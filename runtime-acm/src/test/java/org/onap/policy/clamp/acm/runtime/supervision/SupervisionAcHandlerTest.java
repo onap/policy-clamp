@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -513,9 +514,9 @@ class SupervisionAcHandlerTest {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         assert automationComposition != null;
         automationComposition.setPhase(0);
-        handler.migrate(automationComposition, UUID.randomUUID(), UUID.randomUUID());
+        handler.migrate(automationComposition, UUID.randomUUID(), UUID.randomUUID(), List.of());
         verify(acCompositionMigrationPublisher, timeout(1000))
-                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class));
+                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class), any());
     }
 
     @Test
@@ -528,9 +529,9 @@ class SupervisionAcHandlerTest {
                 mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
-        handler.migratePrecheck(automationComposition, UUID.randomUUID(), UUID.randomUUID());
+        handler.migratePrecheck(automationComposition, UUID.randomUUID(), UUID.randomUUID(), List.of());
         verify(acCompositionMigrationPublisher, timeout(1000))
-                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class));
+                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class), any());
     }
 
     @Test
