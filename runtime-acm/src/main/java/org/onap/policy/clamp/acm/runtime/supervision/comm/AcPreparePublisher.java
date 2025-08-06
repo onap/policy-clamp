@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -53,7 +54,8 @@ public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationC
         var acPrepare = createAutomationCompositionPrepare(automationComposition.getCompositionId(),
             automationComposition.getInstanceId());
         acPrepare.setStage(stage);
-        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.NONE);
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.NONE,
+                List.of());
         acPrepare.setParticipantList(participantUpdatesList);
         acPrepare.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));

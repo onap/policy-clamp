@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -37,6 +38,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionS
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
@@ -345,11 +347,11 @@ public class SupervisionAcHandler {
      * @param revisionIdCompositionTarget the last Update from Composition Target
      */
     public void migrate(AutomationComposition automationComposition, UUID revisionIdComposition,
-            UUID revisionIdCompositionTarget) {
+                        UUID revisionIdCompositionTarget, List<AutomationCompositionElement> removedElements) {
         executor.execute(() -> {
             encryptionUtils.decryptInstanceProperties(automationComposition);
             acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase(),
-                    revisionIdComposition, revisionIdCompositionTarget);
+                    revisionIdComposition, revisionIdCompositionTarget, removedElements);
         });
     }
 
@@ -361,8 +363,8 @@ public class SupervisionAcHandler {
      * @param revisionIdCompositionTarget the last Update from Composition Target
      */
     public void migratePrecheck(AutomationComposition automationComposition, UUID revisionIdComposition,
-            UUID revisionIdCompositionTarget) {
+            UUID revisionIdCompositionTarget, List<AutomationCompositionElement> removedElements) {
         executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0,
-                revisionIdComposition, revisionIdCompositionTarget));
+                revisionIdComposition, revisionIdCompositionTarget, removedElements));
     }
 }

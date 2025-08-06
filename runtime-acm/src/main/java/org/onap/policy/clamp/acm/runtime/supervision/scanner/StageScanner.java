@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
@@ -118,7 +119,7 @@ public class StageScanner extends AbstractScanner {
             LOGGER.debug("retry message AutomationCompositionMigration");
             // acDefinition for migration is the Composition target
             acMigrationPublisher.send(automationComposition, minStageNotCompleted, revisionIdComposition,
-                    acDefinition.getRevisionId());
+                    acDefinition.getRevisionId(), List.of());
         }
         if (SubState.PREPARING.equals(automationComposition.getSubState())) {
             LOGGER.debug("retry message AutomationCompositionPrepare");

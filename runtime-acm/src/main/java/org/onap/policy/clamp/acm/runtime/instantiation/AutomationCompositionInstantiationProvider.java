@@ -51,14 +51,12 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -232,10 +230,13 @@ public class AutomationCompositionInstantiationProvider {
         encryptInstanceProperties(acToBeUpdated, acToBeUpdated.getCompositionTargetId());
 
         var ac = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
-        elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
+        for (var element : elementsRemoved) {
+            automationCompositionProvider.deleteAutomationCompositionElement(element.getId());
+        }
 
         // Publish migrate event to the participants
-        supervisionAcHandler.migrate(acToPublish, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId());
+        supervisionAcHandler.migrate(acToPublish, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId(),
+                elementsRemoved);
         return createInstantiationResponse(ac);
     }
 
@@ -252,9 +253,10 @@ public class AutomationCompositionInstantiationProvider {
         acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
     }
 
-    private List<UUID> getElementRemoved(AutomationComposition acFromDb, AutomationComposition acFromMigration) {
-        return acFromDb.getElements().keySet().stream()
-            .filter(id -> acFromMigration.getElements().get(id) == null).toList();
+    private List<AutomationCompositionElement> getElementRemoved(AutomationComposition acFromDb,
+                                                                 AutomationComposition acFromMigration) {
+        return acFromDb.getElements().values().stream()
+            .filter(element -> acFromMigration.getElements().get(element.getId()) == null).toList();
     }
 
 
@@ -267,10 +269,11 @@ public class AutomationCompositionInstantiationProvider {
         var acDefinitionTarget = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
         AcDefinitionProvider.checkPrimedComposition(acDefinitionTarget);
         // Iterate and update the element property values
-        updateElementsProperties(automationComposition, copyAc, acDefinitionTarget);
+        var removedElements = updateElementsProperties(automationComposition, copyAc, acDefinitionTarget);
 
         // Publish migrate event to the participants
-        supervisionAcHandler.migratePrecheck(copyAc, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId());
+        supervisionAcHandler.migratePrecheck(copyAc, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId(),
+                removedElements);
 
         AcmUtils.setCascadedState(acToBeUpdated, DeployState.DEPLOYED, LockState.LOCKED,
             SubState.MIGRATION_PRECHECKING);
@@ -458,12 +461,15 @@ public class AutomationCompositionInstantiationProvider {
         updateAcForMigration(acToBeUpdated, acDefinitionTarget, DeployState.MIGRATION_REVERTING);
         var elementsRemoved = getElementRemoved(automationComposition, acToBeUpdated);
         automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
-        elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
+        for (var element : elementsRemoved) {
+            automationCompositionProvider.deleteAutomationCompositionElement(element.getId());
+        }
         var acDefinition = acDefinitionProvider.getAcDefinition(acToBeUpdated.getCompositionId());
-        supervisionAcHandler.migrate(acToBeUpdated, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId());
+        supervisionAcHandler.migrate(acToBeUpdated, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId(),
+                elementsRemoved);
     }
 
-    private List<UUID> updateElementsProperties(AutomationComposition automationComposition,
+    private List<AutomationCompositionElement> updateElementsProperties(AutomationComposition automationComposition,
             AutomationComposition acToBeUpdated, AutomationCompositionDefinition acDefinitionTarget) {
         for (var element : automationComposition.getElements().entrySet()) {
             var elementId = element.getKey();
@@ -483,7 +489,7 @@ public class AutomationCompositionInstantiationProvider {
         }
         // Remove element which is not present in the new Ac instance
         var elementsRemoved = getElementRemoved(acToBeUpdated, automationComposition);
-        elementsRemoved.forEach(uuid -> acToBeUpdated.getElements().remove(uuid));
+        elementsRemoved.forEach(element -> acToBeUpdated.getElements().remove(element.getId()));
 
         var validationResult = validateAutomationComposition(acToBeUpdated, acDefinitionTarget);
         if (!validationResult.isValid()) {
