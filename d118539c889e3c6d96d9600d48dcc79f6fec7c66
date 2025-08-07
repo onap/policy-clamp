@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaa5310b_d6a1caa1",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/utils/AcmUtilsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-08-07T14:52:07Z",
+      "side": 1,
+      "message": "Use assertThat(actual).hasSize(expected) instead.",
+      "range": {
+        "startLine": 240,
+        "startChar": 8,
+        "endLine": 240,
+        "endChar": 43
+      },
+      "revId": "d118539c889e3c6d96d9600d48dcc79f6fec7c66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
