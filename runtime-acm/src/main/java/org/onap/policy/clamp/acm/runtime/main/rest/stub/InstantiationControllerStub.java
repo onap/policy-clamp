@@ -97,8 +97,9 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     }
 
     @Override
-    public ResponseEntity<AutomationCompositions> queryCompositionInstancesByStateChangeDeployState(String deployState,
-            String stateChangeResult, Integer page, Integer size, String sort, String sortOrder, UUID onapRequestId) {
+    public ResponseEntity<AutomationCompositions> queryCompositionInstancesByFilter(
+        String compositionIds, String deployState, String stateChangeResult,
+        Integer page, Integer size, String sort, String sortOrder, UUID onapRequestId) {
         return stubUtils.getResponse(pathToAllInstances, AutomationCompositions.class);
     }
 }

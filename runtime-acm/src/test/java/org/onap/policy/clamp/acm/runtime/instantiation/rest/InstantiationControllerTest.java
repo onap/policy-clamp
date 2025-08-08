@@ -454,7 +454,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void test_QueryCompositionInstancesByStateChangeDeployState() {
+    void test_queryCompositionInstancesByFilter_WithoutCompositionIds() {
         // test setup
         var compositionId = createAcDefinitionInDB("Query");
         var automationComposition =
@@ -473,6 +473,27 @@ class InstantiationControllerTest extends CommonRestController {
         validateQueryPageable("instances?deployState=UNDEPLOYED", 10);
         validateQueryPageable("instances?stateChangeResult=NO_ERROR&deployState=UNDEPLOYED", 0);
         validateQueryPageable("instances?sort=name&sortOrder=DESC", 10);
+    }
+
+    @Test
+    void test_queryCompositionInstancesByFilter_WithCompositionIds() {
+        // test setup
+        var compositionId = createAcDefinitionInDB("Query");
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
+        assertNotNull(automationComposition);
+        automationComposition.setCompositionId(compositionId);
+        for (var i = 0; i < NUMBER_INSTANCES; i++) {
+            automationComposition.setName("acmr_" + i);
+            instantiationProvider.createAutomationComposition(compositionId, automationComposition);
+        }
+
+        validateQueryPageable("instances?compositionIds=" + compositionId, 10);
+        validateQueryPageable("instances?page=1&size=4&compositionIds=" + compositionId, 4);
+        validateQueryPageable("instances?size=4&compositionIds=" + compositionId, 10);
+        validateQueryPageable("instances?stateChangeResult=FAILED,TIMEOUT&compositionIds=" + compositionId, 0);
+        validateQueryPageable("instances?deployState=UNDEPLOYED&compositionIds=" + compositionId, 10);
+        validateQueryPageable("instances?sort=name&sortOrder=DESC&compositionIds=" + compositionId, 10);
     }
 
     private UUID createAcDefinitionInDB(String name) {

@@ -1923,8 +1923,14 @@ paths:
         - Automation Composition Instance
       summary: Query a list of automation composition instances
       description: Query a list of automation composition instances based on the query filter
-      operationId: queryCompositionInstancesByStateChangeDeployState
+      operationId: queryCompositionInstancesByFilter
       parameters:
+        - name: compositionIds
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter to get instances by compositionId (two or more to be comma-separated)
         - name: deployState
           in: query
           required: false
