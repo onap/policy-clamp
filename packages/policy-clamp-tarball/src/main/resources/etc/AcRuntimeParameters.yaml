@@ -75,3 +75,9 @@ management:
       base-path: /
       exposure:
         include: health, metrics, prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always

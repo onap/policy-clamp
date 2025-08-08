@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,8 @@ class ActuatorControllerTest {
     @Test
     void testGetHealth() {
         webClient.get().uri("/health").accept(APPLICATION_JSON)
-            .exchange().expectStatus().isOk();
+            .exchange().expectStatus().isOk()
+            .expectBody().jsonPath("$.status.code").isEqualTo("UP");
     }
 
     @Test
