@@ -111,10 +111,11 @@ public class InstantiationController extends AbstractRestController implements A
      * @return a {@link ResponseEntity} containing an {@link AutomationCompositions} object
      */
     @Override
-    public ResponseEntity<AutomationCompositions> queryCompositionInstancesByStateChangeDeployState(String deployStates,
-         String stateChangeResults, Integer page, Integer size, String sort, String sortOrder, UUID requestId) {
+    public ResponseEntity<AutomationCompositions> queryCompositionInstancesByFilter(
+        String compositionIds, String deployStates, String stateChangeResults,
+        Integer page, Integer size, String sort, String sortOrder, UUID requestId) {
         var pageable = getPageableWithSorting(page, size, sort, sortOrder);
-        var instances = provider.getAcInstancesByStateResultDeployState(stateChangeResults, deployStates, pageable);
+        var instances = provider.getAcInstancesByFilter(compositionIds, stateChangeResults, deployStates, pageable);
         return ResponseEntity.ok().body(instances);
     }
 
