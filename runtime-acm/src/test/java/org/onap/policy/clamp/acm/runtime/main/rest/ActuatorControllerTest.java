@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.message.bus.event.TopicEndpoint;
+import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
@@ -58,7 +60,17 @@ class ActuatorControllerTest {
     @Test
     void testGetHealth() {
         webClient.get().uri("/health").accept(APPLICATION_JSON)
-            .exchange().expectStatus().isOk();
+            .exchange().expectStatus().isOk()
+            .expectBody().jsonPath("$.status.code").isEqualTo("UP");
+
+        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
+        topicEndpoint.stop();
+
+        webClient.get().uri("/health").accept(APPLICATION_JSON)
+            .exchange().expectStatus().is5xxServerError()
+            .expectBody().jsonPath("$.status.code").isEqualTo("DOWN");
+
+        topicEndpoint.start();
     }
 
     @Test
