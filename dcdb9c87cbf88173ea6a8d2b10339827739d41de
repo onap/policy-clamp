@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "207d66e3_8f1af3df",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/health/KafkaHealthIndicator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-08-11T15:30:58Z",
+      "side": 1,
+      "message": "private final",
+      "revId": "dcdb9c87cbf88173ea6a8d2b10339827739d41de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
