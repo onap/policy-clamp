@@ -75,6 +75,14 @@ public class SimpleScanner extends AbstractScanner {
     private UpdateSync handleAcStateChange(AutomationComposition automationComposition, DocMessage message) {
         var result = new UpdateSync();
         var element = automationComposition.getElements().get(message.getInstanceElementId());
+        if (element == null && isMigration(automationComposition)
+                && StateChangeResult.FAILED.equals(message.getStateChangeResult())) {
+            // fail delete element during migration
+            automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+            result.setUpdated(true);
+            result.setToBeSync(true);
+            return result;
+        }
         if (element == null || !validateStateMessage(automationComposition, message)) {
             return result;
         }
@@ -91,6 +99,11 @@ public class SimpleScanner extends AbstractScanner {
         element.setStage(message.getStage());
         element.setMessage(message.getMessage());
         return result;
+    }
+
+    private boolean isMigration(AutomationComposition automationComposition) {
+        return DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState());
     }
 
     private boolean validateStateMessage(AutomationComposition automationComposition, DocMessage message) {

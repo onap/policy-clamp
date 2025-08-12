@@ -159,7 +159,11 @@ public class CacheProvider {
      */
     public Map<String, Object> getCommonProperties(@NonNull UUID compositionId,
         @NonNull ToscaConceptIdentifier definition) {
-        var map = acElementsDefinitions.get(compositionId).getElements().get(definition);
+        var acDefinition = acElementsDefinitions.get(compositionId);
+        if (acDefinition == null) {
+            return new HashMap<>();
+        }
+        var map = acDefinition.getElements().get(definition);
         return map != null ? map.getAutomationCompositionElementToscaNodeTemplate().getProperties() : new HashMap<>();
     }
 
@@ -277,7 +281,7 @@ public class CacheProvider {
      */
     public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element) {
         var acDefinition = acElementsDefinitions.get(compositionId);
-        var acDefinitionElement = acDefinition.getElements().get(element.getDefinition());
+        var acDefinitionElement = acDefinition != null ? acDefinition.getElements().get(element.getDefinition()) : null;
 
         return (acDefinitionElement != null) ? new CompositionElementDto(compositionId, element.getDefinition(),
                 acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),

@@ -285,6 +285,22 @@ public class SimulatorService {
     }
 
     /**
+     * Handle deleting an automation composition element in migration.
+     *
+     * @param instanceId the instanceId
+     * @param elementId  the elementId
+     */
+    public void deleteInMigration(UUID instanceId, UUID elementId) {
+        if (getConfig().isMigrateSuccess()) {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+        } else {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Delete failed!");
+        }
+    }
+
+    /**
      * Handle an update on an automation composition element.
      *
      * @param instanceId the instanceId

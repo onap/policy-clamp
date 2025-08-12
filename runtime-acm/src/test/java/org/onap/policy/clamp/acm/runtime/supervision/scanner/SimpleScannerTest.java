@@ -203,30 +203,15 @@ class SimpleScannerTest {
     }
 
     private AutomationComposition createDeploying() {
-        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setInstanceId(INSTANCE_ID);
-        automationComposition.setDeployState(DeployState.DEPLOYING);
-        automationComposition.setLockState(LockState.NONE);
-        automationComposition.setPhase(0);
-        automationComposition.setLastMsg(TimestampHelper.now());
-        automationComposition.setCompositionId(COMPOSITION_ID);
-        for (var element : automationComposition.getElements().values()) {
-            element.setDeployState(DeployState.DEPLOYING);
-            element.setLockState(LockState.NONE);
-        }
-        return automationComposition;
+        return createAutomationComposition(DeployState.DEPLOYING, LockState.NONE);
     }
 
     @Test
     void testSendAutomationCompositionMigratingPrecheck() {
-        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setLockState(LockState.LOCKED);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
+        var automationComposition = createAutomationComposition(DeployState.DEPLOYED, LockState.LOCKED);
         automationComposition.setSubState(SubState.MIGRATION_PRECHECKING);
         for (var element : automationComposition.getElements().values()) {
-            element.setDeployState(DeployState.DEPLOYED);
             element.setSubState(SubState.NONE);
-            element.setLockState(LockState.LOCKED);
             if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
                 element.setSubState(SubState.MIGRATION_PRECHECKING);
             }
@@ -236,14 +221,10 @@ class SimpleScannerTest {
 
     @Test
     void testSendAutomationCompositionPrepare() {
-        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setLockState(LockState.NONE);
-        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        var automationComposition = createAutomationComposition(DeployState.UNDEPLOYED, LockState.NONE);
         automationComposition.setSubState(SubState.PREPARING);
         for (var element : automationComposition.getElements().values()) {
-            element.setDeployState(DeployState.UNDEPLOYED);
             element.setSubState(SubState.NONE);
-            element.setLockState(LockState.NONE);
             if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
                 element.setSubState(SubState.PREPARING);
             }
@@ -284,5 +265,40 @@ class SimpleScannerTest {
         automationComposition.getElements().values().forEach(c);
         simpleScanner.simpleScan(automationComposition, new UpdateSync());
         verify(acProvider).updateAutomationComposition(any());
+    }
+
+    @Test
+    void testScanMessageMigrationFail() {
+        var automationComposition = createAutomationComposition(DeployState.MIGRATING, LockState.LOCKED);
+        var elementId = UUID.randomUUID();
+        var docMessage = new DocMessage();
+        docMessage.setMessageType(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+        docMessage.setStateChangeResult(StateChangeResult.FAILED);
+        docMessage.setInstanceId(INSTANCE_ID);
+        docMessage.setInstanceElementId(elementId);
+        docMessage.setDeployState(DeployState.UNDEPLOYED);
+        docMessage.setLockState(LockState.NONE);
+        var acProvider = mock(AutomationCompositionProvider.class);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
+                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup));
+        var result = simpleScanner.scanMessage(automationComposition, docMessage);
+        assertTrue(result.isUpdated());
+        assertTrue(result.isToBeSync());
+    }
+
+    private AutomationComposition createAutomationComposition(DeployState deployState, LockState lockState) {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setDeployState(deployState);
+        automationComposition.setLockState(lockState);
+        automationComposition.setPhase(0);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(deployState);
+            element.setLockState(lockState);
+        }
+        return automationComposition;
     }
 }

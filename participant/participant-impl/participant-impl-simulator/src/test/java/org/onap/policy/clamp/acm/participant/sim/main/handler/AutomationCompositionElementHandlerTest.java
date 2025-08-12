@@ -286,9 +286,6 @@ class AutomationCompositionElementHandlerTest {
             .migrate(COMPOSITION_ELEMENT, compoElTargetRemove, INSTANCE_ELEMENT, inElMigratedRemove, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-            DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
-        verify(intermediaryApi).updateAutomationCompositionElementState(
-            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
             DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
     }
 

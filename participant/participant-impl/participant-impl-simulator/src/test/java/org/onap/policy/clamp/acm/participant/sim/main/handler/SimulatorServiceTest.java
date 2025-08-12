@@ -37,6 +37,8 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
@@ -167,5 +169,21 @@ class SimulatorServiceTest {
         testThread.start();
         testThread.interrupt();
         testThread.join();
+    }
+
+    @Test
+    void testDeleteInMigration() {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var instanceId = UUID.randomUUID();
+        var elementId = UUID.randomUUID();
+        simulatorService.deleteInMigration(instanceId, elementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+
+        simulatorService.getConfig().setMigrateSuccess(false);
+        simulatorService.deleteInMigration(instanceId, elementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Delete failed!");
     }
 }

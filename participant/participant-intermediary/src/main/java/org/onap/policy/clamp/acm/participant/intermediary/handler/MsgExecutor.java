@@ -28,6 +28,8 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,6 +37,7 @@ import org.springframework.stereotype.Component;
 public class MsgExecutor {
 
     private final ExecutorService executor = Context.taskWrapping(Executors.newSingleThreadExecutor());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MsgExecutor.class);
 
     private final CacheProvider cacheProvider;
     private final ParticipantMessagePublisher publisher;
@@ -82,6 +85,7 @@ public class MsgExecutor {
                 message.setCompositionId(null);
                 message.setRevisionIdComposition(null);
             } else {
+                LOGGER.debug("Composition {} missing or outdated", message.getCompositionId());
                 result = false;
             }
         }
@@ -92,6 +96,7 @@ public class MsgExecutor {
                 message.setCompositionTargetId(null);
                 message.setRevisionIdCompositionTarget(null);
             } else {
+                LOGGER.debug("Composition Target {} missing or outdated", message.getCompositionTargetId());
                 result = false;
             }
         }
@@ -101,6 +106,7 @@ public class MsgExecutor {
                 message.setInstanceId(null);
                 message.setRevisionIdInstance(null);
             } else {
+                LOGGER.debug("Instance {} missing or outdated", message.getInstanceId());
                 result = false;
             }
         }

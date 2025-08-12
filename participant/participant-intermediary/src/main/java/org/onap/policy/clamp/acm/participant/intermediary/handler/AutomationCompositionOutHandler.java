@@ -54,6 +54,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AutomationCompositionOutHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionOutHandler.class);
+    private static final String MSG_NOT_PRESENT
+            = "Cannot update Automation composition element {}, {} id {} not present";
+    private static final String MSG_STATE_CHANGE = "Automation composition element {} state changed to {}";
+    private static final String MSG_AC = "Automation composition";
+    private static final String MSG_AC_ELEMENT = "AC Element";
+    private static final String MSG_STAGE = "stage";
 
     private final ParticipantMessagePublisher publisher;
     private final CacheProvider cacheProvider;
@@ -75,15 +81,13 @@ public class AutomationCompositionOutHandler {
 
         var automationComposition = cacheProvider.getAutomationComposition(instance);
         if (automationComposition == null) {
-            LOGGER.error("Cannot update Automation composition element stage, Automation composition id {} not present",
-                instance);
+            LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC, instance);
             return;
         }
 
         var element = automationComposition.getElements().get(elementId);
         if (element == null) {
-            var msg = "Cannot update Automation composition element stage, AC Element id {} not present";
-            LOGGER.error(msg, elementId);
+            LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC_ELEMENT, elementId);
             return;
         }
 
@@ -145,15 +149,13 @@ public class AutomationCompositionOutHandler {
 
         var automationComposition = cacheProvider.getAutomationComposition(instance);
         if (automationComposition == null) {
-            LOGGER.error("Cannot update Automation composition element state, Automation composition id {} not present",
-                instance);
+            LOGGER.error(MSG_NOT_PRESENT, "state", MSG_AC, instance);
             return;
         }
 
         var element = automationComposition.getElements().get(elementId);
         if (element == null) {
-            var msg = "Cannot update Automation composition element state, AC Element id {} not present";
-            LOGGER.error(msg, elementId);
+            checkElement(automationComposition, instance, elementId, deployState, stateChangeResult, message);
             return;
         }
 
@@ -166,21 +168,46 @@ public class AutomationCompositionOutHandler {
             handleLockState(automationComposition, element, lockState, stateChangeResult);
         }
 
-        var automationCompositionStateChangeAck =
-                new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-        automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
-        automationCompositionStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
-        automationCompositionStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
-        automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
-        automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
-        automationCompositionStateChangeAck.setAutomationCompositionId(instance);
-        automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
+        var acStateChangeAck = createAutomationCompositionDeployAck();
+        acStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
+        acStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
+        acStateChangeAck.setStateChangeResult(stateChangeResult);
+        acStateChangeAck.setAutomationCompositionId(instance);
+        acStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
                 new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
                         element.getUseState(), element.getOutProperties(), true, message));
-        LOGGER.debug("Automation composition element {} state changed to {}", elementId, deployState);
-        automationCompositionStateChangeAck.setResult(true);
-        publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
+        LOGGER.debug(MSG_STATE_CHANGE, elementId, deployState);
+        publisher.sendAutomationCompositionAck(acStateChangeAck);
         cacheProvider.getMsgIdentification().remove(element.getId());
+    }
+
+    private void checkElement(AutomationComposition automationComposition, UUID instance, UUID elementId,
+            DeployState deployState, StateChangeResult stateChangeResult, String message) {
+        if ((DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()))) {
+            var acStateChangeAck = createAutomationCompositionDeployAck();
+            acStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
+            acStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(elementId));
+            acStateChangeAck.setStateChangeResult(stateChangeResult);
+            acStateChangeAck.setAutomationCompositionId(instance);
+            acStateChangeAck.getAutomationCompositionResultMap().put(elementId,
+                    new AcElementDeployAck(deployState, null, null,
+                            null, Map.of(), true, message));
+            LOGGER.debug(MSG_STATE_CHANGE, elementId, deployState);
+            publisher.sendAutomationCompositionAck(acStateChangeAck);
+            cacheProvider.getMsgIdentification().remove(elementId);
+        } else {
+            LOGGER.error(MSG_NOT_PRESENT, "state", MSG_AC_ELEMENT, elementId);
+        }
+    }
+
+    private AutomationCompositionDeployAck createAutomationCompositionDeployAck() {
+        var acStateChangeAck =
+                new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+        acStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
+        acStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
+        acStateChangeAck.setResult(true);
+        return acStateChangeAck;
     }
 
     private void handleDeployState(AutomationComposition automationComposition, AutomationCompositionElement element,
@@ -255,15 +282,13 @@ public class AutomationCompositionOutHandler {
 
         var automationComposition = cacheProvider.getAutomationComposition(automationCompositionId);
         if (automationComposition == null) {
-            LOGGER.error("Cannot update Automation composition element state, Automation composition id {} not present",
-                    automationCompositionId);
+            LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC, automationCompositionId);
             return;
         }
 
         var element = automationComposition.getElements().get(elementId);
         if (element == null) {
-            var msg = "Cannot update Automation composition element state, AC Element id {} not present";
-            LOGGER.error(msg, elementId);
+            LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC_ELEMENT, elementId);
             return;
         }
         element.setOperationalState(operationalState);

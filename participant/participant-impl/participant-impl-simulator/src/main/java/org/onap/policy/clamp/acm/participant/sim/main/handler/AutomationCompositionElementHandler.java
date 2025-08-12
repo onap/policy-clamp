@@ -125,9 +125,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
             LOGGER.debug("new element scenario");
         }
         if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
-            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
-                    instanceElement.outProperties());
-            simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.deleteInMigration(instanceElement.instanceId(), instanceElement.elementId());
         } else {
             simulatorService.migrate(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId(), stage,
                     compositionElementTarget.inProperties(), instanceElementMigrate.outProperties());

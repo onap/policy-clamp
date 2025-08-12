@@ -373,4 +373,22 @@ class AutomationCompositionOutHandlerTest {
                 .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
         assertEquals(compositionId, automationComposition.getCompositionId());
     }
+
+    @Test
+    void deleteFailMigrationTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
+
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+
+        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        automationComposition.setDeployState(DeployState.MIGRATING);
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(),
+            UUID.randomUUID(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "");
+        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+    }
 }

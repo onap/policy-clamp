@@ -78,6 +78,33 @@ class AutomationCompositionHandlerTest {
     }
 
     @Test
+    void handleAcStateChangeUndeployTest() {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        automationComposition.setCompositionId(UUID.randomUUID());
+        automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        var participantDeploy =
+                CommonTestData.createparticipantDeploy(CommonTestData.getParticipantId(), automationComposition);
+
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
+        cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
+                automationComposition.getInstanceId(), participantDeploy, UUID.randomUUID());
+
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+                automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
+
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        automationComposition = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
+        verify(listener, times(automationComposition.getElements().size())).undeploy(any(), any(), any());
+        for (var element : automationComposition.getElements().values()) {
+            assertEquals(DeployState.UNDEPLOYING, element.getDeployState());
+        }
+    }
+
+    @Test
     void handleAutomationCompositionStateChangeUndeployTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         var cacheProvider = mock(CacheProvider.class);
