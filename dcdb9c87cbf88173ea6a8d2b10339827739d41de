@@ -16,6 +16,24 @@
       "message": "private final",
       "revId": "dcdb9c87cbf88173ea6a8d2b10339827739d41de",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b13d23e5_605c7ed2",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/health/KafkaHealthIndicator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-08-12T08:51:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "207d66e3_8f1af3df",
+      "revId": "dcdb9c87cbf88173ea6a8d2b10339827739d41de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
