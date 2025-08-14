@@ -45,6 +45,7 @@ public class BrokerStarter<T> {
     private final ParticipantParameters parameters;
     private final List<Publisher> publishers;
     private final List<Listener<T>> listeners;
+    private int retryCount = -1;
 
     /**
      * Constructor.
@@ -70,6 +71,9 @@ public class BrokerStarter<T> {
     }
 
     protected TopicHealthCheck createTopicHealthCheck(TopicParameters topic) {
+        if (topic.getTopicCommInfrastructure().equals(Topic.CommInfrastructure.NOOP.name())) {
+            retryCount = 0;
+        }
         return new TopicHealthCheckFactory().getTopicHealthCheck(topic);
     }
 
@@ -88,14 +92,11 @@ public class BrokerStarter<T> {
 
     private void runTopicHealthCheck() {
         var fetchTimeout = getFetchTimeout();
-        var retries = 10; // TODO - make this configurable with max number of retries or timeout
         while (!topicHealthCheck.healthCheck(getTopics())) {
             LOGGER.debug(" Broker not up yet!");
             try {
                 Thread.sleep(fetchTimeout);
-                retries--;
-                if (retries == 0) {
-                    LOGGER.error("Broker not up after {} retries", retries);
+                if (retryCount == 0) {
                     break;
                 }
             } catch (InterruptedException e) {
