@@ -65,12 +65,26 @@ class ActuatorControllerTest {
 
         TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
         topicEndpoint.stop();
-
         webClient.get().uri("/health").accept(APPLICATION_JSON)
             .exchange().expectStatus().is5xxServerError()
             .expectBody().jsonPath("$.status.code").isEqualTo("DOWN");
-
         topicEndpoint.start();
+    }
+
+    @Test
+    void testHealthIndicator() {
+        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
+        topicEndpoint.getNoopTopicSource("policy-acruntime-participant").stop();
+        webClient.get().uri("/health").accept(APPLICATION_JSON)
+            .exchange().expectStatus().is5xxServerError()
+            .expectBody().jsonPath("$.status.code").isEqualTo("OUT_OF_SERVICE");
+        topicEndpoint.getNoopTopicSource("policy-acruntime-participant").start();
+
+        topicEndpoint.getNoopTopicSink("acm-ppnt-sync").stop();
+        webClient.get().uri("/health").accept(APPLICATION_JSON)
+            .exchange().expectStatus().is5xxServerError()
+            .expectBody().jsonPath("$.status.code").isEqualTo("OUT_OF_SERVICE");
+        topicEndpoint.getNoopTopicSink("acm-ppnt-sync").start();
     }
 
     @Test
