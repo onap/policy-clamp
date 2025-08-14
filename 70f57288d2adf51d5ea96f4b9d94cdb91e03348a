@@ -16,6 +16,24 @@
       "message": "https://sonarcloud.io/project/issues?issueStatuses\u003dOPEN%2CCONFIRMED\u0026sinceLeakPeriod\u003dtrue\u0026branch\u003d141831-3\u0026id\u003donap_policy-clamp two unused imports",
       "revId": "70f57288d2adf51d5ea96f4b9d94cdb91e03348a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2b85033_aee3fccb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-08-14T15:53:31Z",
+      "side": 1,
+      "message": "I can add these in POLICY-5447",
+      "parentUuid": "3dd55db5_d521a6b7",
+      "revId": "70f57288d2adf51d5ea96f4b9d94cdb91e03348a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
