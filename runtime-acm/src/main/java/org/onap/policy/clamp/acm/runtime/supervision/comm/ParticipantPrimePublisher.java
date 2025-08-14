@@ -118,7 +118,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
             }
         }
         participantProvider.verifyParticipantState(participantIds);
-        return AcmUtils.prepareParticipantPriming(acElements, supportedElementMap);
+        return AcmUtils.prepareParticipantPriming(acElements, supportedElementMap, acmDefinition);
     }
 
     /**

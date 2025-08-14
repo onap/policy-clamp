@@ -112,7 +112,8 @@ public final class AcmUtils {
      * @param supportedElementMap supported Element Map
      */
     public static List<ParticipantDefinition> prepareParticipantPriming(
-            List<Entry<String, ToscaNodeTemplate>> acElements, Map<ToscaConceptIdentifier, UUID> supportedElementMap) {
+            List<Entry<String, ToscaNodeTemplate>> acElements, Map<ToscaConceptIdentifier, UUID> supportedElementMap,
+            AutomationCompositionDefinition acmDefinition) {
 
         Map<UUID, List<AutomationCompositionElementDefinition>> map = new HashMap<>();
         for (var elementEntry : acElements) {
@@ -126,6 +127,11 @@ public final class AcmUtils {
             acElementDefinition.setAcElementDefinitionId(
                     new ToscaConceptIdentifier(elementEntry.getKey(), elementEntry.getValue().getVersion()));
             acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(elementEntry.getValue());
+            var nodeTemplateState = acmDefinition.getElementStateMap()
+                    .get(acElementDefinition.getAcElementDefinitionId().getName());
+            if (nodeTemplateState != null) {
+                acElementDefinition.setOutProperties(nodeTemplateState.getOutProperties());
+            }
             map.putIfAbsent(participantId, new ArrayList<>());
             map.get(participantId).add(acElementDefinition);
         }
@@ -522,16 +528,7 @@ public final class AcmUtils {
                 elementList.add(elementEntry);
             }
         }
-        var list = prepareParticipantPriming(elementList, supportedElementMap);
-        for (var participantDefinition : list) {
-            for (var elementDe : participantDefinition.getAutomationCompositionElementDefinitionList()) {
-                var state = acmDefinition.getElementStateMap().get(elementDe.getAcElementDefinitionId().getName());
-                if (state != null) {
-                    elementDe.setOutProperties(state.getOutProperties());
-                }
-            }
-        }
-        return list;
+        return prepareParticipantPriming(elementList, supportedElementMap, acmDefinition);
     }
 
     /**

@@ -104,9 +104,17 @@ class AcmUtilsTest {
 
         var acElements =
                 AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, AUTOMATION_COMPOSITION_ELEMENT);
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setState(AcTypeState.PRIMED);
+        acDefinition.setServiceTemplate(serviceTemplate);
+        acDefinition.setCompositionId(UUID.randomUUID());
+        acDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.PRIMED));
+        acDefinition.getElementStateMap().values().forEach(nodeTemplateState
+                -> nodeTemplateState.setOutProperties(Map.of("outProperty", "testProperty")));
+
         Map<ToscaConceptIdentifier, UUID> map = new HashMap<>();
         var participantId = UUID.randomUUID();
-        assertThatThrownBy(() -> AcmUtils.prepareParticipantPriming(acElements, map)).hasMessageMatching(
+        assertThatThrownBy(() -> AcmUtils.prepareParticipantPriming(acElements, map, acDefinition)).hasMessageMatching(
                 "Element Type org.onap.policy.clamp.acm.PolicyAutomationCompositionElement 1.0.0 not supported");
         map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.0"),
                 participantId);
@@ -114,8 +122,12 @@ class AcmUtilsTest {
                 "1.0.0"), participantId);
         map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.0"),
                 participantId);
-        var result = AcmUtils.prepareParticipantPriming(acElements, map);
+        var result = AcmUtils.prepareParticipantPriming(acElements, map, acDefinition);
         assertThat(result).isNotEmpty().hasSize(1);
+        for (var participantDefList : result) {
+            assertTrue(participantDefList.getAutomationCompositionElementDefinitionList().stream()
+                    .allMatch(element -> "testProperty".equals(element.getOutProperties().get("outProperty"))));
+        }
     }
 
     @Test
