@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -160,5 +161,30 @@ class AcDefinitionHandlerTest {
         ach.handleParticipantSync(participantSyncMsg);
         verify(cacheProvider).removeElementDefinition(participantSyncMsg.getCompositionId());
         verify(cacheProvider).removeAutomationComposition(restartAc.getAutomationCompositionId());
+    }
+
+    @Test
+    void syncDeleteInMigrationTest() {
+        var participantSyncMsg = new ParticipantSync();
+        participantSyncMsg.setState(AcTypeState.PRIMED);
+        participantSyncMsg.setRestarting(true);
+        var compositionId = UUID.randomUUID();
+        participantSyncMsg.setCompositionId(compositionId);
+
+        AutomationCompositionMsg<?> acMsgComposition = mock(AutomationCompositionMsg.class);
+        when(acMsgComposition.getCompositionId()).thenReturn(compositionId);
+
+        AutomationCompositionMsg<?> acMsgCompositionTarget = mock(AutomationCompositionMsg.class);
+        acMsgCompositionTarget.setCompositionId(UUID.randomUUID());
+        when(acMsgCompositionTarget.getCompositionTargetId()).thenReturn(compositionId);
+
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getMessagesOnHold())
+                .thenReturn(Map.of(UUID.randomUUID(), acMsgComposition, UUID.randomUUID(), acMsgCompositionTarget));
+        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
+                mock(ThreadHandler.class));
+        ach.handleParticipantSync(participantSyncMsg);
+        verify(acMsgComposition).setCompositionId(null);
+        verify(acMsgCompositionTarget).setCompositionTargetId(null);
     }
 }
