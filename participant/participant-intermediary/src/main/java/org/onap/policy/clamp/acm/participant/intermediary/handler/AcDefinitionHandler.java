@@ -135,6 +135,8 @@ public class AcDefinitionHandler {
                 cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list,
                         participantSyncMsg.getRevisionIdComposition());
             }
+        } else if (participantSyncMsg.isRestarting()) {
+            checkComposition(participantSyncMsg);
         }
 
         for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
@@ -144,6 +146,19 @@ public class AcDefinitionHandler {
                 for (var element : automationcomposition.getAcElementList()) {
                     listener.cleanExecution(element.getId(), participantSyncMsg.getMessageId());
                 }
+            }
+        }
+    }
+
+    private void checkComposition(ParticipantSync participantSyncMsg) {
+        // edge case scenario in migration whit remove/add elements,
+        // when composition or target composition doesn't contain elements from this participant
+        for (var msg : cacheProvider.getMessagesOnHold().values()) {
+            if (participantSyncMsg.getCompositionId().equals(msg.getCompositionTargetId())) {
+                msg.setCompositionTargetId(null);
+            }
+            if (participantSyncMsg.getCompositionId().equals(msg.getCompositionId())) {
+                msg.setCompositionId(null);
             }
         }
     }
