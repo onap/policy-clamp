@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,10 +88,16 @@ public class BrokerStarter<T> {
 
     private void runTopicHealthCheck() {
         var fetchTimeout = getFetchTimeout();
+        var retries = 10; // TODO - make this configurable with max number of retries or timeout
         while (!topicHealthCheck.healthCheck(getTopics())) {
             LOGGER.debug(" Broker not up yet!");
             try {
                 Thread.sleep(fetchTimeout);
+                retries--;
+                if (retries == 0) {
+                    LOGGER.error("Broker not up after {} retries", retries);
+                    break;
+                }
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());
                 Thread.currentThread().interrupt();
@@ -103,7 +109,7 @@ public class BrokerStarter<T> {
         var opTopic = parameters.getIntermediaryParameters().getTopics().getOperationTopic();
         var syncTopic = parameters.getIntermediaryParameters().getTopics().getSyncTopic();
         return Boolean.TRUE.equals(parameters.getIntermediaryParameters().getTopicValidation())
-                ? List.of(opTopic, syncTopic) : List.<String>of();
+                ? List.of(opTopic, syncTopic) : List.of();
     }
 
     private int getFetchTimeout() {
