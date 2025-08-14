@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,25 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantStatusReqListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.common.message.bus.event.Topic;
+import org.onap.policy.common.message.bus.event.TopicEndpoint;
+import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 import org.onap.policy.common.message.bus.healthcheck.TopicHealthCheck;
 import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 class BrokerStarterTest {
+
+    @BeforeEach
+    void setUp() {
+        TopicEndpoint endpointManager = TopicEndpointManager.getManager();
+        endpointManager.start();
+    }
 
     @Test
     void testWithClampAdminTopicsNull() {
