@@ -171,7 +171,7 @@ class SupervisionParticipantHandlerTest {
                 .send(participantRegisterMessage.getMessageId(), participantId, replicaId);
         verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
                 eq(CommonTestData.TOSCA_COMP_NAME));
-        verify(participantSyncPublisher)
+        verify(participantSyncPublisher, times(0))
                 .sendRestartMsg(any(), any(), any(AutomationCompositionDefinition.class), any());
     }
 

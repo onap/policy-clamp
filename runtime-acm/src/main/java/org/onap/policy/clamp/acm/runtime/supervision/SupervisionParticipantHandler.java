@@ -21,14 +21,12 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
@@ -136,15 +134,17 @@ public class SupervisionParticipantHandler {
             List<ParticipantSupportedElementType> participantSupportedElementType, boolean registration) {
         var replicaId = msgReplicaId != null ? msgReplicaId : participantId;
         var replicaOpt = participantProvider.findParticipantReplica(replicaId);
+        var toRestart = registration;
         if (replicaOpt.isPresent()) {
             var replica = replicaOpt.get();
             checkOnline(replica);
+            toRestart = false;
         } else {
             var participant = getParticipant(participantId, listToMap(participantSupportedElementType));
             participant.getReplicas().put(replicaId, createReplica(replicaId));
             participantProvider.saveParticipant(participant);
         }
-        if (registration) {
+        if (toRestart) {
             handleRestart(participantId, replicaId);
         }
     }
@@ -230,9 +230,8 @@ public class SupervisionParticipantHandler {
     }
 
     private Map<UUID, ParticipantSupportedElementType> listToMap(List<ParticipantSupportedElementType> elementList) {
-        Map<UUID, ParticipantSupportedElementType> map = new HashMap<>();
-        MapUtils.populateMap(map, elementList, ParticipantSupportedElementType::getId);
-        return map;
+        return elementList.stream()
+                .collect(Collectors.toMap(ParticipantSupportedElementType::getId, UnaryOperator.identity()));
     }
 
     /**
