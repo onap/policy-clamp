@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f4659bd_075e7fba",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/SupervisionParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-08-21T13:27:08Z",
+      "side": 1,
+      "message": "Small comment: Should this variable be renamed \"toBeRestarted\" or maybe \"toRestart\" instead?",
+      "range": {
+        "startLine": 137,
+        "startChar": 12,
+        "endLine": 137,
+        "endChar": 23
+      },
+      "revId": "f4a4c118716b819be16e50be5e2e3518946e61de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
