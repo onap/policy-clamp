@@ -511,19 +511,19 @@ public class AutomationCompositionInstantiationProvider {
      * Retrieves a list of AutomationComposition instances filtered by the specified state change results
      * and deployment states. The result can be paginated and sorted based on the provided parameters.
      *
-     * @param compositionIds a list of composition UUIDs to filter the AutomationComposition instances
+     * @param instanceIds a list of instance UUIDs
      * @param stateChangeResults a list of StateChangeResult values to filter the AutomationComposition instances
      * @param deployStates a list of DeployState values to filter the AutomationComposition instances
      * @param pageable the pagination information including page size and page number
      * @return a list of AutomationComposition instances that match the specified filters
      */
     public AutomationCompositions getAcInstancesByFilter(
-        final String compositionIds, final String stateChangeResults, final String deployStates,
+        final String instanceIds, final String stateChangeResults, final String deployStates,
         final Pageable pageable) {
 
         List<String> acIds = new ArrayList<>();
-        if (compositionIds != null) {
-            Arrays.stream(compositionIds.split(",")).forEach(acId -> acIds.add(acId.trim()));
+        if (instanceIds != null) {
+            Arrays.stream(instanceIds.split(",")).forEach(acId -> acIds.add(acId.trim()));
         }
 
         List<StateChangeResult> stateChangeResultList = new ArrayList<>();

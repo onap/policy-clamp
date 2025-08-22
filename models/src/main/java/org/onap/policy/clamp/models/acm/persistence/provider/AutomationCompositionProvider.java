@@ -335,21 +335,21 @@ public class AutomationCompositionProvider {
      * Retrieves a list of AutomationComposition instances filtered by the specified state change results
      * and deployment states. The result can be paginated and sorted based on the provided parameters.
      *
-     * @param compositionIds a list of composition UUIDs to filter the AutomationComposition instances
+     * @param instanceIds a list of instance UUIDs
      * @param stateChangeResults a list of StateChangeResult values to filter the AutomationComposition instances
      * @param deployStates a list of DeployState values to filter the AutomationComposition instances
      * @param pageable the pagination information including page size and page number
      * @return a list of AutomationComposition instances that match the specified filters
      */
     public List<AutomationComposition> getAcInstancesByFilter(
-            @NonNull final List<String> compositionIds,
+            @NonNull final List<String> instanceIds,
             @NonNull final List<StateChangeResult> stateChangeResults,
             @NonNull final List<DeployState> deployStates,
             @NonNull final Pageable pageable) {
         Page<JpaAutomationComposition> page;
 
-        if (!compositionIds.isEmpty()) {
-            page = filterWithCompositionIds(compositionIds, stateChangeResults, deployStates, pageable);
+        if (!instanceIds.isEmpty()) {
+            page = filterWithInstanceIds(instanceIds, stateChangeResults, deployStates, pageable);
         } else if (stateChangeResults.isEmpty() && deployStates.isEmpty()) {
             page = automationCompositionRepository.findAll(pageable);
         } else if (!stateChangeResults.isEmpty() && deployStates.isEmpty()) {
@@ -364,21 +364,21 @@ public class AutomationCompositionProvider {
         return ProviderUtils.asEntityList(page.toList());
     }
 
-    private Page<JpaAutomationComposition> filterWithCompositionIds(final List<String> compositionIds,
+    private Page<JpaAutomationComposition> filterWithInstanceIds(final List<String> instanceIds,
                                                                     final List<StateChangeResult> stages,
                                                                     final List<DeployState> deployStates,
                                                                     final Pageable pageable) {
         if (stages.isEmpty() && deployStates.isEmpty()) {
-            return automationCompositionRepository.findByCompositionIdIn(compositionIds, pageable);
+            return automationCompositionRepository.findByInstanceIdIn(instanceIds, pageable);
         } else if (!stages.isEmpty() && deployStates.isEmpty()) {
-            return automationCompositionRepository.findByCompositionIdInAndStateChangeResultIn(
-                compositionIds, stages, pageable);
+            return automationCompositionRepository.findByInstanceIdInAndStateChangeResultIn(
+                    instanceIds, stages, pageable);
         } else if (stages.isEmpty()) {
-            return automationCompositionRepository.findByCompositionIdInAndDeployStateIn(
-                compositionIds, deployStates, pageable);
+            return automationCompositionRepository.findByInstanceIdInAndDeployStateIn(
+                    instanceIds, deployStates, pageable);
         } else {
-            return automationCompositionRepository.findByCompositionIdInAndStateChangeResultInAndDeployStateIn(
-                compositionIds, stages, deployStates, pageable);
+            return automationCompositionRepository.findByInstanceIdInAndStateChangeResultInAndDeployStateIn(
+                    instanceIds, stages, deployStates, pageable);
         }
     }
 }
