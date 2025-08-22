@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "130adcb5_eb5a2f30",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-08-22T14:39:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9366005d_81525e66",
+      "range": {
+        "startLine": 367,
+        "startChar": 84,
+        "endLine": 367,
+        "endChar": 98
+      },
+      "revId": "c40c1ccc56e768abb4795255a509a97f4edc87ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec4148d2_c756dbf5",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-08-22T14:28:12Z",
       "side": 1,
       "message": "same comment on the variable naming",
+      "range": {
+        "startLine": 56,
+        "startChar": 73,
+        "endLine": 56,
+        "endChar": 87
+      },
+      "revId": "c40c1ccc56e768abb4795255a509a97f4edc87ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a5d8aad_69370841",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/repository/AutomationCompositionRepository.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-08-22T14:39:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec4148d2_c756dbf5",
       "range": {
         "startLine": 56,
         "startChar": 73,
