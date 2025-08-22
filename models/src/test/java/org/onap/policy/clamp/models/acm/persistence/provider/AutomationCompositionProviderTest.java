@@ -419,7 +419,7 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
-    void testGetAcInstancesByFilter_WithoutCompositionIds() {
+    void testGetAcInstancesByFilter_WithoutInstanceIds() {
         Page<JpaAutomationComposition> mockPage = new PageImpl<>(inputAutomationCompositionsJpa);
         var acRepository = mock(AutomationCompositionRepository.class);
         when(acRepository.findByStateChangeResultIn(anyCollection(), any(Pageable.class)))
@@ -455,7 +455,7 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
-    void testGetAcInstancesByFilter_WithCompositionIds() {
+    void testGetAcInstancesByFilter_WithInstanceIds() {
         Page<JpaAutomationComposition> mockPage = new PageImpl<>(inputAutomationCompositionsJpa);
         var acRepository = mock(AutomationCompositionRepository.class);
 
@@ -464,12 +464,12 @@ class AutomationCompositionProviderTest {
         var deployStates = new ArrayList<DeployState>();
         var pageable = Pageable.unpaged();
 
-        when(acRepository.findByCompositionIdInAndStateChangeResultInAndDeployStateIn(
+        when(acRepository.findByInstanceIdInAndStateChangeResultInAndDeployStateIn(
             acIds, stateChangeResults, deployStates, pageable)).thenReturn(mockPage);
-        when(acRepository.findByCompositionIdInAndStateChangeResultIn(acIds, stateChangeResults, pageable))
+        when(acRepository.findByInstanceIdInAndStateChangeResultIn(acIds, stateChangeResults, pageable))
             .thenReturn(mockPage);
-        when(acRepository.findByCompositionIdInAndDeployStateIn(acIds, deployStates, pageable)).thenReturn(mockPage);
-        when(acRepository.findByCompositionIdIn(acIds, pageable)).thenReturn(mockPage);
+        when(acRepository.findByInstanceIdInAndDeployStateIn(acIds, deployStates, pageable)).thenReturn(mockPage);
+        when(acRepository.findByInstanceIdIn(acIds, pageable)).thenReturn(mockPage);
 
         var acProvider = new AutomationCompositionProvider(acRepository,
             mock(AutomationCompositionElementRepository.class), mock(AutomationCompositionRollbackRepository.class));

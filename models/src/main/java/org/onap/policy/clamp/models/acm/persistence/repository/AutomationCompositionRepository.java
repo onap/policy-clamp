@@ -53,15 +53,15 @@ public interface AutomationCompositionRepository extends JpaRepository<JpaAutoma
     Page<JpaAutomationComposition> findByStateChangeResultIn(Collection<StateChangeResult> stateChangeResults,
                                                              Pageable pageable);
 
-    Page<JpaAutomationComposition> findByCompositionIdIn(Collection<String> compositionIds, Pageable pageable);
+    Page<JpaAutomationComposition> findByInstanceIdIn(Collection<String> compositionIds, Pageable pageable);
 
-    Page<JpaAutomationComposition> findByCompositionIdInAndStateChangeResultIn(
+    Page<JpaAutomationComposition> findByInstanceIdInAndStateChangeResultIn(
         Collection<String> compositionIds, Collection<StateChangeResult> stateChangeResults, Pageable pageable);
 
-    Page<JpaAutomationComposition> findByCompositionIdInAndDeployStateIn(
+    Page<JpaAutomationComposition> findByInstanceIdInAndDeployStateIn(
         Collection<String> compositionIds, Collection<DeployState> deployStates, Pageable pageable);
 
-    Page<JpaAutomationComposition> findByCompositionIdInAndStateChangeResultInAndDeployStateIn(
+    Page<JpaAutomationComposition> findByInstanceIdInAndStateChangeResultInAndDeployStateIn(
         Collection<String> compositionIds, Collection<StateChangeResult> stateChangeResults,
         Collection<DeployState> deployStates, Pageable pageable);
 }
