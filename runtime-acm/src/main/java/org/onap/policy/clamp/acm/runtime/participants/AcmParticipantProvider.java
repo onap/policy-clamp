@@ -58,6 +58,7 @@ public class AcmParticipantProvider {
      * @return A list of available participants
      */
     public List<ParticipantInformation> getAllParticipants(final Pageable pageable) {
+        LOGGER.info("Get request received for all participants");
         var participants = this.participantProvider.getParticipants();
         return participants.stream().map(participant -> createParticipantInformation(participant, pageable)).toList();
     }
@@ -80,6 +81,7 @@ public class AcmParticipantProvider {
      * @return The participant
      */
     public ParticipantInformation getParticipantById(final UUID participantId, final Pageable pageable) {
+        LOGGER.info("Get participant by participantID request received: {}", participantId);
         var participant = this.participantProvider.getParticipantById(participantId);
         return createParticipantInformation(participant, pageable);
     }

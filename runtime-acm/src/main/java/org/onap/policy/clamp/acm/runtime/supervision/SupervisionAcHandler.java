@@ -103,6 +103,8 @@ public class SupervisionAcHandler {
         executor.execute(
             () -> {
                 var acToSend = new AutomationComposition(automationComposition);
+                LOGGER.info("Sending deployment request for AutomationComposition with instanceID: {}"
+                        + " and compositionID: {}", acToSend.getInstanceId(), acToSend.getCompositionId());
                 encryptionUtils.decryptInstanceProperties(acToSend);
                 automationCompositionDeployPublisher.send(acToSend, startPhase, true, acDefinition.getRevisionId());
             });
@@ -134,8 +136,13 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+            () -> {
+                LOGGER.info("Sending undeployment request for AutomationComposition with instanceID: {}"
+                        + " and compositionID: {}", automationComposition.getInstanceId(),
+                        automationComposition.getCompositionId());
+                automationCompositionStateChangePublisher.send(
+                        automationComposition, startPhase, true, acDefinition.getRevisionId());
+            });
     }
 
     /**
@@ -162,8 +169,13 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+            () -> {
+                LOGGER.info("Sending unlock request for AutomationComposition with instanceID: {} "
+                    + "compositionID: {}", automationComposition.getInstanceId(),
+                        automationComposition.getCompositionId());
+                automationCompositionStateChangePublisher.send(
+                        automationComposition, startPhase, true, acDefinition.getRevisionId());
+            });
     }
 
     /**
@@ -180,6 +192,8 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> {
             var acToSend = new AutomationComposition(automationComposition);
+            LOGGER.info("Sending prepare pre-deploy request for AutomationComposition with instanceID: {} "
+                    + "compositionID: {}", acToSend.getInstanceId(), acToSend.getCompositionId());
             encryptionUtils.decryptInstanceProperties(acToSend);
             acPreparePublisher.sendPrepare(acToSend, stage, acDefinition.getRevisionId());
         });
@@ -195,7 +209,12 @@ public class SupervisionAcHandler {
         AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> acPreparePublisher.sendReview(automationComposition, acDefinition.getRevisionId()));
+        executor.execute(() -> {
+            LOGGER.info("Sending prepare post-deploy request for AutomationComposition with instanceID: {} "
+                    + "compositionID: {}", automationComposition.getInstanceId(),
+                    automationComposition.getCompositionId());
+            acPreparePublisher.sendReview(automationComposition, acDefinition.getRevisionId());
+        });
     }
 
     /**
@@ -222,8 +241,13 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+            () -> {
+                LOGGER.info("Sending lock request for AutomationComposition with instanceID: {} "
+                        + "compositionID: {}", automationComposition.getInstanceId(),
+                        automationComposition.getCompositionId());
+                automationCompositionStateChangePublisher.send(
+                        automationComposition, startPhase, true, acDefinition.getRevisionId());
+            });
     }
 
     /**

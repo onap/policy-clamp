@@ -91,6 +91,7 @@ public class AutomationCompositionInstantiationProvider {
      */
     public InstantiationResponse createAutomationComposition(UUID compositionId,
                                                              AutomationComposition automationComposition) {
+        LOGGER.info("Create request received for automation composition definition with ID: {}", compositionId);
         AutomationCompositionProvider.validateInstanceEndpoint(compositionId, automationComposition);
         automationCompositionProvider.validateNameVersion(automationComposition.getKey().asIdentifier());
 
@@ -128,6 +129,8 @@ public class AutomationCompositionInstantiationProvider {
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         AcDefinitionProvider.checkPrimedComposition(acDefinition);
         if (DeployState.UNDEPLOYED.equals(acToUpdate.getDeployState())) {
+            LOGGER.info("Update (UNDEPLOYED State) request received for automation composition "
+                    + "with compositionID: {}", compositionId);
             acToUpdate.setElements(automationComposition.getElements());
             acToUpdate.setName(automationComposition.getName());
             acToUpdate.setVersion(automationComposition.getVersion());
@@ -182,6 +185,8 @@ public class AutomationCompositionInstantiationProvider {
             AutomationCompositionDefinition acDefinition) {
         // save copy in case of a rollback
         automationCompositionProvider.copyAcElementsBeforeUpdate(acToBeUpdated);
+        LOGGER.info("Update (DEPLOYED State) request received for automation composition "
+                + "element with compositionID: {}", automationComposition.getCompositionId());
 
         // Iterate and update the element property values
         for (var element : automationComposition.getElements().entrySet()) {
@@ -211,7 +216,8 @@ public class AutomationCompositionInstantiationProvider {
     private InstantiationResponse migrateAutomationComposition(
             AutomationComposition automationComposition, AutomationComposition acToBeUpdated,
             AutomationCompositionDefinition acDefinition) {
-
+        LOGGER.info("Migration request received for automation composition with CompositionID: {}",
+                automationComposition.getCompositionId());
         if (!DeployState.DEPLOYED.equals(acToBeUpdated.getDeployState())) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                 "Not allowed to migrate in the state " + acToBeUpdated.getDeployState());
@@ -265,6 +271,8 @@ public class AutomationCompositionInstantiationProvider {
             AutomationCompositionDefinition acDefinition) {
 
         acToBeUpdated.setPrecheck(true);
+        LOGGER.info("Migrate precheck request received for composition with ID: {}",
+                automationComposition.getCompositionId());
         var copyAc = new AutomationComposition(acToBeUpdated);
         var acDefinitionTarget = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
         AcDefinitionProvider.checkPrimedComposition(acDefinitionTarget);
@@ -347,6 +355,8 @@ public class AutomationCompositionInstantiationProvider {
     public InstantiationResponse deleteAutomationComposition(UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         var acDefinition = getAcDefinition(compositionId, automationComposition);
+        LOGGER.info("Delete automation composition request received for name: {} and version: {}",
+                automationComposition.getName(), automationComposition.getVersion());
         var result = acInstanceStateResolver.resolve(DeployOrder.DELETE,
             null, null,
             automationComposition.getDeployState(), automationComposition.getLockState(),
@@ -435,6 +445,8 @@ public class AutomationCompositionInstantiationProvider {
      * @param instanceId    The UUID of the automation composition instance
      */
     public void rollback(UUID compositionId, UUID instanceId) {
+        LOGGER.info("Rollback automation composition request received for CompositionID: {} and InstanceID: {}",
+                compositionId, instanceId);
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         AutomationCompositionProvider.validateInstanceEndpoint(compositionId, automationComposition);
 
@@ -521,6 +533,7 @@ public class AutomationCompositionInstantiationProvider {
         final String instanceIds, final String stateChangeResults, final String deployStates,
         final Pageable pageable) {
 
+        LOGGER.info("Get automation compositions request received with filters");
         List<String> acIds = new ArrayList<>();
         if (instanceIds != null) {
             Arrays.stream(instanceIds.split(",")).forEach(acId -> acIds.add(acId.trim()));
