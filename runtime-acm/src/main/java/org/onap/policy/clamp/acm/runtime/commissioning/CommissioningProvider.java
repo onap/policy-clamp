@@ -45,6 +45,8 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +68,9 @@ public class CommissioningProvider {
 
     private final ExecutorService executor =
             Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
+
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CommissioningProvider.class);
 
     private CommissioningResponse createCommissioningResponse(UUID compositionId,
             ToscaServiceTemplate serviceTemplate) {
@@ -91,11 +96,11 @@ public class CommissioningProvider {
      */
     @Transactional
     public CommissioningResponse createAutomationCompositionDefinition(ToscaServiceTemplate serviceTemplate) {
-
         var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate,
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName(),
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
         serviceTemplate = acmDefinition.getServiceTemplate();
+        LOGGER.info("Create request received for ID: {}", acmDefinition.getCompositionId());
         return createCommissioningResponse(acmDefinition.getCompositionId(), serviceTemplate);
     }
 
@@ -108,6 +113,7 @@ public class CommissioningProvider {
      */
     @Transactional
     public CommissioningResponse updateCompositionDefinition(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
+        LOGGER.info("Update request received for ID: {}", compositionId);
         if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "There are ACM instances, Update of ACM Definition not allowed");
@@ -120,7 +126,6 @@ public class CommissioningProvider {
         acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate,
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName(),
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
-
         return createCommissioningResponse(compositionId, serviceTemplate);
     }
 
@@ -132,6 +137,7 @@ public class CommissioningProvider {
      */
     @Transactional
     public CommissioningResponse deleteAutomationCompositionDefinition(UUID compositionId) {
+        LOGGER.info("Delete request received for ID: {}", compositionId);
         if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "Delete instances, to commission automation composition definitions");
@@ -156,6 +162,8 @@ public class CommissioningProvider {
     @Transactional(readOnly = true)
     public ToscaServiceTemplates getAutomationCompositionDefinitions(String acName, String acVersion,
             @NonNull Pageable pageable) {
+        LOGGER.info("Get automation compositions request received for name: {} "
+                + "and version: {}", acName, acVersion);
         var result = new ToscaServiceTemplates();
         result.setServiceTemplates(acDefinitionProvider.getServiceTemplateList(acName, acVersion, pageable));
         return result;
@@ -169,7 +177,7 @@ public class CommissioningProvider {
      */
     @Transactional(readOnly = true)
     public AutomationCompositionDefinition getAutomationCompositionDefinition(UUID compositionId) {
-
+        LOGGER.info("Get automation composition definition request received for ID: {}", compositionId);
         return acDefinitionProvider.getAcDefinition(compositionId);
     }
 
@@ -210,6 +218,7 @@ public class CommissioningProvider {
     }
 
     private void prime(AutomationCompositionDefinition acmDefinition) {
+        LOGGER.info("Prime request received for ID: {}", acmDefinition.getCompositionId());
         var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
@@ -220,6 +229,7 @@ public class CommissioningProvider {
     }
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
+        LOGGER.info("Deprime request received for ID: {}", acmDefinition.getCompositionId());
         acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var participantIds = new HashSet<UUID>();
         for (var elementState : acmDefinition.getElementStateMap().values()) {
