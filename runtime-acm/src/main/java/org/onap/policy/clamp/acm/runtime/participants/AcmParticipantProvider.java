@@ -58,6 +58,7 @@ public class AcmParticipantProvider {
      * @return A list of available participants
      */
     public List<ParticipantInformation> getAllParticipants(final Pageable pageable) {
+        LOGGER.info("Get request received for all participants");
         var participants = this.participantProvider.getParticipants();
         return participants.stream().map(participant -> createParticipantInformation(participant, pageable)).toList();
     }
@@ -80,6 +81,7 @@ public class AcmParticipantProvider {
      * @return The participant
      */
     public ParticipantInformation getParticipantById(final UUID participantId, final Pageable pageable) {
+        LOGGER.info("Get participant by participantID request received: {}", participantId);
         var participant = this.participantProvider.getParticipantById(participantId);
         return createParticipantInformation(participant, pageable);
     }
@@ -129,7 +131,7 @@ public class AcmParticipantProvider {
                     "Participant Not Found with ID: " + participantId);
         }
         supervisionParticipantHandler.handleRestart(participantId, null);
-        LOGGER.debug("Restarting participant with ID: {}", participantId);
+        LOGGER.debug("Sync participant cache request received with ID: {}", participantId);
     }
 
 
@@ -138,6 +140,6 @@ public class AcmParticipantProvider {
      */
     public void restartAllParticipants() {
         supervisionParticipantHandler.handleRestartOfAllParticipants();
-        LOGGER.debug("Restarting all participants");
+        LOGGER.debug("Sync participant cache request received for all participants");
     }
 }

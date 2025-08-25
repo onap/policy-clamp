@@ -83,6 +83,7 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void deploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        LOGGER.info("Deployment request received for instanceID: {}", automationComposition.getInstanceId());
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && DeployState.DEPLOYING.equals(automationComposition.getDeployState())
                 && automationComposition.getElements().size() > 1) {
@@ -115,6 +116,7 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void undeploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        LOGGER.info("Undeployment request received for instanceID: {}", automationComposition.getInstanceId());
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && DeployState.UNDEPLOYING.equals(automationComposition.getDeployState())
                 && automationComposition.getElements().size() > 1) {
@@ -133,9 +135,8 @@ public class SupervisionAcHandler {
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+        executor.execute(() -> automationCompositionStateChangePublisher.send(automationComposition,
+                    startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
@@ -145,6 +146,7 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void unlock(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        LOGGER.info("Unlock request received for instanceID: {}", automationComposition.getInstanceId());
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && LockState.UNLOCKING.equals(automationComposition.getLockState())
                 && automationComposition.getElements().size() > 1) {
@@ -162,8 +164,8 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+            () -> automationCompositionStateChangePublisher.send(automationComposition,
+                    startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
@@ -173,6 +175,7 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void prepare(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        LOGGER.info("Prepare pre-deploy request received for instanceID: {}", automationComposition.getInstanceId());
         AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE, SubState.PREPARING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var stage = ParticipantUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
@@ -192,6 +195,7 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void review(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        LOGGER.info("Prepare post-deploy request received for instanceID: {}", automationComposition.getInstanceId());
         AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
@@ -205,6 +209,7 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void lock(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        LOGGER.info("Lock request received for instanceID: {}", automationComposition.getInstanceId());
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && LockState.LOCKING.equals(automationComposition.getLockState())
                 && automationComposition.getElements().size() > 1) {
@@ -222,8 +227,8 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+            () -> automationCompositionStateChangePublisher.send(automationComposition,
+                    startPhase, true, acDefinition.getRevisionId()));
     }
 
     /**
