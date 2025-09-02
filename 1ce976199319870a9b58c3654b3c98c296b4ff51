@@ -283,6 +283,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33babfc1_4e93d349",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/utils/EndPointInterceptor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-09-02T09:05:10Z",
+      "side": 1,
+      "message": "it is correct.\njust check the logs if it works",
+      "parentUuid": "b7a98a5a_20a693f1",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "1ce976199319870a9b58c3654b3c98c296b4ff51",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9ffcb629_a9f5dcbc",
