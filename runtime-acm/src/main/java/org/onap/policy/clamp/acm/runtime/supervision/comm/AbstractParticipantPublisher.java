@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2025 Nordix Foundation.
+ *  Copyright (C) 2021,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import jakarta.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Publisher;
-import org.onap.policy.clamp.acm.runtime.main.utils.NetLoggerUtil;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.common.message.bus.event.TopicSink;
 import org.onap.policy.common.message.bus.event.client.TopicSinkClient;

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.comm;
 import java.util.function.Consumer;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Listener;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
+import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
@@ -53,6 +54,8 @@ public abstract class ParticipantListener<T extends ParticipantMessage> extends 
     @Override
     public void onTopicEvent(CommInfrastructure infra, String topic, StandardCoderObject sco, T message) {
         if (participantHandler.appliesTo(message)) {
+            NetLoggerUtil.log(NetLoggerUtil.EventType.IN, infra, topic,
+                    String.format("{\"type\":\"IN\", \"topic\":\"%s\", \"message\":%s}", topic, message));
             consumer.accept(message);
         }
     }
