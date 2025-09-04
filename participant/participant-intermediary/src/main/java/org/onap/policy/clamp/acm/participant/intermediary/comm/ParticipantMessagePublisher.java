@@ -27,6 +27,7 @@ import java.util.List;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
@@ -35,8 +36,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.common.message.bus.event.TopicSink;
 import org.onap.policy.common.message.bus.event.client.TopicSinkClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,7 +44,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ParticipantMessagePublisher implements Publisher {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantMessagePublisher.class);
     private static final String NOT_ACTIVE_TEXT = "Not Active!";
 
     @Getter
@@ -75,7 +73,9 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantReqSync(final ParticipantReqSync participantReqSync) {
         validate();
         topicSinkClient.send(participantReqSync);
-        LOGGER.info("Sent Participant Request Sync to CLAMP - {}", participantReqSync);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+                topicSinkClient.getTopic(), "Sent Participant Request Sync to CLAMP - "
+                        + participantReqSync.toString());
     }
 
     /**
@@ -87,7 +87,9 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
         validate();
         topicSinkClient.send(participantStatus);
-        LOGGER.info("Sent Participant Status message to CLAMP - {}", participantStatus);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+                topicSinkClient.getTopic(), "Sent Participant Status message to CLAMP - "
+                        + participantStatus.toString());
     }
 
     /**
@@ -99,7 +101,9 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
         validate();
         topicSinkClient.send(participantRegister);
-        LOGGER.info("Sent Participant Register message to CLAMP - {}", participantRegister);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+                topicSinkClient.getTopic(), "Sent Participant Register message to CLAMP - "
+                        + participantRegister.toString());
     }
 
     /**
@@ -111,7 +115,9 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
         validate();
         topicSinkClient.send(participantDeregister);
-        LOGGER.debug("Sent Participant Deregister message to CLAMP - {}", participantDeregister);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+                topicSinkClient.getTopic(), "Sent Participant Deregister message to CLAMP - "
+                        + participantDeregister.toString());
     }
 
     /**
@@ -123,7 +129,9 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantPrimeAck(final ParticipantPrimeAck participantPrimeAck) {
         validate();
         topicSinkClient.send(participantPrimeAck);
-        LOGGER.debug("Sent Participant Prime Ack message to CLAMP - {}", participantPrimeAck);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+                topicSinkClient.getTopic(), "Sent Participant Prime Ack message to CLAMP - "
+                        + participantPrimeAck.toString());
     }
 
     /**
@@ -135,8 +143,9 @@ public class ParticipantMessagePublisher implements Publisher {
             description = "AUTOMATION_COMPOSITION_UPDATE_ACK/AUTOMATION_COMPOSITION_STATECHANGE_ACK messages published")
     public void sendAutomationCompositionAck(final AutomationCompositionDeployAck automationCompositionAck) {
         validate();
-        topicSinkClient.send(automationCompositionAck);
-        LOGGER.debug("Sent AutomationComposition Update/StateChange Ack to runtime - {}", automationCompositionAck);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+                topicSinkClient.getTopic(), "Sent AutomationComposition Update/StateChange Ack to runtime - "
+                        + automationCompositionAck.toString());
     }
 
     private void validate() {
