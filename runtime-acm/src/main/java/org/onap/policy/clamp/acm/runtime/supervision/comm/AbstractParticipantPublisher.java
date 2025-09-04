@@ -22,8 +22,8 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import jakarta.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Publisher;
-import org.onap.policy.clamp.acm.runtime.main.utils.NetLoggerUtil;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.common.message.bus.event.TopicSink;
 import org.onap.policy.common.message.bus.event.client.TopicSinkClient;

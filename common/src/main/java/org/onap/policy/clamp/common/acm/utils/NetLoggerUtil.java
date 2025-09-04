@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.main.utils;
+package org.onap.policy.clamp.common.acm.utils;
 
 import lombok.Getter;
 import org.onap.policy.common.message.bus.event.Topic;
