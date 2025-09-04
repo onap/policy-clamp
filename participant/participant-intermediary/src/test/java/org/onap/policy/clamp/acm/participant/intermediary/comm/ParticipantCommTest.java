@@ -29,21 +29,17 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.*;
+import org.onap.policy.common.message.bus.event.Topic;
 import org.onap.policy.common.message.bus.event.TopicSink;
+import org.onap.policy.common.utils.coder.StandardCoderObject;
 
 class ParticipantCommTest {
 
@@ -152,5 +148,25 @@ class ParticipantCommTest {
         messageSender.run();
         assertFalse(messageSender.makeTimerPool().isTerminated());
         messageSender.close();
+    }
+
+    @Test
+    void testOnTopicEvent() {
+        ParticipantHandler handler = Mockito.mock(ParticipantHandler.class);
+        Consumer<ParticipantMessage> consumer = Mockito.mock(Consumer.class);
+        ParticipantMessage message = Mockito.mock(ParticipantMessage.class);
+
+        Mockito.when(handler.appliesTo(message)).thenReturn(true);
+
+        ParticipantListener<ParticipantMessage> listener = new ParticipantListener<>(ParticipantMessage.class, handler, consumer) {
+            @Override
+            public String getType() {
+                return "";
+            }
+        };
+
+        listener.onTopicEvent(Mockito.mock(Topic.CommInfrastructure.class), "topic", Mockito.mock(StandardCoderObject.class), message);
+
+        Mockito.verify(handler).appliesTo(message);
     }
 }
