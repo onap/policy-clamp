@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.main.utils;
+package org.onap.policy.clamp.common.acm.utils;
 
 import lombok.Getter;
 import org.onap.policy.common.message.bus.event.Topic;
