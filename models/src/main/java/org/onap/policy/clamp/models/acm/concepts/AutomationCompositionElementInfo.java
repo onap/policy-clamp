@@ -34,7 +34,6 @@ import org.onap.policy.models.base.PfUtils;
  */
 @NoArgsConstructor
 @Data
-@ToString
 public class AutomationCompositionElementInfo {
 
     private UUID automationCompositionElementId;
@@ -61,5 +60,16 @@ public class AutomationCompositionElementInfo {
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
         this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
+    }
+
+    @Override
+    public String toString() {
+        return "AutomationCompositionElementInfo{"
+                + "automationCompositionElementId=" + automationCompositionElementId
+                + ", deployState=" + deployState
+                + ", lockState=" + lockState
+                + ", operationalState='" + operationalState + '\''
+                + ", useState='" + useState + '\''
+                + '}';
     }
 }
