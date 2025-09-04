@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b800dce1_3ab50bf7",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-04T10:01:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5803d372_ffe67106",
+      "range": {
+        "startLine": 94,
+        "startChar": 45,
+        "endLine": 94,
+        "endChar": 53
+      },
+      "revId": "38bb28784e92b2ab1cd19770d26e7905c26adb8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a3ded73a_bbbac598",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-09-02T09:19:30Z",
       "side": 1,
       "message": "we can add the variable from line 126, instanceId",
+      "range": {
+        "startLine": 132,
+        "startChar": 67,
+        "endLine": 132,
+        "endChar": 93
+      },
+      "revId": "38bb28784e92b2ab1cd19770d26e7905c26adb8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "318bf8e8_efb915f4",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-04T10:01:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a3ded73a_bbbac598",
       "range": {
         "startLine": 132,
         "startChar": 67,
@@ -70,6 +118,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7f17453_c477b3f9",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/participants/AcmParticipantProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-04T10:01:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "455151d4_e53636c1",
+      "range": {
+        "startLine": 134,
+        "startChar": 22,
+        "endLine": 134,
+        "endChar": 44
+      },
+      "revId": "38bb28784e92b2ab1cd19770d26e7905c26adb8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7290e1f4_239d40ec",
@@ -83,6 +155,30 @@
       "writtenOn": "2025-09-02T09:05:10Z",
       "side": 1,
       "message": "Sync all participants cache",
+      "range": {
+        "startLine": 143,
+        "startChar": 22,
+        "endLine": 143,
+        "endChar": 49
+      },
+      "revId": "38bb28784e92b2ab1cd19770d26e7905c26adb8f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f866823e_c3eb7902",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/participants/AcmParticipantProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-04T10:01:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7290e1f4_239d40ec",
       "range": {
         "startLine": 143,
         "startChar": 22,
