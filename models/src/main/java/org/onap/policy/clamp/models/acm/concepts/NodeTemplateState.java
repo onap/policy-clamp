@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,6 @@ public class NodeTemplateState {
 
     private ToscaConceptIdentifier nodeTemplateId;
 
-    private Boolean restarting;
-
     private AcTypeState state;
 
     private String message;
@@ -59,7 +57,6 @@ public class NodeTemplateState {
         this.nodeTemplateStateId = copyConstructor.nodeTemplateStateId;
         this.participantId = copyConstructor.participantId;
         this.nodeTemplateId = new ToscaConceptIdentifier(copyConstructor.nodeTemplateId);
-        this.restarting = copyConstructor.restarting;
         this.state = copyConstructor.state;
         this.message = copyConstructor.message;
         this.outProperties = PfUtils.mapMap(copyConstructor.outProperties, UnaryOperator.identity());
