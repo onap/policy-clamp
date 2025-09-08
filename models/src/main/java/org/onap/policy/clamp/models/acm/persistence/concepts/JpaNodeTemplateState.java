@@ -69,9 +69,6 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     private PfConceptKey nodeTemplateId;
 
     @Column
-    private Boolean restarting;
-
-    @Column
     @NotNull
     private AcTypeState state;
 
@@ -109,7 +106,6 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
             this.participantId = copyConcept.getParticipantId().toString();
         }
         this.nodeTemplateId = copyConcept.getNodeTemplateId().asConceptKey();
-        this.restarting = copyConcept.getRestarting();
         this.state = copyConcept.getState();
         this.message = copyConcept.getMessage();
         this.outProperties = PfUtils.mapMap(copyConcept.getOutProperties(), UnaryOperator.identity());
@@ -123,7 +119,6 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
             nodeTemplateState.setParticipantId(UUID.fromString(this.participantId));
         }
         nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier(this.nodeTemplateId));
-        nodeTemplateState.setRestarting(this.restarting);
         nodeTemplateState.setState(this.state);
         nodeTemplateState.setMessage(this.message);
         nodeTemplateState.setOutProperties(PfUtils.mapMap(outProperties, UnaryOperator.identity()));
