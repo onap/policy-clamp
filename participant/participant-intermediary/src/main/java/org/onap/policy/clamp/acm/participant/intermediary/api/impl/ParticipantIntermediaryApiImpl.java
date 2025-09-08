@@ -24,6 +24,9 @@ package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -34,6 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
@@ -92,6 +96,14 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
+    public InstanceElementDto getInstanceElementDto(UUID instanceId, UUID elementId) {
+        var element = getAutomationCompositionElement(instanceId, elementId);
+        return element == null
+            ? new InstanceElementDto(instanceId, elementId, Map.of(), Map.of(), ElementState.NOT_PRESENT)
+            : new InstanceElementDto(instanceId, elementId, element.getProperties(), element.getOutProperties());
+    }
+
+    @Override
     public void sendAcDefinitionInfo(UUID compositionId, ToscaConceptIdentifier elementId,
             Map<String, Object> outProperties) {
         automationCompositionHandler.sendAcDefinitionInfo(compositionId, elementId, outProperties);
@@ -128,5 +140,14 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
         }
         var acElementDefinition = acDefinition.getElements().get(elementId);
         return acElementDefinition != null ? new AutomationCompositionElementDefinition(acElementDefinition) : null;
+    }
+
+    @Override
+    public CompositionElementDto getCompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementId) {
+        var element = getAcElementDefinition(compositionId, elementId);
+        return element == null
+                ? new CompositionElementDto(compositionId, elementId, Map.of(), Map.of(), ElementState.NOT_PRESENT)
+                : new CompositionElementDto(compositionId, elementId,
+                element.getAutomationCompositionElementToscaNodeTemplate().getProperties(), element.getOutProperties());
     }
 }

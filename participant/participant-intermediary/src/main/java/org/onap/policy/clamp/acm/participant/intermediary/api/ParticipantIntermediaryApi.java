@@ -86,6 +86,15 @@ public interface ParticipantIntermediaryApi {
     AutomationCompositionElement getAutomationCompositionElement(UUID instanceId, UUID elementId);
 
     /**
+     * Get an InstanceElementDto by AutomationComposition instanceId and elementId.
+     *
+     * @param instanceId the ID of the AutomationComposition Instance to update the state on
+     * @param elementId the ID of the AutomationComposition Instance Element to update the state on
+     * @return get the InstanceElementDto
+     */
+    InstanceElementDto getInstanceElementDto(UUID instanceId, UUID elementId);
+
+    /**
      * Get a copy of all AutomationCompositionElementDefinition from all primed compositions.
      *
      * @return a Map by compositionId of Maps of AutomationCompositionElement
@@ -108,6 +117,15 @@ public interface ParticipantIntermediaryApi {
      * @return the AutomationCompositionElementDefinition
      */
     AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId, ToscaConceptIdentifier elementId);
+
+    /**
+     * Get a CompositionElementDto by compositionId and element definition id.
+     *
+     * @param compositionId the composition id
+     * @param elementId the element definition id
+     * @return the AutomationCompositionElementDefinition
+     */
+    CompositionElementDto getCompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementId);
 
     /**
      * Send AutomationComposition Instance Element update Info to AC-runtime.
