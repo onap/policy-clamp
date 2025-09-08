@@ -18,19 +18,29 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
-  - include:
-      file: db/changelog/changelog-1400.yaml
-  - include:
-      file: db/changelog/changelog-1500.yaml
-  - include:
-      file: db/changelog/changelog-1600.yaml
-  - include:
-      file: db/changelog/changelog-1601.yaml
-  - include:
-      file: db/changelog/changelog-1700.yaml
-  - include:
-      file: db/changelog/changelog-1701.yaml
-  - include:
-      file: db/changelog/changelog-1702.yaml
-  - include:
-      file: db/changelog/changelog-1800.yaml
+
+  - changeSet:
+      author: policy
+      id: 1800-1
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: AutomationCompositionElement
+            columnName: restarting
+      changes:
+        - dropColumn:
+            tableName: AutomationCompositionElement
+            columnName: restarting
+
+  - changeSet:
+      author: policy
+      id: 1800-2
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: NodeTemplateState
+            columnName: restarting
+      changes:
+        - dropColumn:
+            tableName: NodeTemplateState
+            columnName: restarting

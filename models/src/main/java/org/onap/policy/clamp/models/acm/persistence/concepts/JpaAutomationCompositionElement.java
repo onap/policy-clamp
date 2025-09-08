@@ -83,9 +83,6 @@ public class JpaAutomationCompositionElement extends Validated
     private String participantId;
 
     @Column
-    private Boolean restarting;
-
-    @Column
     @NotNull
     private DeployState deployState;
 
@@ -175,11 +172,8 @@ public class JpaAutomationCompositionElement extends Validated
         this.definition = new PfConceptKey(copyConcept.definition);
         this.participantId = copyConcept.participantId;
         this.description = copyConcept.description;
-        this.properties = (copyConcept.properties != null ? new LinkedHashMap<>(copyConcept.properties) : null);
-        this.outProperties =
-                (copyConcept.outProperties != null ? new LinkedHashMap<>(copyConcept.outProperties)
-                        : null);
-        this.restarting = copyConcept.restarting;
+        this.properties = PfUtils.mapMap(copyConcept.properties, UnaryOperator.identity());
+        this.outProperties = PfUtils.mapMap(copyConcept.outProperties, UnaryOperator.identity());
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
         this.subState = copyConcept.subState;
@@ -208,7 +202,6 @@ public class JpaAutomationCompositionElement extends Validated
         element.setDescription(description);
         element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
         element.setOutProperties(PfUtils.mapMap(outProperties, UnaryOperator.identity()));
-        element.setRestarting(restarting);
         element.setDeployState(deployState);
         element.setLockState(lockState);
         element.setSubState(subState);
@@ -227,7 +220,6 @@ public class JpaAutomationCompositionElement extends Validated
         this.description = element.getDescription();
         this.properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
         this.outProperties = PfUtils.mapMap(element.getOutProperties(), UnaryOperator.identity());
-        this.restarting = element.getRestarting();
         this.deployState = element.getDeployState();
         this.lockState = element.getLockState();
         this.subState = element.getSubState();
@@ -262,11 +254,6 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = participantId.compareTo(other.participantId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(restarting, other.restarting);
         if (result != 0) {
             return result;
         }
