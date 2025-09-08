@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,6 @@ public class AutomationCompositionElement {
     @NonNull
     private UUID participantId = UUID.randomUUID();
 
-    private Boolean restarting;
-
     @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
 
@@ -83,7 +81,6 @@ public class AutomationCompositionElement {
         this.description = otherElement.description;
         this.properties = AcmUtils.cloneMap(otherElement.properties);
         this.outProperties = AcmUtils.cloneMap(otherElement.outProperties);
-        this.restarting = otherElement.restarting;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
         this.subState = otherElement.subState;
