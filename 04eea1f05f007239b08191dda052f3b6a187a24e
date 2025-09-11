@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb66e8e4_ea9544aa",
+        "filename": "runtime-acm/src/main/resources/db/changelog/changelog-1800.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-09-11T16:31:25Z",
+      "side": 1,
+      "message": "FYI for future:\nLiquibase will remember if it applied the change or not. We only need pre-conditions for initial upgrade from DB-migrator.\nSo if this change is NOT done in DB-migrator, we don\u0027t need a pre-condition.",
+      "range": {
+        "startLine": 24,
+        "startChar": 16,
+        "endLine": 29,
+        "endChar": 34
+      },
+      "revId": "04eea1f05f007239b08191dda052f3b6a187a24e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
