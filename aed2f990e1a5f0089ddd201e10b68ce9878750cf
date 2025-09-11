@@ -22,6 +22,30 @@
       },
       "revId": "aed2f990e1a5f0089ddd201e10b68ce9878750cf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "379c4591_29691dba",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-09-11T13:42:40Z",
+      "side": 0,
+      "message": "not sure, can restarting field be dopped in this version or in a new one?",
+      "parentUuid": "1214a201_a2b7e912",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 7
+      },
+      "revId": "aed2f990e1a5f0089ddd201e10b68ce9878750cf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
