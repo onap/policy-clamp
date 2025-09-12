@@ -167,9 +167,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
             LOGGER.debug("new element scenario");
         }
         if (ElementState.REMOVED.equals(instanceElementRollback.state())) {
-            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
-                    instanceElement.outProperties());
-            simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.deleteInRollback(instanceElement.instanceId(), instanceElement.elementId());
         } else {
             simulatorService.rollback(instanceElementRollback.instanceId(), instanceElementRollback.elementId(), stage,
                     compositionElementRollback.inProperties(), instanceElementRollback.outProperties());

@@ -247,6 +247,7 @@ public class CacheProvider {
 
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(compositionId);
+        automationComposition.setCompositionTargetId(participantRestartAc.getCompositionTargetId());
         automationComposition.setDeployState(participantRestartAc.getDeployState());
         automationComposition.setLockState(participantRestartAc.getLockState());
         automationComposition.setInstanceId(participantRestartAc.getAutomationCompositionId());

@@ -179,11 +179,28 @@ class SimulatorServiceTest {
         var elementId = UUID.randomUUID();
         simulatorService.deleteInMigration(instanceId, elementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Migration - Deleted");
 
         simulatorService.getConfig().setMigrateSuccess(false);
         simulatorService.deleteInMigration(instanceId, elementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Delete failed!");
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
+    }
+
+
+    @Test
+    void testDeleteInRollback() {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var instanceId = UUID.randomUUID();
+        var elementId = UUID.randomUUID();
+        simulatorService.deleteInRollback(instanceId, elementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Rollback - Deleted");
+
+        simulatorService.getConfig().setRollback(false);
+        simulatorService.deleteInRollback(instanceId, elementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Rollback - Delete failed!");
     }
 }

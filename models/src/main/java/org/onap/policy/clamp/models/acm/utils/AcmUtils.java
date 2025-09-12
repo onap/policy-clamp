@@ -476,6 +476,7 @@ public final class AcmUtils {
         syncAc.setDeployState(automationComposition.getDeployState());
         syncAc.setLockState(automationComposition.getLockState());
         syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
+        syncAc.setCompositionTargetId(automationComposition.getCompositionTargetId());
         for (var element : automationComposition.getElements().values()) {
             if (participantId.equals(element.getParticipantId())) {
                 var acElementSync = createAcElementRestart(element);
@@ -498,6 +499,7 @@ public final class AcmUtils {
         acElementRestart.setParticipantId(element.getParticipantId());
         acElementRestart.setDeployState(element.getDeployState());
         acElementRestart.setLockState(element.getLockState());
+        acElementRestart.setMigrationState(element.getMigrationState());
         acElementRestart.setOperationalState(element.getOperationalState());
         acElementRestart.setUseState(element.getUseState());
         acElementRestart.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));

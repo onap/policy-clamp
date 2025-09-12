@@ -191,7 +191,7 @@ public class AutomationCompositionOutHandler {
             acStateChangeAck.setStateChangeResult(stateChangeResult);
             acStateChangeAck.setAutomationCompositionId(instance);
             acStateChangeAck.getAutomationCompositionResultMap().put(elementId,
-                    new AcElementDeployAck(deployState, null, null,
+                    new AcElementDeployAck(deployState, LockState.NONE, null,
                             null, Map.of(), true, message));
             LOGGER.debug(MSG_STATE_CHANGE, elementId, deployState);
             publisher.sendAutomationCompositionAck(acStateChangeAck);

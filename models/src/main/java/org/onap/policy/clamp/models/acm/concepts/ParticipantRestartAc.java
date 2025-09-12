@@ -41,6 +41,7 @@ public class ParticipantRestartAc {
     private LockState lockState;
     private StateChangeResult stateChangeResult;
     private UUID revisionId;
+    private UUID compositionTargetId;
 
     private List<AcElementRestart> acElementList = new ArrayList<>();
 
@@ -56,5 +57,6 @@ public class ParticipantRestartAc {
         this.stateChangeResult = copyConstructor.stateChangeResult;
         this.revisionId = copyConstructor.revisionId;
         this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementRestart::new);
+        this.compositionTargetId = copyConstructor.compositionTargetId;
     }
 }

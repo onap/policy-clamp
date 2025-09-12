@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ public class AcElementRestart {
     // State of the AutomationCompositionElement
     private LockState lockState;
 
+    private MigrationState migrationState;
     private String operationalState;
     private String useState;
 
@@ -73,6 +74,7 @@ public class AcElementRestart {
         this.participantId = otherElement.participantId;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
+        this.migrationState = otherElement.migrationState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
@@ -89,6 +91,7 @@ public class AcElementRestart {
                 + ", participantId=" + participantId
                 + ", deployState=" + deployState
                 + ", lockState=" + lockState
+                + ", migrationState=" + migrationState
                 + ", operationalState='" + operationalState + '\''
                 + ", useState='" + useState + '\''
                 + ", toscaServiceTemplateFragment=" + toscaServiceTemplateFragment

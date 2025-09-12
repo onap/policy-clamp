@@ -286,7 +286,7 @@ class AutomationCompositionElementHandlerTest {
             .migrate(COMPOSITION_ELEMENT, compoElTargetRemove, INSTANCE_ELEMENT, inElMigratedRemove, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-            DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+            DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Migration - Deleted");
     }
 
     @Test
@@ -441,9 +441,6 @@ class AutomationCompositionElementHandlerTest {
                 .rollbackMigration(COMPOSITION_ELEMENT, compoElRollbackRemove, INSTANCE_ELEMENT, inElRollbackRemove, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
-        verify(intermediaryApi).updateAutomationCompositionElementState(
-                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Rollback - Deleted");
     }
 }

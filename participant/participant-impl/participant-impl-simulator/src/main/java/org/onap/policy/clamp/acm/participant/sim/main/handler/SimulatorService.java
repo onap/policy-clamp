@@ -293,10 +293,26 @@ public class SimulatorService {
     public void deleteInMigration(UUID instanceId, UUID elementId) {
         if (getConfig().isMigrateSuccess()) {
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Migration - Deleted");
         } else {
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Delete failed!");
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
+        }
+    }
+
+    /**
+     * Handle deleting an automation composition element in rollback.
+     *
+     * @param instanceId the instanceId
+     * @param elementId  the elementId
+     */
+    public void deleteInRollback(UUID instanceId, UUID elementId) {
+        if (getConfig().isRollback()) {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Rollback - Deleted");
+        } else {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Rollback - Delete failed!");
         }
     }
 

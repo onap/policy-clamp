@@ -128,6 +128,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
         var syncAc = new ParticipantRestartAc();
+        syncAc.setCompositionTargetId(automationComposition.getCompositionTargetId());
         syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
         syncAc.setRevisionId(automationComposition.getRevisionId());
         syncAc.setDeployState(automationComposition.getDeployState());
