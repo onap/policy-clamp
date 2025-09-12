@@ -22,6 +22,30 @@
       },
       "revId": "04eea1f05f007239b08191dda052f3b6a187a24e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60767456_8a9c350b",
+        "filename": "runtime-acm/src/main/resources/db/changelog/changelog-1800.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-09-12T09:58:47Z",
+      "side": 1,
+      "message": "for removal field, DB-migrator should be the last to make a change.\ndo we need to remove precondition to other removed fields?",
+      "parentUuid": "bb66e8e4_ea9544aa",
+      "range": {
+        "startLine": 24,
+        "startChar": 16,
+        "endLine": 29,
+        "endChar": 34
+      },
+      "revId": "04eea1f05f007239b08191dda052f3b6a187a24e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
