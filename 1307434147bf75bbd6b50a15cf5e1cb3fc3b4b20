@@ -46,6 +46,30 @@
       },
       "revId": "1307434147bf75bbd6b50a15cf5e1cb3fc3b4b20",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "071311dc_fd9062f9",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantCommTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-09-15T13:27:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16ca179d_823de169",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 49
+      },
+      "revId": "1307434147bf75bbd6b50a15cf5e1cb3fc3b4b20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
