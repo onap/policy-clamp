@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cbe3b36_88475c7e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/utils/NetLoggerUtil.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-09-15T13:29:43Z",
+      "side": 1,
+      "message": "was this copied from common? maybe the common class can be improved to be used here or maybe extended to a new class in participant? also header is nordix still",
+      "range": {
+        "startLine": 28,
+        "startChar": 13,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "69fe34d7612339847381d6d22c16dd269be568cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
