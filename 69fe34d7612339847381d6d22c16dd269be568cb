@@ -22,6 +22,30 @@
       },
       "revId": "69fe34d7612339847381d6d22c16dd269be568cb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e449b3f3_dffaa45f",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/utils/NetLoggerUtil.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-17T10:12:43Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9cbe3b36_88475c7e",
+      "range": {
+        "startLine": 28,
+        "startChar": 13,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "69fe34d7612339847381d6d22c16dd269be568cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
