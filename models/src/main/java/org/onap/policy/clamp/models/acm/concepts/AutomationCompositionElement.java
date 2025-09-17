@@ -56,6 +56,8 @@ public class AutomationCompositionElement {
     @NonNull
     private SubState subState = SubState.NONE;
 
+    private MigrationState migrationState = MigrationState.DEFAULT;
+
     private Integer stage;
 
     private String operationalState;
@@ -88,5 +90,6 @@ public class AutomationCompositionElement {
         this.useState = otherElement.useState;
         this.stage = otherElement.stage;
         this.message = otherElement.message;
+        this.migrationState = otherElement.migrationState;
     }
 }

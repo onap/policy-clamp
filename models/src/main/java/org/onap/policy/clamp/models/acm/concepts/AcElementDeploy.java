@@ -49,6 +49,9 @@ public class AcElementDeploy {
     @NonNull
     private DeployOrder orderedState = DeployOrder.DEPLOY;
 
+    @NonNull
+    private MigrationState migrationState = MigrationState.DEFAULT;
+
     // backward compatibility
     private ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
 
@@ -67,6 +70,7 @@ public class AcElementDeploy {
         this.orderedState = otherElement.orderedState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
+        this.migrationState = otherElement.migrationState;
     }
 
     @Override
@@ -76,6 +80,7 @@ public class AcElementDeploy {
                 + "id=" + id
                 + ", definition=" + definition
                 + ", orderedState=" + orderedState
+                + ", migrationState=" + migrationState
                 + ", toscaServiceTemplateFragment="
                 + toscaServiceTemplateFragment + '}';
     }
