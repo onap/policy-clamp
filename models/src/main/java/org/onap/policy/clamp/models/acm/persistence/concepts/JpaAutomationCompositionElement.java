@@ -30,7 +30,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -41,6 +40,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -95,6 +95,10 @@ public class JpaAutomationCompositionElement extends Validated
     private SubState subState;
 
     @Column
+    @NotNull
+    private MigrationState migrationState;
+
+    @Column
     private String operationalState;
 
     @Column
@@ -135,30 +139,13 @@ public class JpaAutomationCompositionElement extends Validated
      * @param instanceId The id of the automation composition instance
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
-        this(elementId, instanceId, new PfConceptKey(),
-            DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE);
-    }
-
-    /**
-     * The Key Constructor creates a {@link JpaAutomationCompositionElement} object with all mandatory fields.
-     *
-     * @param elementId The id of the automation composition instance Element
-     * @param instanceId The id of the automation composition instance
-     * @param definition the TOSCA definition of the automation composition element
-     * @param deployState the Deploy State of the automation composition
-     * @param lockState the Lock State of the automation composition
-     * @param subState the Sub State of the automation composition
-     */
-    public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId,
-            @NonNull final PfConceptKey definition,
-            @NonNull final DeployState deployState, @NonNull final LockState lockState,
-            @NonNull final SubState subState) {
         this.elementId = elementId;
         this.instanceId = instanceId;
-        this.definition = definition;
-        this.deployState = deployState;
-        this.lockState = lockState;
-        this.subState = subState;
+        this.definition = new PfConceptKey();
+        this.deployState = DeployState.UNDEPLOYED;
+        this.lockState = LockState.NONE;
+        this.subState = SubState.NONE;
+        this.migrationState = MigrationState.DEFAULT;
     }
 
     /**
@@ -177,6 +164,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
         this.subState = copyConcept.subState;
+        this.migrationState = copyConcept.migrationState;
         this.operationalState = copyConcept.operationalState;
         this.useState = copyConcept.useState;
         this.stage = copyConcept.stage;
@@ -205,6 +193,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setDeployState(deployState);
         element.setLockState(lockState);
         element.setSubState(subState);
+        element.setMigrationState(migrationState);
         element.setOperationalState(operationalState);
         element.setUseState(useState);
         element.setStage(stage);
@@ -223,6 +212,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.deployState = element.getDeployState();
         this.lockState = element.getLockState();
         this.subState = element.getSubState();
+        this.migrationState = element.getMigrationState();
         this.operationalState = element.getOperationalState();
         this.useState = element.getUseState();
         this.stage = element.getStage();
@@ -269,6 +259,11 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = ObjectUtils.compare(subState, other.subState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(migrationState, other.migrationState);
         if (result != 0) {
             return result;
         }
