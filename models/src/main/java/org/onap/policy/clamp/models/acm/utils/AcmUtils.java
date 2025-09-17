@@ -423,6 +423,7 @@ public final class AcmUtils {
         acElementDeploy.setId(element.getId());
         acElementDeploy.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
         acElementDeploy.setOrderedState(deployOrder);
+        acElementDeploy.setMigrationState(element.getMigrationState());
         acElementDeploy.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
         return acElementDeploy;
     }

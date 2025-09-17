@@ -34,3 +34,17 @@ databaseChangeLog:
         - dropColumn:
             tableName: NodeTemplateState
             columnName: restarting
+
+  - changeSet:
+      author: policy
+      id: 1800-3
+      changes:
+        - addColumn:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: migrationState
+                  type: SMALLINT
+                  defaultValue: 0
+                  constraints:
+                    nullable: false

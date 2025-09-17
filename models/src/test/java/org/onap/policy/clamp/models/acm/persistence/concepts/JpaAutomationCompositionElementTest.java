@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.base.PfConceptKey;
@@ -50,8 +51,6 @@ class JpaAutomationCompositionElementTest {
     private static final String INSTANCE_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
     private static final String KEY = "key";
     private static final String BAD_VALUE = "BadValue";
-
-    private static final PfConceptKey CONCEPT_KEY = new PfConceptKey();
 
     @Test
     void testJpaAutomationCompositionElementConstructor() {
@@ -75,39 +74,8 @@ class JpaAutomationCompositionElementTest {
             new JpaAutomationCompositionElement(null, null);
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, null, null, null, null);
-        }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(KEY, null, null,
-                DeployState.UNDEPLOYED, LockState.LOCKED, SubState.NONE);
-        }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(KEY, KEY, null,
-                DeployState.UNDEPLOYED, LockState.LOCKED, SubState.NONE);
-        }).hasMessageMatching("definition" + NULL_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(KEY, KEY, CONCEPT_KEY,
-                    null, LockState.LOCKED, SubState.NONE);
-        }).hasMessageMatching("deployState" + NULL_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(KEY, KEY, CONCEPT_KEY,
-                DeployState.UNDEPLOYED, null, SubState.NONE);
-        }).hasMessageMatching("lockState" + NULL_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(KEY, KEY, CONCEPT_KEY,
-                    DeployState.UNDEPLOYED, LockState.NONE, null);
-        }).hasMessageMatching("subState" + NULL_ERROR);
-
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement());
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement(KEY, KEY));
-        assertDoesNotThrow(() -> new JpaAutomationCompositionElement(KEY, KEY,
-            new PfConceptKey(), DeployState.UNDEPLOYED, LockState.LOCKED, SubState.NONE));
     }
 
     @Test
@@ -205,6 +173,11 @@ class JpaAutomationCompositionElementTest {
         testJpaAcElement.setSubState(SubState.PREPARING);
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setSubState(SubState.NONE);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
+        testJpaAcElement.setMigrationState(MigrationState.REMOVED);
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setMigrationState(MigrationState.DEFAULT);
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
         testJpaAcElement.setUseState(BAD_VALUE);
