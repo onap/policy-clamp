@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2896aa24_4eb623c2",
+        "filename": "common/src/test/java/org/onap/policy/clamp/common/acm/utils/NetLoggerUtilTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-09-18T09:34:05Z",
+      "side": 1,
+      "message": "public could be removed",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 7
+      },
+      "revId": "239325b077a06a2d9c21ce84c52aaa37ce6a9d83",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
