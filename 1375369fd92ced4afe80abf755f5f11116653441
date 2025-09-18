@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2820d116_35144796",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-09-18T14:37:10Z",
+      "side": 1,
+      "message": "Thanks Wayne. We need to change the logback.xml for the participants in CSIT to use the acm-network logger and verify the participant\u0027s kafka logs are as expected",
+      "revId": "1375369fd92ced4afe80abf755f5f11116653441",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
