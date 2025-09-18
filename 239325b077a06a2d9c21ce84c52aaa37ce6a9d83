@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "690e4e7b_af78fe1c",
+        "filename": "common/src/test/java/org/onap/policy/clamp/common/acm/utils/NetLoggerUtilTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-18T13:15:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2896aa24_4eb623c2",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 7
+      },
+      "revId": "239325b077a06a2d9c21ce84c52aaa37ce6a9d83",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ade8b27a_ea10631d",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-09-18T10:02:12Z",
       "side": 1,
       "message": "This might still print the properties as we are not calling the toString ?",
+      "range": {
+        "startLine": 58,
+        "startChar": 73,
+        "endLine": 58,
+        "endChar": 80
+      },
+      "revId": "239325b077a06a2d9c21ce84c52aaa37ce6a9d83",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "380a5b0f_bcb3415b",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantListener.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-18T13:15:06Z",
+      "side": 1,
+      "message": "No, properties will not be printed — as %s in String.format calls the toString() method, which has been overridden in AutomationCompositionInfo to exclude property values. I think only what is explicitly returned by toString() will ever appear in the log for this message field.",
+      "parentUuid": "ade8b27a_ea10631d",
       "range": {
         "startLine": 58,
         "startChar": 73,
