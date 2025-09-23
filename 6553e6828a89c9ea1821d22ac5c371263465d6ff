@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d33dd421_b9d18d6e",
+        "filename": ".github/workflows/openssfscorecard.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-23T13:32:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0d444fb_08f5d632",
+      "range": {
+        "startLine": 3,
+        "startChar": 26,
+        "endLine": 3,
+        "endChar": 51
+      },
+      "revId": "6553e6828a89c9ea1821d22ac5c371263465d6ff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25c797c4_b204e28a",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-09-23T13:25:51Z",
       "side": 1,
       "message": "new line needed",
+      "revId": "6553e6828a89c9ea1821d22ac5c371263465d6ff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28bdfcdf_bde8b7ab",
+        "filename": ".github/workflows/openssfscorecard.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-09-23T13:32:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25c797c4_b204e28a",
       "revId": "6553e6828a89c9ea1821d22ac5c371263465d6ff",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
