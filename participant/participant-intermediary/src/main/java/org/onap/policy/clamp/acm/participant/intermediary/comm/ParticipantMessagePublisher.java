@@ -143,6 +143,7 @@ public class ParticipantMessagePublisher implements Publisher {
             description = "AUTOMATION_COMPOSITION_UPDATE_ACK/AUTOMATION_COMPOSITION_STATECHANGE_ACK messages published")
     public void sendAutomationCompositionAck(final AutomationCompositionDeployAck automationCompositionAck) {
         validate();
+        topicSinkClient.send(automationCompositionAck);
         NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
                 topicSinkClient.getTopic(), "Sent AutomationComposition Update/StateChange Ack to runtime - "
                         + automationCompositionAck.toString());

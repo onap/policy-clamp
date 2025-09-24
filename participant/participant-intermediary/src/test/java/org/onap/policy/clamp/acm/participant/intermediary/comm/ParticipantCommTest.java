@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +49,9 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.common.message.bus.event.Topic;
 import org.onap.policy.common.message.bus.event.TopicSink;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
 
 class ParticipantCommTest {
@@ -100,26 +104,35 @@ class ParticipantCommTest {
     }
 
     @Test
-    void participantMessagePublisherTest() {
+    void participantMessagePublisherTest() throws CoderException {
+        var coder = new StandardCoder();
+        var mockTopicSink = mock(TopicSink.class);
         var publisher = new ParticipantMessagePublisher();
-        publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+        publisher.active(Collections.singletonList(mockTopicSink));
+
         var participantStatus = new ParticipantStatus();
         assertDoesNotThrow(() -> publisher.sendParticipantStatus(participantStatus));
+        verify(mockTopicSink).send(coder.encode(participantStatus));
 
         var participantRegister = new ParticipantRegister();
         assertDoesNotThrow(() -> publisher.sendParticipantRegister(participantRegister));
+        verify(mockTopicSink).send(coder.encode(participantRegister));
 
         var participantDeregister = new ParticipantDeregister();
         assertDoesNotThrow(() -> publisher.sendParticipantDeregister(participantDeregister));
+        verify(mockTopicSink).send(coder.encode(participantDeregister));
 
         var participantPrimeAck = new ParticipantPrimeAck();
         assertDoesNotThrow(() -> publisher.sendParticipantPrimeAck(participantPrimeAck));
+        verify(mockTopicSink).send(coder.encode(participantPrimeAck));
 
-        var automationCompositionAck = mock(AutomationCompositionDeployAck.class);
+        var automationCompositionAck = new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertDoesNotThrow(() -> publisher.sendAutomationCompositionAck(automationCompositionAck));
+        verify(mockTopicSink).send(coder.encode(automationCompositionAck));
 
-        var participantReqSync = mock(ParticipantReqSync.class);
+        var participantReqSync = new ParticipantReqSync();
         assertDoesNotThrow(() -> publisher.sendParticipantReqSync(participantReqSync));
+        verify(mockTopicSink).send(coder.encode(participantReqSync));
     }
 
     @Test
