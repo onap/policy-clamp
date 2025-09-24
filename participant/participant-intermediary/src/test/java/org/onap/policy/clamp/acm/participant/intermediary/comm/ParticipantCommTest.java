@@ -126,7 +126,8 @@ class ParticipantCommTest {
         assertDoesNotThrow(() -> publisher.sendParticipantPrimeAck(participantPrimeAck));
         verify(mockTopicSink).send(coder.encode(participantPrimeAck));
 
-        var automationCompositionAck = new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
+        var automationCompositionAck =
+                new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertDoesNotThrow(() -> publisher.sendAutomationCompositionAck(automationCompositionAck));
         verify(mockTopicSink).send(coder.encode(automationCompositionAck));
 
