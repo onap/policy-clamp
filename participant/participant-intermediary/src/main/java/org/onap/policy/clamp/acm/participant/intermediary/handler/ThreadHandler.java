@@ -72,6 +72,8 @@ public class ThreadHandler implements Closeable {
         this.cacheProvider = cacheProvider;
         executor = Context.taskWrapping(Executors.newFixedThreadPool(
                 parameters.getIntermediaryParameters().getThreadPoolSize()));
+        LOGGER.info("ThreadHandler started with thread pool size {}",
+                parameters.getIntermediaryParameters().getThreadPoolSize());
     }
 
     /**
@@ -244,6 +246,8 @@ public class ThreadHandler implements Closeable {
         var process = executionMap.get(execIdentificationId);
         if (process != null) {
             if (!process.isDone()) {
+                LOGGER.warn("ThreadHandler cancelling previous thread for execIdentificationId={} messageId={}",
+                        execIdentificationId, messageId);
                 process.cancel(true);
             }
             executionMap.remove(execIdentificationId);
