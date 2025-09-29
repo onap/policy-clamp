@@ -44,7 +44,7 @@ public class AutomationCompositionDefinition {
     @NonNull
     private AcTypeState state;
 
-    private StateChangeResult stateChangeResult;
+    private StateChangeResult stateChangeResult = StateChangeResult.NO_ERROR;
 
     @NonNull
     private String lastMsg;

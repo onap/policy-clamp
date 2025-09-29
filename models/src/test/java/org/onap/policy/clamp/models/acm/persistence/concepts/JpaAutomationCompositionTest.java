@@ -175,9 +175,9 @@ class JpaAutomationCompositionTest {
         assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
         jpaAutomationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setStateChangeResult(null);
         assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setStateChangeResult(null);
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
         assertEquals(jpaAutomationComposition, new JpaAutomationComposition(jpaAutomationComposition));
     }

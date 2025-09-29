@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -150,6 +151,9 @@ class AutomationCompositionInstantiationProviderTest {
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionCreate);
 
         verify(acProvider).createAutomationComposition(automationCompositionCreate);
+
+        assertEquals(StateChangeResult.NO_ERROR, acProvider.createAutomationComposition(automationCompositionCreate)
+                .getStateChangeResult());
 
         when(acProvider.getAutomationCompositions(compositionId, automationCompositionCreate.getName(),
                 automationCompositionCreate.getVersion(), Pageable.unpaged()))

@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.commissioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -44,6 +45,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -104,6 +106,10 @@ class CommissioningProviderTest {
             CommonTestData.TOSCA_ELEMENT_NAME, CommonTestData.TOSCA_COMP_NAME);
         // Response should return the number of node templates present in the service template
         assertThat(affectedDefinitions).hasSize(7);
+
+        assertEquals(StateChangeResult.NO_ERROR,
+                acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate,
+                        CommonTestData.TOSCA_ELEMENT_NAME, CommonTestData.TOSCA_COMP_NAME).getStateChangeResult());
     }
 
     /**

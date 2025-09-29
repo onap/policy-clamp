@@ -471,7 +471,7 @@ class InstantiationControllerTest extends CommonRestController {
         validateQueryPageable("instances?size=4", 10); // only works if page is also informed, so listAll
         validateQueryPageable("instances?stateChangeResult=FAILED,TIMEOUT", 0);
         validateQueryPageable("instances?deployState=UNDEPLOYED", 10);
-        validateQueryPageable("instances?stateChangeResult=NO_ERROR&deployState=UNDEPLOYED", 0);
+        validateQueryPageable("instances?stateChangeResult=NO_ERROR&deployState=UNDEPLOYED", 10);
         validateQueryPageable("instances?sort=name&sortOrder=DESC", 10);
     }
 

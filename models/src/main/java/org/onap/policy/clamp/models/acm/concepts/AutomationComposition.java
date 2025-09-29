@@ -61,7 +61,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
 
     private Map<UUID, AutomationCompositionElement> elements;
 
-    private StateChangeResult stateChangeResult;
+    private StateChangeResult stateChangeResult = StateChangeResult.NO_ERROR;
 
     private UUID revisionId = UUID.randomUUID();
 
