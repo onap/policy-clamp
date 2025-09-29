@@ -48,3 +48,41 @@ databaseChangeLog:
                   defaultValue: 0
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: 1800-4
+      author: policy
+      changes:
+        - addDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: stateChangeResult
+            defaultValue: 0
+        - update:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: stateChangeResult
+                  value: 0
+            where: stateChangeResult IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: stateChangeResult
+
+  - changeSet:
+      id: 1800-5
+      author: policy
+      changes:
+        - addDefaultValue:
+            tableName: AutomationComposition
+            columnName: stateChangeResult
+            defaultValue: 0
+        - update:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: stateChangeResult
+                  value: 0
+            where: stateChangeResult IS NULL
+        - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: stateChangeResult
