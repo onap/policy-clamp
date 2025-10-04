@@ -26,6 +26,7 @@ import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
@@ -65,6 +66,12 @@ public abstract class AbstractScanner {
             // migration scenario
             automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
             automationComposition.setCompositionTargetId(null);
+
+            for (var acElement : automationComposition.getElements().values()) {
+                if (MigrationState.NEW.equals(acElement.getMigrationState())) {
+                    acElement.setMigrationState(MigrationState.DEFAULT);
+                }
+            }
         }
         automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
         automationComposition.setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));

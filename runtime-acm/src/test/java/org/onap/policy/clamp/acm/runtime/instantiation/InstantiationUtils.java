@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.common.utils.coder.Coder;
@@ -57,13 +55,6 @@ public class InstantiationUtils {
 
             // add suffix to name
             automationComposition.setName(automationComposition.getName() + suffix);
-            var elements = new ArrayList<>(automationComposition.getElements().values());
-            automationComposition.getElements().clear();
-            for (var element : elements) {
-                // set unique UUID to the element
-                element.setId(UUID.randomUUID());
-                automationComposition.getElements().put(element.getId(), element);
-            }
             return automationComposition;
         } catch (CoderException e) {
             fail("Cannot read or decode " + path);

@@ -21,21 +21,23 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -59,6 +61,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AutomationCompositionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionHandler.class);
+    private static final String AC_NOT_USED = "Automation composition {} does not use this participant";
 
     private final CacheProvider cacheProvider;
     private final ParticipantMessagePublisher publisher;
@@ -85,8 +88,7 @@ public class AutomationCompositionHandler {
                 automationCompositionAck.setAutomationCompositionId(stateChangeMsg.getAutomationCompositionId());
                 publisher.sendAutomationCompositionAck(automationCompositionAck);
             } else {
-                LOGGER.debug("Automation composition {} does not use this participant",
-                        stateChangeMsg.getAutomationCompositionId());
+                LOGGER.warn(AC_NOT_USED, stateChangeMsg.getAutomationCompositionId());
             }
             return;
         }
@@ -184,39 +186,57 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private void migrateExistingElementsOnThisParticipant(UUID instanceId, UUID compositionTargetId,
-            ParticipantDeploy participantDeploy, int stage) {
-        var automationComposition = cacheProvider.getAutomationComposition(instanceId);
-        var acElementList = automationComposition.getElements();
+    private void migrateExistingElementsOnThisParticipant(AutomationComposition automationComposition,
+                                                          UUID compositionTargetId, ParticipantDeploy participantDeploy,
+                                                          int stage, boolean newParticipant) {
         for (var element : participantDeploy.getAcElementList()) {
+            UUID compIdForCommonProperties = null;
+            if (MigrationState.REMOVED.equals(element.getMigrationState())) {
+                compIdForCommonProperties = automationComposition.getCompositionId();
+            } else {
+                compIdForCommonProperties = compositionTargetId;
+            }
             var compositionInProperties =
-                    cacheProvider.getCommonProperties(compositionTargetId, element.getDefinition());
+                    cacheProvider.getCommonProperties(compIdForCommonProperties, element.getDefinition());
             var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
+            if (MigrationState.REMOVED.equals(element.getMigrationState())) {
+                stageSet = Set.of(0);
+            }
             if (stageSet.contains(stage)) {
-                var acElement = acElementList.get(element.getId());
-                if (acElement == null) {
-                    var newElement = CacheProvider.createAutomationCompositionElement(element);
-                    newElement.setParticipantId(participantDeploy.getParticipantId());
-                    newElement.setDeployState(DeployState.MIGRATING);
-                    newElement.setLockState(LockState.LOCKED);
-                    newElement.setStage(stage);
-
-                    acElementList.put(element.getId(), newElement);
-                    LOGGER.info("New Ac Element with id {} is added in Migration", element.getId());
-                } else {
-                    AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
-                    acElement.setDeployState(DeployState.MIGRATING);
-                    acElement.setStage(stage);
-                    acElement.setDefinition(element.getDefinition());
-                }
+                migrateElement(element, automationComposition, compositionTargetId, stage, newParticipant,
+                        participantDeploy);
             }
         }
-        // Check for missing elements and remove them from cache
-        var elementsToRemove = findElementsToRemove(participantDeploy.getAcElementList(), acElementList);
-        for (var key : elementsToRemove) {
-            acElementList.remove(key);
-            LOGGER.info("Element with id {} is removed in Migration", key);
+    }
+
+    private void migrateElement(AcElementDeploy element, AutomationComposition automationComposition,
+                                UUID compositionTargetId, int stage, boolean newParticipant,
+                                ParticipantDeploy participantDeploy) {
+        var acElementList = automationComposition.getElements();
+        automationComposition.setCompositionTargetId(compositionTargetId);
+        automationComposition.setDeployState(DeployState.MIGRATING);
+        var acElement = acElementList.get(element.getId());
+        if (acElement == null) {  // NEW element with existing participant
+            var newElement = CacheProvider.createAutomationCompositionElement(element);
+            newElement.setParticipantId(participantDeploy.getParticipantId());
+            newElement.setDeployState(DeployState.MIGRATING);
+            newElement.setLockState(LockState.LOCKED);
+            newElement.setStage(stage);
+            newElement.setMigrationState(MigrationState.NEW);
+
+            acElementList.put(element.getId(), newElement);
+            LOGGER.info("New Ac Element with id {} is added in Migration", element.getId());
+        } else {
+            acElement.setStage(stage);
+            acElement.setMigrationState(element.getMigrationState());
+            if (! newParticipant) { //DEFAULT element
+                AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
+                acElement.setDeployState(DeployState.MIGRATING);
+                acElement.setDefinition(element.getDefinition());
+            }
+            LOGGER.info("Cache updated for the migration of element with id {}", element.getId());
         }
+
     }
 
     private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy) {
@@ -230,12 +250,6 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private List<UUID> findElementsToRemove(List<AcElementDeploy> acElementDeployList,
-            Map<UUID, AutomationCompositionElement> acElementList) {
-        var acElementDeploySet = acElementDeployList.stream().map(AcElementDeploy::getId).collect(Collectors.toSet());
-        return acElementList.keySet().stream().filter(id -> !acElementDeploySet.contains(id)).toList();
-    }
-
     /**
      * Method to handle when the new state from participant is UNINITIALISED state.
      *
@@ -245,16 +259,24 @@ public class AutomationCompositionHandler {
      */
     private void handleUndeployState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
-        automationComposition.setCompositionTargetId(null);
         automationComposition.setDeployState(DeployState.UNDEPLOYING);
         for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider.getCommonProperties(automationComposition.getCompositionId(),
-                    element.getDefinition());
+            UUID compositionId = null;
+            if (MigrationState.NEW.equals(element.getMigrationState())) {
+                compositionId = automationComposition.getCompositionTargetId();
+            } else {
+                compositionId = automationComposition.getCompositionId();
+            }
+            var compositionInProperties = cacheProvider.getCommonProperties(compositionId, element.getDefinition());
             int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
+            if (MigrationState.NEW.equals(element.getMigrationState())) {
+                // Undeploy newly added element on a Failed Migration
+                startPhase = 0;
+            }
             if (startPhaseMsg.equals(startPhase)) {
                 element.setDeployState(DeployState.UNDEPLOYING);
                 var compositionElement =
-                        cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(), element);
+                        cacheProvider.createCompositionElementDto(compositionId, element);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                         element.getProperties(), element.getOutProperties());
                 listener.undeploy(messageId, compositionElement, instanceElement);
@@ -288,74 +310,129 @@ public class AutomationCompositionHandler {
      */
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
         var automationComposition = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
-        if (automationComposition == null) {
-            LOGGER.debug("Automation composition {} does not use this participant",
-                    migrationMsg.getAutomationCompositionId());
-            return;
+        var acTargetDefinition = cacheProvider.getAcElementsDefinitions().get(migrationMsg.getCompositionTargetId());
+        if (Boolean.FALSE.equals(migrationMsg.getRollback())) {
+            handleMigration(automationComposition, acTargetDefinition, migrationMsg);
+        } else {
+            handleRollback(automationComposition, migrationMsg);
         }
-        var acCopy = new AutomationComposition(automationComposition);
-        automationComposition.setCompositionTargetId(migrationMsg.getCompositionTargetId());
-        automationComposition.setDeployState(DeployState.MIGRATING);
+    }
+
+    private void handleRollback(AutomationComposition automationComposition,
+                                AutomationCompositionMigration migrationMsg) {
+        AutomationComposition acCopy = null;
+        if (automationComposition == null) {
+            LOGGER.warn(AC_NOT_USED, migrationMsg.getAutomationCompositionId());
+            return;
+        } else {
+            LOGGER.info("Rollback operation invoked for the instance {}", migrationMsg.getAutomationCompositionId());
+            acCopy = new AutomationComposition(automationComposition);
+            automationComposition.setCompositionTargetId(migrationMsg.getCompositionTargetId());
+            automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
+        }
         for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
+                migrateExistingElementsOnThisParticipant(automationComposition, migrationMsg.getCompositionTargetId(),
+                        participantDeploy, migrationMsg.getStage(), false);
 
-                migrateExistingElementsOnThisParticipant(migrationMsg.getAutomationCompositionId(),
-                        migrationMsg.getCompositionTargetId(), participantDeploy, migrationMsg.getStage());
+                callParticipantMigrate(migrationMsg, participantDeploy.getAcElementList(), acCopy);
+            }
 
-                callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(), acCopy,
-                        migrationMsg.getCompositionTargetId(), migrationMsg.getStage(),
-                        Boolean.TRUE.equals(migrationMsg.getRollback()));
+        }
+    }
+
+    private void handleMigration(AutomationComposition automationComposition, AcDefinition acTargetDefinition,
+                                 AutomationCompositionMigration migrationMsg) {
+        AutomationComposition acCopy = null;
+        if (automationComposition == null) {
+            if (acTargetDefinition == null) {
+                LOGGER.warn(AC_NOT_USED, migrationMsg.getAutomationCompositionId());
+                return;
+            }
+        } else {
+            LOGGER.info("Migration invoked on an existing participant for the instance {}",
+                    migrationMsg.getAutomationCompositionId());
+            acCopy = new AutomationComposition(automationComposition);
+        }
+        var newParticipant = false;
+        for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
+            if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
+                if (automationComposition == null) {
+                    // New element with new participant added in Migration
+                    LOGGER.info("Participant newly added in Migration for the instance {}",
+                            migrationMsg.getAutomationCompositionId());
+                    newParticipant = true;
+                    cacheProvider.initializeAutomationComposition(migrationMsg.getCompositionId(),
+                            migrationMsg.getCompositionTargetId(), migrationMsg.getAutomationCompositionId(),
+                            participantDeploy, DeployState.MIGRATING, SubState.NONE,
+                            migrationMsg.getRevisionIdInstance());
+                    automationComposition = cacheProvider
+                            .getAutomationComposition(migrationMsg.getAutomationCompositionId());
+                }
+                migrateExistingElementsOnThisParticipant(automationComposition, migrationMsg.getCompositionTargetId(),
+                        participantDeploy, migrationMsg.getStage(), newParticipant);
+
+                callParticipantMigrate(migrationMsg, participantDeploy.getAcElementList(), acCopy);
             }
         }
     }
 
-    private void callParticipantMigrate(UUID messageId, List<AcElementDeploy> acElements, AutomationComposition acCopy,
-            UUID compositionTargetId, int stage, boolean rollback) {
-        var compositionElementMap = cacheProvider.getCompositionElementDtoMap(acCopy);
-        var instanceElementMap = cacheProvider.getInstanceElementDtoMap(acCopy);
-        var automationComposition = cacheProvider.getAutomationComposition(acCopy.getInstanceId());
-        var compositionElementTargetMap =
-                cacheProvider.getCompositionElementDtoMap(automationComposition, compositionTargetId);
-        var instanceElementMigrateMap = cacheProvider.getInstanceElementDtoMap(automationComposition);
-
-        // Call migrate for newly added and updated elements
+    private void callParticipantMigrate(AutomationCompositionMigration migrationMsg, List<AcElementDeploy> acElements,
+                                        AutomationComposition formerAcInstance) {
+        var latestAcFromCache = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
+        var instanceElementTargetMap = cacheProvider.getInstanceElementDtoMap(latestAcFromCache);
+        var compositionElementTargetMap = cacheProvider.getCompositionElementDtoMap(latestAcFromCache,
+                migrationMsg.getCompositionTargetId());
+        Map<UUID, CompositionElementDto> compositionElementMap = new HashMap<>();
+        Map<UUID, InstanceElementDto> instanceElementMap = new HashMap<>();
+        if (formerAcInstance != null) { //Existing participant
+            compositionElementMap = cacheProvider.getCompositionElementDtoMap(formerAcInstance);
+            instanceElementMap = cacheProvider.getInstanceElementDtoMap(formerAcInstance);
+        }
+        // Call migrate for new and existing elements
         for (var acElement : acElements) {
+            UUID compIdForCommonProperties = null;
+            if (MigrationState.REMOVED.equals(acElement.getMigrationState())) {
+                compIdForCommonProperties = latestAcFromCache.getCompositionId();
+            } else {
+                compIdForCommonProperties = migrationMsg.getCompositionTargetId();
+            }
             var compositionInProperties =
-                    cacheProvider.getCommonProperties(compositionTargetId, acElement.getDefinition());
+                    cacheProvider.getCommonProperties(compIdForCommonProperties, acElement.getDefinition());
             var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
-            if (stageSet.contains(stage)) {
-                if (instanceElementMap.get(acElement.getId()) == null) {
-                    var compositionElementDto =
-                            new CompositionElementDto(acCopy.getCompositionId(), acElement.getDefinition(), Map.of(),
-                                    Map.of(), ElementState.NOT_PRESENT);
-                    var instanceElementDto =
-                            new InstanceElementDto(acCopy.getInstanceId(), acElement.getId(), Map.of(), Map.of(),
-                                    ElementState.NOT_PRESENT);
+            if (MigrationState.REMOVED.equals(acElement.getMigrationState())) {
+                stageSet = Set.of(0);
+            }
+            var rollback = Boolean.TRUE.equals(migrationMsg.getRollback());
+            if (stageSet.contains(migrationMsg.getStage())) {
+                if (MigrationState.NEW.equals(acElement.getMigrationState())) {
+                    var compositionElementDto = new CompositionElementDto(migrationMsg.getCompositionId(),
+                            acElement.getDefinition(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+                    var instanceElementDto = new InstanceElementDto(migrationMsg.getAutomationCompositionId(),
+                            acElement.getId(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
                     var compositionElementTargetDto =
                             CacheProvider.changeStateToNew(compositionElementTargetMap.get(acElement.getId()));
-                    var instanceElementMigrateDto =
-                            CacheProvider.changeStateToNew(instanceElementMigrateMap.get(acElement.getId()));
+                    var instanceElementTargetDto =
+                            CacheProvider.changeStateToNew(instanceElementTargetMap.get(acElement.getId()));
 
-                    listenerMigrate(messageId, compositionElementDto, compositionElementTargetDto, instanceElementDto,
-                            instanceElementMigrateDto, stage, rollback);
-                } else {
-                    listenerMigrate(messageId, compositionElementMap.get(acElement.getId()),
+                    listenerMigrate(migrationMsg.getMessageId(), compositionElementDto, compositionElementTargetDto,
+                            instanceElementDto, instanceElementTargetDto, migrationMsg.getStage(), rollback);
+
+                } else if (MigrationState.REMOVED.equals(acElement.getMigrationState())) {
+                    var compositionDtoTarget = new CompositionElementDto(migrationMsg.getCompositionTargetId(),
+                            acElement.getDefinition(), Map.of(), Map.of(), ElementState.REMOVED);
+                    var instanceElementDtoTarget = new InstanceElementDto(migrationMsg.getAutomationCompositionId(),
+                            acElement.getId(), Map.of(), Map.of(), ElementState.REMOVED);
+                    listenerMigrate(migrationMsg.getMessageId(), compositionElementMap.get(acElement.getId()),
+                            compositionDtoTarget, instanceElementMap.get(acElement.getId()), instanceElementDtoTarget,
+                            migrationMsg.getStage(), rollback);
+
+                } else { // DEFAULT case
+                    listenerMigrate(migrationMsg.getMessageId(), compositionElementMap.get(acElement.getId()),
                             compositionElementTargetMap.get(acElement.getId()),
-                            instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()),
-                            stage, rollback);
+                            instanceElementMap.get(acElement.getId()), instanceElementTargetMap.get(acElement.getId()),
+                            migrationMsg.getStage(), rollback);
                 }
-            }
-        }
-        if (stage == 0) {
-            // Call migrate for removed elements
-            List<UUID> removedElements = findElementsToRemove(acElements, acCopy.getElements());
-            for (var elementId : removedElements) {
-                var compositionDtoTarget = new CompositionElementDto(compositionTargetId,
-                        acCopy.getElements().get(elementId).getDefinition(), Map.of(), Map.of(), ElementState.REMOVED);
-                var instanceDtoTarget = new InstanceElementDto(acCopy.getInstanceId(), elementId, Map.of(), Map.of(),
-                        ElementState.REMOVED);
-                listenerMigrate(messageId, compositionElementMap.get(elementId), compositionDtoTarget,
-                        instanceElementMap.get(elementId), instanceDtoTarget, 0, rollback);
             }
         }
     }
@@ -367,6 +444,7 @@ public class AutomationCompositionHandler {
             listener.rollback(messageId, compositionElement, compositionElementTarget, instanceElement,
                     instanceElementMigrate, stage);
         } else {
+            LOGGER.info("Invoking migration of element on the participant for {}", instanceElement.elementId());
             listener.migrate(messageId, compositionElement, compositionElementTarget, instanceElement,
                     instanceElementMigrate, stage);
         }

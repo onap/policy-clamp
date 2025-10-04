@@ -87,7 +87,7 @@ public class MsgExecutor {
                 message.setCompositionId(null);
                 message.setRevisionIdComposition(null);
             } else {
-                LOGGER.debug("Composition {} missing or outdated", message.getCompositionId());
+                LOGGER.info("Composition {} missing or outdated", message.getCompositionId());
                 result = false;
             }
         }
@@ -98,7 +98,7 @@ public class MsgExecutor {
                 message.setCompositionTargetId(null);
                 message.setRevisionIdCompositionTarget(null);
             } else {
-                LOGGER.debug("Composition Target {} missing or outdated", message.getCompositionTargetId());
+                LOGGER.info("Composition Target {} missing or outdated", message.getCompositionTargetId());
                 result = false;
             }
         }
@@ -108,7 +108,7 @@ public class MsgExecutor {
                 message.setInstanceId(null);
                 message.setRevisionIdInstance(null);
             } else {
-                LOGGER.debug("Instance {} missing or outdated", message.getInstanceId());
+                LOGGER.info("Instance {} missing or outdated", message.getInstanceId());
                 result = false;
             }
         }

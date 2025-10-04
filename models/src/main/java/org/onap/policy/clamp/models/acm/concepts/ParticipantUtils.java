@@ -87,12 +87,15 @@ public final class ParticipantUtils {
             ToscaServiceTemplate toscaServiceTemplate) {
         Set<Integer> minStage = new HashSet<>();
         for (var element : automationComposition.getElements().values()) {
-            var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                .get(element.getDefinition().getName());
-            var stage = DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                    ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
-                    : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
-            minStage.addAll(stage);
+            if (! MigrationState.REMOVED.equals(element.getMigrationState())) {
+                var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                        .get(element.getDefinition().getName());
+                var stage = DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                        ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
+                        : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
+                minStage.addAll(stage);
+            }
+
         }
         return minStage.stream().min(Integer::compare).orElse(0);
     }

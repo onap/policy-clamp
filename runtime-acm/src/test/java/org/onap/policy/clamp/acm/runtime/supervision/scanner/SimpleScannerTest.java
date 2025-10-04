@@ -119,12 +119,12 @@ class SimpleScannerTest {
         assertFalse(result.isUpdated());
         assertFalse(result.isToBeSync());
 
-        // wrong Delete State
+        // Delete response from participant
         docMessage.setMessageType(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         docMessage.setInstanceElementId(elementId);
         docMessage.setDeployState(DeployState.DELETED);
         result = simpleScanner.scanMessage(automationComposition, docMessage);
-        assertFalse(result.isUpdated());
+        assertTrue(result.isUpdated());
         assertFalse(result.isToBeSync());
     }
 
@@ -270,7 +270,7 @@ class SimpleScannerTest {
     @Test
     void testScanMessageMigrationFail() {
         var automationComposition = createAutomationComposition(DeployState.MIGRATING, LockState.LOCKED);
-        var elementId = UUID.randomUUID();
+        var elementId = automationComposition.getElements().entrySet().iterator().next().getKey();
         var docMessage = new DocMessage();
         docMessage.setMessageType(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         docMessage.setStateChangeResult(StateChangeResult.FAILED);

@@ -311,7 +311,7 @@ class AutomationCompositionInstantiationProviderTest {
         automationCompositionTarget.setPrecheck(true);
         var preCheckResponse = instantiationProvider.updateAutomationComposition(compositionId,
                 automationCompositionTarget);
-        verify(supervisionAcHandler).migratePrecheck(any(), any(), any(), any());
+        verify(supervisionAcHandler).migratePrecheck(any(), any(), any());
         InstantiationUtils.assertInstantiationResponse(preCheckResponse, automationCompositionTarget);
 
         automationCompositionTarget.setPrecheck(false);
@@ -320,7 +320,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider.updateAutomationComposition(compositionId,
                 automationCompositionTarget);
 
-        verify(supervisionAcHandler).migrate(any(), any(), any(), any());
+        verify(supervisionAcHandler).migrate(any(), any(), any());
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionTarget);
     }
 
@@ -366,7 +366,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), automationComposition);
 
-        verify(supervisionAcHandler).migrate(any(), any(), any(), any());
+        verify(supervisionAcHandler).migrate(any(), any(), any());
         verify(acProvider).updateAutomationComposition(automationComposition);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationComposition);
     }
@@ -405,7 +405,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), automationComposition);
 
-        verify(supervisionAcHandler).migratePrecheck(any(), any(), any(), any());
+        verify(supervisionAcHandler).migratePrecheck(any(), any(), any());
         verify(acProvider).updateAutomationComposition(automationComposition);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationComposition);
 

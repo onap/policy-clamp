@@ -67,10 +67,10 @@ class CacheProviderTest {
         var deployState = DeployState.DEPLOYED;
         var subState = SubState.NONE;
 
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, instanceId, participantDeploy,
-                deployState, subState, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, participantDeploy,
-                deployState, subState, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, instanceId, null,
+                participantDeploy, deployState, subState, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, null,
+                participantDeploy, deployState, subState, null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test

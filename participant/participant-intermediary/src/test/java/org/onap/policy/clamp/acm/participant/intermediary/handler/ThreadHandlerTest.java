@@ -86,13 +86,13 @@ class ThreadHandlerTest {
             var messageId = UUID.randomUUID();
             threadHandler.prime(messageId, composition);
             verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
-                StateChangeResult.FAILED, "Composition Defintion prime failed");
+                StateChangeResult.FAILED, "Composition Definition prime failed");
 
             clearInvocations(listener);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener).deprime(composition);
             threadHandler.deprime(messageId, composition);
             verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.PRIMED,
-                StateChangeResult.FAILED, "Composition Defintion deprime failed");
+                StateChangeResult.FAILED, "Composition Definition deprime failed");
         }
     }
 

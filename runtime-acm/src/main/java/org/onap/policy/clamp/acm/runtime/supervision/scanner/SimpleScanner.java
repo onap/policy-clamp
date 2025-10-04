@@ -75,15 +75,8 @@ public class SimpleScanner extends AbstractScanner {
     private UpdateSync handleAcStateChange(AutomationComposition automationComposition, DocMessage message) {
         var result = new UpdateSync();
         var element = automationComposition.getElements().get(message.getInstanceElementId());
-        if (element == null && isMigration(automationComposition)
-                && StateChangeResult.FAILED.equals(message.getStateChangeResult())) {
-            // fail delete element during migration
-            automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-            result.setUpdated(true);
-            result.setToBeSync(true);
-            return result;
-        }
-        if (element == null || !validateStateMessage(automationComposition, message)) {
+        if (element == null) {
+            LOGGER.warn("Not a valid message, element is null for the element id {}", message.getInstanceElementId());
             return result;
         }
         result.setUpdated(true);
@@ -99,16 +92,6 @@ public class SimpleScanner extends AbstractScanner {
         element.setStage(message.getStage());
         element.setMessage(message.getMessage());
         return result;
-    }
-
-    private boolean isMigration(AutomationComposition automationComposition) {
-        return DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState());
-    }
-
-    private boolean validateStateMessage(AutomationComposition automationComposition, DocMessage message) {
-        return !DeployState.DELETED.equals(message.getDeployState())
-                || (DeployState.DELETING.equals(automationComposition.getDeployState()));
     }
 
     private UpdateSync handleOutProperties(AutomationComposition automationComposition, DocMessage message) {

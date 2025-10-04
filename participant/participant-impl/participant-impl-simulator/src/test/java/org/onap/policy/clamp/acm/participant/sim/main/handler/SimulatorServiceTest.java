@@ -184,7 +184,7 @@ class SimulatorServiceTest {
         simulatorService.getConfig().setMigrateSuccess(false);
         simulatorService.deleteInMigration(instanceId, elementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
     }
 
 

@@ -296,7 +296,7 @@ public class SimulatorService {
                     DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Migration - Deleted");
         } else {
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
+                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
         }
     }
 

@@ -47,6 +47,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
@@ -198,7 +199,7 @@ public final class AcmUtils {
      * @return the result of validation
      */
     public static BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition,
-            ToscaServiceTemplate serviceTemplate, String toscaCompositionName) {
+            ToscaServiceTemplate serviceTemplate, String toscaCompositionName, boolean migrateOperation) {
         var result = new BeanValidationResult(ENTRY + automationComposition.getName(), automationComposition);
 
         var map = getMapToscaNodeTemplates(serviceTemplate);
@@ -221,13 +222,14 @@ public final class AcmUtils {
                     .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
             // @formatter:on
 
-            if (definitions.size() != automationComposition.getElements().size()) {
+            if (definitions.size() != automationComposition.getElements().size()
+                    && !migrateOperation) {
                 result.setResult(ValidationStatus.INVALID,
-                        "Elements of the instance not matching with the elements of the composition");
+                            "Elements of the instance not matching with the elements of the composition");
             }
 
             for (var element : automationComposition.getElements().values()) {
-                result.addResult(validateDefinition(definitions, element.getDefinition()));
+                result.addResult(validateDefinition(definitions, element.getDefinition(), element.getMigrationState()));
             }
         }
 
@@ -236,12 +238,13 @@ public final class AcmUtils {
     }
 
     private static ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-            ToscaConceptIdentifier definition) {
+                                                       ToscaConceptIdentifier definition,
+                                                       MigrationState migrationState) {
         var result = new BeanValidationResult(ENTRY + definition.getName(), definition);
         var identifier = definitions.get(definition.getName());
-        if (identifier == null) {
+        if (identifier == null && MigrationState.DEFAULT.equals(migrationState)) {
             result.setResult(ValidationStatus.INVALID, "Not found");
-        } else if (!identifier.equals(definition)) {
+        } else if (! definition.equals(identifier) && MigrationState.DEFAULT.equals(migrationState)) {
             result.setResult(ValidationStatus.INVALID, "Version not matching");
         }
         return (result.isClean() ? null : result);
@@ -435,7 +438,7 @@ public final class AcmUtils {
      * @param deployOrder the DeployOrder
      */
     public static List<ParticipantDeploy> createParticipantDeployList(AutomationComposition automationComposition,
-            DeployOrder deployOrder, List<AutomationCompositionElement> removedElements) {
+            DeployOrder deployOrder) {
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = createAcElementDeploy(element, deployOrder);
@@ -448,16 +451,6 @@ public final class AcmUtils {
             participantDeploy.setParticipantId(entry.getKey());
             participantDeploy.setAcElementList(entry.getValue());
             participantDeploys.add(participantDeploy);
-        }
-        // Include the participantIds for the removed elements
-        for (var element : removedElements) {
-            if (map.get(element.getParticipantId()) == null) {
-                var participantDeploy = new ParticipantDeploy();
-                participantDeploy.setParticipantId(element.getParticipantId());
-                participantDeploys.add(participantDeploy);
-                map.put(element.getParticipantId(), new ArrayList<>());
-            }
-
         }
         return participantDeploys;
     }

@@ -20,8 +20,11 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
@@ -30,8 +33,11 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionM
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -76,39 +82,69 @@ public class StageScanner extends AbstractScanner {
             AutomationCompositionDefinition acDefinition, UpdateSync updateSync, UUID revisionIdComposition) {
         var completed = true;
         var minStageNotCompleted = 1000; // min stage not completed
+        List<UUID> elementsDeleted = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {
             if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
                     element.getSubState())) {
-                var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
-                        .get(element.getDefinition().getName());
-                var stageSet = DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                            || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
-                        ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
-                        : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
-                var minStage = stageSet.stream().min(Comparator.comparing(Integer::valueOf)).orElse(0);
+                var minStage = calculateMinStage(element, automationComposition, acDefinition);
                 int stage = element.getStage() != null ? element.getStage() : minStage;
                 minStageNotCompleted = Math.min(minStageNotCompleted, stage);
                 completed = false;
+            } else if (DeployState.DELETED.equals(element.getDeployState())
+                    && automationComposition.getStateChangeResult().equals(StateChangeResult.NO_ERROR)) {
+                // Migration with successful removal of element
+                elementsDeleted.add(element.getId());
             }
         }
-
+        removeDeletedElements(automationComposition, elementsDeleted, updateSync);
         if (completed) {
             complete(automationComposition, updateSync);
         } else {
-            LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
-                    automationComposition.getDeployState(), automationComposition.getLockState());
+            processNextStage(automationComposition, updateSync, minStageNotCompleted, revisionIdComposition,
+                    acDefinition);
+        }
+    }
 
-            if (minStageNotCompleted != automationComposition.getPhase()) {
-                savePhase(automationComposition, minStageNotCompleted);
-                updateSync.setUpdated(true);
-                saveAndSync(automationComposition, updateSync);
-                LOGGER.debug("retry message AutomationCompositionMigration");
-                var acToSend = new AutomationComposition(automationComposition);
-                decryptInstanceProperties(acToSend);
-                sendNextStage(acToSend, minStageNotCompleted, revisionIdComposition, acDefinition);
-            } else {
-                handleTimeout(automationComposition, updateSync);
-            }
+    private void processNextStage(AutomationComposition automationComposition, UpdateSync updateSync,
+                                  int minStageNotCompleted, UUID revisionIdComposition,
+                                  AutomationCompositionDefinition acDefinition) {
+        LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
+                automationComposition.getDeployState(), automationComposition.getLockState());
+
+        if (minStageNotCompleted != automationComposition.getPhase()) {
+            savePhase(automationComposition, minStageNotCompleted);
+            updateSync.setUpdated(true);
+            saveAndSync(automationComposition, updateSync);
+            LOGGER.debug("retry message AutomationCompositionMigration");
+            var acToSend = new AutomationComposition(automationComposition);
+            decryptInstanceProperties(acToSend);
+            sendNextStage(acToSend, minStageNotCompleted, revisionIdComposition, acDefinition);
+        } else {
+            handleTimeout(automationComposition, updateSync);
+        }
+    }
+
+    private Integer calculateMinStage(AutomationCompositionElement element, AutomationComposition automationComposition,
+                                      AutomationCompositionDefinition acDefinition) {
+        Set<Integer> stageSet = new HashSet<>();
+        if (! MigrationState.REMOVED.equals(element.getMigrationState())) {
+            var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
+                    .get(element.getDefinition().getName());
+            stageSet = DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                    || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
+                    ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
+                    : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
+        }
+        return stageSet.stream().min(Comparator.comparing(Integer::valueOf)).orElse(0);
+    }
+
+    private void removeDeletedElements(AutomationComposition automationComposition, List<UUID> elementsDeleted,
+                                       UpdateSync updateSync) {
+        for (var elementId : elementsDeleted) {
+            LOGGER.info("Deleting element {} in Migration ", elementId);
+            automationComposition.getElements().remove(elementId);
+            acProvider.deleteAutomationCompositionElement(elementId);
+            updateSync.setUpdated(true);
         }
     }
 
@@ -119,7 +155,7 @@ public class StageScanner extends AbstractScanner {
             LOGGER.debug("retry message AutomationCompositionMigration");
             // acDefinition for migration is the Composition target
             acMigrationPublisher.send(automationComposition, minStageNotCompleted, revisionIdComposition,
-                    acDefinition.getRevisionId(), List.of());
+                    acDefinition.getRevisionId());
         }
         if (SubState.PREPARING.equals(automationComposition.getSubState())) {
             LOGGER.debug("retry message AutomationCompositionPrepare");

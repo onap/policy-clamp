@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -59,8 +58,7 @@ public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<P
         propertiesUpdate.setTimestamp(Instant.now());
         propertiesUpdate.setRevisionIdInstance(automationComposition.getRevisionId());
         propertiesUpdate.setRevisionIdComposition(revisionIdComposition);
-        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE,
-                List.of());
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE);
         propertiesUpdate.setParticipantUpdatesList(participantUpdatesList);
         propertiesUpdate.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));

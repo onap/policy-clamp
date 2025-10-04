@@ -151,7 +151,7 @@ public class AcDefinitionHandler {
     }
 
     private void checkComposition(ParticipantSync participantSyncMsg) {
-        // edge case scenario in migration whit remove/add elements,
+        // edge case scenario in migration with remove/add elements,
         // when composition or target composition doesn't contain elements from this participant
         for (var msg : cacheProvider.getMessagesOnHold().values()) {
             if (participantSyncMsg.getCompositionId().equals(msg.getCompositionTargetId())) {

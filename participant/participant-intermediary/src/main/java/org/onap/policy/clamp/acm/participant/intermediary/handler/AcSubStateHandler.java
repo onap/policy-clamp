@@ -59,16 +59,27 @@ public class AcSubStateHandler {
         if (migrationMsg.getAutomationCompositionId() == null || migrationMsg.getCompositionTargetId() == null) {
             return;
         }
-
+        var acTargetDefinition = cacheProvider.getAcElementsDefinitions().get(migrationMsg.getCompositionTargetId());
         var automationComposition = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
         if (automationComposition == null) {
-            LOGGER.debug("Automation composition {} does not use this participant",
+            if (acTargetDefinition == null) {
+                LOGGER.warn("Automation composition {} does not use this participant",
+                        migrationMsg.getAutomationCompositionId());
+                return;
+            }
+        } else {
+            LOGGER.info("Migration Precheck invoked on an existing participant for the instance {}",
                     migrationMsg.getAutomationCompositionId());
-            return;
         }
-        automationComposition.setSubState(SubState.MIGRATION_PRECHECKING);
         for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
+                if (automationComposition == null) { // New element with new participant
+                    automationComposition = cacheProvider.createAcInstance(migrationMsg.getCompositionId(),
+                            migrationMsg.getCompositionTargetId(), migrationMsg.getAutomationCompositionId(),
+                            participantDeploy, DeployState.MIGRATING, SubState.MIGRATION_PRECHECKING,
+                            migrationMsg.getRevisionIdInstance());
+                    LOGGER.info("New participant with new element type added for Migration Precheck");
+                }
 
                 callParticipantMigratePrecheck(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
                     automationComposition, migrationMsg.getCompositionTargetId());
@@ -153,7 +164,7 @@ public class AcSubStateHandler {
         if (acPrepareMsg.isPreDeploy()) {
             for (var participantPrepare : acPrepareMsg.getParticipantList()) {
                 if (cacheProvider.getParticipantId().equals(participantPrepare.getParticipantId())) {
-                    cacheProvider.initializeAutomationComposition(acPrepareMsg.getCompositionId(),
+                    cacheProvider.initializeAutomationComposition(acPrepareMsg.getCompositionId(), null,
                         acPrepareMsg.getAutomationCompositionId(), participantPrepare, DeployState.UNDEPLOYED,
                         SubState.PREPARING, acPrepareMsg.getRevisionIdInstance());
                     callParticipanPrepare(acPrepareMsg.getMessageId(), participantPrepare.getAcElementList(),
