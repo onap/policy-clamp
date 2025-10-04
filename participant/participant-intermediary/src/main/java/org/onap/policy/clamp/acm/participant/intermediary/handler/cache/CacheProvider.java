@@ -46,10 +46,14 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CacheProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheProvider.class);
 
     @Getter
     private final UUID participantId;
@@ -131,6 +135,7 @@ public class CacheProvider {
             acDefinition.getElements().put(acElementDefinition.getAcElementDefinitionId(), acElementDefinition);
         }
         acElementsDefinitions.put(compositionId, acDefinition);
+        LOGGER.info("Updated cache for the composition id {}", compositionId);
     }
 
     public void removeElementDefinition(@NonNull UUID compositionId) {
@@ -177,8 +182,9 @@ public class CacheProvider {
      */
     public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
             ParticipantDeploy participantDeploy, UUID revisionId) {
-        initializeAutomationComposition(compositionId, instanceId, participantDeploy,
+        initializeAutomationComposition(compositionId, null, instanceId, participantDeploy,
             DeployState.DEPLOYING, SubState.NONE, revisionId);
+
     }
 
     /**
@@ -191,31 +197,16 @@ public class CacheProvider {
      * @param subState the SubState
      * @param revisionId the identification of the last update
      */
-    public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
+    public void initializeAutomationComposition(@NonNull UUID compositionId, UUID compositionTargetId,
+                                                @NonNull UUID instanceId,
             ParticipantDeploy participantDeploy, DeployState deployState, SubState subState, UUID revisionId) {
-        var acLast = automationCompositions.get(instanceId);
-        Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
-        for (var element : participantDeploy.getAcElementList()) {
-            var acElement = createAutomationCompositionElement(element);
-            acElement.setParticipantId(getParticipantId());
-            acElement.setDeployState(deployState);
-            acElement.setSubState(subState);
-            var acElementLast = acLast != null ? acLast.getElements().get(element.getId()) : null;
-            if (acElementLast != null) {
-                acElement.setOutProperties(acElementLast.getOutProperties());
-                acElement.setOperationalState(acElementLast.getOperationalState());
-                acElement.setUseState(acElementLast.getUseState());
-            }
-            acElementMap.put(element.getId(), acElement);
-        }
-        var automationComposition = new AutomationComposition();
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setInstanceId(instanceId);
-        automationComposition.setElements(acElementMap);
-        automationComposition.setDeployState(deployState);
-        automationComposition.setSubState(subState);
-        automationComposition.setRevisionId(revisionId);
+
+        var automationComposition = createAcInstance(compositionId, compositionTargetId, instanceId, participantDeploy,
+                deployState, subState, revisionId);
+
         automationCompositions.put(instanceId, automationComposition);
+        LOGGER.info("Initialized participant cache for the {} operation of the instance {}", deployState, instanceId);
+
     }
 
     /**
@@ -242,9 +233,9 @@ public class CacheProvider {
             acElement.setUseState(element.getUseState());
             acElement.setProperties(element.getProperties());
             acElement.setOutProperties(element.getOutProperties());
+            acElement.setMigrationState(element.getMigrationState());
             acElementMap.put(element.getId(), acElement);
         }
-
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(compositionId);
         automationComposition.setCompositionTargetId(participantRestartAc.getCompositionTargetId());
@@ -255,6 +246,55 @@ public class CacheProvider {
         automationComposition.setStateChangeResult(participantRestartAc.getStateChangeResult());
         automationComposition.setRevisionId(participantRestartAc.getRevisionId());
         automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
+        LOGGER.info("Updated participant cache for the instance id {}",
+                participantRestartAc.getAutomationCompositionId());
+    }
+
+    /**
+     *  Create an AutomationComposition.
+     * @param compositionId compositionId
+     * @param compositionTargetId compositionTargetId
+     * @param instanceId instanceId
+     * @param participantDeploy participantDeploy
+     * @param deployState deployState
+     * @param subState subState
+     * @param revisionId revisionId
+     * @return AutomationComposition
+     */
+    public AutomationComposition createAcInstance(@NonNull UUID compositionId, UUID compositionTargetId,
+                                                  @NonNull UUID instanceId, ParticipantDeploy participantDeploy,
+                                                  DeployState deployState, SubState subState, UUID revisionId) {
+        var acLast = automationCompositions.get(instanceId);
+        Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
+        for (var element : participantDeploy.getAcElementList()) {
+            var acElement = createAutomationCompositionElement(element);
+            acElement.setParticipantId(getParticipantId());
+            acElement.setDeployState(deployState);
+            acElement.setSubState(subState);
+            var acElementLast = acLast != null ? acLast.getElements().get(element.getId()) : null;
+            if (acElementLast != null) {
+                acElement.setOutProperties(acElementLast.getOutProperties());
+                acElement.setOperationalState(acElementLast.getOperationalState());
+                acElement.setUseState(acElementLast.getUseState());
+            }
+            acElementMap.put(element.getId(), acElement);
+        }
+        var automationComposition = acLast != null ? acLast : new AutomationComposition();
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(instanceId);
+        if (acLast != null) {
+            automationComposition.getElements().putAll(acElementMap);
+        } else {
+            automationComposition.setElements(acElementMap);
+        }
+        automationComposition.setDeployState(deployState);
+        automationComposition.setSubState(subState);
+        automationComposition.setRevisionId(revisionId);
+        if (compositionTargetId != null) {
+            automationComposition.setCompositionTargetId(compositionTargetId);
+        }
+
+        return automationComposition;
     }
 
     /**
@@ -270,6 +310,7 @@ public class CacheProvider {
         acElement.setProperties(element.getProperties());
         acElement.setSubState(SubState.NONE);
         acElement.setLockState(LockState.LOCKED);
+        acElement.setMigrationState(element.getMigrationState());
         return acElement;
     }
 
@@ -303,7 +344,8 @@ public class CacheProvider {
         var acDefinition = acElementsDefinitions.get(compositionId);
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var acDefinitionElement = acDefinition.getElements().get(element.getDefinition());
+            var acDefinitionElement = (acDefinition != null) ? acDefinition.getElements().get(element.getDefinition()) :
+                    null;
             var compositionElement = (acDefinitionElement != null)
                     ? new CompositionElementDto(compositionId, element.getDefinition(),
                     acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),

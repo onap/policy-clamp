@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,17 +40,23 @@ import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.AcDefinitionScanner;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.MonitoringScanner;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.PhaseScanner;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.SimpleScanner;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.StageScanner;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.UpdateSync;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
@@ -120,6 +129,76 @@ class SupervisionScannerTest {
         supervisionScanner.run();
         verify(acDefinitionScanner).scanAutomationCompositionDefinition(any(), any());
         verify(messageProvider).removeMessage(message.getMessageId());
+        verify(messageProvider).removeJob(JOB_ID);
+    }
+
+    @Test
+    void testAcInstanceForMigrationSuccess() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.MIGRATING);
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        var compositionTargetId = UUID.randomUUID();
+        automationComposition.setCompositionTargetId(compositionTargetId);
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(0);
+        List<UUID> elementIds = new ArrayList<>(automationComposition.getElements().keySet());
+
+        Map<UUID, MigrationState> migrationStateMap = new HashMap<>();
+        List<MigrationState> states = List.of(MigrationState.REMOVED, MigrationState.NEW, MigrationState.DEFAULT);
+
+        for (int i = 0; i < elementIds.size(); i++) {
+            migrationStateMap.put(elementIds.get(i), states.get(i));
+        }
+
+        for (var entry : automationComposition.getElements().entrySet()) {
+            entry.getValue().setMigrationState(migrationStateMap.get(entry.getKey()));
+        }
+
+        for (var element : automationComposition.getElements().values()) {
+            if (MigrationState.REMOVED.equals(migrationStateMap.get(element.getId()))) {
+                element.setDeployState(DeployState.DELETED);
+                element.setLockState(LockState.LOCKED);
+            } else {
+                element.setDeployState(DeployState.DEPLOYED);
+                element.setLockState(LockState.LOCKED);
+            }
+        }
+
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
+        when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(Optional.of(automationComposition));
+
+        var acDefinitionTarget = createAutomationCompositionDefinition(AcTypeState.PRIMED);
+        acDefinitionTarget.setCompositionId(compositionTargetId);
+        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMED);
+        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(acDefinitionTarget);
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(COMPOSITION_ID);
+        when(acDefinitionProvider.getAcDefinition(COMPOSITION_ID)).thenReturn(acDefinition);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var stageScanner = new StageScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
+                mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
+                acRuntimeParameterGroup, mock(EncryptionUtils.class));
+
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+        var monitoringScanner = new MonitoringScanner(automationCompositionProvider, acDefinitionProvider,
+                mock(AcDefinitionScanner.class), stageScanner, mock(SimpleScanner.class), mock(PhaseScanner.class),
+                messageProvider);
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+                messageProvider, monitoringScanner);
+
+        supervisionScanner.run();
+        assertEquals(2, automationComposition.getElements().size());
+        assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
+        for (var entry : automationComposition.getElements().entrySet()) {
+            assertEquals(MigrationState.DEFAULT, entry.getValue().getMigrationState());
+        }
         verify(messageProvider).removeJob(JOB_ID);
     }
 

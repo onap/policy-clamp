@@ -258,7 +258,6 @@ public class ParticipantHandler {
             LOGGER.debug("Ignore ParticipantSync message {}", participantSyncMsg.getMessageId());
             return;
         }
-        LOGGER.debug("ParticipantSync message received for participantId {}", participantSyncMsg.getParticipantId());
         acDefinitionHandler.handleParticipantSync(participantSyncMsg);
         msgExecutor.check();
     }

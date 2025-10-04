@@ -24,7 +24,6 @@ import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -40,7 +39,6 @@ import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
@@ -147,7 +145,6 @@ public class SupervisionAcHandler {
             AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYING, LockState.NONE);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        automationComposition.setCompositionTargetId(null);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
@@ -368,11 +365,11 @@ public class SupervisionAcHandler {
      * @param revisionIdCompositionTarget the last Update from Composition Target
      */
     public void migrate(AutomationComposition automationComposition, UUID revisionIdComposition,
-                        UUID revisionIdCompositionTarget, List<AutomationCompositionElement> removedElements) {
+                        UUID revisionIdCompositionTarget) {
         executor.execute(() -> {
             encryptionUtils.decryptInstanceProperties(automationComposition);
             acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase(),
-                    revisionIdComposition, revisionIdCompositionTarget, removedElements);
+                    revisionIdComposition, revisionIdCompositionTarget);
         });
     }
 
@@ -384,8 +381,8 @@ public class SupervisionAcHandler {
      * @param revisionIdCompositionTarget the last Update from Composition Target
      */
     public void migratePrecheck(AutomationComposition automationComposition, UUID revisionIdComposition,
-            UUID revisionIdCompositionTarget, List<AutomationCompositionElement> removedElements) {
+            UUID revisionIdCompositionTarget) {
         executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0,
-                revisionIdComposition, revisionIdCompositionTarget, removedElements));
+                revisionIdComposition, revisionIdCompositionTarget));
     }
 }

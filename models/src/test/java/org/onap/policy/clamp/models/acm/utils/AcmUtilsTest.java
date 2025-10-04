@@ -41,7 +41,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -135,13 +134,13 @@ class AcmUtilsTest {
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
         var automationComposition = CommonTestData.getJsonObject(AC_INSTANTIATION_JSON, AutomationComposition.class);
         var result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
-                AUTOMATION_COMPOSITION_NODE_TYPE);
+                AUTOMATION_COMPOSITION_NODE_TYPE, false);
         assertTrue(result.isValid());
 
         var element = automationComposition.getElements().values().iterator().next();
         automationComposition.getElements().remove(element.getId());
         result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
-                AUTOMATION_COMPOSITION_NODE_TYPE);
+                AUTOMATION_COMPOSITION_NODE_TYPE, false);
         assertFalse(result.isValid());
         assertThat(result.getMessage()).contains("not matching");
     }
@@ -151,7 +150,7 @@ class AcmUtilsTest {
         var automationComposition = getDummyAutomationComposition();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
         var result = AcmUtils.validateAutomationComposition(automationComposition,
-                toscaServiceTemplate, AUTOMATION_COMPOSITION_NODE_TYPE);
+                toscaServiceTemplate, AUTOMATION_COMPOSITION_NODE_TYPE, false);
         assertNotNull(result);
         assertFalse(result.isValid());
 
@@ -161,12 +160,12 @@ class AcmUtilsTest {
         nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
         toscaServiceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
         result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate,
-                AUTOMATION_COMPOSITION_NODE_TYPE);
+                AUTOMATION_COMPOSITION_NODE_TYPE, false);
         assertFalse(result.isValid());
 
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
         result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
-                AUTOMATION_COMPOSITION_NODE_TYPE);
+                AUTOMATION_COMPOSITION_NODE_TYPE, false);
         assertFalse(result.isValid());
     }
 
@@ -225,33 +224,13 @@ class AcmUtilsTest {
     @Test
     void testCreateAcElementDeployList() {
         var automationComposition = getDummyAutomationComposition();
-        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY, List.of());
+        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY);
         assertThat(result).hasSameSizeAs(automationComposition.getElements().values());
         for (var participantDeploy : result) {
             for (var element : participantDeploy.getAcElementList()) {
                 assertEquals(DeployOrder.DEPLOY, element.getOrderedState());
             }
         }
-    }
-
-    @Test
-    void testAcDeployListWithRemovedElements() {
-        var removedElement1 = CommonTestData.getJsonObject(
-                "src/test/resources/json/AutomationCompositionElementNoOrderedState.json",
-                AutomationCompositionElement.class);
-        var participantId1 = UUID.randomUUID();
-        var participantId2 = UUID.randomUUID();
-        assert removedElement1 != null;
-        removedElement1.setParticipantId(participantId1);
-        var removedElement2 = new AutomationCompositionElement(removedElement1);
-        removedElement2.setParticipantId(participantId2);
-
-        var automationComposition = getDummyAutomationComposition();
-        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY,
-                List.of(removedElement1, removedElement2));
-        assertThat(result).hasSize(automationComposition.getElements().values().size() + 2);
-        var participantIds = result.stream().map(ParticipantDeploy::getParticipantId).toList();
-        assertThat(participantIds).containsAll(List.of(participantId1, participantId2));
     }
 
     @Test

@@ -40,8 +40,10 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CachePro
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
@@ -272,7 +274,8 @@ class AutomationCompositionHandlerTest {
     void handleAutomationCompositionMigrationTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         automationComposition.setCompositionId(UUID.randomUUID());
-        automationComposition.setInstanceId(UUID.randomUUID());
+        var instanceId = UUID.randomUUID();
+        automationComposition.setInstanceId(instanceId);
         automationComposition.setCompositionTargetId(UUID.randomUUID());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
@@ -291,6 +294,14 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getElements().size(), false);
         testMigration(cacheProviderRollback, automationComposition, 0,
                 automationComposition.getElements().size(), true);
+
+        // New participant with new elements added in Migration
+        cacheProvider.removeAutomationComposition(instanceId);
+        for (var element : automationComposition.getElements().entrySet()) {
+            element.getValue().setMigrationState(MigrationState.NEW);
+        }
+        testMigration(cacheProvider, automationComposition, 0,
+                automationComposition.getElements().size(), false);
     }
 
     @Test
@@ -302,10 +313,17 @@ class AutomationCompositionHandlerTest {
         var acMigrate = new AutomationComposition(automationComposition);
         acMigrate.setCompositionTargetId(UUID.randomUUID());
 
-        // replacing first element with new one
+        // remove element
         var element = acMigrate.getElements().values().iterator().next();
-        element.setDefinition(new ToscaConceptIdentifier("policy.clamp.new.element", "1.0.0"));
-        element.setId(UUID.randomUUID());
+        element.setMigrationState(MigrationState.REMOVED);
+
+        //Add element
+        var newElement = new AutomationCompositionElement(element);
+        newElement.setDefinition(new ToscaConceptIdentifier("policy.clamp.new.element", "1.2.4"));
+        newElement.setId(UUID.randomUUID());
+        newElement.setMigrationState(MigrationState.NEW);
+
+        acMigrate.getElements().put(newElement.getId(), newElement);
 
         var migrateDefinitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(acMigrate);
@@ -321,9 +339,10 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getInstanceId(), definitions,
                 acMigrate.getCompositionTargetId(), migrateDefinitions);
 
-        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size() + 1, false);
-        testMigration(cacheProviderRollback, acMigrate, 0, acMigrate.getElements().size() + 1, true);
+        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size(), false);
+        testMigration(cacheProviderRollback, acMigrate, 0, acMigrate.getElements().size(), true);
     }
+
 
     @Test
     void handleAcMigrationStageTest() {
@@ -334,10 +353,18 @@ class AutomationCompositionHandlerTest {
         var acMigrate = new AutomationComposition(automationComposition);
         acMigrate.setCompositionTargetId(UUID.randomUUID());
 
-        // replacing first element with new one
+        // remove element
         var element = acMigrate.getElements().values().iterator().next();
-        element.setDefinition(new ToscaConceptIdentifier("policy.clamp.new.element", "1.2.4"));
-        element.setId(UUID.randomUUID());
+        element.setMigrationState(MigrationState.REMOVED);
+
+        //Add element
+        var newElement = new AutomationCompositionElement(element);
+        newElement.setDefinition(new ToscaConceptIdentifier("policy.clamp.new.element", "1.2.4"));
+        newElement.setId(UUID.randomUUID());
+        newElement.setMigrationState(MigrationState.NEW);
+
+        acMigrate.getElements().put(newElement.getId(), newElement);
+
 
         // replacing definition version
         acMigrate.getElements().values().forEach(el -> el.setDefinition(

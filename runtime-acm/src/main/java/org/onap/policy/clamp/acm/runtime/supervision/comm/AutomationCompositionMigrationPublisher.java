@@ -21,11 +21,9 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -49,7 +47,7 @@ public class AutomationCompositionMigrationPublisher
             value = "publisher.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
     public void send(AutomationComposition automationComposition, int stage, UUID revisionIdComposition,
-                     UUID revisionIdCompositionTarget, List<AutomationCompositionElement> removedElements) {
+                     UUID revisionIdCompositionTarget) {
         var acMigration = new AutomationCompositionMigration();
         acMigration.setRollback(DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()));
         acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
@@ -61,8 +59,7 @@ public class AutomationCompositionMigrationPublisher
         acMigration.setRevisionIdInstance(automationComposition.getRevisionId());
         acMigration.setRevisionIdComposition(revisionIdComposition);
         acMigration.setRevisionIdCompositionTarget(revisionIdCompositionTarget);
-        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE,
-                removedElements);
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE);
         acMigration.setParticipantUpdatesList(participantUpdatesList);
         acMigration.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));

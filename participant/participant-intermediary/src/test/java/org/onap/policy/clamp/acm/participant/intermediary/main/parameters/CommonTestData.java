@@ -281,6 +281,7 @@ public class CommonTestData {
             acElement.setId(element.getId());
             acElement.setDefinition(element.getDefinition());
             acElement.setProperties(element.getProperties());
+            acElement.setMigrationState(element.getMigrationState());
             participantDeploy.getAcElementList().add(acElement);
         }
         return participantDeploy;

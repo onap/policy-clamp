@@ -87,6 +87,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() -> this.deployProcess(compositionElement, instanceElement));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Deploy process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void deployProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
@@ -103,7 +104,7 @@ public class ThreadHandler implements Closeable {
     }
 
     /**
-     * Handle an udeploy on a automation composition element.
+     * Handle an undeploy on a automation composition element.
      *
      * @param messageId the messageId
      * @param compositionElement the information of the Automation Composition Definition Element
@@ -113,6 +114,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() -> this.undeployProcess(compositionElement, instanceElement));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Undeploy process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void undeployProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
@@ -191,6 +193,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() -> this.deleteProcess(compositionElement, instanceElement));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Delete process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void deleteProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
@@ -220,6 +223,7 @@ public class ThreadHandler implements Closeable {
         var result = executor.submit(() ->
             this.updateProcess(compositionElement, instanceElement, instanceElementUpdated));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Update process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void updateProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
@@ -265,6 +269,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(composition.compositionId(), messageId);
         var result = executor.submit(() -> this.primeProcess(composition));
         executionMap.put(composition.compositionId(), result);
+        LOGGER.info("Priming process successfully started on the participant for {}", composition.compositionId());
     }
 
     private void primeProcess(CompositionDto composition) {
@@ -272,9 +277,9 @@ public class ThreadHandler implements Closeable {
             listener.prime(composition);
             executionMap.remove(composition.compositionId());
         } catch (Exception e) {
-            LOGGER.error("Composition Defintion prime failed {} {}", composition.compositionId(), e.getMessage());
+            LOGGER.error("Composition Definition prime failed {} {}", composition.compositionId(), e.getMessage());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
-                StateChangeResult.FAILED, "Composition Defintion prime failed");
+                StateChangeResult.FAILED, "Composition Definition prime failed");
         }
     }
 
@@ -288,6 +293,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(composition.compositionId(), messageId);
         var result = executor.submit(() -> this.deprimeProcess(composition));
         executionMap.put(composition.compositionId(), result);
+        LOGGER.info("De-priming process successfully started on the participant for {}", composition.compositionId());
     }
 
     private void deprimeProcess(CompositionDto composition) {
@@ -295,9 +301,9 @@ public class ThreadHandler implements Closeable {
             listener.deprime(composition);
             executionMap.remove(composition.compositionId());
         } catch (Exception e) {
-            LOGGER.error("Composition Defintion deprime failed {} {}", composition.compositionId(), e.getMessage());
+            LOGGER.error("Composition Definition deprime failed {} {}", composition.compositionId(), e.getMessage());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
-                StateChangeResult.FAILED, "Composition Defintion deprime failed");
+                StateChangeResult.FAILED, "Composition Definition deprime failed");
         }
     }
 
@@ -331,6 +337,7 @@ public class ThreadHandler implements Closeable {
             this.migrateProcess(compositionElement, compositionElementTarget,
                 instanceElement, instanceElementMigrate, stage));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Migration process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void migrateProcess(CompositionElementDto compositionElement,
@@ -366,6 +373,8 @@ public class ThreadHandler implements Closeable {
             this.migratePrecheckProcess(compositionElement, compositionElementTarget, instanceElement,
                 instanceElementMigrate));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Migration Precheck process successfully started on the participant for {}",
+                instanceElement.elementId());
     }
 
     private void migratePrecheckProcess(CompositionElementDto compositionElement,
@@ -396,6 +405,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() -> this.reviewProcess(compositionElement, instanceElement));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Review process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void reviewProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
@@ -424,6 +434,7 @@ public class ThreadHandler implements Closeable {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() -> this.prepareProcess(compositionElement, instanceElement, stage));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Prepare process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void prepareProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
@@ -457,6 +468,7 @@ public class ThreadHandler implements Closeable {
                 this.rollbackProcess(compositionElement, compositionElementRollback, instanceElement,
                         instanceElementRollback, stage));
         executionMap.put(instanceElement.elementId(), result);
+        LOGGER.info("Rollback process successfully started on the participant for {}", instanceElement.elementId());
     }
 
     private void rollbackProcess(CompositionElementDto compositionElement,
