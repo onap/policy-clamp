@@ -22,6 +22,30 @@
       },
       "revId": "17f971281a5bdfbab419dd1c3f9ae058d5e198e1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "155fb75d_a9d5e1fd",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/SupervisionAcHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-10-07T12:53:06Z",
+      "side": 1,
+      "message": "patch 2 removed it",
+      "parentUuid": "23f458f4_aaefd61c",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 28
+      },
+      "revId": "17f971281a5bdfbab419dd1c3f9ae058d5e198e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
