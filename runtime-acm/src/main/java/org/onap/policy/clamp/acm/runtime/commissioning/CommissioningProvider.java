@@ -191,6 +191,15 @@ public class CommissioningProvider {
     }
 
     /**
+     * Validates to see if there is any compositionTargetId associated with this compositionId.
+     *
+     * @return true if exists compositionTargetId
+     */
+    private boolean verifyIfCompositionTargetIdExists(UUID compositionId) {
+        return !acProvider.getAcInstancesByTargetCompositionId(compositionId).isEmpty();
+    }
+
+    /**
      * Composition Definition Priming.
      *
      * @param compositionId the compositionId
@@ -199,6 +208,10 @@ public class CommissioningProvider {
     public void compositionDefinitionPriming(UUID compositionId, AcTypeStateUpdate acTypeStateUpdate) {
         if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There are instances, Priming/Depriming not allowed");
+        }
+        if (verifyIfCompositionTargetIdExists(compositionId)) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "This compositionId is referenced as a targetCompositionId in the instance table.");
         }
         var acmDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         var stateOrdered = acTypeStateResolver.resolve(acTypeStateUpdate.getPrimeOrder(), acmDefinition.getState(),

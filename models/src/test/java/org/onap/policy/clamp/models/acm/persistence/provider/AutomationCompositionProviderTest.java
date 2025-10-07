@@ -208,6 +208,20 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
+    void testGetAcInstancesByTargetCompositionId() {
+        var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        when(automationCompositionRepository.findByCompositionTargetId(any()))
+                .thenReturn(List.of(inputAutomationCompositionsJpa.get(0)));
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                automationCompositionRepository, mock(AutomationCompositionElementRepository.class),
+                mock(AutomationCompositionRollbackRepository.class));
+        var acList = automationCompositionProvider
+                .getAcInstancesByTargetCompositionId(automationComposition.getCompositionTargetId());
+        assertEquals(inputAutomationCompositions.getAutomationCompositionList().get(0), acList.get(0));
+    }
+
+    @Test
     void testGetAcInstancesInTransition() {
         inputAutomationCompositions.getAutomationCompositionList().get(0).setDeployState(DeployState.DEPLOYING);
         inputAutomationCompositions.getAutomationCompositionList().get(1).setLockState(LockState.LOCKING);

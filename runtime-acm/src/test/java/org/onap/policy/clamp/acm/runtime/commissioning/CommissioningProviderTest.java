@@ -230,6 +230,12 @@ class CommissioningProviderTest {
         var acTypeStateUpdate = new AcTypeStateUpdate();
         assertThatThrownBy(() -> provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate))
             .hasMessageMatching("There are instances, Priming/Depriming not allowed");
+
+        when(acProvider.getAcInstancesByCompositionId(compositionId)).thenReturn(List.of());
+        when(acProvider.getAcInstancesByTargetCompositionId(compositionId))
+                .thenReturn(List.of(new AutomationComposition()));
+        assertThatThrownBy(() -> provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate))
+                .hasMessageMatching("This compositionId is referenced as a targetCompositionId in the instance table.");
     }
 
     @Test

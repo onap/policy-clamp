@@ -46,6 +46,8 @@ public interface AutomationCompositionRepository extends JpaRepository<JpaAutoma
 
     List<JpaAutomationComposition> findBySubStateIn(Collection<SubState> subStates);
 
+    List<JpaAutomationComposition> findByCompositionTargetId(String compositionTargetId);
+
     Page<JpaAutomationComposition> findByStateChangeResultInAndDeployStateIn(
             Collection<StateChangeResult> stateChangeResults, Collection<DeployState> deployStates,
             Pageable pageable);

@@ -145,6 +145,18 @@ public class AutomationCompositionProvider {
     }
 
     /**
+     * Get all automation compositions by targetCompositionId.
+     *
+     * @param targetCompositionId the target composition ID of the AC definition
+     * @return all automation compositions found
+     */
+    @Transactional(readOnly = true)
+    public List<AutomationComposition> getAcInstancesByTargetCompositionId(UUID targetCompositionId) {
+        return ProviderUtils.asEntityList(automationCompositionRepository
+            .findByCompositionTargetId(targetCompositionId.toString()));
+    }
+
+    /**
      * Get all automation compositions in transition.
      *
      * @return all automation compositions found
