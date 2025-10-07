@@ -20,9 +20,12 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
@@ -47,13 +50,16 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
+import org.onap.policy.models.base.PfModelRuntimeException;
 
 class SupervisionAcHandlerTest {
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
@@ -63,6 +69,10 @@ class SupervisionAcHandlerTest {
 
     @Test
     void testAutomationCompositionDeployAckValidation() {
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        assertNotNull(automationComposition);
+
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var messageProvider = mock(MessageProvider.class);
         var handler = new SupervisionAcHandler(automationCompositionProvider,
@@ -70,8 +80,6 @@ class SupervisionAcHandlerTest {
                 mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
                 mock(AcPreparePublisher.class), messageProvider, mock(EncryptionUtils.class));
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
         automationComposition.setInstanceId(IDENTIFIER);
         var automationCompositionAckMessage =
                 getAutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK,
@@ -107,6 +115,7 @@ class SupervisionAcHandlerTest {
     void testHandleAcMigrationWithStage() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        assertNotNull(automationComposition);
         automationComposition.setInstanceId(IDENTIFIER);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
@@ -131,6 +140,7 @@ class SupervisionAcHandlerTest {
     void testHandleAutomationCompositionStateChangeAckMessage() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        assertNotNull(automationComposition);
         automationComposition.setInstanceId(IDENTIFIER);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
@@ -168,6 +178,7 @@ class SupervisionAcHandlerTest {
     void testHandleAutomationCompositionUpdateAckMessage() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        assertNotNull(automationComposition);
         automationComposition.setInstanceId(IDENTIFIER);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
@@ -193,6 +204,7 @@ class SupervisionAcHandlerTest {
     void testHandleAcUpdateAckFailedMessage() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
@@ -232,6 +244,7 @@ class SupervisionAcHandlerTest {
     void testDeploy() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Deploy");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.UNDEPLOYED);
         deploy(automationComposition);
     }
@@ -240,6 +253,7 @@ class SupervisionAcHandlerTest {
     void testDeployFailed() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Deploy");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.UNDEPLOYING);
         automationComposition.getElements().values()
                 .forEach(element -> element.setDeployState(DeployState.UNDEPLOYING));
@@ -258,6 +272,7 @@ class SupervisionAcHandlerTest {
     void testDeployFailedSimple() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "Deploy");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.UNDEPLOYED);
         automationComposition.getElements().values().iterator().next().setDeployState(DeployState.UNDEPLOYED);
         deploy(automationComposition);
@@ -291,6 +306,7 @@ class SupervisionAcHandlerTest {
     void testUndeploy() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Undeploy");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationComposition.getElements().values()
@@ -318,6 +334,7 @@ class SupervisionAcHandlerTest {
     void testUndeployFailed() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnDeploy");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.getElements().values()
@@ -336,6 +353,7 @@ class SupervisionAcHandlerTest {
     void testUndeployFailedSimple() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "UnDeploy");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.getElements().values().iterator().next().setDeployState(DeployState.UNDEPLOYED);
@@ -351,6 +369,7 @@ class SupervisionAcHandlerTest {
     void testUnlock() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnLock");
+        assertNotNull(automationComposition);
         automationComposition.setLockState(LockState.LOCKED);
         automationComposition.getElements().values()
                 .forEach(element -> element.setLockState(LockState.LOCKED));
@@ -377,6 +396,7 @@ class SupervisionAcHandlerTest {
     void testUnlockFailed() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnLock");
+        assertNotNull(automationComposition);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.setLockState(LockState.LOCKING);
         automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.LOCKING));
@@ -393,6 +413,7 @@ class SupervisionAcHandlerTest {
     void testUnlockSimple() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "UnLock");
+        assertNotNull(automationComposition);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.setLockState(LockState.LOCKING);
         automationComposition.getElements().values().iterator().next().setLockState(LockState.UNLOCKED);
@@ -408,6 +429,7 @@ class SupervisionAcHandlerTest {
     void testLock() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
+        assertNotNull(automationComposition);
         automationComposition.setLockState(LockState.UNLOCKED);
         automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.UNLOCKED));
         lock(automationComposition);
@@ -433,6 +455,7 @@ class SupervisionAcHandlerTest {
     void testLockFailed() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
+        assertNotNull(automationComposition);
         automationComposition.setLockState(LockState.UNLOCKING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.UNLOCKING));
@@ -449,6 +472,7 @@ class SupervisionAcHandlerTest {
     void testLockSimple() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "Lock");
+        assertNotNull(automationComposition);
         automationComposition.setLockState(LockState.UNLOCKING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.getElements().values().iterator().next().setLockState(LockState.LOCKED);
@@ -465,6 +489,7 @@ class SupervisionAcHandlerTest {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        assertNotNull(automationComposition);
         automationComposition.setDeployState(DeployState.DELETING);
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
                 .thenReturn(Optional.of(automationComposition));
@@ -546,6 +571,7 @@ class SupervisionAcHandlerTest {
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
+        assertNotNull(automationComposition);
         handler.prepare(automationComposition, acDefinition);
         verify(acPreparePublisher, timeout(1000)).sendPrepare(any(AutomationComposition.class), anyInt(),
                 any(UUID.class));
@@ -561,7 +587,48 @@ class SupervisionAcHandlerTest {
                 acPreparePublisher, mock(MessageProvider.class), mock(EncryptionUtils.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
+        assertNotNull(automationComposition);
         handler.review(automationComposition, new AutomationCompositionDefinition());
         verify(acPreparePublisher, timeout(1000)).sendReview(any(AutomationComposition.class), any(UUID.class));
+    }
+
+    @Test
+    void testDeployWithInvalidElement_NewState() {
+        var elementNew = new AutomationCompositionElement();
+        elementNew.setDeployState(DeployState.UNDEPLOYED);
+        elementNew.setMigrationState(MigrationState.NEW);
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Deploy");
+        assertNotNull(automationComposition);
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.getElements().put(elementNew.getParticipantId(), elementNew);
+
+        var mockHandler = mock(SupervisionAcHandler.class);
+        var acDefinition = new AutomationCompositionDefinition();
+        doCallRealMethod().when(mockHandler).deploy(automationComposition, acDefinition);
+
+        assertThrows(PfModelRuntimeException.class,
+            () -> mockHandler.deploy(automationComposition, acDefinition));
+    }
+
+    @Test
+    void testDeployWithInvalidElement_RemovedState() {
+        var elementRemoved = new AutomationCompositionElement();
+        elementRemoved.setDeployState(DeployState.UNDEPLOYED);
+        elementRemoved.setMigrationState(MigrationState.REMOVED);
+
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Deploy");
+        assertNotNull(automationComposition);
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.getElements().put(elementRemoved.getParticipantId(), elementRemoved);
+
+        var mockHandler = mock(SupervisionAcHandler.class);
+        var acDefinition = new AutomationCompositionDefinition();
+        doCallRealMethod().when(mockHandler).deploy(automationComposition, acDefinition);
+
+        assertThrows(PfModelRuntimeException.class,
+            () -> mockHandler.deploy(automationComposition, acDefinition));
     }
 }
