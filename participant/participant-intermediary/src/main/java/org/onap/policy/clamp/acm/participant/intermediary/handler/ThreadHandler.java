@@ -36,11 +36,11 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -71,7 +71,7 @@ public class ThreadHandler implements Closeable {
         this.intermediaryApi = intermediaryApi;
         this.cacheProvider = cacheProvider;
         executor = Context.taskWrapping(Executors.newFixedThreadPool(
-                parameters.getIntermediaryParameters().getThreadPoolSize()));
+                parameters.getIntermediaryParameters().getThreadPoolSize(), new AcmThreadFactory()));
         LOGGER.info("ThreadHandler started with thread pool size {}",
                 parameters.getIntermediaryParameters().getThreadPoolSize());
     }
@@ -92,7 +92,7 @@ public class ThreadHandler implements Closeable {
     private void deployProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
             listener.deploy(compositionElement, instanceElement);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element deploy failed {} {}", instanceElement.elementId(),
                 e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -118,7 +118,7 @@ public class ThreadHandler implements Closeable {
     private void undeployProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
             listener.undeploy(compositionElement, instanceElement);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error(
                 "Automation composition element undeploy failed {} {}", instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -144,7 +144,7 @@ public class ThreadHandler implements Closeable {
     private void lockProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
             listener.lock(compositionElement, instanceElement);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element lock failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -170,7 +170,7 @@ public class ThreadHandler implements Closeable {
     private void unlockProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
             listener.unlock(compositionElement, instanceElement);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element unlock failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -196,7 +196,7 @@ public class ThreadHandler implements Closeable {
     private void deleteProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
             listener.delete(compositionElement, instanceElement);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element delete failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(
@@ -226,7 +226,7 @@ public class ThreadHandler implements Closeable {
                                InstanceElementDto instanceElementUpdated) {
         try {
             listener.update(compositionElement, instanceElement, instanceElementUpdated);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element update failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -271,7 +271,7 @@ public class ThreadHandler implements Closeable {
         try {
             listener.prime(composition);
             executionMap.remove(composition.compositionId());
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Composition Defintion prime failed {} {}", composition.compositionId(), e.getMessage());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
                 StateChangeResult.FAILED, "Composition Defintion prime failed");
@@ -294,7 +294,7 @@ public class ThreadHandler implements Closeable {
         try {
             listener.deprime(composition);
             executionMap.remove(composition.compositionId());
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Composition Defintion deprime failed {} {}", composition.compositionId(), e.getMessage());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
                 StateChangeResult.FAILED, "Composition Defintion deprime failed");
@@ -339,7 +339,7 @@ public class ThreadHandler implements Closeable {
         try {
             listener.migrate(compositionElement, compositionElementTarget,
                 instanceElement, instanceElementMigrate, stage);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element migrate failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(
@@ -374,7 +374,7 @@ public class ThreadHandler implements Closeable {
         try {
             listener.migratePrecheck(compositionElement, compositionElementTarget, instanceElement,
                 instanceElementMigrate);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element migrate precheck failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(
@@ -401,7 +401,7 @@ public class ThreadHandler implements Closeable {
     private void reviewProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
             listener.review(compositionElement, instanceElement);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element Review failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(
@@ -430,7 +430,7 @@ public class ThreadHandler implements Closeable {
         int stage) {
         try {
             listener.prepare(compositionElement, instanceElement, stage);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element prepare Pre Deploy failed {} {}",
                 instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(
@@ -465,7 +465,7 @@ public class ThreadHandler implements Closeable {
         try {
             listener.rollbackMigration(compositionElement, compositionElementRollback, instanceElement,
                     instanceElementRollback, stage);
-        } catch (PfModelException e) {
+        } catch (Exception e) {
             LOGGER.error("Automation composition element rollback failed {} {}",
                     instanceElement.elementId(), e.getMessage());
             intermediaryApi.updateAutomationCompositionElementState(

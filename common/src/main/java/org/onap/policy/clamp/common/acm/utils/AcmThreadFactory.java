@@ -18,24 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.supervision;
+package org.onap.policy.clamp.common.acm.utils;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import java.util.concurrent.ThreadFactory;
+import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.junit.jupiter.api.Test;
+public class AcmThreadFactory implements ThreadFactory {
 
-class AcmThreadFactoryTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AcmThreadFactory.class);
 
-    @Test
-    void test() throws InterruptedException {
-        var threadFactory = spy(new AcmThreadFactory());
-        var thread = threadFactory.newThread(new Thread(() -> {
-            throw new RuntimeException("Error");
-        }));
-        thread.start();
-        thread.join();
-        verify(threadFactory).uncaughtException(any(), any());
+    protected void uncaughtException(Thread t, Throwable e) {
+        LOGGER.error("Uncaught Exception: {}", e.getMessage(), e);
+    }
+
+    @Override
+    public Thread newThread(@NonNull Runnable r) {
+        final var thread = new Thread(r);
+        thread.setUncaughtExceptionHandler(this::uncaughtException);
+        return thread;
     }
 }

@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
+import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MsgExecutor {
 
-    private final ExecutorService executor = Context.taskWrapping(Executors.newSingleThreadExecutor());
+    private final ExecutorService executor =
+            Context.taskWrapping(Executors.newSingleThreadExecutor(new AcmThreadFactory()));
     private static final Logger LOGGER = LoggerFactory.getLogger(MsgExecutor.class);
 
     private final CacheProvider cacheProvider;
