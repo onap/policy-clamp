@@ -75,6 +75,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationComposition
             columnName: name
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: name
+        - dropDefaultValue:
+            tableName: AutomationComposition
+            columnName: name
 
   - changeSet:
       id: 1701-4
@@ -92,6 +99,13 @@ databaseChangeLog:
                   value: '1.0.0'
             where: version IS NULL
         - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: version
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: version
+        - dropDefaultValue:
             tableName: AutomationComposition
             columnName: version
 
@@ -113,6 +127,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationComposition
             columnName: deployState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: deployState
+        - dropDefaultValue:
+            tableName: AutomationComposition
+            columnName: deployState
 
   - changeSet:
       id: 1701-6
@@ -130,6 +151,13 @@ databaseChangeLog:
                   valueNumeric: 4
             where: lockState IS NULL
         - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: lockState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: lockState
+        - dropDefaultValue:
             tableName: AutomationComposition
             columnName: lockState
 
@@ -151,6 +179,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationComposition
             columnName: subState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: subState
+        - dropDefaultValue:
+            tableName: AutomationComposition
+            columnName: subState
 
   - changeSet:
       id: 1701-8
@@ -164,6 +199,10 @@ databaseChangeLog:
                   valueComputed: CURRENT_TIMESTAMP
             where: lastMsg IS NULL
         - addNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: lastMsg
+      rollback:
+        - dropNotNullConstraint:
             tableName: AutomationComposition
             columnName: lastMsg
 
@@ -185,6 +224,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionElement
             columnName: definition_name
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: definition_name
+        - dropDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: definition_name
 
   - changeSet:
       id: 1701-10
@@ -202,6 +248,13 @@ databaseChangeLog:
                   value: '0.0.0'
             where: definition_version IS NULL
         - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: definition_version
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: definition_version
+        - dropDefaultValue:
             tableName: AutomationCompositionElement
             columnName: definition_version
 
@@ -223,6 +276,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionElement
             columnName: deployState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: deployState
+        - dropDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: deployState
 
   - changeSet:
       id: 1701-12
@@ -240,6 +300,13 @@ databaseChangeLog:
                   valueNumeric: 4
             where: lockState IS NULL
         - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: lockState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: lockState
+        - dropDefaultValue:
             tableName: AutomationCompositionElement
             columnName: lockState
 
@@ -261,6 +328,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionElement
             columnName: subState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: subState
+        - dropDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: subState
 
   - changeSet:
       id: 1701-14
@@ -278,6 +352,13 @@ databaseChangeLog:
                   value: '{}'
             where: outProperties IS NULL
         - addNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: outProperties
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: outProperties
+        - dropDefaultValue:
             tableName: AutomationCompositionElement
             columnName: outProperties
 
@@ -299,6 +380,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionElement
             columnName: properties
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionElement
+            columnName: properties
+        - dropDefaultValue:
+            tableName: AutomationCompositionElement
+            columnName: properties
 
   - changeSet:
       id: 1701-16
@@ -318,6 +406,10 @@ databaseChangeLog:
             referencedColumnNames: compositionId
             onUpdate: RESTRICT
             onDelete: RESTRICT
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: AutomationComposition
+            constraintName: ac_composition_fk
 
   - changeSet:
       id: 1701-17
@@ -335,6 +427,13 @@ databaseChangeLog:
                   value: ''
             where: name IS NULL
         - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: name
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: name
+        - dropDefaultValue:
             tableName: AutomationCompositionDefinition
             columnName: name
 
@@ -356,6 +455,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionDefinition
             columnName: version
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: version
+        - dropDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: version
 
   - changeSet:
       id: 1701-19
@@ -373,6 +479,13 @@ databaseChangeLog:
                   valueNumeric: 0
             where: state IS NULL
         - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: state
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: state
+        - dropDefaultValue:
             tableName: AutomationCompositionDefinition
             columnName: state
 
@@ -394,6 +507,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionDefinition
             columnName: serviceTemplate
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: serviceTemplate
+        - dropDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: serviceTemplate
 
   - changeSet:
       id: 1701-21
@@ -407,6 +527,10 @@ databaseChangeLog:
                   valueComputed: CURRENT_TIMESTAMP
             where: lastMsg IS NULL
         - addNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: lastMsg
+      rollback:
+        - dropNotNullConstraint:
             tableName: AutomationCompositionDefinition
             columnName: lastMsg
 
@@ -428,6 +552,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: NodeTemplateState
             columnName: nodeTemplate_name
+      rollback:
+        - dropNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_name
+        - dropDefaultValue:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_name
 
   - changeSet:
       id: 1701-23
@@ -445,6 +576,13 @@ databaseChangeLog:
                   value: '1.0.0'
             where: nodeTemplate_version IS NULL
         - addNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_version
+      rollback:
+        - dropNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: nodeTemplate_version
+        - dropDefaultValue:
             tableName: NodeTemplateState
             columnName: nodeTemplate_version
 
@@ -466,6 +604,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: NodeTemplateState
             columnName: outProperties
+      rollback:
+        - dropNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: outProperties
+        - dropDefaultValue:
+            tableName: NodeTemplateState
+            columnName: outProperties
 
   - changeSet:
       id: 1701-25
@@ -485,6 +630,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: NodeTemplateState
             columnName: state
+      rollback:
+        - dropNotNullConstraint:
+            tableName: NodeTemplateState
+            columnName: state
+        - dropDefaultValue:
+            tableName: NodeTemplateState
+            columnName: state
 
   - changeSet:
       id: 1701-26
@@ -501,6 +653,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: identificationId
+      rollback:
+        - dropIndex:
+            indexName: mb_identificationId_index
+            tableName: Message
 
   - changeSet:
       id: 1701-27
@@ -516,6 +672,10 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: ParticipantReplica
             columnName: lastMsg
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: lastMsg
 
   - changeSet:
       id: 1701-28
@@ -526,6 +686,13 @@ databaseChangeLog:
             columnName: participantId
             defaultValue: ''
         - addNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: participantId
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: participantId
+        - dropDefaultValue:
             tableName: ParticipantReplica
             columnName: participantId
 
@@ -547,6 +714,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: ParticipantReplica
             columnName: participantState
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ParticipantReplica
+            columnName: participantState
+        - dropDefaultValue:
+            tableName: ParticipantReplica
+            columnName: participantState
 
   - changeSet:
       id: 1701-30
@@ -557,6 +731,13 @@ databaseChangeLog:
             columnName: participantId
             defaultValue: ''
         - addNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: participantId
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: participantId
+        - dropDefaultValue:
             tableName: ParticipantSupportedAcElements
             columnName: participantId
 
@@ -578,6 +759,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: ParticipantSupportedAcElements
             columnName: typeName
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeName
+        - dropDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeName
 
   - changeSet:
       id: 1701-32
@@ -597,3 +785,17 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: ParticipantSupportedAcElements
             columnName: typeVersion
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeVersion
+        - dropDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: typeVersion
+
+  - changeSet:
+      id: 1701-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1701

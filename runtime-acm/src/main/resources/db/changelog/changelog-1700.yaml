@@ -102,3 +102,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: identificationId
+
+  - changeSet:
+      id: 1700-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1700
