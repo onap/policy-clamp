@@ -26,6 +26,13 @@ databaseChangeLog:
         - dropColumn:
             tableName: AutomationCompositionElement
             columnName: restarting
+      rollback:
+        - addColumn:
+            tableName: AutomationCompositionElement
+            columns:
+              - column:
+                  name: restarting
+                  type: BOOLEAN
 
   - changeSet:
       author: policy
@@ -34,6 +41,13 @@ databaseChangeLog:
         - dropColumn:
             tableName: NodeTemplateState
             columnName: restarting
+      rollback:
+        - addColumn:
+            tableName: NodeTemplateState
+            columns:
+              - column:
+                  name: restarting
+                  type: BOOLEAN
 
   - changeSet:
       author: policy
@@ -67,6 +81,13 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationCompositionDefinition
             columnName: stateChangeResult
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationCompositionDefinition
+            columnName: stateChangeResult
+        - dropDefaultValue:
+            tableName: AutomationCompositionDefinition
+            columnName: stateChangeResult
 
   - changeSet:
       id: 1800-5
@@ -86,3 +107,17 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: AutomationComposition
             columnName: stateChangeResult
+      rollback:
+        - dropNotNullConstraint:
+            tableName: AutomationComposition
+            columnName: stateChangeResult
+        - dropDefaultValue:
+            tableName: AutomationComposition
+            columnName: stateChangeResult
+
+  - changeSet:
+      id: 1800-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1800

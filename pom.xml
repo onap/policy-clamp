@@ -64,13 +64,21 @@
         <module>participant</module>
     </modules>
 
-    <!-- Fix transitive dependencies' vulnerabilities -->
     <dependencyManagement>
         <dependencies>
+            <!-- Fix transitive dependencies' vulnerabilities -->
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
                 <version>4.2.5.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Dependencies specific to clamp repo -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>1.21.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
