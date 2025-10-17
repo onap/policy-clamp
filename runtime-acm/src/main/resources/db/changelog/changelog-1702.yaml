@@ -67,6 +67,11 @@ databaseChangeLog:
             tableName: AutomationComposition
             columnName: phase
             newDataType: INT
+      rollback:
+        - modifyDataType:
+            tableName: AutomationComposition
+            columnName: phase
+            newDataType: SMALLINT
 
   - changeSet:
       author: policy
@@ -76,6 +81,11 @@ databaseChangeLog:
             tableName: AutomationCompositionElement
             columnName: stage
             newDataType: INT
+      rollback:
+        - modifyDataType:
+            tableName: AutomationCompositionElement
+            columnName: stage
+            newDataType: SMALLINT
 
   - changeSet:
       author: policy
@@ -84,6 +94,11 @@ databaseChangeLog:
         - dropDefaultValue:
             tableName: ParticipantReplica
             columnName: participantId
+      rollback:
+        - addDefaultValue:
+            tableName: ParticipantReplica
+            columnName: participantId
+            defaultValue: ''
 
   - changeSet:
       author: policy
@@ -97,6 +112,13 @@ databaseChangeLog:
         - dropColumn:
             tableName: AutomationComposition
             columnName: restarting
+      rollback:
+        - addColumn:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: restarting
+                  type: BOOLEAN
 
   - changeSet:
       author: policy
@@ -110,6 +132,13 @@ databaseChangeLog:
         - dropColumn:
             tableName: AutomationCompositionDefinition
             columnName: restarting
+      rollback:
+        - addColumn:
+            tableName: AutomationCompositionDefinition
+            columns:
+              - column:
+                  name: restarting
+                  type: BOOLEAN
 
   - changeSet:
       author: policy
@@ -123,6 +152,13 @@ databaseChangeLog:
         - dropColumn:
             tableName: Participant
             columnName: participantState
+      rollback:
+        - addColumn:
+            tableName: Participant
+            columns:
+              - column:
+                  name: participantState
+                  type: SMALLINT
 
   - changeSet:
       author: policy
@@ -136,3 +172,18 @@ databaseChangeLog:
         - dropColumn:
             tableName: Participant
             columnName: lastMsg
+      rollback:
+        - addColumn:
+            tableName: Participant
+            columns:
+              - column:
+                  name: lastMsg
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 1702-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1702

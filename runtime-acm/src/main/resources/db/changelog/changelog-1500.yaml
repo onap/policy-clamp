@@ -155,3 +155,10 @@ databaseChangeLog:
             referencedColumnNames: participantId
             onUpdate: RESTRICT
             onDelete: RESTRICT
+
+  - changeSet:
+      id: 1500-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1500

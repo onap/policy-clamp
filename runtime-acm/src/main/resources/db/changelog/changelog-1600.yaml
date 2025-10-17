@@ -69,3 +69,10 @@ databaseChangeLog:
               - column:
                   name: stage
                   type: SMALLINT
+
+  - changeSet:
+      id: 1600-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1600
