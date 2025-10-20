@@ -47,7 +47,7 @@ RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
 COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY --chown=policy:policy acm-runtime.sh bin/
+COPY --chown=policy:policy acm-runtime.sh liquibase.sh bin/
 COPY --chown=policy:policy /maven/policy-clamp-runtime-acm.jar /app/app.jar
 
 RUN pip uninstall -y setuptools || true

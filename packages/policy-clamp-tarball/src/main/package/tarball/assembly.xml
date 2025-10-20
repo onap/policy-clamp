@@ -47,5 +47,13 @@
             <outputDirectory>${file.separator}etc${file.separator}ssl</outputDirectory>
             <lineEnding>keep</lineEnding>
         </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/liquibase</directory>
+            <includes>
+                <include>*.yaml</include>
+            </includes>
+            <outputDirectory>${file.separator}etc${file.separator}liquibase${file.separator}db${file.separator}changelog</outputDirectory>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
     </fileSets>
 </assembly>
