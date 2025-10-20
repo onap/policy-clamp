@@ -26,6 +26,16 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
+            <directory>${project.basedir}/src/main/resources/bin
+            </directory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <outputDirectory>${file.separator}bin</outputDirectory>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0555</fileMode>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/resources/etc
             </directory>
             <includes>
@@ -46,6 +56,14 @@
             </includes>
             <outputDirectory>${file.separator}etc${file.separator}ssl</outputDirectory>
             <lineEnding>keep</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/liquibase</directory>
+            <includes>
+                <include>*.yaml</include>
+            </includes>
+            <outputDirectory>${file.separator}etc${file.separator}liquibase${file.separator}db${file.separator}changelog</outputDirectory>
+            <lineEnding>unix</lineEnding>
         </fileSet>
     </fileSets>
 </assembly>
