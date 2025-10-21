@@ -70,10 +70,6 @@ public class AutomationCompositionHandler {
      * @param stateChangeMsg the state change message
      */
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
-        if (stateChangeMsg.getAutomationCompositionId() == null) {
-            return;
-        }
-
         var automationComposition = cacheProvider.getAutomationComposition(stateChangeMsg.getAutomationCompositionId());
 
         if (automationComposition == null) {
@@ -291,10 +287,6 @@ public class AutomationCompositionHandler {
      * @param migrationMsg the AutomationCompositionMigration
      */
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
-        if (migrationMsg.getAutomationCompositionId() == null || migrationMsg.getCompositionTargetId() == null) {
-            return;
-        }
-
         var automationComposition = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
         if (automationComposition == null) {
             LOGGER.debug("Automation composition {} does not use this participant",

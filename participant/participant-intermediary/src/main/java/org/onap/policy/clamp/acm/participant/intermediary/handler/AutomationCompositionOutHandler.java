@@ -160,12 +160,16 @@ public class AutomationCompositionOutHandler {
         }
 
         if (!SubState.NONE.equals(element.getSubState())) {
-            handleSubState(automationComposition, element, stateChangeResult);
+            if (!StateChangeResult.FAILED.equals(stateChangeResult)) {
+                element.setSubState(SubState.NONE);
+            }
         } else if (deployState != null) {
-            handleDeployState(automationComposition, element, deployState, stateChangeResult);
+            element.setDeployState(deployState);
+            element.setLockState(
+                    DeployState.DEPLOYED.equals(element.getDeployState()) ? LockState.LOCKED : LockState.NONE);
         }
         if (lockState != null) {
-            handleLockState(automationComposition, element, lockState, stateChangeResult);
+            element.setLockState(lockState);
         }
 
         var acStateChangeAck = createAutomationCompositionDeployAck();
@@ -208,59 +212,6 @@ public class AutomationCompositionOutHandler {
         acStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
         acStateChangeAck.setResult(true);
         return acStateChangeAck;
-    }
-
-    private void handleDeployState(AutomationComposition automationComposition, AutomationCompositionElement element,
-            DeployState deployState, StateChangeResult stateChangeResult) {
-        element.setDeployState(deployState);
-        element.setLockState(DeployState.DEPLOYED.equals(element.getDeployState()) ? LockState.LOCKED : LockState.NONE);
-        if (StateChangeResult.FAILED.equals(stateChangeResult)) {
-            return;
-        }
-        var checkOpt = automationComposition.getElements().values().stream()
-                .filter(acElement -> !deployState.equals(acElement.getDeployState())).findAny();
-        if (checkOpt.isEmpty()) {
-            if (DeployState.DEPLOYED.equals(automationComposition.getDeployState())
-                    && automationComposition.getCompositionTargetId() != null) {
-                // migration scenario
-                automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
-                automationComposition.setCompositionTargetId(null);
-            }
-            automationComposition.setDeployState(deployState);
-            automationComposition.setLockState(element.getLockState());
-            automationComposition.setSubState(SubState.NONE);
-
-            if (DeployState.DELETED.equals(deployState)) {
-                cacheProvider.removeAutomationComposition(automationComposition.getInstanceId());
-            }
-        }
-    }
-
-    private void handleLockState(AutomationComposition automationComposition, AutomationCompositionElement element,
-            LockState lockState, StateChangeResult stateChangeResult) {
-        element.setLockState(lockState);
-        if (StateChangeResult.FAILED.equals(stateChangeResult)) {
-            return;
-        }
-        var checkOpt = automationComposition.getElements().values().stream()
-                .filter(acElement -> !lockState.equals(acElement.getLockState())).findAny();
-        if (checkOpt.isEmpty()) {
-            automationComposition.setLockState(lockState);
-            automationComposition.setSubState(SubState.NONE);
-        }
-    }
-
-    private void handleSubState(AutomationComposition automationComposition, AutomationCompositionElement element,
-            StateChangeResult stateChangeResult) {
-        if (StateChangeResult.FAILED.equals(stateChangeResult)) {
-            return;
-        }
-        element.setSubState(SubState.NONE);
-        var checkOpt = automationComposition.getElements().values().stream()
-                .filter(acElement -> !SubState.NONE.equals(acElement.getSubState())).findAny();
-        if (checkOpt.isEmpty()) {
-            automationComposition.setSubState(SubState.NONE);
-        }
     }
 
     /**
