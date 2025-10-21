@@ -46,6 +46,30 @@
       },
       "revId": "872bf08c73aadd2483aa9232182185828fae53f8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a372d56a_67e36fb4",
+        "filename": "packages/policy-clamp-tarball/src/main/package/tarball/assembly.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-10-21T12:10:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "69972d47_7878e9c8",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "872bf08c73aadd2483aa9232182185828fae53f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
