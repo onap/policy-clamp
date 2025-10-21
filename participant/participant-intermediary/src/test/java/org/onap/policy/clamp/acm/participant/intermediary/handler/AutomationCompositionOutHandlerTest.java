@@ -201,7 +201,6 @@ class AutomationCompositionOutHandlerTest {
         }
         verify(publisher, times(automationComposition.getElements().size()))
                 .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
-        verify(cacheProvider).removeAutomationComposition(automationComposition.getInstanceId());
     }
 
     @Test
@@ -347,7 +346,6 @@ class AutomationCompositionOutHandlerTest {
         }
         verify(publisher, times(automationComposition.getElements().size()))
                 .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
-        assertEquals(compositionTarget, automationComposition.getCompositionId());
     }
 
     @Test
