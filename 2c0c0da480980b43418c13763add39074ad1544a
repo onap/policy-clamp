@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aa3ea18_11ba6439",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-10-22T10:45:12Z",
+      "side": 1,
+      "message": "coverage is pretty good, but a few chunks of if/else not tested for the extra scenarios (like this https://sonarcloud.io/component_measures?metric\u003dnew_coverage\u0026selected\u003donap_policy-clamp%3Aparticipant%2Fparticipant-intermediary%2Fsrc%2Fmain%2Fjava%2Forg%2Fonap%2Fpolicy%2Fclamp%2Facm%2Fparticipant%2Fintermediary%2Fhandler%2FAcSubStateHandler.java\u0026view\u003dlist\u0026branch\u003d142303-2\u0026id\u003donap_policy-clamp )",
+      "revId": "2c0c0da480980b43418c13763add39074ad1544a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
