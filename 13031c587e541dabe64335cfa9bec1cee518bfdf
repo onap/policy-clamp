@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0538817_10176754",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-10-22T09:18:20Z",
+      "side": 1,
+      "message": "license",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 46
+      },
+      "revId": "13031c587e541dabe64335cfa9bec1cee518bfdf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
