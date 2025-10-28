@@ -63,7 +63,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateReso
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
@@ -315,7 +315,7 @@ class AutomationCompositionInstantiationProviderTest {
         InstantiationUtils.assertInstantiationResponse(preCheckResponse, automationCompositionTarget);
 
         automationCompositionTarget.setPrecheck(false);
-        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED,
+        AcmStateUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED,
                 SubState.NONE);
         var instantiationResponse = instantiationProvider.updateAutomationComposition(compositionId,
                 automationCompositionTarget);
@@ -596,15 +596,17 @@ class AutomationCompositionInstantiationProviderTest {
     @Test
     void testRollbackSuccess() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var acDefinition = CommonTestData.createAcDefinition(serviceTemplateMigration, AcTypeState.PRIMED);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_MIGRATE_JSON, "Crud");
         var instanceId = UUID.randomUUID();
+        var compositionTargetId = UUID.randomUUID();
         automationComposition.setInstanceId(instanceId);
         automationComposition.setCompositionId(compositionId);
+        automationComposition.setCompositionTargetId(compositionTargetId);
         automationComposition.setDeployState(DeployState.MIGRATING);
         automationComposition.setLockState(LockState.LOCKED);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
@@ -617,7 +619,6 @@ class AutomationCompositionInstantiationProviderTest {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
 
         var rollbackRecord = new AutomationCompositionRollback();
-        var compositionTargetId = UUID.randomUUID();
         rollbackRecord.setCompositionId(compositionTargetId);
         rollbackRecord.setInstanceId(instanceId);
         rollbackRecord.setElements(acRollback.getElements());
@@ -629,7 +630,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
                 new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, new AcRuntimeParameterGroup(),
                 encryptionUtils);
-        var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplateMigration, AcTypeState.PRIMED);
         when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(acDefinitionTarget);
 
         instantiationProvider.rollback(compositionId, automationComposition.getInstanceId());

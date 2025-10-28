@@ -49,7 +49,8 @@ public class AutomationCompositionMigrationPublisher
     public void send(AutomationComposition automationComposition, int stage, UUID revisionIdComposition,
                      UUID revisionIdCompositionTarget) {
         var acMigration = new AutomationCompositionMigration();
-        acMigration.setRollback(DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()));
+        var rollback = DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState());
+        acMigration.setRollback(rollback);
         acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
         acMigration.setCompositionId(automationComposition.getCompositionId());
         acMigration.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -59,7 +60,8 @@ public class AutomationCompositionMigrationPublisher
         acMigration.setRevisionIdInstance(automationComposition.getRevisionId());
         acMigration.setRevisionIdComposition(revisionIdComposition);
         acMigration.setRevisionIdCompositionTarget(revisionIdCompositionTarget);
-        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE);
+        var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition,
+                rollback ? DeployOrder.MIGRATION_REVERT : DeployOrder.MIGRATE);
         acMigration.setParticipantUpdatesList(participantUpdatesList);
         acMigration.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));

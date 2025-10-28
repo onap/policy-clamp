@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,35 +18,23 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.concepts;
+package org.onap.policy.clamp.models.acm.utils;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ParticipantUtils {
+public final class AcmStageUtils {
     private static final String STAGE_MIGRATE = "migrate";
     private static final String STAGE_PREPARE = "prepare";
-    public static final String DEFAULT_TIMEOUT = "maxOperationWaitMs";
-    public static final String PRIME_TIMEOUT = "primeTimeoutMs";
-    public static final String DEPRIME_TIMEOUT = "deprimeTimeoutMs";
-    public static final String DEPLOY_TIMEOUT = "deployTimeoutMs";
-    public static final String UNDEPLOY_TIMEOUT = "undeployTimeoutMs";
-    public static final String UPDATE_TIMEOUT = "updateTimeoutMs";
-    public static final String MIGRATE_TIMEOUT = "migrateTimeoutMs";
-    public static final String DELETE_TIMEOUT = "deleteTimeoutMs";
-
-    public static final Map<DeployState, String> MAP_TIMEOUT = Map.of(DeployState.DEPLOYING, DEPLOY_TIMEOUT,
-            DeployState.UNDEPLOYING, UNDEPLOY_TIMEOUT,
-            DeployState.UPDATING, UPDATE_TIMEOUT,
-            DeployState.MIGRATING, MIGRATE_TIMEOUT,
-            DeployState.DELETING, DELETE_TIMEOUT);
 
     /**
      * Get the First StartPhase.
@@ -59,25 +47,25 @@ public final class ParticipantUtils {
      * @return the First StartPhase
      */
     public static int getFirstStartPhase(
-        AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate) {
+            AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate) {
         var minStartPhase = 1000;
         var maxStartPhase = 0;
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                .get(element.getDefinition().getName());
+                    .get(element.getDefinition().getName());
             int startPhase = toscaNodeTemplate != null
                     && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
-                    ? ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
+                    ? findStartPhase(toscaNodeTemplate.getProperties()) : 0;
             minStartPhase = Math.min(minStartPhase, startPhase);
             maxStartPhase = Math.max(maxStartPhase, startPhase);
         }
 
-        return DeployState.DEPLOYING.equals(automationComposition.getDeployState())
-            || LockState.UNLOCKING.equals(automationComposition.getLockState()) ? minStartPhase : maxStartPhase;
+        return AcmStateUtils.isForward(automationComposition.getDeployState(), automationComposition.getLockState())
+                ? minStartPhase : maxStartPhase;
     }
 
     /**
-     * Get the First Stage.
+     * Get the First Stage from AutomationComposition.
      *
      * @param automationComposition the automation composition
      * @param toscaServiceTemplate the ToscaServiceTemplate
@@ -85,19 +73,39 @@ public final class ParticipantUtils {
      */
     public static int getFirstStage(AutomationComposition automationComposition,
             ToscaServiceTemplate toscaServiceTemplate) {
-        Set<Integer> minStage = new HashSet<>();
-        for (var element : automationComposition.getElements().values()) {
-            if (! MigrationState.REMOVED.equals(element.getMigrationState())) {
-                var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                        .get(element.getDefinition().getName());
-                var stage = DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                        ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
-                        : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
-                minStage.addAll(stage);
-            }
+        var stages = automationComposition.getElements().values().stream()
+                .map(element -> getFirstStage(element, toscaServiceTemplate));
+        return stages.min(Integer::compare).orElse(0);
+    }
 
+    /**
+     * Get the First Stage from AutomationCompositionElement.
+     *
+     * @param element the automation composition element
+     * @param toscaServiceTemplate the ToscaServiceTemplate
+     * @return the First stage
+     */
+    public static int getFirstStage(AutomationCompositionElement element, ToscaServiceTemplate toscaServiceTemplate) {
+        var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                .get(element.getDefinition().getName());
+        if (toscaNodeTemplate == null) {
+            return 0;
         }
-        return minStage.stream().min(Integer::compare).orElse(0);
+        return getFirstStage(element.getDeployState(), toscaNodeTemplate.getProperties());
+    }
+
+    /**
+     * Get the First Stage.
+     *
+     * @param deployState the DeployState
+     * @param properties Map of properties
+     * @return the First stage
+     */
+    public static int getFirstStage(DeployState deployState, Map<String, Object> properties) {
+        var stageSet = AcmStateUtils.isMigrating(deployState)
+                ? findStageSetMigrate(properties)
+                : findStageSetPrepare(properties);
+        return stageSet.stream().min(Integer::compare).orElse(0);
     }
 
     /**
@@ -127,42 +135,6 @@ public final class ParticipantUtils {
             return findStageSet(objStage);
         }
         return Set.of(0);
-    }
-
-    /**
-     * Get timeout value from properties by name operation, return default value if not present.
-     *
-     * @param properties instance properties
-     * @param name the operation name
-     * @param defaultValue the default value
-     * @return the timeout value
-     */
-    public static long getTimeout(Map<String, Object> properties, String name, long defaultValue) {
-        var objTimeout = properties.get(name);
-        if (objTimeout != null) {
-            return Long.parseLong(objTimeout.toString());
-        }
-        return defaultValue;
-    }
-
-    /**
-     * Get operation name of a composition definition.
-     *
-     * @param state the state of the composition definition
-     * @return the operation name
-     */
-    public static String getOpName(AcTypeState state) {
-        return AcTypeState.PRIMING.equals(state) ? PRIME_TIMEOUT : DEPRIME_TIMEOUT;
-    }
-
-    /**
-     * Get operation name of a AutomationComposition.
-     *
-     * @param deployState the state of the AutomationComposition
-     * @return the operation name
-     */
-    public static String getOpName(DeployState deployState) {
-        return MAP_TIMEOUT.getOrDefault(deployState, DEFAULT_TIMEOUT);
     }
 
     /**

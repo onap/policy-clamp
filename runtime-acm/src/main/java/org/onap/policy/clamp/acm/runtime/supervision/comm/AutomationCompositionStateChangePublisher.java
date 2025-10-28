@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,8 +52,8 @@ public class AutomationCompositionStateChangePublisher
         acsc.setCompositionId(automationComposition.getCompositionId());
         acsc.setAutomationCompositionId(automationComposition.getInstanceId());
         acsc.setMessageId(UUID.randomUUID());
-        acsc.setDeployOrderedState(AcmUtils.stateDeployToOrder(automationComposition.getDeployState()));
-        acsc.setLockOrderedState(AcmUtils.stateLockToOrder(automationComposition.getLockState()));
+        acsc.setDeployOrderedState(AcmStateUtils.stateDeployToOrder(automationComposition.getDeployState()));
+        acsc.setLockOrderedState(AcmStateUtils.stateLockToOrder(automationComposition.getLockState()));
         acsc.setStartPhase(startPhase);
         acsc.setFirstStartPhase(firstStartPhase);
         acsc.setRevisionIdInstance(automationComposition.getRevisionId());

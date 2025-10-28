@@ -128,6 +128,22 @@ public class CommonTestData {
     }
 
     /**
+     * Get Object from json string.
+     *
+     * @param json the json
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getJson(final String json, Class<T> clazz) {
+        try {
+            return CODER.decode(json, clazz);
+        } catch (CoderException e) {
+            fail("Cannot decode " + json);
+            return null;
+        }
+    }
+
+    /**
      * Get new AutomationCompositionElementDefinition.
      *
      * @param id the ToscaConceptIdentifier

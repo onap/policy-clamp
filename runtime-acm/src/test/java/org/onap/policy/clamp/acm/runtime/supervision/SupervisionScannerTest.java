@@ -397,10 +397,10 @@ class SupervisionScannerTest {
         when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(Optional.of(automationComposition));
 
-        var definitionTarget = createAutomationCompositionDefinition(AcTypeState.PRIMED);
-        definitionTarget.setCompositionId(compositionTargetId);
+        var acDefinitionTarget = createAutomationCompositionDefinition(AcTypeState.PRIMED);
+        acDefinitionTarget.setCompositionId(compositionTargetId);
         var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMED);
-        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(definitionTarget);
+        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(acDefinitionTarget);
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setCompositionId(COMPOSITION_ID);
         when(acDefinitionProvider.getAcDefinition(COMPOSITION_ID)).thenReturn(acDefinition);
@@ -415,8 +415,8 @@ class SupervisionScannerTest {
                 messageProvider, monitoringScanner);
 
         supervisionScanner.run();
-        verify(stageScanner).scanStage(automationComposition, definitionTarget, new UpdateSync(),
-                acDefinition.getRevisionId());
+        verify(stageScanner).scanStage(automationComposition, acDefinition, new UpdateSync(),
+                acDefinitionTarget.getRevisionId());
         verify(messageProvider).removeJob(JOB_ID);
     }
 

@@ -58,7 +58,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
      */
     @Override
     public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
-        LOGGER.debug("deploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("deploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.deploy(instanceElement.instanceId(), instanceElement.elementId(),
                 instanceElement.outProperties());
     }
@@ -71,53 +71,53 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
      */
     @Override
     public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
-        LOGGER.debug("undeploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("undeploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
                 instanceElement.outProperties());
     }
 
     @Override
     public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
-        LOGGER.debug("lock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("lock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.lock(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
     public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
-        LOGGER.debug("unlock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("unlock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.unlock(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
     public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
-        LOGGER.debug("delete call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("delete call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
     public void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
                        InstanceElementDto instanceElementUpdated) {
-        LOGGER.debug("update call compositionElement: {}, instanceElement: {}, instanceElementUpdated: {}",
+        LOGGER.info("update call compositionElement: {}, instanceElement: {}, instanceElementUpdated: {}",
                 compositionElement, instanceElement, instanceElementUpdated);
         simulatorService.update(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
     public void prime(CompositionDto composition) {
-        LOGGER.debug("prime call composition: {}", composition);
+        LOGGER.info("prime call composition: {}", composition);
         simulatorService.prime(composition);
     }
 
     @Override
     public void deprime(CompositionDto composition) {
-        LOGGER.debug("deprime call composition: {}", composition);
+        LOGGER.info("deprime call composition: {}", composition);
         simulatorService.deprime(composition);
     }
 
     @Override
     public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
                         InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate, int stage) {
-        LOGGER.debug("migrate call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
+        LOGGER.info("migrate call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
                 + " instanceElementMigrate: {}, stage: {}",
             compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate, stage);
 
@@ -127,8 +127,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
         if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
             simulatorService.deleteInMigration(instanceElement.instanceId(), instanceElement.elementId());
         } else {
+            var nextStage = intermediaryApi.getMigrateNextStage(compositionElementTarget, stage);
             simulatorService.migrate(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId(), stage,
-                    compositionElementTarget.inProperties(), instanceElementMigrate.outProperties());
+                    nextStage, instanceElementMigrate.outProperties());
         }
     }
 
@@ -136,7 +137,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     public void migratePrecheck(CompositionElementDto compositionElement,
             CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
             InstanceElementDto instanceElementMigrate) {
-        LOGGER.debug("migrate precheck call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
+        LOGGER.info("migrate precheck call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
                         + " instanceElementMigrate: {}",
                 compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
         simulatorService.migratePrecheck(instanceElement.instanceId(), instanceElement.elementId());
@@ -144,14 +145,15 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
 
     @Override
     public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement, int stage) {
-        LOGGER.debug("prepare call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("prepare call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        var nextStage = intermediaryApi.getPrepareNextStage(compositionElement, stage);
         simulatorService.prepare(instanceElement.instanceId(), instanceElement.elementId(),
-                stage, compositionElement.inProperties(), instanceElement.outProperties());
+                stage, nextStage, instanceElement.outProperties());
     }
 
     @Override
     public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
-        LOGGER.debug("review call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        LOGGER.info("review call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.review(instanceElement.instanceId(), instanceElement.elementId());
     }
 
@@ -159,7 +161,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     public void rollbackMigration(CompositionElementDto compositionElement,
             CompositionElementDto compositionElementRollback, InstanceElementDto instanceElement,
             InstanceElementDto instanceElementRollback, int stage) {
-        LOGGER.debug("rollback call compositionElement: {}, compositionElementRollback: {}, instanceElement: {},"
+        LOGGER.info("rollback call compositionElement: {}, compositionElementRollback: {}, instanceElement: {},"
                         + " instanceElementRollback: {}, stage: {}",
                 compositionElement, compositionElementRollback, instanceElement, instanceElementRollback, stage);
 
@@ -169,8 +171,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
         if (ElementState.REMOVED.equals(instanceElementRollback.state())) {
             simulatorService.deleteInRollback(instanceElement.instanceId(), instanceElement.elementId());
         } else {
+            var nextStage = intermediaryApi.getRollbackNextStage(compositionElementRollback, stage);
             simulatorService.rollback(instanceElementRollback.instanceId(), instanceElementRollback.elementId(), stage,
-                    compositionElementRollback.inProperties(), instanceElementRollback.outProperties());
+                    nextStage, instanceElementRollback.outProperties());
         }
     }
 }

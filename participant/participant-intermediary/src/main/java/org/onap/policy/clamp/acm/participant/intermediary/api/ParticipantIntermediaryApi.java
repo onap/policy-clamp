@@ -158,4 +158,31 @@ public interface ParticipantIntermediaryApi {
      */
     void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message);
+
+    /**
+     * Get next stage in Migration.
+     *
+     * @param compositionElementTarget the CompositionElementDto target
+     * @param lastStage the last stage completed
+     * @return the next stage or lastStage if migration completed
+     */
+    int getMigrateNextStage(CompositionElementDto compositionElementTarget, int lastStage);
+
+    /**
+     * Get next stage in Rollback.
+     *
+     * @param compositionElementRollback the CompositionElementDto rollback target
+     * @param lastStage the last stage completed
+     * @return the next stage or lastStage if rollback completed
+     */
+    int getRollbackNextStage(CompositionElementDto compositionElementRollback, int lastStage);
+
+    /**
+     * Get next stage in Prepare.
+     *
+     * @param compositionElement the CompositionElementDto
+     * @param lastStage the last stage completed
+     * @return the next stage or lastStage if prepare completed
+     */
+    int getPrepareNextStage(CompositionElementDto compositionElement, int lastStage);
 }

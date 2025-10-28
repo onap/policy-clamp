@@ -24,12 +24,11 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -115,7 +114,7 @@ public class SimpleScanner extends AbstractScanner {
      */
     public void simpleScan(final AutomationComposition automationComposition, UpdateSync updateSync) {
         var completed = automationComposition.getElements().values().stream()
-                .filter(element -> AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
+                .filter(element -> AcmStateUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
                         element.getSubState())).findFirst().isEmpty();
 
         if (completed) {

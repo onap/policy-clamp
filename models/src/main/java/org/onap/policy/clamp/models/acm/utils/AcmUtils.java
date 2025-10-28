@@ -45,16 +45,12 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
-import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.persistence.concepts.StringToMapConverter;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
@@ -199,7 +195,7 @@ public final class AcmUtils {
      * @return the result of validation
      */
     public static BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition,
-            ToscaServiceTemplate serviceTemplate, String toscaCompositionName, boolean migrateOperation) {
+            ToscaServiceTemplate serviceTemplate, String toscaCompositionName, int removeElement) {
         var result = new BeanValidationResult(ENTRY + automationComposition.getName(), automationComposition);
 
         var map = getMapToscaNodeTemplates(serviceTemplate);
@@ -222,8 +218,7 @@ public final class AcmUtils {
                     .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
             // @formatter:on
 
-            if (definitions.size() != automationComposition.getElements().size()
-                    && !migrateOperation) {
+            if (definitions.size() != (automationComposition.getElements().size() - removeElement)) {
                 result.setResult(ValidationStatus.INVALID,
                             "Elements of the instance not matching with the elements of the composition");
             }
@@ -238,13 +233,15 @@ public final class AcmUtils {
     }
 
     private static ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-                                                       ToscaConceptIdentifier definition,
-                                                       MigrationState migrationState) {
+            ToscaConceptIdentifier definition, MigrationState migrationState) {
+        if (MigrationState.REMOVED.equals(migrationState)) {
+            return null;
+        }
         var result = new BeanValidationResult(ENTRY + definition.getName(), definition);
         var identifier = definitions.get(definition.getName());
-        if (identifier == null && MigrationState.DEFAULT.equals(migrationState)) {
+        if (identifier == null) {
             result.setResult(ValidationStatus.INVALID, "Not found");
-        } else if (! definition.equals(identifier) && MigrationState.DEFAULT.equals(migrationState)) {
+        } else if (! definition.equals(identifier)) {
             result.setResult(ValidationStatus.INVALID, "Version not matching");
         }
         return (result.isClean() ? null : result);
@@ -283,135 +280,6 @@ public final class AcmUtils {
                     map.get(new ToscaConceptIdentifier(elementMap.get("name"), elementMap.get("version"))))
             .toList();
         // @formatter:on
-    }
-
-
-    /**
-     * Return true if DeployState, LockState and SubState are in a Transitional State.
-     *
-     * @param deployState the DeployState
-     * @param lockState the LockState
-     * @param subState the SubState
-     * @return true if there is a state in a Transitional State
-     */
-    public static boolean isInTransitionalState(DeployState deployState, LockState lockState, SubState subState) {
-        return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
-                || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
-                || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState)
-                || DeployState.MIGRATING.equals(deployState) || DeployState.MIGRATION_REVERTING.equals(deployState)
-                || !SubState.NONE.equals(subState);
-    }
-
-    /**
-     * Get DeployOrder from transitional DeployState.
-     *
-     * @param deployState the Deploy State
-     * @return the DeployOrder
-     */
-    public static DeployOrder stateDeployToOrder(DeployState deployState) {
-        return switch (deployState) {
-            case DEPLOYING -> DeployOrder.DEPLOY;
-            case UNDEPLOYING -> DeployOrder.UNDEPLOY;
-            case DELETING -> DeployOrder.DELETE;
-            default -> DeployOrder.NONE;
-        };
-    }
-
-    /**
-     * Get LockOrder from transitional LockState.
-     *
-     * @param lockState the Lock State
-     * @return the LockOrder
-     */
-    public static LockOrder stateLockToOrder(LockState lockState) {
-        if (LockState.LOCKING.equals(lockState)) {
-            return LockOrder.LOCK;
-        } else if (LockState.UNLOCKING.equals(lockState)) {
-            return LockOrder.UNLOCK;
-        }
-        return LockOrder.NONE;
-    }
-
-    /**
-     * Get final DeployState from transitional DeployState.
-     *
-     * @param deployState the DeployState
-     * @return the DeployState
-     */
-    public static DeployState deployCompleted(DeployState deployState) {
-        return switch (deployState) {
-            case MIGRATING, MIGRATION_REVERTING, UPDATING, DEPLOYING -> DeployState.DEPLOYED;
-            case UNDEPLOYING -> DeployState.UNDEPLOYED;
-            case DELETING -> DeployState.DELETED;
-            default -> deployState;
-        };
-    }
-
-    /**
-     * Get final LockState from transitional LockState.
-     *
-     * @param lockState the LockState
-     * @return the LockState
-     */
-    public static LockState lockCompleted(DeployState deployState, LockState lockState) {
-        if (LockState.LOCKING.equals(lockState) || DeployState.DEPLOYING.equals(deployState)) {
-            return LockState.LOCKED;
-        } else if (LockState.UNLOCKING.equals(lockState)) {
-            return LockState.UNLOCKED;
-        } else if (DeployState.UNDEPLOYING.equals(deployState)) {
-            return LockState.NONE;
-        }
-        return lockState;
-    }
-
-    /**
-     * Return true if transition states is Forward.
-     *
-     * @param deployState the DeployState
-     * @param lockState the LockState
-     * @return true if transition if Forward
-     */
-    public static boolean isForward(DeployState deployState, LockState lockState) {
-        return DeployState.DEPLOYING.equals(deployState) || LockState.UNLOCKING.equals(lockState);
-    }
-
-    /**
-     * Set the states on the automation composition and on all its automation composition elements.
-     *
-     * @param deployState the DeployState we want the automation composition to transition to
-     * @param lockState the LockState we want the automation composition to transition to
-     */
-    public static void setCascadedState(final AutomationComposition automationComposition,
-            final DeployState deployState, final LockState lockState) {
-        setCascadedState(automationComposition, deployState, lockState, SubState.NONE);
-    }
-
-    /**
-     /**
-     * Set the states on the automation composition and on all its automation composition elements.
-     *
-     * @param deployState the DeployState we want the automation composition to transition to
-     * @param lockState the LockState we want the automation composition to transition to
-     * @param subState the SubState we want the automation composition to transition to
-     */
-    public static void setCascadedState(final AutomationComposition automationComposition,
-        final DeployState deployState, final LockState lockState, final SubState subState) {
-        automationComposition.setDeployState(deployState);
-        automationComposition.setLockState(lockState);
-        automationComposition.setLastMsg(TimestampHelper.now());
-        automationComposition.setSubState(subState);
-
-        if (MapUtils.isEmpty(automationComposition.getElements())) {
-            return;
-        }
-
-        for (var element : automationComposition.getElements().values()) {
-            element.setDeployState(deployState);
-            element.setLockState(lockState);
-            element.setSubState(subState);
-            element.setMessage(null);
-            element.setStage(null);
-        }
     }
 
     /**

@@ -39,12 +39,8 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -63,22 +59,6 @@ class AcmUtilsTest {
     public static final String AUTOMATION_COMPOSITION_ELEMENT =
             "org.onap.policy.clamp.acm.AutomationCompositionElement";
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
-
-    @Test
-    void testIsInTransitionalState() {
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE)).isFalse();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYING, LockState.NONE, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.UNDEPLOYING, LockState.NONE, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKING, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATING, LockState.LOCKED, SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATION_REVERTING, LockState.LOCKED,
-                SubState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED,
-                SubState.MIGRATION_PRECHECKING)).isTrue();
-    }
 
     @Test
     void testCheckIfNodeTemplateIsAutomationCompositionElement() {
@@ -134,13 +114,13 @@ class AcmUtilsTest {
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
         var automationComposition = CommonTestData.getJsonObject(AC_INSTANTIATION_JSON, AutomationComposition.class);
         var result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
-                AUTOMATION_COMPOSITION_NODE_TYPE, false);
+                AUTOMATION_COMPOSITION_NODE_TYPE, 0);
         assertTrue(result.isValid());
 
         var element = automationComposition.getElements().values().iterator().next();
         automationComposition.getElements().remove(element.getId());
         result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
-                AUTOMATION_COMPOSITION_NODE_TYPE, false);
+                AUTOMATION_COMPOSITION_NODE_TYPE, 0);
         assertFalse(result.isValid());
         assertThat(result.getMessage()).contains("not matching");
     }
@@ -150,7 +130,7 @@ class AcmUtilsTest {
         var automationComposition = getDummyAutomationComposition();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
         var result = AcmUtils.validateAutomationComposition(automationComposition,
-                toscaServiceTemplate, AUTOMATION_COMPOSITION_NODE_TYPE, false);
+                toscaServiceTemplate, AUTOMATION_COMPOSITION_NODE_TYPE, 0);
         assertNotNull(result);
         assertFalse(result.isValid());
 
@@ -160,56 +140,13 @@ class AcmUtilsTest {
         nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
         toscaServiceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
         result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate,
-                AUTOMATION_COMPOSITION_NODE_TYPE, false);
+                AUTOMATION_COMPOSITION_NODE_TYPE, 0);
         assertFalse(result.isValid());
 
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
         result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
-                AUTOMATION_COMPOSITION_NODE_TYPE, false);
+                AUTOMATION_COMPOSITION_NODE_TYPE, 0);
         assertFalse(result.isValid());
-    }
-
-    @Test
-    void testStateDeployToOrder() {
-        // from transitional state to order state
-        assertEquals(DeployOrder.DEPLOY, AcmUtils.stateDeployToOrder(DeployState.DEPLOYING));
-        assertEquals(DeployOrder.UNDEPLOY, AcmUtils.stateDeployToOrder(DeployState.UNDEPLOYING));
-        assertEquals(DeployOrder.DELETE, AcmUtils.stateDeployToOrder(DeployState.DELETING));
-        assertEquals(DeployOrder.NONE, AcmUtils.stateDeployToOrder(DeployState.DEPLOYED));
-    }
-
-    @Test
-    void testStateLockToOrder() {
-        // from transitional state to order state
-        assertEquals(LockOrder.LOCK, AcmUtils.stateLockToOrder(LockState.LOCKING));
-        assertEquals(LockOrder.UNLOCK, AcmUtils.stateLockToOrder(LockState.UNLOCKING));
-        assertEquals(LockOrder.NONE, AcmUtils.stateLockToOrder(LockState.NONE));
-    }
-
-    @Test
-    void testDeployCompleted() {
-        // from transitional state to final state
-        assertEquals(DeployState.DEPLOYED, AcmUtils.deployCompleted(DeployState.DEPLOYING));
-        assertEquals(DeployState.UNDEPLOYED, AcmUtils.deployCompleted(DeployState.UNDEPLOYING));
-        assertEquals(DeployState.DEPLOYED, AcmUtils.deployCompleted(DeployState.DEPLOYED));
-        assertEquals(DeployState.DELETED, AcmUtils.deployCompleted(DeployState.DELETING));
-    }
-
-    @Test
-    void testLockCompleted() {
-        // from transitional state to final state
-        assertEquals(LockState.LOCKED, AcmUtils.lockCompleted(DeployState.DEPLOYING, LockState.NONE));
-        assertEquals(LockState.LOCKED, AcmUtils.lockCompleted(DeployState.DEPLOYED, LockState.LOCKING));
-        assertEquals(LockState.UNLOCKED, AcmUtils.lockCompleted(DeployState.DEPLOYED, LockState.UNLOCKING));
-        assertEquals(LockState.NONE, AcmUtils.lockCompleted(DeployState.UNDEPLOYING, LockState.LOCKED));
-    }
-
-    @Test
-    void testIsForward() {
-        assertTrue(AcmUtils.isForward(DeployState.DEPLOYING, LockState.NONE));
-        assertTrue(AcmUtils.isForward(DeployState.DEPLOYED, LockState.UNLOCKING));
-        assertFalse(AcmUtils.isForward(DeployState.DEPLOYED, LockState.LOCKING));
-        assertFalse(AcmUtils.isForward(DeployState.UNDEPLOYING, LockState.LOCKED));
     }
 
     @Test
