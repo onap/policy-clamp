@@ -38,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
@@ -297,7 +298,9 @@ public class CommonTestData {
             createAutomationCompositionElementDefinitionList(AutomationComposition automationComposition) {
         List<AutomationCompositionElementDefinition> definitions = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {
-            definitions.add(createAutomationCompositionElementDefinition(element.getDefinition()));
+            if (!MigrationState.REMOVED.equals(element.getMigrationState())) {
+                definitions.add(createAutomationCompositionElementDefinition(element.getDefinition()));
+            }
         }
         return definitions;
     }

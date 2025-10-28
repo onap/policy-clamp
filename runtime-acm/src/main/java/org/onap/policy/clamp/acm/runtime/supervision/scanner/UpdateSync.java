@@ -20,6 +20,9 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import lombok.Data;
 
 @Data
@@ -27,6 +30,7 @@ public class UpdateSync {
     private boolean toBeDelete = false;
     private boolean updated = false;
     private boolean toBeSync = false;
+    private Set<UUID> participantRemoved = new HashSet<>();
 
     /**
      * Or operator with other update/sync information.
@@ -37,5 +41,6 @@ public class UpdateSync {
         this.updated |= updateSync.updated;
         this.toBeSync |= updateSync.toBeSync;
         this.toBeDelete |= updateSync.toBeDelete;
+        this.participantRemoved.addAll(updateSync.participantRemoved);
     }
 }

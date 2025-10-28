@@ -40,7 +40,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
@@ -52,6 +51,8 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
@@ -98,7 +99,7 @@ public class AutomationCompositionInstantiationProvider {
 
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         AcDefinitionProvider.checkPrimedComposition(acDefinition);
-        var validationResult = validateAutomationComposition(automationComposition, acDefinition, false);
+        var validationResult = validateAutomationComposition(automationComposition, acDefinition, 0);
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         } else {
@@ -138,7 +139,7 @@ public class AutomationCompositionInstantiationProvider {
             acFromDb.setVersion(automationComposition.getVersion());
             acFromDb.setDescription(automationComposition.getDescription());
             acFromDb.setDerivedFrom(automationComposition.getDerivedFrom());
-            var validationResult = validateAutomationComposition(acFromDb, acDefinition, false);
+            var validationResult = validateAutomationComposition(acFromDb, acDefinition, 0);
             if (!validationResult.isValid()) {
                 throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
             } else {
@@ -201,7 +202,7 @@ public class AutomationCompositionInstantiationProvider {
             AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
         }
 
-        var validationResult = validateAutomationComposition(acToBeUpdated, acDefinition, false);
+        var validationResult = validateAutomationComposition(acToBeUpdated, acDefinition, 0);
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         } else {
@@ -248,14 +249,14 @@ public class AutomationCompositionInstantiationProvider {
 
     private void updateAcForMigration(AutomationComposition acFromDb,
                                       AutomationCompositionDefinition acDefinition, DeployState deployState) {
-        AcmUtils.setCascadedState(acFromDb, deployState, LockState.LOCKED);
+        AcmStateUtils.setCascadedState(acFromDb, deployState, LockState.LOCKED);
         acFromDb.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var stage = ParticipantUtils.getFirstStage(acFromDb, acDefinition.getServiceTemplate());
+        var stage = AcmStageUtils.getFirstStage(acFromDb, acDefinition.getServiceTemplate());
         acFromDb.setPhase(stage);
     }
 
     private void updateAcForProperties(AutomationComposition acToBeUpdated) {
-        AcmUtils.setCascadedState(acToBeUpdated, DeployState.UPDATING, acToBeUpdated.getLockState());
+        AcmStateUtils.setCascadedState(acToBeUpdated, DeployState.UPDATING, acToBeUpdated.getLockState());
         acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
     }
 
@@ -281,7 +282,7 @@ public class AutomationCompositionInstantiationProvider {
         // Publish migrate event to the participants
         supervisionAcHandler.migratePrecheck(copyAc, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId());
 
-        AcmUtils.setCascadedState(acToBeUpdated, DeployState.DEPLOYED, LockState.LOCKED,
+        AcmStateUtils.setCascadedState(acToBeUpdated, DeployState.DEPLOYED, LockState.LOCKED,
             SubState.MIGRATION_PRECHECKING);
         acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
 
@@ -296,12 +297,12 @@ public class AutomationCompositionInstantiationProvider {
      * @return the result of validation
      */
     private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition,
-            AutomationCompositionDefinition acDefinition, boolean migrateOperation) {
+            AutomationCompositionDefinition acDefinition, int removeElement) {
         var result = new BeanValidationResult("AutomationComposition", automationComposition);
         participantProvider.checkRegisteredParticipant(acDefinition);
         result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
                 acDefinition.getServiceTemplate(),
-            acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName(), migrateOperation));
+            acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName(), removeElement));
 
         result.addResult(automationCompositionProvider.validateElementIds(automationComposition));
 
@@ -450,12 +451,11 @@ public class AutomationCompositionInstantiationProvider {
         var automationCompositionToRollback =
             automationCompositionProvider.getAutomationCompositionRollback(instanceId);
         var acFromDbCopy = new AutomationComposition(acFromDb);
-        acFromDbCopy.setCompositionTargetId(automationCompositionToRollback.getCompositionId());
         acFromDbCopy.setElements(automationCompositionToRollback.getElements().values().stream()
                 .collect(Collectors.toMap(AutomationCompositionElement::getId, AutomationCompositionElement::new)));
 
-        var acDefinitionTarget = acDefinitionProvider.getAcDefinition(acFromDbCopy.getCompositionTargetId());
-        var validationResult = validateAutomationComposition(acFromDbCopy, acDefinitionTarget, true);
+        var acDefinition = acDefinitionProvider.getAcDefinition(acFromDbCopy.getCompositionId());
+        var validationResult = validateAutomationComposition(acFromDbCopy, acDefinition, 0);
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
@@ -469,9 +469,9 @@ public class AutomationCompositionInstantiationProvider {
             }
         }
 
-        updateAcForMigration(acFromDbCopy, acDefinitionTarget, DeployState.MIGRATION_REVERTING);
+        updateAcForMigration(acFromDbCopy, acDefinition, DeployState.MIGRATION_REVERTING);
         automationCompositionProvider.updateAutomationComposition(acFromDbCopy);
-        var acDefinition = acDefinitionProvider.getAcDefinition(acFromDbCopy.getCompositionId());
+        var acDefinitionTarget = acDefinitionProvider.getAcDefinition(acFromDbCopy.getCompositionTargetId());
         supervisionAcHandler.migrate(acFromDbCopy, acDefinition.getRevisionId(), acDefinitionTarget.getRevisionId());
     }
 
@@ -499,7 +499,7 @@ public class AutomationCompositionInstantiationProvider {
         elementsRemoved.forEach(element -> acFromDb.getElements().get(element.getId())
                 .setMigrationState(MigrationState.REMOVED));
 
-        var validationResult = validateAutomationComposition(acFromDb, acDefinitionTarget, true);
+        var validationResult = validateAutomationComposition(acFromDb, acDefinitionTarget, elementsRemoved.size());
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         } else {
@@ -514,11 +514,11 @@ public class AutomationCompositionInstantiationProvider {
         for (var element : acFromDb.getElements().values()) {
             var name = element.getDefinition().getName();
             var migrationState = element.getMigrationState();
-            if (MigrationState.REMOVED.equals(migrationState) && oldAcDefinition != null) {
-                var participantId = oldAcDefinition.getElementStateMap().get(name).getParticipantId();
-                element.setParticipantId(participantId);
-            } else {
+            if (MigrationState.DEFAULT.equals(migrationState) || MigrationState.NEW.equals(migrationState)) {
                 var participantId = acDefinitionTarget.getElementStateMap().get(name).getParticipantId();
+                element.setParticipantId(participantId);
+            } else if (MigrationState.REMOVED.equals(migrationState) && oldAcDefinition != null) {
+                var participantId = oldAcDefinition.getElementStateMap().get(name).getParticipantId();
                 element.setParticipantId(participantId);
             }
         }

@@ -37,7 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
@@ -48,6 +48,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryApi {
+
+    private static final int MAX_STAGES = 1000;
 
     // The handler for the automationComposition intermediary
     private final AutomationCompositionOutHandler automationCompositionHandler;
@@ -83,6 +85,35 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message) {
         automationCompositionHandler.updateCompositionState(compositionId, state, stateChangeResult, message);
+    }
+
+    @Override
+    public int getMigrateNextStage(CompositionElementDto compositionElementTarget, int lastStage) {
+        var stageSet = AcmStageUtils.findStageSetMigrate(compositionElementTarget.inProperties());
+        var nextStage = MAX_STAGES;
+        for (var s : stageSet) {
+            if (s > lastStage) {
+                nextStage = Math.min(s, nextStage);
+            }
+        }
+        return nextStage == MAX_STAGES ? lastStage : nextStage;
+    }
+
+    @Override
+    public int getRollbackNextStage(CompositionElementDto compositionElementRollback, int lastStage) {
+        return getMigrateNextStage(compositionElementRollback, lastStage);
+    }
+
+    @Override
+    public int getPrepareNextStage(CompositionElementDto compositionElement, int lastStage) {
+        var stageSet = AcmStageUtils.findStageSetPrepare(compositionElement.inProperties());
+        var nextStage = MAX_STAGES;
+        for (var s : stageSet) {
+            if (s > lastStage) {
+                nextStage = Math.min(s, nextStage);
+            }
+        }
+        return nextStage == MAX_STAGES ? lastStage : nextStage;
     }
 
     @Override

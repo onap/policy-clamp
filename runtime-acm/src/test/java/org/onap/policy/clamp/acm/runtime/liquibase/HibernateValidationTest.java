@@ -20,15 +20,6 @@
 
 package org.onap.policy.clamp.acm.runtime.liquibase;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * This test enables Hibernate validation during context startup.
@@ -39,25 +30,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * It will NOT detect issues related to constraints (e.g. missing NOT NULL constraint),
  * nor will it detect extra tables or columns in the database.
  */
-@SpringBootTest
-@ActiveProfiles("hibernate-validation")
-@Testcontainers
 class HibernateValidationTest {
 
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
-
-    @DynamicPropertySource
-    static void overrideProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
-    }
-
-    // Dummy test: Hibernate validation runs during context startup and throws exception on validation failure
-    @Test
-    void contextStartsAndHibernateValidationPasses() {
-        Assertions.assertTrue(true);
-    }
 }

@@ -27,9 +27,9 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -76,7 +76,7 @@ public class AcLockHandler {
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                     .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
+            int startPhase = AcmStageUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
                 element.setLockState(LockState.LOCKING);
                 element.setSubState(SubState.NONE);
@@ -95,7 +95,7 @@ public class AcLockHandler {
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                     .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
+            int startPhase = AcmStageUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
                 element.setLockState(LockState.UNLOCKING);
                 element.setSubState(SubState.NONE);

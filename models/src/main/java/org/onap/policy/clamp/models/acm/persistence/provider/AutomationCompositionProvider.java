@@ -43,7 +43,7 @@ import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompos
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRollbackRepository;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfConceptKey;
@@ -109,7 +109,7 @@ public class AutomationCompositionProvider {
      */
     public AutomationComposition createAutomationComposition(final AutomationComposition automationComposition) {
         automationComposition.setInstanceId(UUID.randomUUID());
-        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
+        AcmStateUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
             JpaAutomationComposition::new, "automation composition"));
 

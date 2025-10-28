@@ -42,12 +42,13 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
@@ -109,10 +110,10 @@ public class SupervisionAcHandler {
                 }
             }
         } else {
-            AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYING, LockState.NONE);
+            AcmStateUtils.setCascadedState(automationComposition, DeployState.DEPLOYING, LockState.NONE);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+        var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
@@ -142,10 +143,10 @@ public class SupervisionAcHandler {
                 }
             }
         } else {
-            AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYING, LockState.NONE);
+            AcmStateUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYING, LockState.NONE);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+        var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> automationCompositionStateChangePublisher.send(automationComposition,
@@ -170,10 +171,10 @@ public class SupervisionAcHandler {
                 }
             }
         } else {
-            AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.UNLOCKING);
+            AcmStateUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.UNLOCKING);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+        var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
@@ -189,9 +190,10 @@ public class SupervisionAcHandler {
      */
     public void prepare(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         LOGGER.info("Prepare pre-deploy request received for instanceID: {}", automationComposition.getInstanceId());
-        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE, SubState.PREPARING);
+        AcmStateUtils
+                .setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE, SubState.PREPARING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var stage = ParticipantUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
+        var stage = AcmStageUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(stage);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> {
@@ -209,7 +211,8 @@ public class SupervisionAcHandler {
      */
     public void review(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         LOGGER.info("Prepare post-deploy request received for instanceID: {}", automationComposition.getInstanceId());
-        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
+        AcmStateUtils
+                .setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> acPreparePublisher.sendReview(automationComposition, acDefinition.getRevisionId()));
@@ -233,10 +236,10 @@ public class SupervisionAcHandler {
                 }
             }
         } else {
-            AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKING);
+            AcmStateUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKING);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+        var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
@@ -265,9 +268,9 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void delete(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
+        AcmStateUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+        var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
@@ -348,7 +351,7 @@ public class SupervisionAcHandler {
         if ((acAckMessage.getStage() == null)
             && (acAckMessage.getAutomationCompositionResultMap() != null)) {
             for (var el : acAckMessage.getAutomationCompositionResultMap().values()) {
-                if (AcmUtils.isInTransitionalState(el.getDeployState(), el.getLockState(), SubState.NONE)) {
+                if (AcmStateUtils.isInTransitionalState(el.getDeployState(), el.getLockState(), SubState.NONE)) {
                     LOGGER.error("Not valid AutomationCompositionDeployAck message, states are not valid");
                     return false;
                 }

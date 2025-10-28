@@ -164,12 +164,32 @@ public class CacheProvider {
      */
     public Map<String, Object> getCommonProperties(@NonNull UUID compositionId,
         @NonNull ToscaConceptIdentifier definition) {
-        var acDefinition = acElementsDefinitions.get(compositionId);
-        if (acDefinition == null) {
-            return new HashMap<>();
-        }
-        var map = acDefinition.getElements().get(definition);
+        var map = getAcElementDefinition(acElementsDefinitions.get(compositionId), definition);
         return map != null ? map.getAutomationCompositionElementToscaNodeTemplate().getProperties() : new HashMap<>();
+    }
+
+    /**
+     * Get AutomationCompositionElementDefinition from AcDefinition and ToscaConceptIdentifier.
+     *
+     * @param acDefinition the AcDefinition
+     * @param definition the ToscaConceptIdentifier
+     * @return the AutomationCompositionElementDefinition
+     */
+    public AutomationCompositionElementDefinition getAcElementDefinition(AcDefinition acDefinition,
+            ToscaConceptIdentifier definition) {
+        if (acDefinition == null) {
+            return null;
+        }
+        var acDefinitionElement = acDefinition.getElements().get(definition);
+        if (acDefinitionElement == null) {
+            var val = acDefinition.getElements().entrySet().stream()
+                    .filter(entry -> definition.getName().equals(entry.getKey().getName()))
+                    .findFirst();
+            if (val.isPresent()) {
+                acDefinitionElement = val.get().getValue();
+            }
+        }
+        return acDefinitionElement;
     }
 
     /**
@@ -323,9 +343,10 @@ public class CacheProvider {
      */
     public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element) {
         var acDefinition = acElementsDefinitions.get(compositionId);
-        var acDefinitionElement = acDefinition != null ? acDefinition.getElements().get(element.getDefinition()) : null;
+        var acDefinitionElement = getAcElementDefinition(acDefinition, element.getDefinition());
 
-        return (acDefinitionElement != null) ? new CompositionElementDto(compositionId, element.getDefinition(),
+        return (acDefinitionElement != null) ? new CompositionElementDto(compositionId,
+                acDefinitionElement.getAcElementDefinitionId(),
                 acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
                 acDefinitionElement.getOutProperties()) :
             new CompositionElementDto(compositionId, element.getDefinition(),
@@ -344,10 +365,9 @@ public class CacheProvider {
         var acDefinition = acElementsDefinitions.get(compositionId);
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var acDefinitionElement = (acDefinition != null) ? acDefinition.getElements().get(element.getDefinition()) :
-                    null;
+            var acDefinitionElement = getAcElementDefinition(acDefinition, element.getDefinition());
             var compositionElement = (acDefinitionElement != null)
-                    ? new CompositionElementDto(compositionId, element.getDefinition(),
+                    ? new CompositionElementDto(compositionId, acDefinitionElement.getAcElementDefinitionId(),
                     acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
                     acDefinitionElement.getOutProperties()) :
                     new CompositionElementDto(compositionId, element.getDefinition(),

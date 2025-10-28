@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElement
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.ParticipantIntermediaryApiImpl;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -230,7 +232,7 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void testMigrateStage() {
         var config = CommonTestData.createSimConfig();
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var intermediaryApi = spy(new ParticipantIntermediaryApiImpl(mock(), mock()));
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
@@ -248,7 +250,7 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void testMigrateAdd() {
         var config = CommonTestData.createSimConfig();
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var intermediaryApi = spy(new ParticipantIntermediaryApiImpl(mock(), mock()));
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
@@ -381,11 +383,10 @@ class AutomationCompositionElementHandlerTest {
             null, StateChangeResult.FAILED, "Migration rollback failed");
     }
 
-
     @Test
     void testRollbackStage() {
         var config = CommonTestData.createSimConfig();
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var intermediaryApi = spy(new ParticipantIntermediaryApiImpl(mock(), mock()));
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);

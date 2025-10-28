@@ -44,6 +44,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
@@ -142,7 +143,7 @@ public class AutomationCompositionOutHandler {
         }
 
         if ((deployState != null && lockState != null) || (deployState == null && lockState == null)
-                || AcmUtils.isInTransitionalState(deployState, lockState, SubState.NONE)) {
+                || AcmStateUtils.isInTransitionalState(deployState, lockState, SubState.NONE)) {
             LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
             return;
         }
