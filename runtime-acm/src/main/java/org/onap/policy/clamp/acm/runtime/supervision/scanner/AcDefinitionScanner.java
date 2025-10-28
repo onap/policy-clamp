@@ -25,10 +25,10 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmTimeoutUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,8 +145,8 @@ public class AcDefinitionScanner {
             LOGGER.debug("The ac definition is in timeout {}", acDefinition.getCompositionId());
             return result;
         }
-        var name = ParticipantUtils.getOpName(acDefinition.getState());
-        var maxWaitMs = ParticipantUtils
+        var name = AcmTimeoutUtils.getOpName(acDefinition.getState());
+        var maxWaitMs = AcmTimeoutUtils
                 .getTimeout(acDefinition.getServiceTemplate().getMetadata(), name, maxOperationWaitMs);
         var lastMsg = TimestampHelper.toEpochMilli(acDefinition.getLastMsg());
         var now = TimestampHelper.nowEpochMilli();

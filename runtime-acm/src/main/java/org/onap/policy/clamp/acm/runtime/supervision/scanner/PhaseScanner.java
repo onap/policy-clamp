@@ -28,9 +28,9 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublish
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -79,10 +79,10 @@ public class PhaseScanner extends AbstractScanner {
                     .get(element.getDefinition().getName());
             int startPhase = toscaNodeTemplate != null
                     && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
-                    ? ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
+                    ? AcmStageUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
             defaultMin = Math.min(defaultMin, startPhase);
             defaultMax = Math.max(defaultMax, startPhase);
-            if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
+            if (AcmStateUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
                     element.getSubState())) {
                 completed = false;
                 minSpNotCompleted = Math.min(minSpNotCompleted, startPhase);
@@ -96,8 +96,8 @@ public class PhaseScanner extends AbstractScanner {
             LOGGER.debug("automation composition scan: transition state {} {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
-            var isForward =
-                    AcmUtils.isForward(automationComposition.getDeployState(), automationComposition.getLockState());
+            var isForward = AcmStateUtils
+                    .isForward(automationComposition.getDeployState(), automationComposition.getLockState());
 
             var nextSpNotCompleted = isForward ? minSpNotCompleted : maxSpNotCompleted;
 

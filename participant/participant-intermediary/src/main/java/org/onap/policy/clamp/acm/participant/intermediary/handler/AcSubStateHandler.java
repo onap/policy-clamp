@@ -32,10 +32,10 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,7 +188,7 @@ public class AcSubStateHandler {
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
             var compositionElement = cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(),
                 element);
-            var stageSet = ParticipantUtils.findStageSetPrepare(compositionInProperties);
+            var stageSet = AcmStageUtils.findStageSetPrepare(compositionInProperties);
             if (stageSet.contains(stageMsg)) {
                 var instanceElement =
                         new InstanceElementDto(instanceId, elementDeploy.getId(), elementDeploy.getProperties(),

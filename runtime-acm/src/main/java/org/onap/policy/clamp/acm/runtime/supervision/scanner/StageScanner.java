@@ -21,10 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
@@ -33,14 +30,12 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionM
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.MigrationState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -84,13 +79,13 @@ public class StageScanner extends AbstractScanner {
         var minStageNotCompleted = 1000; // min stage not completed
         List<UUID> elementsDeleted = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {
-            if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
+            if (AcmStateUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
                     element.getSubState())) {
-                var minStage = calculateMinStage(element, automationComposition, acDefinition);
-                int stage = element.getStage() != null ? element.getStage() : minStage;
+                var firstStage = AcmStageUtils.getFirstStage(element, acDefinition.getServiceTemplate());
+                int stage = element.getStage() != null ? element.getStage() : firstStage;
                 minStageNotCompleted = Math.min(minStageNotCompleted, stage);
                 completed = false;
-            } else if (DeployState.DELETED.equals(element.getDeployState())
+            } else if (element.getDeployState().equals(DeployState.DELETED)
                     && automationComposition.getStateChangeResult().equals(StateChangeResult.NO_ERROR)) {
                 // Migration with successful removal of element
                 elementsDeleted.add(element.getId());
@@ -115,27 +110,12 @@ public class StageScanner extends AbstractScanner {
             savePhase(automationComposition, minStageNotCompleted);
             updateSync.setUpdated(true);
             saveAndSync(automationComposition, updateSync);
-            LOGGER.debug("retry message AutomationCompositionMigration");
             var acToSend = new AutomationComposition(automationComposition);
             decryptInstanceProperties(acToSend);
             sendNextStage(acToSend, minStageNotCompleted, revisionIdComposition, acDefinition);
         } else {
             handleTimeout(automationComposition, updateSync);
         }
-    }
-
-    private Integer calculateMinStage(AutomationCompositionElement element, AutomationComposition automationComposition,
-                                      AutomationCompositionDefinition acDefinition) {
-        Set<Integer> stageSet = new HashSet<>();
-        if (! MigrationState.REMOVED.equals(element.getMigrationState())) {
-            var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
-                    .get(element.getDefinition().getName());
-            stageSet = DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                    || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
-                    ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
-                    : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
-        }
-        return stageSet.stream().min(Comparator.comparing(Integer::valueOf)).orElse(0);
     }
 
     private void removeDeletedElements(AutomationComposition automationComposition, List<UUID> elementsDeleted,
@@ -150,14 +130,16 @@ public class StageScanner extends AbstractScanner {
 
     private void sendNextStage(final AutomationComposition automationComposition, int minStageNotCompleted,
             UUID revisionIdComposition, AutomationCompositionDefinition acDefinition) {
-        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
-            LOGGER.debug("retry message AutomationCompositionMigration");
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            LOGGER.debug("retry migrating message AutomationCompositionMigration");
             // acDefinition for migration is the Composition target
             acMigrationPublisher.send(automationComposition, minStageNotCompleted, revisionIdComposition,
                     acDefinition.getRevisionId());
-        }
-        if (SubState.PREPARING.equals(automationComposition.getSubState())) {
+        } else if (DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
+            LOGGER.debug("retry rollback message AutomationCompositionMigration");
+            acMigrationPublisher.send(automationComposition, minStageNotCompleted, acDefinition.getRevisionId(),
+                    revisionIdComposition);
+        } else if (SubState.PREPARING.equals(automationComposition.getSubState())) {
             LOGGER.debug("retry message AutomationCompositionPrepare");
             acPreparePublisher.sendPrepare(automationComposition, minStageNotCompleted, acDefinition.getRevisionId());
         }

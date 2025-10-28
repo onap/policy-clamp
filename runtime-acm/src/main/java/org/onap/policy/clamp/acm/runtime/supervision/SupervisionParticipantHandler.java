@@ -41,7 +41,6 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
@@ -50,6 +49,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -270,7 +270,7 @@ public class SupervisionParticipantHandler {
         encryptionUtils.decryptInstanceProperties(automationComposition);
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
             var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
-            var stage = ParticipantUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
+            var stage = AcmStageUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
             if (automationComposition.getPhase().equals(stage)) {
                 // scenario first stage migration
                 var rollback = automationCompositionProvider.getAutomationCompositionRollback(automationCompositionId);

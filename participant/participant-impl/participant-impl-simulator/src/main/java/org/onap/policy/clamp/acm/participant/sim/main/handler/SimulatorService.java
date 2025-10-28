@@ -38,7 +38,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
@@ -395,10 +394,10 @@ public class SimulatorService {
      * @param instanceId              the instanceId
      * @param elementId               the elementId
      * @param stage                   the stage
-     * @param compositionInProperties in Properties from composition definition element
+     * @param nextStage               the next stage
      * @param instanceOutProperties   in Properties from instance element
      */
-    public void migrate(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
+    public void migrate(UUID instanceId, UUID elementId, int stage, int nextStage,
                         Map<String, Object> instanceOutProperties) {
         if (isInterrupted(getConfig().getMigrateTimerMs(),
             "Current Thread migrate is Interrupted during execution {}", elementId)) {
@@ -406,19 +405,12 @@ public class SimulatorService {
         }
 
         if (config.isMigrateSuccess()) {
-            var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
-            var nextStage = 1000;
-            for (var s : stageSet) {
-                if (s > stage) {
-                    nextStage = Math.min(s, nextStage);
-                }
-            }
             instanceOutProperties.putIfAbsent(MIGRATION_PROPERTY, new ArrayList<>());
             @SuppressWarnings("unchecked")
             var stageList = (List<Integer>) instanceOutProperties.get(MIGRATION_PROPERTY);
             stageList.add(stage);
             intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
-            if (nextStage == 1000) {
+            if (nextStage == stage) {
                 intermediaryApi.updateAutomationCompositionElementState(
                     instanceId, elementId,
                     DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
@@ -461,10 +453,10 @@ public class SimulatorService {
      * @param instanceId              the instanceId
      * @param elementId               the elementId
      * @param stage                   the stage
-     * @param compositionInProperties in Properties from composition definition element
+     * @param nextStage               the next stage
      * @param instanceOutProperties   in Properties from instance element
      */
-    public void prepare(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
+    public void prepare(UUID instanceId, UUID elementId, int stage, int nextStage,
                         Map<String, Object> instanceOutProperties) {
         if (isInterrupted(config.getPrepareTimerMs(),
             "Current Thread prepare is Interrupted during execution {}", elementId)) {
@@ -472,19 +464,12 @@ public class SimulatorService {
         }
 
         if (config.isPrepare()) {
-            var stageSet = ParticipantUtils.findStageSetPrepare(compositionInProperties);
-            var nextStage = 1000;
-            for (var s : stageSet) {
-                if (s > stage) {
-                    nextStage = Math.min(s, nextStage);
-                }
-            }
             instanceOutProperties.putIfAbsent(PREPARE_PROPERTY, new ArrayList<>());
             @SuppressWarnings("unchecked")
             var stageList = (List<Integer>) instanceOutProperties.get(PREPARE_PROPERTY);
             stageList.add(stage);
             intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
-            if (nextStage == 1000) {
+            if (nextStage == stage) {
                 intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed");
             } else {
@@ -525,10 +510,10 @@ public class SimulatorService {
      * @param instanceId              the instanceId
      * @param elementId               the elementId
      * @param stage                   the stage
-     * @param compositionInProperties in Properties from composition definition element
+     * @param nextStage               the next stage
      * @param instanceOutProperties   in Properties from instance element
      */
-    public void rollback(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
+    public void rollback(UUID instanceId, UUID elementId, int stage, int nextStage,
             Map<String, Object> instanceOutProperties) {
         if (isInterrupted(getConfig().getRollbackTimerMs(),
             "Current Thread for rollback was Interrupted during execution {}", instanceId)) {
@@ -537,19 +522,12 @@ public class SimulatorService {
         }
 
         if (config.isRollback()) {
-            var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
-            var nextStage = 1000;
-            for (var s : stageSet) {
-                if (s > stage) {
-                    nextStage = Math.min(s, nextStage);
-                }
-            }
             instanceOutProperties.putIfAbsent(ROLLBACK_PROPERTY, new ArrayList<>());
             @SuppressWarnings("unchecked")
             var stageList = (List<Integer>) instanceOutProperties.get(ROLLBACK_PROPERTY);
             stageList.add(stage);
             intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
-            if (nextStage == 1000) {
+            if (nextStage == stage) {
                 intermediaryApi.updateAutomationCompositionElementState(
                         instanceId, elementId,
                         DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migration rollback done");

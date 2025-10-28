@@ -154,7 +154,6 @@ class StageScannerTest {
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
 
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
-        assertEquals(compositionTargetId, automationComposition.getCompositionId());
     }
 
     @Test

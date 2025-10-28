@@ -149,9 +149,9 @@ class SimulatorServiceTest {
         simulatorService.update(UUID.randomUUID(), UUID.randomUUID());
         simulatorService.prime(mock(CompositionDto.class));
         simulatorService.deprime(mock(CompositionDto.class));
-        simulatorService.migrate(UUID.randomUUID(), UUID.randomUUID(), 0, new HashMap<>(), new HashMap<>());
+        simulatorService.migrate(UUID.randomUUID(), UUID.randomUUID(), 0, 1, new HashMap<>());
         simulatorService.review(UUID.randomUUID(), UUID.randomUUID());
-        simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID(), 0, new HashMap<>(), new HashMap<>());
+        simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID(), 0, 1, new HashMap<>());
         simulatorService.migratePrecheck(UUID.randomUUID(), UUID.randomUUID());
         verify(intermediaryApi, times(0)).sendAcDefinitionInfo(any(), any(), any());
     }

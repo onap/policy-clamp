@@ -34,7 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -87,21 +87,26 @@ public class MonitoringScanner {
             automationCompositionOpt.ifPresent(ac -> updateSync.or(simpleScanner.scanMessage(ac, message)));
             messageProvider.removeMessage(message.getMessageId());
         }
-        if (automationCompositionOpt.isPresent()) {
-            var automationComposition = automationCompositionOpt.get();
-            if (automationComposition.getCompositionTargetId() != null) {
-                var acDefinitionTarget = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionTargetId(),
-                        acDefinitionProvider::getAcDefinition);
-                var acDefinition = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionId(),
-                        acDefinitionProvider::getAcDefinition);
+        automationCompositionOpt.ifPresent(ac -> scanAutomationComposition(ac, updateSync, acDefinitionMap));
+    }
+
+    private void scanAutomationComposition(final AutomationComposition automationComposition, UpdateSync updateSync,
+            Map<UUID, AutomationCompositionDefinition> acDefinitionMap) {
+        var acDefinition = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionId(),
+                acDefinitionProvider::getAcDefinition);
+        if (AcmStateUtils.isMigrating(automationComposition.getDeployState())) {
+            var acDefinitionTarget = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionTargetId(),
+                    acDefinitionProvider::getAcDefinition);
+            if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
                 scanAutomationComposition(automationComposition, acDefinitionTarget, updateSync,
                         acDefinition.getRevisionId());
             } else {
-                var acDefinition = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionId(),
-                        acDefinitionProvider::getAcDefinition);
                 scanAutomationComposition(automationComposition, acDefinition, updateSync,
-                        acDefinition.getRevisionId());
+                        acDefinitionTarget.getRevisionId());
             }
+        } else {
+            scanAutomationComposition(automationComposition, acDefinition, updateSync,
+                    acDefinition.getRevisionId());
         }
     }
 
@@ -109,7 +114,7 @@ public class MonitoringScanner {
             AutomationCompositionDefinition acDefinition, UpdateSync updateSync, UUID revisionIdComposition) {
         LOGGER.debug("scanning automation composition {} . . .", automationComposition.getInstanceId());
 
-        if (!AcmUtils.isInTransitionalState(automationComposition.getDeployState(),
+        if (!AcmStateUtils.isInTransitionalState(automationComposition.getDeployState(),
                 automationComposition.getLockState(), automationComposition.getSubState())
                 || StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
             LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
@@ -117,8 +122,7 @@ public class MonitoringScanner {
             return;
         }
 
-        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())
+        if (AcmStateUtils.isMigrating(automationComposition.getDeployState())
                 || SubState.PREPARING.equals(automationComposition.getSubState())) {
             stageScanner.scanStage(automationComposition, acDefinition, updateSync, revisionIdComposition);
         } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())

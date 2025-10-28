@@ -27,11 +27,11 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublish
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmTimeoutUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,20 +61,22 @@ public abstract class AbstractScanner {
                 automationComposition.getSubState());
 
         var deployState = automationComposition.getDeployState();
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            // migration completed
+            automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
+        }
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
                 || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
-            // migration scenario
-            automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
             automationComposition.setCompositionTargetId(null);
-
             for (var acElement : automationComposition.getElements().values()) {
                 if (MigrationState.NEW.equals(acElement.getMigrationState())) {
                     acElement.setMigrationState(MigrationState.DEFAULT);
                 }
             }
         }
-        automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
-        automationComposition.setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));
+        automationComposition.setDeployState(AcmStateUtils.deployCompleted(deployState));
+        automationComposition.setLockState(
+                AcmStateUtils.lockCompleted(deployState, automationComposition.getLockState()));
         automationComposition.setPhase(null);
         automationComposition.setSubState(SubState.NONE);
         automationComposition.setPrecheck(null);
@@ -106,10 +108,10 @@ public abstract class AbstractScanner {
             saveAndSync(automationComposition, updateSync);
             return;
         }
-        var name = ParticipantUtils.getOpName(automationComposition.getDeployState());
+        var name = AcmTimeoutUtils.getOpName(automationComposition.getDeployState());
         var element = automationComposition.getElements().values().stream()
                 .filter(el -> automationComposition.getDeployState().equals(el.getDeployState())).findFirst();
-        var maxWaitMs = element.map(automationCompositionElement -> ParticipantUtils.getTimeout(
+        var maxWaitMs = element.map(automationCompositionElement -> AcmTimeoutUtils.getTimeout(
                 automationCompositionElement.getProperties(), name, maxOperationWaitMs)).orElse(maxOperationWaitMs);
         var now = TimestampHelper.nowEpochMilli();
         var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());

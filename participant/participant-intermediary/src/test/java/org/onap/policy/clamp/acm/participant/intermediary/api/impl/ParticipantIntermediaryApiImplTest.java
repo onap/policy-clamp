@@ -26,9 +26,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
@@ -244,5 +246,35 @@ class ParticipantIntermediaryApiImplTest {
                 element.inProperties());
         assertEquals(acElementDefinition.getOutProperties(), element.outProperties());
         assertEquals(ElementState.PRESENT, element.state());
+    }
+
+    @Test
+    void testGetMigrateNextStage() {
+        var cacheProvider = mock(CacheProvider.class);
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
+        var migrate = Map.of("migrate", List.of(0, 2));
+        Map<String, Object> stageSet = Map.of("stage", migrate);
+        var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                stageSet, Map.of());
+        var result = apiImpl.getMigrateNextStage(compositionElementTarget, 0);
+        assertEquals(2, result);
+        result = apiImpl.getMigrateNextStage(compositionElementTarget, 2);
+        assertEquals(2, result);
+    }
+
+    @Test
+    void testGetRollbackNextStage() {
+        var cacheProvider = mock(CacheProvider.class);
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
+        var migrate = Map.of("migrate", List.of(0, 2));
+        Map<String, Object> stageSet = Map.of("stage", migrate);
+        var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                stageSet, Map.of());
+        var result = apiImpl.getRollbackNextStage(compositionElementTarget, 0);
+        assertEquals(2, result);
+        result = apiImpl.getRollbackNextStage(compositionElementTarget, 2);
+        assertEquals(2, result);
     }
 }
