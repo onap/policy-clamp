@@ -22,6 +22,30 @@
       },
       "revId": "08b1ee7155e24f945618a8e2cb98e58bf766dee4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1969a3f_6f36e518",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandlerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-10-30T09:35:42Z",
+      "side": 0,
+      "message": "has been refactored as handleAcMigrationStageTest and handleAcRollbackStageTest,\nthat both contain add and remove tests",
+      "parentUuid": "34baacd9_ceb3459d",
+      "range": {
+        "startLine": 308,
+        "startChar": 9,
+        "endLine": 308,
+        "endChar": 37
+      },
+      "revId": "08b1ee7155e24f945618a8e2cb98e58bf766dee4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
