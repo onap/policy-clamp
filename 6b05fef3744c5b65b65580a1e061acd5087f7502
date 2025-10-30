@@ -48,6 +48,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b17ec182_2dfcee74",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-10-30T09:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af2b5980_71f02791",
+      "range": {
+        "startLine": 340,
+        "startChar": 15,
+        "endLine": 340,
+        "endChar": 19
+      },
+      "revId": "6b05fef3744c5b65b65580a1e061acd5087f7502",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe4acff6_b8b8dfa7",
@@ -95,6 +119,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d72ae68_c4109d6d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-10-30T09:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe4acff6_b8b8dfa7",
+      "range": {
+        "startLine": 397,
+        "startChar": 15,
+        "endLine": 397,
+        "endChar": 19
+      },
+      "revId": "6b05fef3744c5b65b65580a1e061acd5087f7502",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3fd07f0_f3342443",
@@ -129,6 +177,30 @@
         "id": 7565
       },
       "writtenOn": "2025-10-30T09:35:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3fd07f0_f3342443",
+      "range": {
+        "startLine": 130,
+        "startChar": 23,
+        "endLine": 130,
+        "endChar": 44
+      },
+      "revId": "6b05fef3744c5b65b65580a1e061acd5087f7502",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "813b7e96_9f9f931e",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/scanner/StageScanner.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-10-30T09:37:02Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "d3fd07f0_f3342443",
