@@ -156,26 +156,6 @@ class ParticipantProviderTest {
     }
 
     @Test
-    void testDeleteParticipant() {
-        var participantRepository = mock(ParticipantRepository.class);
-        var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
-        var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
-        var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
-
-        var participantId = inputParticipants.get(0).getParticipantId();
-        assertThatThrownBy(() -> participantProvider.deleteParticipant(participantId))
-            .hasMessageMatching(".*.failed, participant does not exist");
-
-        when(participantRepository.findById(participantId.toString()))
-            .thenReturn(Optional.of(jpaParticipantList.get(0)));
-
-        var deletedParticipant = participantProvider.deleteParticipant(participantId);
-        assertThat(inputParticipants.get(0)).usingRecursiveComparison().isEqualTo(deletedParticipant);
-    }
-
-    @Test
     void testGetAutomationCompositionElements() {
         var participantRepository = mock(ParticipantRepository.class);
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
@@ -230,7 +210,6 @@ class ParticipantProviderTest {
         assertThrows(NullPointerException.class, () -> participantProvider.getParticipantById(null));
         assertThrows(NullPointerException.class, () -> participantProvider.findParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.saveParticipant(null));
-        assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipant(null));
 
         var pageable = Pageable.unpaged();
         assertThrows(NullPointerException.class, () ->

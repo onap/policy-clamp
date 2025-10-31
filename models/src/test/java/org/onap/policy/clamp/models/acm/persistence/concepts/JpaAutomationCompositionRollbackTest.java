@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -60,9 +59,7 @@ class JpaAutomationCompositionRollbackTest {
             new JpaAutomationCompositionRollback(INSTANCE_ID, COMPOSITION_ID, null);
         }).hasMessageMatching("elements" + NULL_ERROR);
 
-        assertDoesNotThrow(() -> new JpaAutomationCompositionRollback());
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("test", "test");
+        Map<String, Object> map = Map.of("test", "test");
         assertDoesNotThrow(() -> new JpaAutomationCompositionRollback(INSTANCE_ID, COMPOSITION_ID, map));
     }
 

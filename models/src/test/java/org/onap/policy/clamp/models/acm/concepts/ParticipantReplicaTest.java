@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -34,7 +33,6 @@ class ParticipantReplicaTest {
 
     @Test
     void testParticipantLombok() {
-        assertDoesNotThrow(() -> new ParticipantReplica());
         var p0 = new ParticipantReplica();
 
         assertThat(p0.toString()).contains("ParticipantReplica(");
