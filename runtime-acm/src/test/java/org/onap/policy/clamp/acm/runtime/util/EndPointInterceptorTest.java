@@ -30,18 +30,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.main.utils.EndPointInterceptor;
 
-public class EndPointInterceptorTest {
+class EndPointInterceptorTest {
 
     @Test
-    public void testPreHandleReturnsTrueAndLogs() throws Exception {
-        EndPointInterceptor interceptor = new EndPointInterceptor();
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+    void testPreHandleReturnsTrueAndLogs() throws Exception {
+        var interceptor = new EndPointInterceptor();
+        var request = mock(HttpServletRequest.class);
+        var response = mock(HttpServletResponse.class);
 
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("/test/uri");
 
-        boolean result = interceptor.preHandle(request, response, new Object());
+        var result = interceptor.preHandle(request, response, new Object());
 
         assertTrue(result);
 

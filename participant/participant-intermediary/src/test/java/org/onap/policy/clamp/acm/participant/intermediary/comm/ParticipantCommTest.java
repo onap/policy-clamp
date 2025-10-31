@@ -49,7 +49,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.common.message.bus.event.Topic;
 import org.onap.policy.common.message.bus.event.TopicSink;
-import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardCoderObject;

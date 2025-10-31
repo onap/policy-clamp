@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023 Nordix Foundation.
+ * Copyright (C) 2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,6 @@ class JpaParticipantSupportedElementTypeTest {
             new JpaParticipantSupportedElementType("key", "key", "name", null);
         }).hasMessageMatching("typeVersion" + NULL_ERROR);
 
-        assertDoesNotThrow(() -> new JpaParticipantSupportedElementType());
         assertDoesNotThrow(() -> new JpaParticipantSupportedElementType("key", "key"));
         assertDoesNotThrow(() -> new JpaParticipantSupportedElementType("key", "key", "name",
             "1.0.0"));

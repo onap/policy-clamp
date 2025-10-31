@@ -118,25 +118,6 @@ public class ParticipantProvider {
     }
 
     /**
-     * Delete a participant.
-     *
-     * @param participantId the Id of the participant to delete
-     * @return the participant deleted
-     */
-    public Participant deleteParticipant(@NonNull final UUID participantId) {
-        var jpaDeleteParticipantOpt = participantRepository.findById(participantId.toString());
-
-        if (jpaDeleteParticipantOpt.isEmpty()) {
-            String errorMessage =
-                "delete of participant \"" + participantId + "\" failed, participant does not exist";
-            throw new PfModelRuntimeException(Status.BAD_REQUEST, errorMessage);
-        }
-        participantRepository.delete(jpaDeleteParticipantOpt.get());
-
-        return jpaDeleteParticipantOpt.get().toAuthorative();
-    }
-
-    /**
      * Get a map with SupportedElement as key and the participantId as value.
      *
      * @return a map

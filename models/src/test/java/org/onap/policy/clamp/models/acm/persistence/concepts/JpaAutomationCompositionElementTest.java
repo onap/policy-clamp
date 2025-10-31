@@ -74,7 +74,6 @@ class JpaAutomationCompositionElementTest {
             new JpaAutomationCompositionElement(null, null);
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
-        assertDoesNotThrow(() -> new JpaAutomationCompositionElement());
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement(KEY, KEY));
     }
 

@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -45,7 +44,6 @@ class AutomationCompositionTest {
 
     @Test
     void testAutomationCompositionLombok() {
-        assertDoesNotThrow(() -> new AutomationComposition());
         var ac0 = new AutomationComposition();
         ac0.setElements(new LinkedHashMap<>());
 

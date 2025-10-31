@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -57,8 +56,6 @@ class JpaAutomationCompositionTest {
         assertThatThrownBy(() -> {
             new JpaAutomationComposition((AutomationComposition) null);
         }).hasMessageMatching("authorativeConcept" + NULL_ERROR);
-
-        assertDoesNotThrow(() -> new JpaAutomationComposition());
     }
 
     @Test

@@ -28,19 +28,18 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.main.utils.EndPointInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-public class InterceptorConfigTest {
+class InterceptorConfigTest {
 
     @Test
-    public void testGetWebMvcConfigurerAddsInterceptor() {
-        InterceptorConfig config = new InterceptorConfig();
-        EndPointInterceptor interceptor = mock(EndPointInterceptor.class);
-        InterceptorRegistry registry = mock(InterceptorRegistry.class);
+    void testGetWebMvcConfigurerAddsInterceptor() {
+        var config = new InterceptorConfig();
+        var interceptor = mock(EndPointInterceptor.class);
+        var registry = mock(InterceptorRegistry.class);
 
         when(registry.addInterceptor(interceptor)).thenReturn(null);
 
-        WebMvcConfigurer webMvcConfigurer = config.getWebMvcConfigurer(interceptor);
+        var webMvcConfigurer = config.getWebMvcConfigurer(interceptor);
         webMvcConfigurer.addInterceptors(registry);
 
         verify(registry, times(1)).addInterceptor(interceptor);
