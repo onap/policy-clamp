@@ -29,6 +29,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * This test enables Hibernate validation during context startup.
@@ -45,7 +46,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class HibernateValidationTest {
 
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            DockerImageName.parse("registry.nordix.org/onaptest/postgres:14.1").asCompatibleSubstituteFor("postgres"));
 
     @DynamicPropertySource
     static void overrideProperties(DynamicPropertyRegistry registry) {

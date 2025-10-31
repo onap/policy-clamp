@@ -44,6 +44,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 // This test class verifies that rollbacks for each Liquibase release tag works correctly.
 @Testcontainers
@@ -51,7 +52,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class LiquibaseRollbackTest {
 
     @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            DockerImageName.parse("registry.nordix.org/onaptest/postgres:14.1").asCompatibleSubstituteFor("postgres"));
 
     private Liquibase liquibase;
 
