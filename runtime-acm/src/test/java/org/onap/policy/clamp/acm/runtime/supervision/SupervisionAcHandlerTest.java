@@ -540,7 +540,7 @@ class SupervisionAcHandlerTest {
         automationComposition.setPhase(0);
         handler.migrate(automationComposition, UUID.randomUUID(), UUID.randomUUID());
         verify(acCompositionMigrationPublisher, timeout(1000))
-                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class));
+                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class), anyBoolean());
     }
 
     @Test
@@ -555,7 +555,7 @@ class SupervisionAcHandlerTest {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         handler.migratePrecheck(automationComposition, UUID.randomUUID(), UUID.randomUUID());
         verify(acCompositionMigrationPublisher, timeout(1000))
-                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class));
+                .send(any(AutomationComposition.class), anyInt(), any(UUID.class), any(UUID.class), anyBoolean());
     }
 
     @Test

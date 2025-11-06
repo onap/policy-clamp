@@ -371,7 +371,7 @@ public class SupervisionAcHandler {
         executor.execute(() -> {
             encryptionUtils.decryptInstanceProperties(automationComposition);
             acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase(),
-                    revisionIdComposition, revisionIdCompositionTarget);
+                    revisionIdComposition, revisionIdCompositionTarget, true);
         });
     }
 
@@ -385,6 +385,6 @@ public class SupervisionAcHandler {
     public void migratePrecheck(AutomationComposition automationComposition, UUID revisionIdComposition,
             UUID revisionIdCompositionTarget) {
         executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0,
-                revisionIdComposition, revisionIdCompositionTarget));
+                revisionIdComposition, revisionIdCompositionTarget, true));
     }
 }

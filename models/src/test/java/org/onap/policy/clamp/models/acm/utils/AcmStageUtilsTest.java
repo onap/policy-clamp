@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class AcmStageUtilsTest {
 
@@ -128,6 +130,28 @@ class AcmStageUtilsTest {
         automationComposition.setSubState(SubState.PREPARING);
         result = AcmStageUtils.getFirstStage(automationComposition, serviceTemplate);
         assertThat(result).isZero();
+
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
+        result = AcmStageUtils.getFirstStage(automationComposition.getElements().values().iterator().next(),
+                serviceTemplate);
+        assertThat(result).isZero();
+    }
+
+    @Test
+    void testGetLastStage() {
+        var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        var automationCompositions = CommonTestData.getJson(
+                ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
+        assertThat(automationCompositions).isNotNull();
+        var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
+        AcmStateUtils.setCascadedState(automationComposition, DeployState.MIGRATION_REVERTING, LockState.LOCKED);
+        var result = AcmStageUtils.getLastStage(automationComposition, serviceTemplate);
+        assertEquals(2, result);
+
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
+        result = AcmStageUtils.getLastStage(automationComposition.getElements().values().iterator().next(),
+                serviceTemplate, 1);
+        assertEquals(1, result);
     }
 
     @Test

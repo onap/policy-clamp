@@ -251,7 +251,9 @@ public class AutomationCompositionInstantiationProvider {
                                       AutomationCompositionDefinition acDefinition, DeployState deployState) {
         AcmStateUtils.setCascadedState(acFromDb, deployState, LockState.LOCKED);
         acFromDb.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var stage = AcmStageUtils.getFirstStage(acFromDb, acDefinition.getServiceTemplate());
+        var stage = DeployState.MIGRATION_REVERTING.equals(deployState)
+                ?  AcmStageUtils.getLastStage(acFromDb, acDefinition.getServiceTemplate())
+                : AcmStageUtils.getFirstStage(acFromDb, acDefinition.getServiceTemplate());
         acFromDb.setPhase(stage);
     }
 

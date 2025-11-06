@@ -40,6 +40,7 @@ public class AutomationCompositionMigration extends ParticipantMessage {
 
     private Boolean precheck = false;
     private Boolean rollback = false;
+    private Boolean firstStage = true;
     private Integer stage = 0;
 
     public AutomationCompositionMigration() {
