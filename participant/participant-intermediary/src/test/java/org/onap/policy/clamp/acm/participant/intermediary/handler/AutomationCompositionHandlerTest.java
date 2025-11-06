@@ -358,6 +358,7 @@ class AutomationCompositionHandlerTest {
             int stage, int expectedMigrated, boolean rollback) {
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(stage);
+        migrationMsg.setFirstStage(rollback && stage == 2);
         migrationMsg.setCompositionId(acMigrate.getCompositionId());
         migrationMsg.setAutomationCompositionId(acMigrate.getInstanceId());
         migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
@@ -430,14 +431,11 @@ class AutomationCompositionHandlerTest {
         cacheProvider.addElementDefinition(
                 automationComposition.getCompositionId(), acRollbackDefinitions, UUID.randomUUID());
 
-        // expected the new element deleted
-        testMigration(cacheProvider, acRollback, 0, 1, true);
-
         // expected default elements
         testMigration(cacheProvider, acRollback, 1, 4, true);
 
-        // expected default elements
-        testMigration(cacheProvider, acRollback, 2, 4, true);
+        // expected default elements and new element deleted
+        testMigration(cacheProvider, acRollback, 2, 5, true);
     }
 
 }

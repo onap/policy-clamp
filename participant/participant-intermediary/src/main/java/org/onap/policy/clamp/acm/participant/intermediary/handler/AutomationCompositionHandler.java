@@ -195,9 +195,9 @@ public class AutomationCompositionHandler {
     }
 
     private void rollbackAutomationComposition(AutomationComposition automationComposition,
-            ParticipantDeploy participantDeploy, int stage) {
+            ParticipantDeploy participantDeploy, int stage, int defaultValue) {
         for (var element : participantDeploy.getAcElementList()) {
-            var stageSet = getRollbackStageSet(element, automationComposition.getCompositionId());
+            var stageSet = getRollbackStageSet(element, automationComposition.getCompositionId(), defaultValue);
             if (stageSet.contains(stage)) {
                 migrateElement(element, automationComposition, stage, participantDeploy);
             }
@@ -310,9 +310,12 @@ public class AutomationCompositionHandler {
         automationComposition.setCompositionTargetId(migrationMsg.getCompositionTargetId());
         automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
         var automationCompositionCopy = new AutomationComposition(automationComposition);
+        var defaultValue =  Boolean.TRUE.equals(migrationMsg.getFirstStage())
+                ? migrationMsg.getStage() : migrationMsg.getStage() + 1;
         for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
-                rollbackAutomationComposition(automationComposition, participantDeploy, migrationMsg.getStage());
+                rollbackAutomationComposition(
+                        automationComposition, participantDeploy, migrationMsg.getStage(), defaultValue);
                 callParticipantRollback(migrationMsg, participantDeploy.getAcElementList(), automationCompositionCopy);
             }
 
@@ -388,6 +391,8 @@ public class AutomationCompositionHandler {
 
     private void callParticipantRollback(AutomationCompositionMigration migrationMsg, List<AcElementDeploy> acElements,
             AutomationComposition automationCompositionCopy) {
+        var defaultValue =  Boolean.TRUE.equals(migrationMsg.getFirstStage())
+                ? migrationMsg.getStage() : migrationMsg.getStage() + 1;
         var automationComposition = cacheProvider.getAutomationComposition(automationCompositionCopy.getInstanceId());
         var instanceElementTargetMap = cacheProvider.getInstanceElementDtoMap(automationComposition);
         var compositionElementTargetMap = cacheProvider.getCompositionElementDtoMap(automationComposition);
@@ -395,7 +400,7 @@ public class AutomationCompositionHandler {
                 automationCompositionCopy.getCompositionTargetId());
         var instanceElementMap = cacheProvider.getInstanceElementDtoMap(automationCompositionCopy);
         for (var acElement : acElements) {
-            var stageSet = getRollbackStageSet(acElement, automationComposition.getCompositionId());
+            var stageSet = getRollbackStageSet(acElement, automationComposition.getCompositionId(), defaultValue);
             var removed = MigrationState.NEW.equals(acElement.getMigrationState());
             if (!removed) {
                 var commonProperties = cacheProvider
@@ -438,9 +443,9 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private Set<Integer> getRollbackStageSet(AcElementDeploy acElement, UUID compositionId) {
+    private Set<Integer> getRollbackStageSet(AcElementDeploy acElement, UUID compositionId, int defaultValue) {
         if (MigrationState.NEW.equals(acElement.getMigrationState())) {
-            return Set.of(0);
+            return Set.of(defaultValue);
         } else {
             var commonProperties = cacheProvider.getCommonProperties(compositionId, acElement.getDefinition());
             return AcmStageUtils.findStageSetMigrate(commonProperties);

@@ -101,7 +101,14 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public int getRollbackNextStage(CompositionElementDto compositionElementRollback, int lastStage) {
-        return getMigrateNextStage(compositionElementRollback, lastStage);
+        var stageSet = AcmStageUtils.findStageSetMigrate(compositionElementRollback.inProperties());
+        var nextStage = -1;
+        for (var s : stageSet) {
+            if (s < lastStage) {
+                nextStage = Math.max(s, nextStage);
+            }
+        }
+        return nextStage == -1 ? lastStage : nextStage;
     }
 
     @Override

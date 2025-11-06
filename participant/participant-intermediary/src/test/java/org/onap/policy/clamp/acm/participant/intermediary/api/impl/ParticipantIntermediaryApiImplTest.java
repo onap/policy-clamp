@@ -272,9 +272,9 @@ class ParticipantIntermediaryApiImplTest {
         Map<String, Object> stageSet = Map.of("stage", migrate);
         var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 stageSet, Map.of());
-        var result = apiImpl.getRollbackNextStage(compositionElementTarget, 0);
-        assertEquals(2, result);
-        result = apiImpl.getRollbackNextStage(compositionElementTarget, 2);
-        assertEquals(2, result);
+        var result = apiImpl.getRollbackNextStage(compositionElementTarget, 2);
+        assertEquals(0, result);
+        result = apiImpl.getRollbackNextStage(compositionElementTarget, 0);
+        assertEquals(0, result);
     }
 }

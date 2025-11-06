@@ -47,10 +47,11 @@ public class AutomationCompositionMigrationPublisher
             value = "publisher.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
     public void send(AutomationComposition automationComposition, int stage, UUID revisionIdComposition,
-                     UUID revisionIdCompositionTarget) {
+                     UUID revisionIdCompositionTarget, boolean fisrtStage) {
         var acMigration = new AutomationCompositionMigration();
         var rollback = DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState());
         acMigration.setRollback(rollback);
+        acMigration.setFirstStage(fisrtStage);
         acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
         acMigration.setCompositionId(automationComposition.getCompositionId());
         acMigration.setAutomationCompositionId(automationComposition.getInstanceId());

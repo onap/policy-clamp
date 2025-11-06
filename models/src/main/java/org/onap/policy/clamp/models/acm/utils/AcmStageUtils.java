@@ -35,6 +35,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public final class AcmStageUtils {
     private static final String STAGE_MIGRATE = "migrate";
     private static final String STAGE_PREPARE = "prepare";
+    private static final int MAX_STAGE = 1000;
 
     /**
      * Get the First StartPhase.
@@ -48,7 +49,7 @@ public final class AcmStageUtils {
      */
     public static int getFirstStartPhase(
             AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate) {
-        var minStartPhase = 1000;
+        var minStartPhase = MAX_STAGE;
         var maxStartPhase = 0;
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
@@ -106,6 +107,50 @@ public final class AcmStageUtils {
                 ? findStageSetMigrate(properties)
                 : findStageSetPrepare(properties);
         return stageSet.stream().min(Integer::compare).orElse(0);
+    }
+
+    /**
+     * Get the Last Stage from AutomationComposition.
+     *
+     * @param automationComposition the automation composition
+     * @param toscaServiceTemplate the ToscaServiceTemplate
+     * @return the Last stage
+     */
+    public static int getLastStage(AutomationComposition automationComposition,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        var stages = automationComposition.getElements().values().stream()
+                .map(element -> getLastStage(element, toscaServiceTemplate, 0));
+        return stages.max(Integer::compare).orElse(0);
+    }
+
+    /**
+     * Get the Last Stage from AutomationCompositionElement.
+     *
+     * @param element the automation composition element
+     * @param toscaServiceTemplate the ToscaServiceTemplate
+     * @param defaultValue default Value is not present
+     * @return the Last stage
+     */
+    public static int getLastStage(
+            AutomationCompositionElement element, ToscaServiceTemplate toscaServiceTemplate, int defaultValue) {
+        var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                .get(element.getDefinition().getName());
+        if (toscaNodeTemplate == null) {
+            return defaultValue;
+        }
+        return getLastStage(toscaNodeTemplate.getProperties(), defaultValue);
+    }
+
+    /**
+     * Get the Last Stage.
+     *
+     * @param properties Map of properties
+     * @param defaultValue default Value is not present
+     * @return the Last stage
+     */
+    public static int getLastStage(Map<String, Object> properties, int defaultValue) {
+        var stageSet = findStageSetMigrate(properties);
+        return stageSet.stream().max(Integer::compare).orElse(defaultValue);
     }
 
     /**

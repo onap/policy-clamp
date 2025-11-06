@@ -395,10 +395,10 @@ class AutomationCompositionElementHandlerTest {
         var instanceElementRollback = new InstanceElementDto(INSTANCE_ELEMENT.instanceId(),
                 INSTANCE_ELEMENT.elementId(), Map.of(), new HashMap<>());
         acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, compositionElementRollback, INSTANCE_ELEMENT,
-                instanceElementRollback, 1);
+                instanceElementRollback, 2);
         verify(intermediaryApi).updateAutomationCompositionElementStage(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                StateChangeResult.NO_ERROR, 2, "stage 1 Migration rollback");
+                StateChangeResult.NO_ERROR, 1, "stage 2 Migration rollback");
     }
 
     @Test
