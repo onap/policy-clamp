@@ -680,11 +680,17 @@ databaseChangeLog:
   - changeSet:
       id: 1701-28
       author: policy
+      # The checksum is needed as this changeset was modified after release to add the delete step.
+      # Otherwise, Liquibase would fail with a checksum validation error when applying to an existing DB.
+      validCheckSum: 9:8ee2b3be1395cf06a05b91faf74b3f80
       changes:
         - addDefaultValue:
             tableName: ParticipantReplica
             columnName: participantId
             defaultValue: ''
+        - delete:
+            tableName: ParticipantReplica
+            where: participantId IS NULL
         - addNotNullConstraint:
             tableName: ParticipantReplica
             columnName: participantId
@@ -725,11 +731,17 @@ databaseChangeLog:
   - changeSet:
       id: 1701-30
       author: policy
+      # The checksum is needed as this changeset was modified after release to add the delete step.
+      # Otherwise, Liquibase would fail with a checksum validation error when applying to an existing DB.
+      validCheckSum: 9:705a8c5532630d8a332c4ecc75952a30
       changes:
         - addDefaultValue:
             tableName: ParticipantSupportedAcElements
             columnName: participantId
             defaultValue: ''
+        - delete:
+            tableName: ParticipantSupportedAcElements
+            where: participantId IS NULL
         - addNotNullConstraint:
             tableName: ParticipantSupportedAcElements
             columnName: participantId
