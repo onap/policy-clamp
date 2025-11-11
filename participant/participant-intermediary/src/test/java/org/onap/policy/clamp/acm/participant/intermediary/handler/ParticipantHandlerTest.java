@@ -36,7 +36,10 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -120,6 +123,73 @@ class ParticipantHandlerTest {
     }
 
     @Test
+    void handleMigrationAddTest() {
+        var migrationMsg = new AutomationCompositionMigration();
+        migrationMsg.setCompositionId(UUID.randomUUID());
+        migrationMsg.setRevisionIdComposition(UUID.randomUUID());
+        migrationMsg.setAutomationCompositionId(UUID.randomUUID());
+        migrationMsg.setRevisionIdInstance(UUID.randomUUID());
+
+        migrationMsg.setCompositionTargetId(UUID.randomUUID());
+        migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionTargetId(),
+                migrationMsg.getRevisionIdCompositionTarget())).thenReturn(true);
+
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setMigrationState(MigrationState.NEW);
+        participantDeploy.setAcElementList(List.of(acElementDeploy));
+        migrationMsg.setParticipantUpdatesList(List.of(participantDeploy));
+
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var acSubStateHandler = mock(AcSubStateHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
+        var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
+                acSubStateHandler, mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
+                cacheProvider, msgExecutor);
+        participantHandler.handleAutomationCompositionMigration(migrationMsg);
+        verify(acHandler).handleAutomationCompositionMigration(migrationMsg);
+    }
+
+    @Test
+    void handleMigrationRemovedTest() {
+        var migrationMsg = new AutomationCompositionMigration();
+        migrationMsg.setCompositionId(UUID.randomUUID());
+        migrationMsg.setRevisionIdComposition(UUID.randomUUID());
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionId(),
+                migrationMsg.getRevisionIdComposition())).thenReturn(true);
+
+        migrationMsg.setAutomationCompositionId(UUID.randomUUID());
+        migrationMsg.setRevisionIdInstance(UUID.randomUUID());
+        when(cacheProvider.isInstanceUpdated(migrationMsg.getAutomationCompositionId(),
+                migrationMsg.getRevisionIdInstance())).thenReturn(true);
+
+        migrationMsg.setCompositionTargetId(UUID.randomUUID());
+        migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
+
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setMigrationState(MigrationState.REMOVED);
+        participantDeploy.setAcElementList(List.of(acElementDeploy));
+        migrationMsg.setParticipantUpdatesList(List.of(participantDeploy));
+
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var acSubStateHandler = mock(AcSubStateHandler.class);
+        var msgExecutor = new MsgExecutor(cacheProvider, mock(ParticipantMessagePublisher.class));
+        var participantHandler = new ParticipantHandler(acHandler, mock(AcLockHandler.class),
+                acSubStateHandler, mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
+                cacheProvider, msgExecutor);
+        participantHandler.handleAutomationCompositionMigration(migrationMsg);
+        verify(acHandler).handleAutomationCompositionMigration(migrationMsg);
+    }
+
+    @Test
     void handleAutomationCompositionMigrationTest() {
         var cacheProvider = mock(CacheProvider.class);
         var migrationMsg = new AutomationCompositionMigration();
@@ -137,6 +207,14 @@ class ParticipantHandlerTest {
         migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
         when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionTargetId(),
                 migrationMsg.getRevisionIdCompositionTarget())).thenReturn(true);
+
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setMigrationState(MigrationState.DEFAULT);
+        participantDeploy.setAcElementList(List.of(acElementDeploy));
+        migrationMsg.setParticipantUpdatesList(List.of(participantDeploy));
 
         var acHandler = mock(AutomationCompositionHandler.class);
         var acSubStateHandler = mock(AcSubStateHandler.class);

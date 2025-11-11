@@ -27,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -119,15 +122,56 @@ public class ParticipantHandler {
             value = "listener.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages received")
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
+        var stateNew = false;
+        var stateDefault = false;
+        var stateRemoved = false;
+        for (var ac : migrationMsg.getParticipantUpdatesList()) {
+            if (cacheProvider.getParticipantId().equals(ac.getParticipantId())) {
+                for (var element : ac.getAcElementList()) {
+                    switch (element.getMigrationState()) {
+                        case NEW -> stateNew = true;
+                        case REMOVED -> stateRemoved = true;
+                        default -> stateDefault = true;
+                    }
+                }
+            }
+        }
         var acMsg = Boolean.TRUE.equals(migrationMsg.getPrecheck())
                 ? new AutomationCompositionMsg<>(acSubStateHandler::handleAcMigrationPrecheck, migrationMsg)
                 : new AutomationCompositionMsg<>(
-                        automationCompositionHandler::handleAutomationCompositionMigration, migrationMsg);
-        setCompositionUpdate(migrationMsg, acMsg);
-        setInstanceUpdate(migrationMsg, acMsg);
-        acMsg.setCompositionTargetId(migrationMsg.getCompositionTargetId());
-        acMsg.setRevisionIdCompositionTarget(migrationMsg.getRevisionIdCompositionTarget());
+                automationCompositionHandler::handleAutomationCompositionMigration, migrationMsg);
+        setUpdate(migrationMsg, acMsg, stateNew, stateDefault, stateRemoved);
         msgExecutor.execute(acMsg);
+    }
+
+    private void setUpdate(AutomationCompositionMigration migrationMsg,
+            AutomationCompositionMsg<AutomationCompositionMigration> acMsg, boolean stateNew, boolean stateDefault,
+            boolean stateRemoved) {
+        if (stateDefault || stateRemoved) {
+            setCompositionUpdate(migrationMsg, acMsg);
+            setInstanceUpdate(migrationMsg, acMsg);
+        } else {
+            checkAutomationComposition(migrationMsg);
+        }
+        if (stateDefault || stateNew) {
+            acMsg.setCompositionTargetId(migrationMsg.getCompositionTargetId());
+            acMsg.setRevisionIdCompositionTarget(migrationMsg.getRevisionIdCompositionTarget());
+        }
+    }
+
+    private void checkAutomationComposition(AutomationCompositionMigration migrationMsg) {
+        var ac = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
+        if (ac != null && migrationMsg.getRevisionIdInstance().equals(ac.getRevisionId())) {
+            return;
+        }
+        var restart = new ParticipantRestartAc();
+        restart.setCompositionTargetId(migrationMsg.getCompositionTargetId());
+        restart.setAutomationCompositionId(migrationMsg.getAutomationCompositionId());
+        restart.setRevisionId(migrationMsg.getRevisionIdInstance());
+        restart.setDeployState(Boolean.TRUE.equals(migrationMsg.getRollback())
+                ? DeployState.MIGRATION_REVERTING : DeployState.MIGRATING);
+        restart.setLockState(LockState.LOCKED);
+        cacheProvider.initializeAutomationComposition(migrationMsg.getCompositionId(), restart);
     }
 
     /**
