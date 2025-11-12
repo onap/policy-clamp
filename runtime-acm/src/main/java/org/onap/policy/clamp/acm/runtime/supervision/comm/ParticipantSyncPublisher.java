@@ -58,6 +58,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
 
         var message = new ParticipantSync();
         message.setParticipantId(participantId);
+        message.getParticipantIdList().add(participantId);
         message.setReplicaId(replicaId);
         message.setRestarting(true);
         message.setCompositionId(acmDefinition.getCompositionId());
@@ -109,6 +110,8 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         } else {
             message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(null, acDefinition,
                     acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
+            message.getParticipantDefinitionUpdates().forEach(participantDefinition
+                    -> message.getParticipantIdList().add(participantDefinition.getParticipantId()));
         }
         LOGGER.debug("Participant AutomationCompositionDefinition Sync sent {}", message);
         super.send(message);
@@ -121,12 +124,6 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
      */
     @Timed(value = "publisher.participant_sync_msg", description = "Participant Sync published")
     public void sendSync(AutomationComposition automationComposition) {
-        var message = new ParticipantSync();
-        message.setCompositionId(automationComposition.getCompositionId());
-        message.setAutomationCompositionId(automationComposition.getInstanceId());
-        message.setState(AcTypeState.PRIMED);
-        message.setMessageId(UUID.randomUUID());
-        message.setTimestamp(Instant.now());
         var syncAc = new ParticipantRestartAc();
         syncAc.setCompositionTargetId(automationComposition.getCompositionTargetId());
         syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -134,12 +131,14 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         syncAc.setDeployState(automationComposition.getDeployState());
         syncAc.setLockState(automationComposition.getLockState());
         syncAc.setStateChangeResult(automationComposition.getStateChangeResult());
+        var message = createSyncMsg(automationComposition);
         if (DeployState.DELETED.equals(automationComposition.getDeployState())) {
             message.setDelete(true);
         } else {
             for (var element : automationComposition.getElements().values()) {
                 var acElementSync = AcmUtils.createAcElementRestart(element);
                 syncAc.getAcElementList().add(acElementSync);
+                message.getParticipantIdList().add(acElementSync.getParticipantId());
 
             }
         }
@@ -147,5 +146,39 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
 
         LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
         super.send(message);
+    }
+
+    /**
+     * Sync event for participant with all elements deleted in Migration.
+     * @param automationComposition automationComposition
+     * @param participantId participantId
+     */
+    @Timed(value = "publisher.participant_sync_msg", description = "Participant Sync published")
+    public void sendDeleteSync(AutomationComposition automationComposition, UUID participantId) {
+        var syncAc = new ParticipantRestartAc();
+        syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
+        syncAc.setRevisionId(automationComposition.getRevisionId());
+        syncAc.setDeployState(DeployState.DELETED);
+        syncAc.setLockState(automationComposition.getLockState());
+        syncAc.setStateChangeResult(automationComposition.getStateChangeResult());
+        var message = createSyncMsg(automationComposition);
+        message.setDelete(true);
+        message.setParticipantId(participantId);
+        message.getParticipantIdList().add(participantId);
+        message.getAutomationcompositionList().add(syncAc);
+
+        LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
+        super.send(message);
+    }
+
+    private ParticipantSync createSyncMsg(AutomationComposition automationComposition) {
+        var message = new ParticipantSync();
+        message.setCompositionId(automationComposition.getCompositionId());
+        message.setAutomationCompositionId(automationComposition.getInstanceId());
+        message.setState(AcTypeState.PRIMED);
+        message.setMessageId(UUID.randomUUID());
+        message.setTimestamp(Instant.now());
+
+        return message;
     }
 }

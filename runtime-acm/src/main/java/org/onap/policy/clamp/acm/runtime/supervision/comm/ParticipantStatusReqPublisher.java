@@ -41,7 +41,11 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
     @Timed(value = "publisher.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages published")
     public void send(UUID participantId) {
         var message = new ParticipantStatusReq();
-        message.setParticipantId(participantId);
+        if (participantId != null) {
+            message.setParticipantId(participantId);
+            message.getParticipantIdList().add(participantId);
+        }
+
         message.setTimestamp(Instant.now());
 
         LOGGER.debug("Participant StatusReq sent {}", message.getMessageId());
