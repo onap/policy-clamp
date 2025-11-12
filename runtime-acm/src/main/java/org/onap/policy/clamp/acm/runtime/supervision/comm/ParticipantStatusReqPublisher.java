@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2022,2024 Nordix Foundation.
+ * Copyright (C) 2021-2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,11 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
     @Timed(value = "publisher.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages published")
     public void send(UUID participantId) {
         var message = new ParticipantStatusReq();
-        message.setParticipantId(participantId);
+        if (participantId != null) {
+            message.setParticipantId(participantId);
+            message.getParticipantIdList().add(participantId);
+        }
+
         message.setTimestamp(Instant.now());
 
         LOGGER.debug("Participant StatusReq sent {}", message.getMessageId());

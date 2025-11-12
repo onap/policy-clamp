@@ -190,6 +190,7 @@ class SupervisionScannerTest {
         var monitoringScanner = new MonitoringScanner(automationCompositionProvider, acDefinitionProvider,
                 mock(AcDefinitionScanner.class), stageScanner, mock(SimpleScanner.class), mock(PhaseScanner.class),
                 messageProvider);
+        when(automationCompositionProvider.getAutomationComposition(any())).thenReturn(automationComposition);
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 messageProvider, monitoringScanner);
 
