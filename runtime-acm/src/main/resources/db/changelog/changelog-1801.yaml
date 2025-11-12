@@ -18,19 +18,23 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
-  - include:
-      file: db/changelog/changelog-1400.yaml
-  - include:
-      file: db/changelog/changelog-1500.yaml
-  - include:
-      file: db/changelog/changelog-1600.yaml
-  - include:
-      file: db/changelog/changelog-1700.yaml
-  - include:
-      file: db/changelog/changelog-1701.yaml
-  - include:
-      file: db/changelog/changelog-1702.yaml
-  - include:
-      file: db/changelog/changelog-1800.yaml
-  - include:
-      file: db/changelog/changelog-1801.yaml
+
+  - changeSet:
+      author: policy
+      id: 1801-1
+      changes:
+        - dropDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: participantId
+      rollback:
+        - addDefaultValue:
+            tableName: ParticipantSupportedAcElements
+            columnName: participantId
+            defaultValue: ''
+
+  - changeSet:
+      id: 1801-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1801
