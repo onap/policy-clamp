@@ -143,7 +143,8 @@ class LiquibaseRollbackTest {
                 Arguments.of("1600", "1700"),
                 Arguments.of("1700", "1701"),
                 Arguments.of("1701", "1702"),
-                Arguments.of("1702", "1800")
+                Arguments.of("1702", "1800"),
+                Arguments.of("1800", "1801")
         );
     }
 
