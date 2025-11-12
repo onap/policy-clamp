@@ -276,6 +276,11 @@ class SupervisionMessagesTest {
         automationComposition.setDeployState(DeployState.DELETED);
         publisher.sendSync(automationComposition);
         verify(topicSink).send(anyString());
+
+        clearInvocations(topicSink);
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.DELETED);
+        publisher.sendDeleteSync(automationComposition, UUID.randomUUID());
+        verify(topicSink).send(anyString());
     }
 
     @Test

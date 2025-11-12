@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
@@ -134,11 +135,21 @@ public class StageScanner extends AbstractScanner {
 
     private void removeDeletedElements(AutomationComposition automationComposition, List<UUID> elementsDeleted,
                                        UpdateSync updateSync) {
+        var participantIds = new HashSet<UUID>();
         for (var elementId : elementsDeleted) {
             LOGGER.info("Deleting element {} in Migration ", elementId);
+            participantIds.add(automationComposition.getElements().get(elementId).getParticipantId());
             automationComposition.getElements().remove(elementId);
             acProvider.deleteAutomationCompositionElement(elementId);
             updateSync.setUpdated(true);
+        }
+        for (var participantId : participantIds) {
+            var hasElements = automationComposition.getElements().values().stream().anyMatch(element
+                    -> element.getParticipantId().equals(participantId));
+            if (! hasElements) {
+                participantSyncPublisher.sendDeleteSync(automationComposition, participantId);
+            }
+
         }
     }
 

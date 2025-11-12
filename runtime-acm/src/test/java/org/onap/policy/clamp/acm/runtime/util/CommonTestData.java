@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,10 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcmParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -174,6 +177,24 @@ public class CommonTestData {
         var acRuntimeParameterGroup = getTestParamaterGroup();
         acRuntimeParameterGroup.getAcmParameters().setEnableEncryption(true);
         return acRuntimeParameterGroup;
+    }
+
+    /**
+     * Modify the state of the AutomationComposition.
+     * @param automationComposition automationComposition
+     * @param deployState deployState
+     */
+    public static void modifyAcState(AutomationComposition automationComposition,
+                                                      DeployState deployState) {
+        automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setDeployState(deployState);
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(0);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DEPLOYED);
+            element.setLockState(LockState.LOCKED);
+        }
     }
 
 }
