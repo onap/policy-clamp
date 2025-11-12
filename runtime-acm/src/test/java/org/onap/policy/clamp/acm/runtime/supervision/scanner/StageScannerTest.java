@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
@@ -54,18 +55,11 @@ class StageScannerTest {
     @Test
     void testSendAutomationCompositionMigrate() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setInstanceId(UUID.randomUUID());
-        automationComposition.setDeployState(DeployState.MIGRATING);
+        assert automationComposition != null;
         automationComposition.setCompositionId(COMPOSITION_ID);
         var compositionTargetId = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTargetId);
-        automationComposition.setLockState(LockState.LOCKED);
-        automationComposition.setLastMsg(TimestampHelper.now());
-        automationComposition.setPhase(0);
-        for (var element : automationComposition.getElements().values()) {
-            element.setDeployState(DeployState.DEPLOYED);
-            element.setLockState(LockState.LOCKED);
-        }
+        CommonTestData.modifyAcState(automationComposition, DeployState.MIGRATING);
         // first element is not migrated yet
         var element = automationComposition.getElements().entrySet().iterator().next().getValue();
         element.setDeployState(DeployState.MIGRATING);
@@ -74,7 +68,8 @@ class StageScannerTest {
         when(acProvider.updateAutomationComposition(any())).thenReturn(automationComposition);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var supervisionScanner = new StageScanner(acProvider, mock(ParticipantSyncPublisher.class),
+        var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
+        var supervisionScanner = new StageScanner(acProvider, participantSyncPublisher,
                 mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
                 acRuntimeParameterGroup, encryptionUtils);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
@@ -102,23 +97,38 @@ class StageScannerTest {
 
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
         assertEquals(compositionTargetId, automationComposition.getCompositionId());
+
+        // remove all element for a participant
+        clearInvocations(acProvider);
+        clearInvocations(participantSyncPublisher);
+        element.setDeployState(DeployState.DELETED);
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+        assertThat(automationComposition.getElements()).doesNotContainKey(element.getId()); //element deleted
+        verify(participantSyncPublisher, times(1)).sendDeleteSync(automationComposition, element.getParticipantId());
+
+        // remove one element; participant retains other elements
+        clearInvocations(acProvider);
+        clearInvocations(participantSyncPublisher);
+        for (var e : automationComposition.getElements().values()) {
+            e.setParticipantId(element.getParticipantId());
+        }
+        automationComposition.getElements().put(element.getId(), element);
+        supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+        assertThat(automationComposition.getElements()).doesNotContainKey(element.getId()); //element deleted
+        verify(participantSyncPublisher, times(0)).sendDeleteSync(automationComposition,
+                element.getParticipantId());
     }
 
     @Test
     void testSendAutomationCompositionMigrationReverting() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setInstanceId(UUID.randomUUID());
-        automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
+        assert automationComposition != null;
         automationComposition.setCompositionId(COMPOSITION_ID);
-        var compositionTargetId = UUID.randomUUID();
-        automationComposition.setCompositionTargetId(compositionTargetId);
-        automationComposition.setLockState(LockState.LOCKED);
-        automationComposition.setLastMsg(TimestampHelper.now());
-        automationComposition.setPhase(0);
-        for (var element : automationComposition.getElements().values()) {
-            element.setDeployState(DeployState.DEPLOYED);
-            element.setLockState(LockState.LOCKED);
-        }
+        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        CommonTestData.modifyAcState(automationComposition, DeployState.MIGRATION_REVERTING);
+
         // first element is not migrated yet
         var element = automationComposition.getElements().entrySet().iterator().next().getValue();
         element.setDeployState(DeployState.MIGRATION_REVERTING);

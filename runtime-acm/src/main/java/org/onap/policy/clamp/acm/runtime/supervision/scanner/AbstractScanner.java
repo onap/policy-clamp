@@ -43,7 +43,7 @@ public abstract class AbstractScanner {
     protected final long maxOperationWaitMs;
 
     protected final AutomationCompositionProvider acProvider;
-    private final ParticipantSyncPublisher participantSyncPublisher;
+    protected final ParticipantSyncPublisher participantSyncPublisher;
     private final EncryptionUtils encryptionUtils;
 
     protected AbstractScanner(final AutomationCompositionProvider acProvider,
