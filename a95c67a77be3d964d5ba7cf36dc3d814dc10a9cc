@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "978b9ce2_2015e42d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-11-14T11:23:12Z",
+      "side": 1,
+      "message": "We observed the logic in acmr on rollback where an element is successfully removed and deleted but rollback was triggered, acmr sends the element with state DEFAULT instead of REMOVED. Will that scenario has any impact with this change?",
+      "range": {
+        "startLine": 134,
+        "startChar": 24,
+        "endLine": 134,
+        "endChar": 32
+      },
+      "revId": "a95c67a77be3d964d5ba7cf36dc3d814dc10a9cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab41847c_71ce79c1",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-11-14T11:23:12Z",
+      "side": 1,
+      "message": "In this case, it will check ands request sync for removed elements too?",
+      "range": {
+        "startLine": 150,
+        "startChar": 28,
+        "endLine": 150,
+        "endChar": 40
+      },
+      "revId": "a95c67a77be3d964d5ba7cf36dc3d814dc10a9cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
