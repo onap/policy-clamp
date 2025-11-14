@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22865465_a3734487",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-11-14T15:34:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "978b9ce2_2015e42d",
+      "range": {
+        "startLine": 134,
+        "startChar": 24,
+        "endLine": 134,
+        "endChar": 32
+      },
+      "revId": "a95c67a77be3d964d5ba7cf36dc3d814dc10a9cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab41847c_71ce79c1",
@@ -84,6 +108,30 @@
       "writtenOn": "2025-11-14T12:48:23Z",
       "side": 1,
       "message": "Dont we need to set the elements for the instance?",
+      "range": {
+        "startLine": 174,
+        "startChar": 22,
+        "endLine": 174,
+        "endChar": 53
+      },
+      "revId": "a95c67a77be3d964d5ba7cf36dc3d814dc10a9cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abccd35a_98305c12",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-11-14T15:34:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9544658b_a480b8fa",
       "range": {
         "startLine": 174,
         "startChar": 22,
