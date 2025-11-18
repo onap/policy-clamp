@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c30b956a_1d22ae9f",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/ParticipantSyncPublisher.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-11-18T10:09:24Z",
+      "side": 1,
+      "message": "for backward compatibility add:\nmessage.setParticipantId(participantId);",
+      "revId": "c2d8075116139ca8450f840638f4d86a89000261",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
