@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,9 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
                 .setRelationshipTypes(DocUtil.docMapToMap(relationshipTypes, DocToscaRelationshipType::toAuthorative));
         toscaServiceTemplate.setNodeTypes(DocUtil.docMapToMap(nodeTypes, DocToscaNodeType::toAuthorative));
         toscaServiceTemplate.setPolicyTypes(DocUtil.docMapToMap(policyTypes, DocToscaPolicyType::toAuthorative));
-        toscaServiceTemplate.setToscaTopologyTemplate(toscaTopologyTemplate.toAuthorative());
+        if (toscaTopologyTemplate != null) {
+            toscaServiceTemplate.setToscaTopologyTemplate(toscaTopologyTemplate.toAuthorative());
+        }
 
         return toscaServiceTemplate;
     }
@@ -135,18 +137,21 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
 
         toscaDefinitionsVersion = toscaServiceTemplate.getToscaDefinitionsVersion();
 
-        dataTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getDataTypes(), DocToscaDataType::new);
+        dataTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getDataTypes(), DocToscaDataType::new,
+                new LinkedHashMap<>());
 
-        capabilityTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getCapabilityTypes(), DocToscaCapabilityType::new);
+        capabilityTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getCapabilityTypes(), DocToscaCapabilityType::new,
+                new LinkedHashMap<>());
 
         relationshipTypes =
-                DocUtil.mapToDocMap(toscaServiceTemplate.getRelationshipTypes(), DocToscaRelationshipType::new);
+                DocUtil.mapToDocMap(toscaServiceTemplate.getRelationshipTypes(), DocToscaRelationshipType::new,
+                        new LinkedHashMap<>());
 
-        nodeTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getNodeTypes(), DocToscaNodeType::new);
+        nodeTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getNodeTypes(), DocToscaNodeType::new,
+                new LinkedHashMap<>());
 
-        if (toscaServiceTemplate.getPolicyTypes() != null) {
-            policyTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getPolicyTypes(), DocToscaPolicyType::new);
-        }
+        policyTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getPolicyTypes(), DocToscaPolicyType::new,
+                new LinkedHashMap<>());
 
         if (toscaServiceTemplate.getToscaTopologyTemplate() != null) {
             toscaTopologyTemplate = new DocToscaTopologyTemplate(toscaServiceTemplate.getToscaTopologyTemplate());
@@ -191,27 +196,18 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
     }
 
     /**
-     * Compare this service template to another service template, ignoring contained entitites.
+     * Compare this service template to another service template, ignoring contained entities.
      *
      * @param otherConcept the other topology template
      * @return the result of the comparison
      */
     public int compareToWithoutEntities(final DocToscaEntity<ToscaServiceTemplate> otherConcept) {
-        if (otherConcept == null) {
-            return -1;
-        }
-        if (this == otherConcept) {
-            return 0;
-        }
-        if (getClass() != otherConcept.getClass()) {
-            return getClass().getName().compareTo(otherConcept.getClass().getName());
+        int result = super.compareTo(otherConcept);
+        if (result != 0) {
+            return result;
         }
 
         final var other = (DocToscaServiceTemplate) otherConcept;
-        if (!super.equals(other)) {
-            return super.compareTo(other);
-        }
-
         return ObjectUtils.compare(toscaDefinitionsVersion, other.toscaDefinitionsVersion);
     }
 }

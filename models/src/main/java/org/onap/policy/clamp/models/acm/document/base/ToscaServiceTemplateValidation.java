@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023 Nordix Foundation.
+ *  Copyright (C) 2022-2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public final class ToscaServiceTemplateValidation {
      * @param result the result
      * @param serviceTemplate the serviceTemplate to validate
      */
-    public static void validate(final BeanValidationResult result, DocToscaServiceTemplate serviceTemplate,
+    public static void validate(final @NonNull BeanValidationResult result, DocToscaServiceTemplate serviceTemplate,
                                 String toscaCompositionName) {
 
         var references = DocUtil.getToscaReferences(serviceTemplate);
@@ -96,7 +96,7 @@ public final class ToscaServiceTemplateValidation {
      * @param topologyTemplate the ToscaServiceTemplate
      * @param toscaCompositionName the name of the ToscaComposition
      */
-    public static void validateToscaTopologyTemplate(BeanValidationResult result,
+    public static void validateToscaTopologyTemplate(final @NonNull BeanValidationResult result,
             DocToscaTopologyTemplate topologyTemplate, String toscaCompositionName) {
         String acNodeTypeNotPresent =
                 "NodeTemplate with type " + toscaCompositionName + " must exist!";
@@ -188,14 +188,14 @@ public final class ToscaServiceTemplateValidation {
     }
 
     private static boolean isTypePresent(String key, Set<String> reference) {
-        if (reference == null || reference.isEmpty()) {
+        if (reference.isEmpty()) {
             return false;
         }
         return reference.contains(key);
     }
 
     private static boolean isTypePresent(DocConceptKey key, Set<String> reference) {
-        if (reference == null || reference.isEmpty()) {
+        if (reference.isEmpty()) {
             return false;
         }
         return reference.contains(key.getId());
@@ -225,7 +225,7 @@ public final class ToscaServiceTemplateValidation {
      * @param result the result of the ancestor search with any warnings or errors
      */
     private static void validEntityTypeAncestors(Map<String, ? extends DocToscaEntity<?>> entityTypes,
-            Set<String> reference, @NonNull final BeanValidationResult result) {
+            Set<String> reference, final BeanValidationResult result) {
         if (entityTypes != null) {
             for (var entityType : entityTypes.values()) {
                 var parentEntityTypeKey = extractDerivedFrom(entityType, result);
@@ -246,7 +246,7 @@ public final class ToscaServiceTemplateValidation {
      * @param result the result of the ancestor search with any warnings or errors
      */
     private static <T extends DocToscaEntity<?>> void validEntityTypeAncestors(List<Map<String, T>> entityTypesList,
-            Set<String> reference, @NonNull final BeanValidationResult result) {
+            Set<String> reference, final BeanValidationResult result) {
         if (entityTypesList != null) {
             for (var entityTypes : entityTypesList) {
                 for (var entityType : entityTypes.values()) {

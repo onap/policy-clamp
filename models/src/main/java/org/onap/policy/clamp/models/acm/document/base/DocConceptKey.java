@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,15 +63,6 @@ public class DocConceptKey extends PfKeyImpl {
      */
     public DocConceptKey(final PfConceptKey copyConcept) {
         super(copyConcept);
-    }
-
-    /**
-     * Copy constructor.
-     *
-     * @param copyConcept the concept to copy from
-     */
-    public DocConceptKey(final DocConceptKey copyConcept) {
-        this(copyConcept.getName(), copyConcept.getVersion());
     }
 
     /**

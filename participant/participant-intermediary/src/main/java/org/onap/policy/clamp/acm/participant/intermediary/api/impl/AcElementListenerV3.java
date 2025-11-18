@@ -45,4 +45,10 @@ public abstract class AcElementListenerV3 extends AcElementListenerV4
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null,
                 StateChangeResult.NO_ERROR, "Prepare completed");
     }
+
+    @Override
+    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement, int nextStage)
+            throws PfModelException {
+        prepare(compositionElement, instanceElement);
+    }
 }

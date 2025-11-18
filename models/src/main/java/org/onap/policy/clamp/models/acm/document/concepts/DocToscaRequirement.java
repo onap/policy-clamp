@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024 Nordix Foundation.
+ *  Copyright (C) 2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,9 @@ public class DocToscaRequirement extends DocToscaWithTypeAndStringProperties<Tos
         this.capability = copyConcept.capability;
         this.node = copyConcept.node;
         this.relationship = copyConcept.relationship;
-        this.occurrences = new ArrayList<>(copyConcept.occurrences);
+        if (copyConcept.occurrences != null) {
+            this.occurrences = new ArrayList<>(copyConcept.occurrences);
+        }
     }
 
     @Override
@@ -95,10 +97,6 @@ public class DocToscaRequirement extends DocToscaWithTypeAndStringProperties<Tos
 
     @Override
     public int compareTo(DocToscaEntity<ToscaRequirement> otherConcept) {
-        if (this == otherConcept) {
-            return 0;
-        }
-
         int result = super.compareTo(otherConcept);
         if (result != 0) {
             return result;

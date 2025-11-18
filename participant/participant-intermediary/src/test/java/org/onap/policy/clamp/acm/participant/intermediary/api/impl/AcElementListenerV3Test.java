@@ -158,7 +158,7 @@ class AcElementListenerV3Test {
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-        acElementListener.prepare(compositionElement, instanceElement);
+        acElementListener.prepare(compositionElement, instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null,
                 StateChangeResult.NO_ERROR, "Prepare completed");

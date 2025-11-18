@@ -277,4 +277,19 @@ class ParticipantIntermediaryApiImplTest {
         result = apiImpl.getRollbackNextStage(compositionElementTarget, 0);
         assertEquals(0, result);
     }
+
+    @Test
+    void testGetPrepareNextStage() {
+        var cacheProvider = mock(CacheProvider.class);
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
+        var prepare = Map.of("prepare", List.of(0, 2));
+        Map<String, Object> stageSet = Map.of("stage", prepare);
+        var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                stageSet, Map.of());
+        var result = apiImpl.getPrepareNextStage(compositionElementTarget, 0);
+        assertEquals(2, result);
+        result = apiImpl.getPrepareNextStage(compositionElementTarget, 2);
+        assertEquals(2, result);
+    }
 }

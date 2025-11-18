@@ -53,6 +53,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -371,5 +372,14 @@ class SupervisionMessagesTest {
         var acStateChangeAckListener = new AutomationCompositionStateChangeAckListener(supervisionHandler);
         acStateChangeAckListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionAck);
         verify(supervisionHandler).handleAutomationCompositionStateChangeAckMessage(automationCompositionAck);
+    }
+
+    @Test
+    void testParticipantReqSyncListener() {
+        final var participantReqSync = new ParticipantReqSync();
+        var supervisionParticipantHandler = mock(SupervisionParticipantHandler.class);
+        var reqSyncListener = new ParticipantReqSyncListener(supervisionParticipantHandler);
+        reqSyncListener.onTopicEvent(INFRA, TOPIC, null, participantReqSync);
+        verify(supervisionParticipantHandler).handleParticipantReqSync(participantReqSync);
     }
 }

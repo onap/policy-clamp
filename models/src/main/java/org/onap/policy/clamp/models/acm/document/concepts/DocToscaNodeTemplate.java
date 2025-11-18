@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,10 +93,6 @@ public class DocToscaNodeTemplate extends DocToscaWithTypeAndStringProperties<To
 
     @Override
     public int compareTo(DocToscaEntity<ToscaNodeTemplate> otherConcept) {
-        if (this == otherConcept) {
-            return 0;
-        }
-
         int result = super.compareTo(otherConcept);
         if (result != 0) {
             return result;

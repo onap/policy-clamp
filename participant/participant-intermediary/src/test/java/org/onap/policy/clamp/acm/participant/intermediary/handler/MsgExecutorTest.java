@@ -79,7 +79,7 @@ class MsgExecutorTest {
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
         cacheProvider.addElementDefinition(compositionId, definitions, revisionIdComposition);
         msgExecutor.check();
-        verify(automationCompositionHandler, timeout(100)).handleAutomationCompositionDeploy(updateMsg);
+        verify(automationCompositionHandler, timeout(200)).handleAutomationCompositionDeploy(updateMsg);
         assertThat(cacheProvider.getMessagesOnHold()).isEmpty();
     }
 

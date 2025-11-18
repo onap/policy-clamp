@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,20 +151,6 @@ public final class DocUtil {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Key " + conceptKey.getId() + " field "
                     + keyFieldValue + " does not match the value " + conceptField + " in the concept field");
         }
-    }
-
-    /**
-     * Convenience method to apply a mapping function to all of the values of a list of maps, generating a new map.
-     *
-     * @param source list of maps whose values are to be mapped, or {@code null}
-     * @param mapFunc mapping function
-     * @return a new map, containing mappings of all of the items in the original map, or {@code null} if the source is
-     *         {@code null}
-     */
-    public static <A extends ToscaEntity, R> Map<String, R> listToDocMap(List<Map<String, A>> source,
-            Function<A, R> mapFunc) {
-
-        return listToDocMap(source, mapFunc, null);
     }
 
     /**
