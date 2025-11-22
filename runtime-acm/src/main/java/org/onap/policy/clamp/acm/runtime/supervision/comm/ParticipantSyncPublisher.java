@@ -24,7 +24,7 @@ import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -38,11 +38,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
-public class ParticipantSyncPublisher extends AbstractParticipantPublisher<ParticipantSync> {
+@RequiredArgsConstructor
+public class ParticipantSyncPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantSyncPublisher.class);
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send Restart sync msg to Participant by participantId.
@@ -75,16 +77,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         }
 
         LOGGER.debug("Participant Restarting Sync sent {}", message);
-        super.send(message);
-    }
-
-    /**
-     * Is default topic.
-     * @return true if default
-     */
-    @Override
-    public boolean isDefaultTopic() {
-        return false;
+        participantPublisher.send(false, message);
     }
 
     /**
@@ -114,7 +107,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
                     -> message.getParticipantIdList().add(participantDefinition.getParticipantId()));
         }
         LOGGER.debug("Participant AutomationCompositionDefinition Sync sent {}", message);
-        super.send(message);
+        participantPublisher.send(false, message);
     }
 
     /**
@@ -145,7 +138,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.getAutomationcompositionList().add(syncAc);
 
         LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
-        super.send(message);
+        participantPublisher.send(false, message);
     }
 
     /**
@@ -168,7 +161,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.getAutomationcompositionList().add(syncAc);
 
         LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
-        super.send(message);
+        participantPublisher.send(false, message);
     }
 
     private ParticipantSync createSyncMsg(AutomationComposition automationComposition) {

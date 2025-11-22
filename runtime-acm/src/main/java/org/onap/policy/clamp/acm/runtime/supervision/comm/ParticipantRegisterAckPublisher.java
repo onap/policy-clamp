@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,10 @@ import org.springframework.stereotype.Component;
  * This class is used to send ParticipantRegisterAck messages to participants on Kafka.
  */
 @Component
-public class ParticipantRegisterAckPublisher extends AbstractParticipantAckPublisher<ParticipantRegisterAck> {
+@RequiredArgsConstructor
+public class ParticipantRegisterAckPublisher {
+
+    private final ParticipantAckPublisher participantAckPublisher;
 
     /**
      * Send ParticipantRegisterAck to Participant.
@@ -46,11 +50,7 @@ public class ParticipantRegisterAckPublisher extends AbstractParticipantAckPubli
         message.setResponseTo(responseTo);
         message.setMessage("Participant Register Ack");
         message.setResult(true);
-        super.send(message);
+        participantAckPublisher.send(false, message);
     }
 
-    @Override
-    public boolean isDefaultTopic() {
-        return false;
-    }
 }

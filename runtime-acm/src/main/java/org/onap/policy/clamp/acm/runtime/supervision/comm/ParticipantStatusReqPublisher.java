@@ -23,15 +23,19 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<ParticipantStatusReq> {
+@RequiredArgsConstructor
+public class ParticipantStatusReqPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusReqPublisher.class);
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send ParticipantStatusReq to Participant.
@@ -49,11 +53,6 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
         message.setTimestamp(Instant.now());
 
         LOGGER.debug("Participant StatusReq sent {}", message.getMessageId());
-        super.send(message);
-    }
-
-    @Override
-    public boolean isDefaultTopic() {
-        return false;
+        participantPublisher.send(false, message);
     }
 }

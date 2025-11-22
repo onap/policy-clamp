@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2024 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,24 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.config.messaging;
+package org.onap.policy.clamp.acm.runtime.supervision.comm.serialization;
 
-import org.onap.policy.common.message.bus.event.TopicSink;
+import org.apache.commons.lang3.SerializationException;
+import org.apache.kafka.common.serialization.Serializer;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.StandardCoder;
 
-/**
- * Publisher.
- */
-public interface Publisher {
+public class ParticipantMessageSerializer implements Serializer<Object> {
 
-    void active(TopicSink topicSink);
+    private static final Coder coder = new StandardCoder();
 
-    void stop();
+    @Override
+    public byte[] serialize(final String topic, final Object object) {
+        try {
+            return coder.encode(object).getBytes();
+        } catch (final Exception e) {
+            throw new SerializationException("Failed to serialize to JSON", e);
+        }
+    }
 
-    boolean isDefaultTopic();
 }
