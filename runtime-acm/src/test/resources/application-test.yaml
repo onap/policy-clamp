@@ -3,6 +3,7 @@ spring:
     user:
       name: runtimeUser
       password: zb!XztG34
+
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -15,3 +16,21 @@ spring:
     open-in-view: false
   liquibase:
     drop-first: true
+
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}  # requires @EmbeddedKafka on @SpringBootTest's
+    security:
+      protocol: PLAINTEXT  # no security for embedded test broker
+    admin:
+      auto-create: true  # auto-create topics is useful for tests
+      fail-fast: true  # fail if the broker is not available on startup
+    consumer:
+      group-id: acm-runtime-test-group  # same for all tests to prevent stale data consumption by subsequent tests
+      auto-offset-reset: earliest  # ensure tests consume all messages from the beginning
+
+logging:
+  level:
+    # reduce noise from kafka logging
+    kafka: WARN
+    org.apache.kafka: WARN
+    org.springframework.kafka: WARN

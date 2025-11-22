@@ -73,7 +73,8 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantReqSync(final ParticipantReqSync participantReqSync) {
         validate();
         topicSinkClient.send(participantReqSync);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
+                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
                 topicSinkClient.getTopic(), "Sent Participant Request Sync to CLAMP - "
                         + participantReqSync.toString());
     }
@@ -87,7 +88,8 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
         validate();
         topicSinkClient.send(participantStatus);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
+                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
                 topicSinkClient.getTopic(), "Sent Participant Status message to CLAMP - "
                         + participantStatus.toString());
     }
@@ -101,7 +103,8 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
         validate();
         topicSinkClient.send(participantRegister);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
+                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
                 topicSinkClient.getTopic(), "Sent Participant Register message to CLAMP - "
                         + participantRegister.toString());
     }
@@ -115,7 +118,8 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
         validate();
         topicSinkClient.send(participantDeregister);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
+                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
                 topicSinkClient.getTopic(), "Sent Participant Deregister message to CLAMP - "
                         + participantDeregister.toString());
     }
@@ -129,7 +133,8 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantPrimeAck(final ParticipantPrimeAck participantPrimeAck) {
         validate();
         topicSinkClient.send(participantPrimeAck);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
+                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
                 topicSinkClient.getTopic(), "Sent Participant Prime Ack message to CLAMP - "
                         + participantPrimeAck.toString());
     }
@@ -144,7 +149,8 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendAutomationCompositionAck(final AutomationCompositionDeployAck automationCompositionAck) {
         validate();
         topicSinkClient.send(automationCompositionAck);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, topicSinkClient.getSink().getTopicCommInfrastructure(),
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
+                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
                 topicSinkClient.getTopic(), "Sent AutomationComposition Update/StateChange Ack to runtime - "
                         + automationCompositionAck.toString());
     }
