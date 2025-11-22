@@ -24,7 +24,7 @@ import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
@@ -36,10 +36,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
-public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationCompositionPrepare> {
+@RequiredArgsConstructor
+public class AcPreparePublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AcPreparePublisher.class);
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send AutomationCompositionPrepare Prepare message to Participant.
@@ -60,7 +62,7 @@ public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationC
         acPrepare.setRevisionIdInstance(automationComposition.getRevisionId());
         acPrepare.setRevisionIdComposition(revisionIdComposition);
         LOGGER.debug("AC Prepare sent {}", acPrepare);
-        super.send(acPrepare);
+        participantPublisher.send(acPrepare);
     }
 
     /**
@@ -79,7 +81,7 @@ public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationC
         acPrepare.setRevisionIdComposition(revisionIdComposition);
         acPrepare.setRevisionIdInstance(automationComposition.getRevisionId());
         LOGGER.debug("AC Review sent {}", acPrepare);
-        super.send(acPrepare);
+        participantPublisher.send(acPrepare);
     }
 
     private AutomationCompositionPrepare createAutomationCompositionPrepare(UUID compositionId, UUID instanceId) {
