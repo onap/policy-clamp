@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
@@ -33,8 +34,10 @@ import org.springframework.stereotype.Component;
  * This class is used to send AutomationCompositionStateChangePublisher messages to participants on Kafka.
  */
 @Component
-public class AutomationCompositionStateChangePublisher
-        extends AbstractParticipantPublisher<AutomationCompositionStateChange> {
+@RequiredArgsConstructor
+public class AutomationCompositionStateChangePublisher {
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send AutomationCompositionStateChange message to Participant.
@@ -61,6 +64,6 @@ public class AutomationCompositionStateChangePublisher
         acsc.setParticipantIdList(automationComposition.getElements().values().stream()
                 .map(AutomationCompositionElement::getParticipantId).collect(Collectors.toSet()));
 
-        super.send(acsc);
+        participantPublisher.send(acsc);
     }
 }
