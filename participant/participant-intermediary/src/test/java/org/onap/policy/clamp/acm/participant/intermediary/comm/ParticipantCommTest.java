@@ -106,10 +106,12 @@ class ParticipantCommTest {
 
     @Test
     void participantMessagePublisherTest() throws CoderException {
-        var coder = new StandardCoder();
         var mockTopicSink = mock(TopicSink.class);
+        when(mockTopicSink.getTopicCommInfrastructure()).thenReturn(Topic.CommInfrastructure.KAFKA);
+        when(mockTopicSink.getTopic()).thenReturn("participant-topic");
         var publisher = new ParticipantMessagePublisher();
         publisher.active(Collections.singletonList(mockTopicSink));
+        var coder = new StandardCoder();
 
         var participantStatus = new ParticipantStatus();
         assertDoesNotThrow(() -> publisher.sendParticipantStatus(participantStatus));
@@ -128,7 +130,7 @@ class ParticipantCommTest {
         verify(mockTopicSink).send(coder.encode(participantPrimeAck));
 
         var automationCompositionAck =
-            new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
+            new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
         assertDoesNotThrow(() -> publisher.sendAutomationCompositionAck(automationCompositionAck));
         verify(mockTopicSink).send(coder.encode(automationCompositionAck));
 

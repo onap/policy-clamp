@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2024 Nordix Foundation.
+ *  Copyright (C) 2021,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,16 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.config.messaging;
+package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
-import org.onap.policy.common.message.bus.event.TopicSink;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
 
-/**
- * Publisher.
- */
-public interface Publisher {
+@Service
+public class ParticipantAckPublisher extends AbstractParticipantPublisher<ParticipantAckMessage> {
 
-    void active(TopicSink topicSink);
-
-    void stop();
-
-    boolean isDefaultTopic();
+    public ParticipantAckPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
+        super(kafkaTemplate);
+    }
 }

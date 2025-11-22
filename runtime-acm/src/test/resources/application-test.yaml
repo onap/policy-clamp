@@ -15,3 +15,10 @@ spring:
     open-in-view: false
   liquibase:
     drop-first: true
+  kafka:
+    # TODO set to ${spring.embedded.kafka.brokers} maybe in a separate profile for tests needing kafka
+    bootstrap-servers: localhost:9093
+    security:
+      protocol: PLAINTEXT
+    consumer:
+      group-id: policy-clamp-runtime-acm

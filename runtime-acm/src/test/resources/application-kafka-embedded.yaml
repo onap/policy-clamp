@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    security:
+      protocol: PLAINTEXT
+    consumer:
+      group-id: test-group-${random.uuid}
+      auto-offset-reset: earliest
+
+logging:
+  level:
+    kafka: WARN
+    org.apache.kafka: WARN
+    org.springframework.kafka: WARN

@@ -23,15 +23,14 @@ package org.onap.policy.clamp.common.acm.utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.message.bus.event.Topic;
 
 class NetLoggerUtilTest {
 
     @Test
     void testLog() {
-        NetLoggerUtil.log(NetLoggerUtil.EventType.IN, Topic.CommInfrastructure.KAFKA, "someTopic", "message1");
+        NetLoggerUtil.log(NetLoggerUtil.EventType.IN, "KAFKA", "someTopic", "message1");
 
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, Topic.CommInfrastructure.REST, null, "message2");
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "REST", null, "message2");
 
         assertEquals("acm-network", NetLoggerUtil.getNetworkLogger().getName());
     }
