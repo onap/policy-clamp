@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,19 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<ParticipantStatusReq> {
+@RequiredArgsConstructor
+public class ParticipantStatusReqPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusReqPublisher.class);
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send ParticipantStatusReq to Participant.
@@ -49,11 +53,6 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
         message.setTimestamp(Instant.now());
 
         LOGGER.debug("Participant StatusReq sent {}", message.getMessageId());
-        super.send(message);
-    }
-
-    @Override
-    public boolean isDefaultTopic() {
-        return false;
+        participantPublisher.sendToSyncTopic(message);
     }
 }

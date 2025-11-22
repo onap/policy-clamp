@@ -25,7 +25,6 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.micrometer.metrics.test.autoconfigure.AutoConfigureMetrics;
@@ -66,29 +65,6 @@ class ActuatorControllerTest {
         webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
             .exchange().expectStatus().isOk()
             .expectBody().jsonPath(STATUS_CODE).isEqualTo("UP");
-
-        var topicEndpoint = TopicEndpointManager.getManager();
-        topicEndpoint.stop();
-        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
-            .exchange().expectStatus().is5xxServerError()
-            .expectBody().jsonPath(STATUS_CODE).isEqualTo("DOWN");
-        topicEndpoint.start();
-    }
-
-    @Test
-    void testHealthIndicator() {
-        var topicEndpoint = TopicEndpointManager.getManager();
-        topicEndpoint.getNoopTopicSource("policy-acruntime-participant").stop();
-        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
-            .exchange().expectStatus().is5xxServerError()
-            .expectBody().jsonPath(STATUS_CODE).isEqualTo("OUT_OF_SERVICE");
-        topicEndpoint.getNoopTopicSource("policy-acruntime-participant").start();
-
-        topicEndpoint.getNoopTopicSink("acm-ppnt-sync").stop();
-        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
-            .exchange().expectStatus().is5xxServerError()
-            .expectBody().jsonPath(STATUS_CODE).isEqualTo("OUT_OF_SERVICE");
-        topicEndpoint.getNoopTopicSink("acm-ppnt-sync").start();
     }
 
     @Test

@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
@@ -32,8 +33,10 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AutomationCompositionMigrationPublisher
-        extends AbstractParticipantPublisher<AutomationCompositionMigration> {
+@RequiredArgsConstructor
+public class AutomationCompositionMigrationPublisher {
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send AutomationCompositionMigration message to Participant.
@@ -67,6 +70,6 @@ public class AutomationCompositionMigrationPublisher
         acMigration.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
 
-        super.send(acMigration);
+        participantPublisher.send(acMigration);
     }
 }
