@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -41,10 +40,6 @@ public class AcRuntimeParameterGroup {
     @Valid
     @NotNull
     private ParticipantParameters participantParameters;
-
-    @Valid
-    @NotNull
-    private TopicParameterGroup topicParameterGroup;
 
     @Valid
     @NotNull
