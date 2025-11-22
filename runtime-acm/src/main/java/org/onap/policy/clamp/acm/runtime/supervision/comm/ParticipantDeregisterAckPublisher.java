@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,10 @@ import org.springframework.stereotype.Component;
  * This class is used to send ParticipantDeregisterAck messages to participants on Kafka.
  */
 @Component
-public class ParticipantDeregisterAckPublisher extends AbstractParticipantAckPublisher<ParticipantDeregisterAck> {
+@RequiredArgsConstructor
+public class ParticipantDeregisterAckPublisher {
+
+    private final ParticipantAckPublisher participantAckPublisher;
 
     /**
      * Sent ParticipantDeregisterAck to Participant.
@@ -43,6 +47,6 @@ public class ParticipantDeregisterAckPublisher extends AbstractParticipantAckPub
         message.setResponseTo(responseTo);
         message.setMessage("Participant Deregister Ack");
         message.setResult(true);
-        super.send(message);
+        participantAckPublisher.send(message);
     }
 }

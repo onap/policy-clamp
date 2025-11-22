@@ -9,38 +9,8 @@
         "operationTopic": "policy-acruntime-participant",
         "syncTopic": "acm-ppnt-sync"
     },
-    "topicParameterGroup": {
-
-        "topicSources": [
-            {
-                "topic": "${topics.operationTopic}",
-                "servers": [
-                    "localhost"
-                ],
-                "topicCommInfrastructure": "NOOP",
-                "fetchTimeout": 15000
-            }
-        ],
-        "topicSinks": [
-            {
-                "topic": "${topics.operationTopic}",
-                "servers": [
-                    "localhost"
-                ],
-                "topicCommInfrastructure": "NOOP"
-            },
-            {
-                "topic": "${topics.syncTopic}",
-                "servers": [
-                    "localhost"
-                ],
-                "topicCommInfrastructure": "NOOP"
-            }
-        ]
-    },
     "acmParameters": {
         "toscaElementName": "org.onap.policy.clamp.acm.AutomationCompositionElement",
         "toscaCompositionName": "org.onap.policy.clamp.acm.AutomationComposition"
     }
-
 }

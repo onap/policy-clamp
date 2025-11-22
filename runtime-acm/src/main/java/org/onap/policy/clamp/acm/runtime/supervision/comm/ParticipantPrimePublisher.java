@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -50,13 +50,15 @@ import org.springframework.stereotype.Component;
  * This class is used to send ParticipantPrime messages to participants on Kafka.
  */
 @Component
-@AllArgsConstructor
-public class ParticipantPrimePublisher extends AbstractParticipantPublisher<ParticipantPrime> {
+@RequiredArgsConstructor
+public class ParticipantPrimePublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantPrimePublisher.class);
 
     private final ParticipantProvider participantProvider;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send ParticipantPrime to Participant
@@ -77,7 +79,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
         message.setRevisionIdComposition(revisionId);
         message.setParticipantDefinitionUpdates(participantDefinitions);
         LOGGER.debug("Participant Update sent {}", message.getMessageId());
-        super.send(message);
+        participantPublisher.send(message);
     }
 
     /**
@@ -133,6 +135,6 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
         message.setRevisionIdComposition(revisionId);
 
         LOGGER.debug("Participant Update sent {}", message.getMessageId());
-        super.send(message);
+        participantPublisher.send(message);
     }
 }

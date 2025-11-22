@@ -15,3 +15,9 @@ spring:
     open-in-view: false
   liquibase:
     drop-first: true
+  kafka:
+    bootstrap-servers: localhost:9093
+    security:
+      protocol: PLAINTEXT
+    consumer:
+      group-id: policy-clamp-runtime-acm

@@ -42,7 +42,7 @@ import org.springframework.test.context.DynamicPropertySource;
  * - inconsistent NOT NULL constraints and @NotNull annotations
  */
 @SpringBootTest
-@ActiveProfiles("hibernate-validation")
+@ActiveProfiles({"hibernate-validation", "test"})
 class HibernateValidationTest extends AbstractLiquibaseTestBase {
 
     @Autowired
