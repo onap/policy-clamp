@@ -41,7 +41,7 @@ class AutomationCompositionDeployAckTest {
         assertThatThrownBy(() -> new AutomationCompositionDeployAck((AutomationCompositionDeployAck) null))
             .isInstanceOf(NullPointerException.class);
 
-        final var orig = new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
+        final var orig = new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
 
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),

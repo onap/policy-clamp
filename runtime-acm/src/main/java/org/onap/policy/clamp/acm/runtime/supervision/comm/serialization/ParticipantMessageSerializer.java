@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
- *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +18,24 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.config.messaging;
+package org.onap.policy.clamp.acm.runtime.supervision.comm.serialization;
 
-import org.onap.policy.common.endpoints.listeners.ScoListener;
+import org.apache.commons.lang3.SerializationException;
+import org.apache.kafka.common.serialization.Serializer;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.StandardCoder;
 
-public interface Listener<T> {
+public class ParticipantMessageSerializer implements Serializer<Object> {
 
-    /**
-     * Get the type of message of interest to the listener.
-     *
-     * @return type of message of interest to the listener
-     */
-    String getType();
+    private static final Coder coder = new StandardCoder();
 
-    /**
-     * Get listener to register.
-     *
-     * @return listener to register
-     */
-    ScoListener<T> getScoListener();
+    @Override
+    public byte[] serialize(final String topic, final Object object) {
+        try {
+            return coder.encode(object).getBytes();
+        } catch (final Exception e) {
+            throw new SerializationException("Failed to serialize to JSON", e);
+        }
+    }
+
 }
