@@ -20,38 +20,14 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
 
-@Slf4j
-@RequiredArgsConstructor
-public abstract class AbstractParticipantPublisher<T> {
+@Service
+public class ParticipantPublisher extends AbstractParticipantPublisher<ParticipantMessage> {
 
-    @Value("${runtime.topics.operationTopic}")
-    private String operationTopic;
-
-    @Value("${runtime.topics.syncTopic}")
-    private String syncTopic;
-
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-
-    public void sendToSyncTopic(final T message) {
-        this.send(syncTopic, message);
-    }
-
-    public void send(final T message) {
-        this.send(operationTopic, message);
-    }
-
-    private void send(final String topic, final T message) {
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "KAFKA", topic, message.toString());
-        try {
-            kafkaTemplate.send(topic, message).join();
-        } catch (final Exception e) {
-            log.warn("send to {} failed because of {}", topic, e.getMessage(), e);
-        }
+    public ParticipantPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
+        super(kafkaTemplate);
     }
 }

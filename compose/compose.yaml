@@ -118,7 +118,6 @@ services:
       SQL_PORT: 5432
       SQL_USER: policy_user
       SQL_PASSWORD: policy_user
-      TOPIC_COMM_INFRASTRUCTURE: kafka
       ALLOW_TRACING: true
       PROMETHEUS_PORT: 6969
       OTEL_SERVICE_NAME: acm-r

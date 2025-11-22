@@ -24,7 +24,7 @@ import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
@@ -38,10 +38,12 @@ import org.springframework.stereotype.Component;
  * This class is used to send PropertiesUpdate messages to participants.
  */
 @Component
-@AllArgsConstructor
-public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<PropertiesUpdate> {
+@RequiredArgsConstructor
+public class AcElementPropertiesPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AcElementPropertiesPublisher.class);
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send ACElementPropertiesUpdate to Participant.
@@ -63,6 +65,6 @@ public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<P
         propertiesUpdate.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
         LOGGER.debug("AC Element properties update sent {}", propertiesUpdate.getMessageId());
-        super.send(propertiesUpdate);
+        participantPublisher.send(propertiesUpdate);
     }
 }

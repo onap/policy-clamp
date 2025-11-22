@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
@@ -44,10 +44,12 @@ import org.springframework.stereotype.Component;
  * This class is used to send AutomationCompositionDeploy messages to participants on Kafka.
  */
 @Component
-@AllArgsConstructor
-public class AutomationCompositionDeployPublisher extends AbstractParticipantPublisher<AutomationCompositionDeploy> {
+@RequiredArgsConstructor
+public class AutomationCompositionDeployPublisher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionDeployPublisher.class);
+
+    private final ParticipantPublisher participantPublisher;
 
     /**
      * Send AutomationCompositionDeploy to Participant.
@@ -88,6 +90,6 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
         acDeployMsg.setParticipantUpdatesList(participantDeploys);
 
         LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg.getMessageId());
-        super.send(acDeployMsg);
+        participantPublisher.send(acDeployMsg);
     }
 }

@@ -54,7 +54,7 @@ public abstract class ParticipantListener<T extends ParticipantMessage> extends 
     @Override
     public void onTopicEvent(CommInfrastructure infra, String topic, StandardCoderObject sco, T message) {
         if (participantHandler.appliesTo(message)) {
-            NetLoggerUtil.log(NetLoggerUtil.EventType.IN, infra, topic,
+            NetLoggerUtil.log(NetLoggerUtil.EventType.IN, infra.toString(), topic,
                     String.format("{\"type\":\"IN\", \"topic\":\"%s\", \"message\":%s}", topic, message));
             consumer.accept(message);
         }
