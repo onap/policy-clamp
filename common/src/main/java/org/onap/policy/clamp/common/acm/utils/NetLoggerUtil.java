@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.common.acm.utils;
 
 import lombok.Getter;
-import org.onap.policy.common.message.bus.event.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ public class NetLoggerUtil {
      * @param topic the topic the message came from or null if the type is REST
      * @param message message to be logged
      */
-    public static void log(EventType type, Topic.CommInfrastructure protocol, String topic, String message) {
+    public static void log(EventType type, String protocol, String topic, String message) {
         networkLogger.info("[{}|{}|{}]{}{}", type, protocol, topic, SYSTEM_LS, message);
     }
 

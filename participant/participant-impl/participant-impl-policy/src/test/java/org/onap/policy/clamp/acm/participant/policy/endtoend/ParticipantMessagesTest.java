@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.acm.participant.policy.endtoend;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -69,7 +70,9 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             var participantMessagePublisher = new ParticipantMessagePublisher();
-            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            var topicSink = Mockito.mock(TopicSink.class);
+            when(topicSink.getTopicCommInfrastructure()).thenReturn(CommInfrastructure.NOOP);
+            participantMessagePublisher.active(Collections.singletonList(topicSink));
             assertThatCode(() -> participantMessagePublisher.sendParticipantRegister(participantRegisterMsg))
                 .doesNotThrowAnyException();
         }
@@ -97,7 +100,9 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             var participantMessagePublisher = new ParticipantMessagePublisher();
-            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            var topicSink = Mockito.mock(TopicSink.class);
+            when(topicSink.getTopicCommInfrastructure()).thenReturn(CommInfrastructure.NOOP);
+            participantMessagePublisher.active(Collections.singletonList(topicSink));
             assertThatCode(() -> participantMessagePublisher.sendParticipantDeregister(participantDeregisterMsg))
                 .doesNotThrowAnyException();
         }
@@ -137,7 +142,9 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             var participantMessagePublisher = new ParticipantMessagePublisher();
-            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            var topicSink = Mockito.mock(TopicSink.class);
+            when(topicSink.getTopicCommInfrastructure()).thenReturn(CommInfrastructure.NOOP);
+            participantMessagePublisher.active(Collections.singletonList(topicSink));
             assertThatCode(() -> participantMessagePublisher.sendParticipantPrimeAck(participantPrimeAckMsg))
                 .doesNotThrowAnyException();
         }
