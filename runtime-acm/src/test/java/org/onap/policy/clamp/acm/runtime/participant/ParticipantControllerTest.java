@@ -51,6 +51,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -62,8 +63,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles({ "test", "default" })
+@EmbeddedKafka
 @DirtiesContext
+@ActiveProfiles({ "test", "default" })
 class ParticipantControllerTest extends CommonRestClient {
     private static final String PARTICIPANTS_ENDPOINT = "participants";
     private static final int NUMBER_RECORDS = 10;

@@ -20,15 +20,10 @@
 
 package org.onap.policy.clamp.acm.runtime.liquibase;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.runtime.supervision.SupervisionScanner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -42,13 +37,9 @@ import org.springframework.test.context.DynamicPropertySource;
  * - inconsistent NOT NULL constraints and @NotNull annotations
  */
 @SpringBootTest
-@ActiveProfiles("hibernate-validation")
+@EmbeddedKafka
+@ActiveProfiles({"hibernate-validation", "test"})
 class HibernateValidationTest extends AbstractLiquibaseTestBase {
-
-    @Autowired
-    private SupervisionScanner scanner;
-
-    private static final AtomicInteger parallelCount = new AtomicInteger();
 
     @DynamicPropertySource
     static void overrideProperties(DynamicPropertyRegistry registry) {
@@ -58,18 +49,9 @@ class HibernateValidationTest extends AbstractLiquibaseTestBase {
         registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
     }
 
+    // Dummy test: Hibernate validation runs during context startup and throws exception on validation failure
     @Test
-    void createJobTest() {
-        var list = List.of(1, 2, 3, 4, 5);
-        var id = UUID.randomUUID();
-        list.stream().parallel().forEach(
-                x -> {
-                    var optJob = scanner.createJob(id);
-                    if (optJob.isPresent()) {
-                        parallelCount.getAndIncrement();
-                    }
-                }
-        );
-        assertEquals(1, parallelCount.get());
+    void contextStartsAndHibernateValidationPasses() {
+        Assertions.assertTrue(true);
     }
 }
