@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021-2022 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2022, 2025 OpenInfra Foundation Europe. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.service;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
+import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.acm.participant.kubernetes.configurations.HelmRepositoryConfig;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.HelmClient;
@@ -33,17 +34,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@NoArgsConstructor
 public class ChartService {
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
     private ChartStore chartStore;
 
-    @Autowired
     private HelmClient helmClient;
 
-    @Autowired
     private HelmRepositoryConfig helmRepositoryConfig;
+
+    /**
+     * Instantiates the ChartService with the specified dependencies.
+     *
+     * @param chartStore the store for managing Helm chart information
+     * @param helmClient the client for interacting with Helm
+     * @param helmRepositoryConfig the configuration for Helm repositories
+     */
+    @Autowired
+    public ChartService(ChartStore chartStore, HelmClient helmClient, HelmRepositoryConfig helmRepositoryConfig) {
+        this.chartStore = chartStore;
+        this.helmClient = helmClient;
+        this.helmRepositoryConfig = helmRepositoryConfig;
+    }
 
     /**
      * Get all the installed charts.
@@ -105,8 +118,8 @@ public class ChartService {
                 chart.setRepository(repo);
             }
         } else {
-            // Add remote repository if passed via TOSCA
-            // check whether the repo is permitted
+            // Add a remote repository if passed via TOSCA
+            // and check whether the repo is permitted
             for (HelmRepository repo : helmRepositoryConfig.getRepos()) {
                 if (repo.getAddress().equals(chart.getRepository().getAddress())
                         && helmRepositoryConfig.getProtocols()
@@ -129,7 +142,7 @@ public class ChartService {
     /**
      * Configure remote repository.
      * @param repo HelmRepository
-     * @throws ServiceException incase of error
+     * @throws ServiceException in case of error
      */
     public boolean configureRepository(HelmRepository repo) throws ServiceException {
         return helmClient.addRepository(repo);

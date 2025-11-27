@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +39,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHan
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
@@ -73,7 +75,7 @@ class ParticipantCommTest {
 
         var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
-                participantDeregisterAckListener.getType());
+            participantDeregisterAckListener.getType());
 
         var participantPrimeListener = new ParticipantPrimeListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_PRIME.name(), participantPrimeListener.getType());
@@ -84,15 +86,15 @@ class ParticipantCommTest {
 
         var automationCompositionUpdateListener = new AutomationCompositionDeployListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY.name(),
-                automationCompositionUpdateListener.getType());
+            automationCompositionUpdateListener.getType());
 
         var automationCompositionStateChangeListener = new AutomationCompositionStateChangeListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE.name(),
-                automationCompositionStateChangeListener.getType());
+            automationCompositionStateChangeListener.getType());
 
         var participantSyncListener = new ParticipantSyncListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_SYNC_MSG.name(),
-                participantSyncListener.getType());
+            participantSyncListener.getType());
         assertFalse(participantSyncListener.isDefaultTopic());
 
         var acMigrationListener = new AutomationCompositionMigrationListener(participantHandler);
@@ -126,7 +128,7 @@ class ParticipantCommTest {
         verify(mockTopicSink).send(coder.encode(participantPrimeAck));
 
         var automationCompositionAck =
-                new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
+            new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertDoesNotThrow(() -> publisher.sendAutomationCompositionAck(automationCompositionAck));
         verify(mockTopicSink).send(coder.encode(automationCompositionAck));
 
@@ -141,19 +143,19 @@ class ParticipantCommTest {
 
         var participantStatus = new ParticipantStatus();
         assertThrows(AutomationCompositionRuntimeException.class,
-                () -> publisher.sendParticipantStatus(participantStatus));
+            () -> publisher.sendParticipantStatus(participantStatus));
 
         var participantRegister = new ParticipantRegister();
         assertThrows(AutomationCompositionRuntimeException.class,
-                () -> publisher.sendParticipantRegister(participantRegister));
+            () -> publisher.sendParticipantRegister(participantRegister));
 
         var participantDeregister = new ParticipantDeregister();
         assertThrows(AutomationCompositionRuntimeException.class,
-                () -> publisher.sendParticipantDeregister(participantDeregister));
+            () -> publisher.sendParticipantDeregister(participantDeregister));
 
         var automationCompositionAck = mock(AutomationCompositionDeployAck.class);
         assertThrows(AutomationCompositionRuntimeException.class,
-                () -> publisher.sendAutomationCompositionAck(automationCompositionAck));
+            () -> publisher.sendAutomationCompositionAck(automationCompositionAck));
 
         List<TopicSink> emptyList = Collections.emptyList();
         assertThrows(IllegalArgumentException.class, () -> publisher.active(emptyList));
@@ -178,10 +180,10 @@ class ParticipantCommTest {
         Consumer<ParticipantMessage> consumer = Mockito.mock(Consumer.class);
         ParticipantMessage message = Mockito.mock(ParticipantMessage.class);
 
-        Mockito.when(handler.appliesTo(message)).thenReturn(true);
+        when(handler.appliesTo(message)).thenReturn(true);
 
         ParticipantListener<ParticipantMessage> listener =
-                new ParticipantListener<>(ParticipantMessage.class, handler, consumer) {
+            new ParticipantListener<>(ParticipantMessage.class, handler, consumer) {
                 @Override
                 public String getType() {
                     return "";
@@ -189,7 +191,31 @@ class ParticipantCommTest {
             };
         assertNotNull(listener);
         listener.onTopicEvent(Mockito.mock(Topic.CommInfrastructure.class),
-                "topic", Mockito.mock(StandardCoderObject.class), message);
-        Mockito.verify(handler).appliesTo(message);
+            "topic", Mockito.mock(StandardCoderObject.class), message);
+        verify(handler).appliesTo(message);
+        verify(consumer).accept(message);
     }
+
+    @Test
+    void testOnTopicEvent_AckListener() {
+        ParticipantHandler handler = mock(ParticipantHandler.class);
+        Consumer<ParticipantAckMessage> consumer = mock(Consumer.class);
+        ParticipantAckMessage message = mock(ParticipantAckMessage.class);
+
+        when(handler.appliesTo(message)).thenReturn(true);
+
+        ParticipantAckListener<ParticipantAckMessage> listener =
+            new ParticipantAckListener<>(ParticipantAckMessage.class, handler, consumer) {
+                @Override
+                public String getType() {
+                    return "";
+                }
+            };
+        assertNotNull(listener);
+        listener.onTopicEvent(mock(Topic.CommInfrastructure.class),
+            "topic", mock(StandardCoderObject.class), message);
+        verify(handler).appliesTo(message);
+        verify(consumer).accept(message);
+    }
+
 }

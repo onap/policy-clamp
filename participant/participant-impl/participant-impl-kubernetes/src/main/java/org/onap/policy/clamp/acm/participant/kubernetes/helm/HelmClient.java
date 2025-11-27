@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021-2024 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ======================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ======================================================================
@@ -26,6 +26,7 @@ import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.NoArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -41,9 +42,9 @@ import org.springframework.stereotype.Component;
  * Client to talk with Helm cli. Supports helm3 + version
  */
 @Component
+@NoArgsConstructor
 public class HelmClient {
 
-    @Autowired
     private ChartStore chartStore;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -52,14 +53,19 @@ public class HelmClient {
     private static final String COMMAND_HELM = "/usr/local/bin/helm";
     public static final String COMMAND_KUBECTL = "/usr/local/bin/kubectl";
 
+    @Autowired
+    public HelmClient(ChartStore chartStore) {
+        this.chartStore = chartStore;
+    }
+
     /**
      * Install a chart.
      *
      * @param chart name and version.
-     * @throws ServiceException incase of error
+     * @throws ServiceException in case of error
      */
     public void installChart(ChartInfo chart) throws ServiceException {
-        if (! checkNamespaceExists(chart.getNamespace())) {
+        if (!checkNamespaceExists(chart.getNamespace())) {
             var processBuilder = prepareCreateNamespaceCommand(chart.getNamespace());
             executeCommand(processBuilder);
         }
@@ -71,10 +77,11 @@ public class HelmClient {
     }
 
     /**
-     * Add repository if doesn't exist.
+     * Add a repository if it doesn't exist.
+     *
      * @param repo HelmRepository
-     * @return boolean true of false based on add repo success or failed
-     * @throws ServiceException incase of error
+     * @return boolean true of false based on added repo success or failed
+     * @throws ServiceException in case of error
      */
     public boolean addRepository(HelmRepository repo) throws ServiceException {
         if (!verifyHelmRepoAlreadyExist(repo)) {
@@ -95,7 +102,7 @@ public class HelmClient {
      * @param chart ChartInfo.
      * @return the chart repository as a string
      * @throws ServiceException in case of error
-     * @throws IOException in case of IO errors
+     * @throws IOException      in case of IO errors
      */
     public String findChartRepository(ChartInfo chart) throws ServiceException, IOException {
         if (updateHelmRepo()) {
@@ -114,15 +121,15 @@ public class HelmClient {
     }
 
     /**
-     * Verify helm chart in configured repositories.
+     * Verify the helm chart in configured repositories.
+     *
      * @param chart chartInfo
      * @return repo name
-     * @throws IOException incase of error
-     * @throws ServiceException incase of error
+     * @throws ServiceException in case of error
      */
-    public String verifyConfiguredRepo(ChartInfo chart) throws IOException, ServiceException {
+    public String verifyConfiguredRepo(ChartInfo chart) throws ServiceException {
         logger.info("Looking for helm chart {} in all the configured helm repositories", chart.getChartId().getName());
-        String repository = null;
+        String repository;
         var builder = helmRepoVerifyCommand(chart.getChartId().getName());
         String output = executeCommand(builder);
         repository = verifyOutput(output, chart.getChartId().getName());
@@ -133,7 +140,7 @@ public class HelmClient {
      * Uninstall a chart.
      *
      * @param chart name and version.
-     * @throws ServiceException incase of error
+     * @throws ServiceException in case of error
      */
     public void uninstallChart(ChartInfo chart) throws ServiceException {
         executeCommand(prepareUnInstallCommand(chart));
@@ -141,10 +148,11 @@ public class HelmClient {
 
 
     /**
-     * Execute helm cli bash commands .
-     * @param processBuilder processbuilder
+     * Execute helm cli bash commands.
+     *
+     * @param processBuilder process builder object
      * @return string output
-     * @throws ServiceException incase of error.
+     * @throws ServiceException in case of error.
      */
     public String executeCommand(ProcessBuilder processBuilder) throws ServiceException {
         var commandStr = toString(processBuilder);
@@ -156,7 +164,7 @@ public class HelmClient {
 
             if (exitValue != 0) {
                 var error = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
-                if (! error.isEmpty()) {
+                if (!error.isEmpty()) {
                     throw new ServiceException("Command execution failed: " + commandStr + " " + error);
                 }
             }
@@ -181,7 +189,7 @@ public class HelmClient {
     }
 
     private String verifyOutput(String output, String value) {
-        for (var line: output.split("\\R")) {
+        for (var line : output.split("\\R")) {
             if (line.contains(value)) {
                 return line.split("/")[0];
             }

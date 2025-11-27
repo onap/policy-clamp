@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
- * ================================================================================
+ * Copyright (C) 2021-2023, 2025 OpenInfra Foundation Europe. All rights reserved
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,7 +64,7 @@ public class AcElementErrorController implements ErrorController {
     }
 
     /**
-     * Handle Errors not handled to GlobalControllerExceptionHandler.
+     * Handle errors that were not handled to GlobalControllerExceptionHandler.
      *
      * @param request HttpServletRequest
      * @return ResponseEntity

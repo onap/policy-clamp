@@ -144,7 +144,7 @@ class HelmClientTest {
     }
 
     @Test
-    void test_verifyConfiguredRepoForInvalidChart() throws IOException, ServiceException {
+    void test_verifyConfiguredRepoForInvalidChart() throws ServiceException {
         doReturn("").when(helmClient).executeCommand(any());
         String configuredRepo = helmClient.verifyConfiguredRepo(charts.get(1));
         assertNull(configuredRepo);

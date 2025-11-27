@@ -68,6 +68,7 @@ public class MonitoringScanner {
                     acDefinition -> updateSync.or(acDefinitionScanner.scanMessage(acDefinition, message)));
             messageProvider.removeMessage(message.getMessageId());
         }
+
         acDefinitionOpt.ifPresent(acDefinition ->
                 acDefinitionScanner.scanAutomationCompositionDefinition(acDefinition, updateSync));
     }

@@ -23,3 +23,7 @@ ui-react/build
 auto-save-list
 tramp
 venv
+
+#Visual Studio
+.DS_Store
+**/.DS_Store

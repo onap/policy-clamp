@@ -24,13 +24,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
@@ -296,5 +303,91 @@ class CacheProviderTest {
 
         revisionId = UUID.randomUUID();
         assertFalse(cacheProvider.isInstanceUpdated(instanceId, revisionId));
+    }
+
+    @Test
+    void test_addElementDefinition() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var revisionId = UUID.randomUUID();
+
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("name", "1.0.0"));
+        var list = new ArrayList<AutomationCompositionElementDefinition>();
+        list.add(acElementDefinition);
+
+        cacheProvider.addElementDefinition(compositionId, list, revisionId);
+        assertEquals(1, cacheProvider.getAcElementsDefinitions().size());
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        assertNotNull(acDefinition);
+        assertEquals(compositionId, acDefinition.getCompositionId());
+        assertEquals(revisionId, acDefinition.getRevisionId());
+
+        var element = acDefinition.getElements().get(acElementDefinition.getAcElementDefinitionId());
+        assertEquals(acElementDefinition, element);
+        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
+        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate().getProperties());
+    }
+
+    @Test
+    void test_initializeAutomationComposition_NullValue() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, null))
+                .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void test_initializeAutomationComposition_ParticipantsDontMatch() {
+        var element = new AcElementRestart();
+        element.setId(UUID.randomUUID());
+        element.setParticipantId(UUID.randomUUID());
+        var participantRestartAc = CommonTestData.createParticipantRestartAc();
+        participantRestartAc.setAcElementList(new ArrayList<>());
+        participantRestartAc.getAcElementList().add(element);
+
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        assertTrue(cacheProvider.getAutomationCompositions().isEmpty());
+        var compositionId = UUID.randomUUID();
+        cacheProvider.initializeAutomationComposition(compositionId, participantRestartAc);
+        assertFalse(cacheProvider.getAutomationCompositions().isEmpty());
+    }
+
+    @Test
+    void test_createAcInstance_NullValues() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+
+        var randomID = UUID.randomUUID();
+        var participantDeploy = new ParticipantDeploy();
+        assertThrows(NullPointerException.class, () ->
+            cacheProvider.createAcInstance(null, randomID, randomID, participantDeploy,
+                DeployState.UNDEPLOYED, SubState.NONE, randomID));
+        assertThrows(NullPointerException.class, () ->
+            cacheProvider.createAcInstance(randomID, randomID, null, participantDeploy,
+                DeployState.UNDEPLOYED, SubState.NONE, randomID));
+    }
+
+    @Test
+    void test_createAcInstance_NotNullCompositionId() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var automationComposition = CommonTestData.getTestAutomationCompositions()
+            .getAutomationCompositionList().get(0);
+        var participantDeploy = CommonTestData.createparticipantDeploy(cacheProvider
+            .getParticipantId(), automationComposition);
+
+        var compositionId = UUID.randomUUID();
+        var compositionTargetId = UUID.randomUUID();
+        AtomicReference<UUID> instanceId = new AtomicReference<>(UUID.randomUUID());
+        Optional.ofNullable(automationComposition.getInstanceId()).ifPresent(instanceId::set);
+
+        var acInstance = cacheProvider.createAcInstance(compositionId, compositionTargetId, instanceId.get(),
+            participantDeploy, DeployState.UNDEPLOYED, SubState.NONE, UUID.randomUUID());
+        assertNotNull(acInstance);
+        assertEquals(instanceId.get(), acInstance.getInstanceId());
+        assertEquals(compositionId, acInstance.getCompositionId());
     }
 }

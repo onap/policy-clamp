@@ -21,10 +21,13 @@
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -276,6 +280,24 @@ class ParticipantIntermediaryApiImplTest {
         assertEquals(0, result);
         result = apiImpl.getRollbackNextStage(compositionElementTarget, 0);
         assertEquals(0, result);
+    }
+
+    @Test
+    void testUpdateAutomationCompositionElementStage() {
+        var instanceId = UUID.randomUUID();
+        var mockCacheProvider = mock(CacheProvider.class);
+        when(mockCacheProvider.getAutomationComposition(instanceId)).thenReturn(null);
+        var mockAutomationCompositionHandler = mock(AutomationCompositionOutHandler.class,
+            withSettings().useConstructor(mock(ParticipantMessagePublisher.class), mockCacheProvider));
+        var elementId = UUID.randomUUID();
+        doCallRealMethod().when(mockAutomationCompositionHandler)
+            .updateAutomationCompositionElementStage(instanceId, elementId, StateChangeResult.NO_ERROR, 1, "message");
+        var api = new ParticipantIntermediaryApiImpl(mockAutomationCompositionHandler, mockCacheProvider);
+
+        assertDoesNotThrow(() -> api.updateAutomationCompositionElementStage(instanceId, elementId,
+            StateChangeResult.NO_ERROR, 1, "message"));
+        verify(mockAutomationCompositionHandler).updateAutomationCompositionElementStage(instanceId, elementId,
+            StateChangeResult.NO_ERROR, 1, "message");
     }
 
     @Test

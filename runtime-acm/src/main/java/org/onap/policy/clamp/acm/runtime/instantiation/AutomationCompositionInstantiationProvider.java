@@ -185,9 +185,9 @@ public class AutomationCompositionInstantiationProvider {
      * @param acToBeUpdated         the composition to be updated
      * @return the result of the update
      */
-    private InstantiationResponse updateDeployedAutomationComposition(
-            AutomationComposition automationComposition, AutomationComposition acToBeUpdated,
-            AutomationCompositionDefinition acDefinition) {
+    InstantiationResponse updateDeployedAutomationComposition(
+        AutomationComposition automationComposition, AutomationComposition acToBeUpdated,
+        AutomationCompositionDefinition acDefinition) {
         // save copy in case of a rollback
         automationCompositionProvider.copyAcElementsBeforeUpdate(acToBeUpdated);
         LOGGER.info("Updating deployed instance with id {}", automationComposition.getInstanceId());

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -139,15 +141,16 @@ class AcElementListenerV1Test {
     @Test
     void handleRestartComposition() {
         var acElementListenerV1 = createAcElementListenerV1(mock(ParticipantIntermediaryApi.class));
-        assertThatThrownBy(() -> acElementListenerV1.handleRestartComposition(null, null))
+        assertThatThrownBy(() -> acElementListenerV1.handleRestartComposition(UUID.randomUUID(),
+            List.of(), AcTypeState.COMMISSIONED))
                 .isInstanceOf(PfModelException.class);
     }
 
     @Test
     void handleRestartInstance() {
         var acElementListenerV1 = createAcElementListenerV1(mock(ParticipantIntermediaryApi.class));
-        assertThatThrownBy(() -> acElementListenerV1.handleRestartInstance(null, null,
-                null, null)).isInstanceOf(PfModelException.class);
+        assertThatThrownBy(() -> acElementListenerV1.handleRestartInstance(UUID.randomUUID(), new AcElementDeploy(),
+            new HashMap<>(), DeployState.UNDEPLOYED, LockState.UNLOCKED)).isInstanceOf(PfModelException.class);
     }
 
     @Test
@@ -215,4 +218,5 @@ class AcElementListenerV1Test {
             }
         };
     }
+
 }

@@ -208,10 +208,10 @@ public class EncryptionUtils {
     }
 
 
-    private List<ToscaProperty> filterSensitiveProperties(AutomationCompositionElement acInstanceElement,
-                                                          Collection<ToscaNodeType> nodeTypes,
-                                                          Collection<ToscaDataType> dataTypes,
-                                                          Collection<ToscaNodeTemplate> nodeTemplates) {
+    List<ToscaProperty> filterSensitiveProperties(AutomationCompositionElement acInstanceElement,
+                                                  Collection<ToscaNodeType> nodeTypes,
+                                                  Collection<ToscaDataType> dataTypes,
+                                                  Collection<ToscaNodeTemplate> nodeTemplates) {
 
         List<ToscaProperty> sensitiveProperties = new ArrayList<>();
 
