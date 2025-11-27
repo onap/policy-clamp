@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/http-participant.tar.gz /packages/
 RUN tar xvzf /packages/http-participant.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:4.2.2
+FROM onap/policy-jre-alpine:4.2.3-SNAPSHOT
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM HTTP Participant"
