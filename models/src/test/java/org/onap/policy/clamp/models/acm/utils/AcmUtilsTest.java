@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -39,8 +40,10 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -192,6 +195,15 @@ class AcmUtilsTest {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
         message = serviceTemplate.toString();
         assertEquals(message.substring(0, 255), AcmUtils.validatedMessage(message));
+    }
+
+    @Test
+    void testCheckMigrationState() {
+        var automationComposition = getDummyAutomationComposition();
+        assertDoesNotThrow(() -> AcmUtils.checkMigrationState(automationComposition));
+        automationComposition.getElements().values().iterator().next().setMigrationState(MigrationState.REMOVED);
+        assertThatThrownBy(() -> AcmUtils.checkMigrationState(automationComposition))
+                .isInstanceOf(PfModelRuntimeException.class);
     }
 
     private AutomationComposition getDummyAutomationComposition() {
