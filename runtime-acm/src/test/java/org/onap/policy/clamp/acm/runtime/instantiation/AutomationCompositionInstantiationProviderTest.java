@@ -51,6 +51,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
@@ -317,6 +318,8 @@ class AutomationCompositionInstantiationProviderTest {
         automationCompositionTarget.setPrecheck(false);
         AcmStateUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED,
                 SubState.NONE);
+        automationComposition.getElements().values()
+                .forEach(el -> el.setMigrationState(MigrationState.DEFAULT));
         var instantiationResponse = instantiationProvider.updateAutomationComposition(compositionId,
                 automationCompositionTarget);
 

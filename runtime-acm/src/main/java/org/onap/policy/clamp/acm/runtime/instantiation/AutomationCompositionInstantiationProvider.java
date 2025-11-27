@@ -132,6 +132,7 @@ public class AutomationCompositionInstantiationProvider {
         AutomationCompositionProvider.validateInstanceEndpoint(compositionId, acFromDb);
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         AcDefinitionProvider.checkPrimedComposition(acDefinition);
+        AcmUtils.checkMigrationState(acFromDb);
         if (DeployState.UNDEPLOYED.equals(acFromDb.getDeployState())) {
             LOGGER.info("Updating undeployed instance with id {}", instanceId);
             acFromDb.setElements(automationComposition.getElements());

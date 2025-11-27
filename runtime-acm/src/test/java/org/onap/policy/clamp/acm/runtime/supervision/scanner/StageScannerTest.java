@@ -44,6 +44,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
@@ -160,9 +161,11 @@ class StageScannerTest {
         // first element is migrated
         clearInvocations(acProvider);
         element.setDeployState(DeployState.DEPLOYED);
+        element.setMigrationState(MigrationState.REMOVED);
         supervisionScanner.scanStage(automationComposition, acDefinition, new UpdateSync(), UUID.randomUUID());
         verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
 
+        assertEquals(MigrationState.DEFAULT, element.getMigrationState());
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
     }
 

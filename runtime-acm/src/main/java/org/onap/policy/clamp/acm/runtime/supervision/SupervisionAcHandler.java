@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
-import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +40,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
@@ -49,8 +47,8 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositi
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -86,23 +84,14 @@ public class SupervisionAcHandler {
      */
     public void deploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         LOGGER.info("Deployment request received for instanceID: {}", automationComposition.getInstanceId());
-
-        var elements = automationComposition.getElements().values();
-        // check if elements are in a valid state to be deployed
-        elements.stream().filter(element -> !MigrationState.DEFAULT.equals(element.getMigrationState()))
-            .findAny().ifPresent(element -> {
-                var msg = String.format("Instance cannot be deployed; There are elements in an invalid Migration state."
-                    + "(ElementId: %s, MigrationState: %s)", element.getId(), element.getMigrationState());
-                LOGGER.warn(msg);
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, msg);
-            });
+        AcmUtils.checkMigrationState(automationComposition);
 
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && DeployState.DEPLOYING.equals(automationComposition.getDeployState())
                 && automationComposition.getElements().size() > 1) {
             automationComposition.setLastMsg(TimestampHelper.now());
 
-            for (var element : elements) {
+            for (var element : automationComposition.getElements().values()) {
                 if (!DeployState.DEPLOYED.equals(element.getDeployState())) {
                     element.setDeployState(DeployState.DEPLOYING);
                     element.setMessage(null);
