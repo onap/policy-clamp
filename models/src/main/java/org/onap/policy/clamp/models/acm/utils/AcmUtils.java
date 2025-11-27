@@ -71,6 +71,9 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AcmUtils {
     public static final String ENTRY = "entry ";
+    private static final String NOT_VALID_INSTANCE =
+            "Instance cannot be deployed; There are elements in an invalid Migration state."
+                    + "(ElementId: %s, MigrationState: %s)";
     private static final StringToMapConverter MAP_CONVERTER = new StringToMapConverter();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AcmUtils.class);
@@ -406,6 +409,23 @@ public final class AcmUtils {
             return message.substring(0, 255);
         }
         return message;
+    }
+
+    /**
+     * Check that the AutomationComposition has all elements in MigrationState as DEFAULT.
+     *
+     * @param automationComposition the AutomationComposition
+     */
+    public static void checkMigrationState(AutomationComposition automationComposition) {
+        var result = automationComposition.getElements().values()
+                .stream()
+                .filter(element -> !MigrationState.DEFAULT.equals(element.getMigrationState()))
+                .findAny();
+        // check if elements are in a valid state to be deployed
+        if (result.isPresent()) {
+            var msg = String.format(NOT_VALID_INSTANCE, result.get().getId(), result.get().getMigrationState());
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, msg);
+        }
     }
 
     /**

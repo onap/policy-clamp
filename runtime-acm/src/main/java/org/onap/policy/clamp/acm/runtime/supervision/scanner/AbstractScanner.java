@@ -69,7 +69,8 @@ public abstract class AbstractScanner {
                 || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState())) {
             automationComposition.setCompositionTargetId(null);
             for (var acElement : automationComposition.getElements().values()) {
-                if (MigrationState.NEW.equals(acElement.getMigrationState())) {
+                if (MigrationState.NEW.equals(acElement.getMigrationState())
+                        || MigrationState.REMOVED.equals(acElement.getMigrationState())) {
                     acElement.setMigrationState(MigrationState.DEFAULT);
                 }
             }
