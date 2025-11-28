@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentGroup;
+import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentGroups;
+import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentSubGroup;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.onap.policy.models.pdp.concepts.DeploymentGroup;
-import org.onap.policy.models.pdp.concepts.DeploymentGroups;
-import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
 
