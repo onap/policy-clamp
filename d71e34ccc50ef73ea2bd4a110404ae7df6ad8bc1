@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b949af91_f03d2045",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/scanner/AbstractScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-12-01T13:58:22Z",
+      "side": 1,
+      "message": "this is missing condition coverage.",
+      "range": {
+        "startLine": 72,
+        "startChar": 20,
+        "endLine": 73,
+        "endChar": 90
+      },
+      "revId": "d71e34ccc50ef73ea2bd4a110404ae7df6ad8bc1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
