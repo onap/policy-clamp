@@ -35,8 +35,8 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
 class EncryptionUtilTest {
 
@@ -47,7 +47,7 @@ class EncryptionUtilTest {
     @BeforeAll
     static void setUpBeforeClass() {
         var serviceTemplateEncrypt = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
-        var jpa2 = ProviderUtils.getJpaAndValidate(serviceTemplateEncrypt, JpaToscaServiceTemplate::new,
+        var jpa2 = ProviderUtils.getJpaAndValidate(serviceTemplateEncrypt, DocToscaServiceTemplate::new,
                 "toscaServiceTemplate");
         serviceTemplateEncrypt = jpa2.toAuthorative();
         acDefinition = CommonTestData.createAcDefinition(serviceTemplateEncrypt, AcTypeState.PRIMED);
