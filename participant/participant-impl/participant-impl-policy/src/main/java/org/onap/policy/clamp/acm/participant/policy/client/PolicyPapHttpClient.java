@@ -20,9 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentGroup;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentGroups;
@@ -57,7 +54,7 @@ public class PolicyPapHttpClient extends AbstractHttpClient {
      * @param action the action to deploy/undeploy policy
      * @return Response
      */
-    public Response handlePolicyDeployOrUndeploy(final String policyName, final String policyVersion,
+    public String handlePolicyDeployOrUndeploy(final String policyName, final String policyVersion,
                                                  final DeploymentSubGroup.Action action) {
 
         var policies = List.of(new ToscaConceptIdentifier(policyName, policyVersion));
@@ -74,6 +71,6 @@ public class PolicyPapHttpClient extends AbstractHttpClient {
         var groups = new DeploymentGroups();
         groups.setGroups(List.of(group));
 
-        return executePost(PAP_URI + "pdps/deployments/batch", Entity.entity(groups, MediaType.APPLICATION_JSON));
+        return executePost(PAP_URI + "pdps/deployments/batch", groups);
     }
 }
