@@ -75,21 +75,6 @@
             <version>${policy.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-base</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-errors</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-tosca</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -160,6 +145,11 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>

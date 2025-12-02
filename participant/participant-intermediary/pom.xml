@@ -56,16 +56,6 @@
             <version>${policy.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-base</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-tosca</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
         </dependency>
