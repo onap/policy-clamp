@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023 Nordix Foundation.
+ *  Copyright (C) 2021,2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
@@ -47,8 +44,8 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      * @param toscaServiceTemplate the whole ToscaServiceTemplate
      * @return Response
      */
-    public Response createPolicyType(ToscaServiceTemplate toscaServiceTemplate) {
-        return executePost(POLICY_URI + "policytypes", Entity.entity(toscaServiceTemplate, MediaType.APPLICATION_JSON));
+    public String createPolicyType(ToscaServiceTemplate toscaServiceTemplate) {
+        return executePost(POLICY_URI + "policytypes", toscaServiceTemplate);
     }
 
     /**
@@ -57,8 +54,8 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      * @param toscaServiceTemplate the whole ToscaServiceTemplate
      * @return Response
      */
-    public Response createPolicy(final ToscaServiceTemplate toscaServiceTemplate) {
-        return executePost(POLICY_URI + "policies", Entity.entity(toscaServiceTemplate, MediaType.APPLICATION_JSON));
+    public String createPolicy(final ToscaServiceTemplate toscaServiceTemplate) {
+        return executePost(POLICY_URI + "policies", toscaServiceTemplate);
     }
 
     /**
@@ -66,10 +63,9 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      *
      * @param policyName the name of the policy to be deleted
      * @param policyVersion the version of the policy to be deleted
-     * @return Response
      */
-    public Response deletePolicy(final String policyName, final String policyVersion) {
-        return executeDelete(POLICY_URI + "policies/" + policyName + "/versions/" + policyVersion);
+    public void deletePolicy(final String policyName, final String policyVersion) {
+        executeDelete(POLICY_URI + "policies/" + policyName + "/versions/" + policyVersion);
     }
 
     /**
@@ -77,9 +73,8 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      *
      * @param policyTypeName the name of the policy to be deleted
      * @param policyTypeVersion the version of the policy to be deleted
-     * @return Response
      */
-    public Response deletePolicyType(final String policyTypeName, final String policyTypeVersion) {
-        return executeDelete(POLICY_URI + "policytypes/" + policyTypeName + "/versions/" + policyTypeVersion);
+    public void deletePolicyType(final String policyTypeName, final String policyTypeVersion) {
+        executeDelete(POLICY_URI + "policytypes/" + policyTypeName + "/versions/" + policyTypeVersion);
     }
 }

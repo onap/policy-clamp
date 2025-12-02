@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,41 +20,27 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.parameters;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-/**
- * Class to hold all parameters needed for the policy participant.
- *
- */
 @Validated
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "participant")
-public class ParticipantPolicyParameters implements ParticipantParameters {
+public class RestClientParameters {
+    @NotBlank
+    private String clientName;
 
-    @NotNull
-    @Valid
-    private ParticipantIntermediaryParameters intermediaryParameters;
+    @Min(0)
+    @Max(65535)
+    private int port;
 
-    @NotNull
-    @Valid
-    private RestClientParameters policyApiParameters;
-
-    @NotNull
-    @Valid
-    private RestClientParameters policyPapParameters;
+    private String userName;
+    private String password;
 
     @NotBlank
-    private String pdpGroup;
-
-    @NotBlank
-    private String pdpType;
+    private String hostname;
 }

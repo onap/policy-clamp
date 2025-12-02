@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,10 @@ package org.onap.policy.clamp.acm.participant.policy.main.handler;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,6 +47,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 class AutomationCompositionElementHandlerTest {
 
@@ -97,12 +98,7 @@ class AutomationCompositionElementHandlerTest {
     void testDeploy() throws PfModelException {
         // Mock success scenario for policy creation and deployment
         var api = mock(PolicyApiHttpClient.class);
-        doReturn(Response.ok().build()).when(api).createPolicyType(any());
-        doReturn(Response.ok().build()).when(api).createPolicy(any());
-
         var pap = mock(PolicyPapHttpClient.class);
-        doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
-
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
 
@@ -119,6 +115,20 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
                 "Undeployed");
+    }
+
+    @Test
+    void testDeployError() {
+        var api = mock(PolicyApiHttpClient.class);
+        var pap = mock(PolicyPapHttpClient.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+
+        var compositionElement = getCompositionElement();
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
+                Map.of("data_types", 100), Map.of());
+        assertThatThrownBy(() -> handler.deploy(compositionElement, instanceElement))
+                .isInstanceOf(PfModelException.class);
     }
 
     @Test
@@ -163,14 +173,12 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void testApiException() throws PfModelException {
+    void testApiPolicyTypeException() throws PfModelException {
         var api = mock(PolicyApiHttpClient.class);
-        doReturn(Response.serverError().build()).when(api).createPolicyType(any());
-        doReturn(Response.ok().build()).when(api).createPolicy(any());
+        when(api.createPolicyType(any()))
+                .thenThrow(new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "", null, null, null));
 
         var pap = mock(PolicyPapHttpClient.class);
-        doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
-
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
 
@@ -185,15 +193,33 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void testDeployPapException() {
+    void testApiPolicyException() throws PfModelException {
         var api = mock(PolicyApiHttpClient.class);
-        doReturn(Response.ok().build()).when(api).createPolicyType(any());
-        doReturn(Response.ok().build()).when(api).createPolicy(any());
+        when(api.createPolicy(any()))
+                .thenThrow(new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "", null, null, null));
 
         var pap = mock(PolicyPapHttpClient.class);
-        doReturn(Response.serverError().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+
+        var compositionElement = getCompositionElement();
+        var instanceElement = getInstanceElement();
+
+        // Mock failure in policy creation
+        handler.deploy(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+    }
+
+    @Test
+    void testDeployPapException() {
+        var pap = mock(PolicyPapHttpClient.class);
+        when(pap.handlePolicyDeployOrUndeploy(any(), any(), any()))
+                .thenThrow(new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "", null, null, null));
 
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var api = mock(PolicyApiHttpClient.class);
         var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
 
         var compositionElement = getCompositionElement();

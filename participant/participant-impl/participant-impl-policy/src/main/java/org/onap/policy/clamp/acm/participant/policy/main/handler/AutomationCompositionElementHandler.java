@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.hc.core5.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
@@ -46,6 +45,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 /**
  * This class handles implementation of automationCompositionElement updates.
@@ -118,9 +118,11 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         // Deploy all policies of this automationComposition from Policy Framework
         if (!policyList.isEmpty()) {
             for (var policy : policyList) {
-                var deployPolicyResp = papHttpClient.handlePolicyDeployOrUndeploy(policy.getName(), policy.getVersion(),
-                        DeploymentSubGroup.Action.POST).getStatus();
-                if (deployPolicyResp != HttpStatus.SC_ACCEPTED) {
+                try {
+                    papHttpClient.handlePolicyDeployOrUndeploy(policy.getName(), policy.getVersion(),
+                            DeploymentSubGroup.Action.POST);
+                } catch (WebClientResponseException e) {
+                    LOGGER.error(e.getMessage(), e);
                     deployFailure = true;
                 }
             }
@@ -162,8 +164,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
     @Override
     public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException {
-        var createPolicyTypeResp = HttpStatus.SC_OK;
-        var createPolicyResp = HttpStatus.SC_OK;
+        var createPolicyTypeResp = true;
+        var createPolicyResp = true;
 
         var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
@@ -175,18 +177,24 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         if (automationCompositionDefinition.getPolicyTypes() != null) {
             LOGGER.info("Found Policy Types in automation composition definition: {} , Creating Policy Types",
                     automationCompositionDefinition.getName());
-            try (var response = apiHttpClient.createPolicyType(automationCompositionDefinition)) {
-                createPolicyTypeResp = response.getStatus();
+            try {
+                apiHttpClient.createPolicyType(automationCompositionDefinition);
+            } catch (WebClientResponseException e) {
+                LOGGER.error(e.getMessage(), e);
+                createPolicyTypeResp = false;
             }
         }
         if (automationCompositionDefinition.getToscaTopologyTemplate().getPolicies() != null) {
             LOGGER.info("Found Policies in automation composition definition: {} , Creating Policies",
                     automationCompositionDefinition.getName());
-            try (var response = apiHttpClient.createPolicy(automationCompositionDefinition)) {
-                createPolicyResp = response.getStatus();
+            try {
+                apiHttpClient.createPolicy(automationCompositionDefinition);
+            } catch (WebClientResponseException e) {
+                LOGGER.error(e.getMessage(), e);
+                createPolicyResp = false;
             }
         }
-        if (isSuccess(createPolicyTypeResp) && isSuccess(createPolicyResp)) {
+        if (createPolicyTypeResp && createPolicyResp) {
             LOGGER.info(
                     "PolicyTypes/Policies for the automation composition element : {} are created " + "successfully",
                     instanceElement.elementId());
@@ -197,10 +205,6 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
                     instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                     "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
         }
-    }
-
-    private boolean isSuccess(int status) {
-        return status == HttpStatus.SC_OK || status == HttpStatus.SC_CREATED;
     }
 
     private List<ToscaConceptIdentifier> getPolicyTypeList(ToscaServiceTemplate serviceTemplate) {
