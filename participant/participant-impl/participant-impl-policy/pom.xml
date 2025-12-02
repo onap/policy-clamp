@@ -33,9 +33,9 @@
     <description>Policy participant, that allows Policy to partake in automation compositions</description>
     <dependencies>
         <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-pdp</artifactId>
-            <version>${policy.models.version}</version>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-clamp-models</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.core5</groupId>
