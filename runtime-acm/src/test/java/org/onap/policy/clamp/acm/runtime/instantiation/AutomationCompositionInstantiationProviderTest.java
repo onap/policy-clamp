@@ -53,6 +53,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -66,7 +67,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -104,11 +104,11 @@ class AutomationCompositionInstantiationProviderTest {
     @BeforeAll
     static void setUpBeforeClass() {
         var st = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var jpa = ProviderUtils.getJpaAndValidate(st, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
+        var jpa = ProviderUtils.getJpaAndValidate(st, DocToscaServiceTemplate::new, "toscaServiceTemplate");
         serviceTemplate = jpa.toAuthorative();
 
         st = InstantiationUtils.getToscaServiceTemplate(MIGRATION_SERVICE_TEMPLATE_YAML);
-        jpa = ProviderUtils.getJpaAndValidate(st, JpaToscaServiceTemplate::new, "migrationServiceTemplate");
+        jpa = ProviderUtils.getJpaAndValidate(st, DocToscaServiceTemplate::new, "migrationServiceTemplate");
         serviceTemplateMigration = jpa.toAuthorative();
     }
 

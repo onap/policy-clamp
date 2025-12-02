@@ -35,6 +35,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-models</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>common-parameters</artifactId>
             <version>${policy.common.version}</version>
@@ -49,21 +54,6 @@
             <artifactId>utils-test</artifactId>
             <version>${policy.common.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-errors</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-base</artifactId>
-            <version>${policy.models.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-tosca</artifactId>
-            <version>${policy.models.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
