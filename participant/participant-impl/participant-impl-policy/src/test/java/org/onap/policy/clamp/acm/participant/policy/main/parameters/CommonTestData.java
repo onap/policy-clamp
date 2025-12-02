@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021--2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.parameters;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,9 @@ import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -42,6 +47,7 @@ public class CommonTestData {
     public static final List<TopicParameters> SOURCE_TOPIC_PARAMS = List.of(getSinkTopicParams(), getSyncTopicParams());
 
     public static final Coder CODER = new StandardCoder();
+    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
 
     /**
      * Get ParticipantPolicyParameters.
@@ -181,4 +187,19 @@ public class CommonTestData {
     public static UUID getParticipantId() {
         return UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03");
     }
+
+    /**
+     * Get ToscaServiceTemplate from resource.
+     *
+     * @param path path of the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
+        try {
+            return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
+        } catch (CoderException e) {
+            fail("Cannot read or decode " + path);
+            return null;
+        }
+    }
 }
+

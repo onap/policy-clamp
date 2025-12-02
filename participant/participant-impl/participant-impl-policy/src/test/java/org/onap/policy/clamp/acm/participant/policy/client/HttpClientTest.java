@@ -20,13 +20,9 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
@@ -36,10 +32,11 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentSubGroup;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.common.parameters.rest.RestClientParameters;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.RestClientParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.web.reactive.function.client.WebClientException;
 
 /**
  * Tests for api and pap http clients.
@@ -50,14 +47,17 @@ class HttpClientTest {
 
     private static PolicyPapHttpClient papHttpClient;
 
+    private static ToscaServiceTemplate serviceTemplate;
+
     /**
      * Set up Mock server.
      */
     @BeforeAll
     static void setUpMockServer() throws IOException {
+        serviceTemplate = CommonTestData.getToscaServiceTemplate("test/funtional-pmsh.yaml");
         // Setup mock web server
         int mockServerPort = 42545;
-        MockWebServer mockServer = new MockWebServer();
+        var mockServer = new MockWebServer();
         mockServer.start(mockServerPort);
         mockServer.setDispatcher(new Dispatcher() {
             @NotNull
@@ -70,6 +70,10 @@ class HttpClientTest {
                             .setResponseCode(200)
                             .addHeader("Content-Type", "application/json");
                 }
+                if (path.equals("/policy/api/v1/policies") && "POST".equals(request.getMethod())
+                        && request.getBody().size() < 40) {
+                    return new MockResponse().setResponseCode(404);
+                }
                 if (path.equals("/policy/api/v1/policies") && "POST".equals(request.getMethod())) {
                     return new MockResponse()
                             .setResponseCode(200)
@@ -78,6 +82,10 @@ class HttpClientTest {
                 if (path.matches("^/policy/api/v1/policytypes/[^/]+/versions/[^/]+$")
                         && "DELETE".equals(request.getMethod())) {
                     return new MockResponse().setResponseCode(200);
+                }
+                if (path.matches("^/policy/api/v1/policies/wrongPolicy/versions/[^/]+$")
+                        && "DELETE".equals(request.getMethod())) {
+                    return new MockResponse().setResponseCode(404);
                 }
                 if (path.matches("^/policy/api/v1/policies/[^/]+/versions/[^/]+$")
                         && "DELETE".equals(request.getMethod())) {
@@ -94,8 +102,8 @@ class HttpClientTest {
         });
 
         // Setup mock api and pap client
-        ParticipantPolicyParameters params = new ParticipantPolicyParameters();
-        RestClientParameters restClientParameters = getMockClientParameters(mockServerPort);
+        var params = new ParticipantPolicyParameters();
+        var restClientParameters = getMockClientParameters(mockServerPort);
         params.setPolicyApiParameters(restClientParameters);
         params.setPolicyPapParameters(restClientParameters);
 
@@ -103,20 +111,30 @@ class HttpClientTest {
         papHttpClient = new PolicyPapHttpClient(params);
     }
 
-
     @Test
     void testCreatePolicy() {
-        assertDoesNotThrow(() -> apiHttpClient.createPolicy(getTestToscaServiceTemplate()));
+        assertDoesNotThrow(() -> apiHttpClient.createPolicy(serviceTemplate));
+    }
+
+    @Test
+    void testCreateBabPolicy() {
+        var badServiceTemplate = new ToscaServiceTemplate();
+        assertThrows(WebClientException.class, () -> apiHttpClient.createPolicy(badServiceTemplate));
     }
 
     @Test
     void testCreatePolicyTypes() {
-        assertDoesNotThrow(() -> apiHttpClient.createPolicyType(getTestToscaServiceTemplate()));
+        assertDoesNotThrow(() -> apiHttpClient.createPolicyType(serviceTemplate));
     }
 
     @Test
     void testDeletePolicy() {
         assertDoesNotThrow(() -> apiHttpClient.deletePolicy("dummyPolicy", "1.0.0"));
+    }
+
+    @Test
+    void testBadDeletePolicy() {
+        assertThrows(WebClientException.class, () -> apiHttpClient.deletePolicy("wrongPolicy", "1.0.0"));
     }
 
     @Test
@@ -138,32 +156,16 @@ class HttpClientTest {
 
     @Test
     void testInvalidEndpoint() {
-        Response response = apiHttpClient.executePost("/invalid", Entity.entity(getTestToscaServiceTemplate(),
-                MediaType.APPLICATION_JSON));
-        assertThat(response.getStatus()).isEqualTo(404);
-    }
-
-    @Test
-    void testInvalidClientParameter() {
-        var parameters = new ParticipantPolicyParameters();
-        assertThrows(AutomationCompositionRuntimeException.class,
-               () -> new PolicyApiHttpClient(parameters));
-    }
-
-
-    private ToscaServiceTemplate getTestToscaServiceTemplate() {
-        return new ToscaServiceTemplate();
+        assertThrows(WebClientException.class, () -> apiHttpClient.executePost("/invalid", serviceTemplate));
     }
 
     private static RestClientParameters getMockClientParameters(int port) {
-        RestClientParameters params = new RestClientParameters();
-        params.setName("policyClient");
+        var params = new RestClientParameters();
+        params.setClientName("policyClient");
         params.setHostname("localhost");
+        params.setUserName("user");
+        params.setPassword("pwd");
         params.setPort(port);
-        params.setUseHttps(false);
         return params;
     }
-
-
-
 }

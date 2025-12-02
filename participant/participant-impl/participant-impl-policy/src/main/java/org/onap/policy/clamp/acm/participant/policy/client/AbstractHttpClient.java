@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021, 2023-2024 Nordix Foundation.
+ * Copyright (C) 2021, 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,56 +20,84 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.common.endpoints.http.client.HttpClient;
-import org.onap.policy.common.endpoints.http.client.HttpClientFactoryInstance;
-import org.onap.policy.common.parameters.topic.BusTopicParams;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.RestClientParameters;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
-public abstract class AbstractHttpClient implements AutoCloseable {
+@RequiredArgsConstructor
+public abstract class AbstractHttpClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpClient.class);
-    private final HttpClient httpclient;
+    private static final Coder CODER = new StandardCoder();
+    private final RestClientParameters parameters;
 
-    /**
-     * Constructor.
-     *
-     * @param policyParticipantParameters the parameters for the policy participant
-     * @throws AutomationCompositionRuntimeException on client start errors
-     */
-    protected AbstractHttpClient(BusTopicParams policyParticipantParameters) {
+    protected String executePost(String path, final Object entity) {
+        var webClient = WebClient.builder().baseUrl(this.getBaseUrl())
+                .defaultHeaders(this::headersConsumer).build();
+        return webClient.post()
+                .uri(path)
+                .body(BodyInserters.fromValue(encode(entity)))
+                .exchangeToMono(this::responseHandler).block();
+    }
+
+    private String encode(Object entity) {
         try {
-            httpclient = HttpClientFactoryInstance.getClientFactory().build(policyParticipantParameters);
-        } catch (final Exception e) {
-            throw new AutomationCompositionRuntimeException(Status.INTERNAL_SERVER_ERROR, " Client failed to start", e);
+            return CODER.encode(entity);
+        } catch (CoderException e) {
+            throw new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null, null, null);
         }
     }
 
-    protected Response executePost(String path, final Entity<?> entity) {
-        var response = httpclient.post(path, entity, Map.of(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON,
-            HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
-        if (response.getStatus() / 100 != 2) {
-            LOGGER.error("Invocation of path {} failed for entity {}. Response status: {}, Response status info: {}",
-                path, entity, response.getStatus(), response.getStatusInfo());
+    private String getBaseUrl() {
+        return "http://" + parameters.getHostname() + ":" + parameters.getPort();
+    }
+
+    private Mono<String> responseHandler(ClientResponse clientResponse) {
+        if (clientResponse.statusCode().is2xxSuccessful()) {
+            return clientResponse.bodyToMono(String.class);
+        } else {
+            LOGGER.error("Invocation Post failed Response status: {}", clientResponse.statusCode());
+            return clientResponse.createException().flatMap(Mono::error);
         }
-        return response;
     }
 
-    protected Response executeDelete(String path) {
-        return httpclient.delete(path, Collections.emptyMap());
+    private void headersConsumer(HttpHeaders headers) {
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (StringUtils.isNotBlank(parameters.getUserName())
+                && StringUtils.isNotBlank(parameters.getPassword())) {
+            headers.setBasicAuth(parameters.getUserName(), parameters.getPassword());
+        }
     }
 
-    @Override
-    public void close() throws IOException {
-        httpclient.shutdown();
+    protected void executeDelete(String path) {
+        var webClient = WebClient.builder().baseUrl(this.getBaseUrl())
+                .defaultHeaders(this::headersConsumer).build();
+        webClient.delete()
+                .uri(path)
+                .exchangeToMono(this::responseDeleteHandler).block();
+    }
+
+    private Mono<Void> responseDeleteHandler(ClientResponse clientResponse) {
+        if (clientResponse.statusCode().is2xxSuccessful()) {
+            return clientResponse.releaseBody();
+        } else {
+            LOGGER.error("Invocation Delete failed Response status: {}", clientResponse.statusCode());
+            return clientResponse.createException().flatMap(Mono::error);
+        }
     }
 }

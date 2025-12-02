@@ -32,14 +32,6 @@
     <name>${project.artifactId}</name>
     <description>HTTP participant, that performs CRUD operations on Microservices through REST</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${version.jersey}</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
