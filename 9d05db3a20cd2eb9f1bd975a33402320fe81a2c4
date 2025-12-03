@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "071dfdac_47b6ee70",
+        "filename": "policy-models/src/main/java/org/onap/policy/models/tosca/utils/ToscaUtils.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-03T11:57:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29a9a912_a83798bd",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 46
+      },
+      "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5f284d6_53151503",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-12-02T21:47:02Z",
       "side": 1,
       "message": "Note this is a new unit test file for code coverage.",
+      "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54d72eab_29f9cb8b",
+        "filename": "policy-models/src/test/java/org/onap/policy/models/tosca/authorative/concepts/ToscaCapabilityAssignmentTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-03T11:57:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a5f284d6_53151503",
       "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
@@ -58,6 +100,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "63657ca3_8ab6c975",
+        "filename": "policy-models/src/test/java/org/onap/policy/models/tosca/authorative/concepts/ToscaPropertyTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-03T11:57:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1a45d621_153bf415",
+      "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a8e186ee_2b579bde",
@@ -71,6 +131,24 @@
       "writtenOn": "2025-12-02T21:47:02Z",
       "side": 1,
       "message": "Note this is a new unit test file for code coverage.",
+      "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a315ade_3f38a0a5",
+        "filename": "policy-models/src/test/java/org/onap/policy/models/tosca/authorative/concepts/ToscaRequirementTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-03T11:57:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a8e186ee_2b579bde",
       "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
@@ -92,6 +170,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed13381b_eb556b6b",
+        "filename": "policy-models/src/test/java/org/onap/policy/models/tosca/utils/ToscaUtilsTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-03T11:57:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a446b47_96922028",
+      "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87a2e19a_b5f7a64b",
@@ -105,6 +201,30 @@
       "writtenOn": "2025-12-02T21:47:02Z",
       "side": 1,
       "message": "Remove unused imports.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 58
+      },
+      "revId": "9d05db3a20cd2eb9f1bd975a33402320fe81a2c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "393662b0_117ae9ec",
+        "filename": "policy-models/src/test/java/org/onap/policy/models/tosca/utils/ToscaUtilsTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-03T11:57:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87a2e19a_b5f7a64b",
       "range": {
         "startLine": 25,
         "startChar": 0,
