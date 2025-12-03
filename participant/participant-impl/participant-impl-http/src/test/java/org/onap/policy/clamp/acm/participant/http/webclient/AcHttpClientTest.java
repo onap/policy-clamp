@@ -24,6 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.List;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,8 +36,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
-import org.onap.policy.clamp.acm.participant.http.utils.MockServerRest;
-import org.onap.policy.common.utils.network.NetworkUtil;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -45,23 +48,40 @@ class AcHttpClientTest {
     private static final String MOCK_URL = "http://localhost";
     private static final String WRONG_URL = "http://wrong-url";
 
-    private static MockServerRest mockServer;
+    private static MockWebServer mockServer;
 
     /**
      * Set up Mock server.
      */
     @BeforeAll
-    static void setUpMockServer() throws IOException, InterruptedException {
-        mockServerPort = NetworkUtil.allocPort();
-        mockServer = new MockServerRest(mockServerPort);
-        mockServer.validate();
+    static void setUpMockServer() throws IOException {
+        mockServerPort = 42545;
+        mockServer = new MockWebServer();
+        mockServer.start(mockServerPort);
+        mockServer.setDispatcher(new Dispatcher() {
+            @NotNull
+            @Override
+            public MockResponse dispatch(@NotNull RecordedRequest request) {
+                String path = request.getPath();
+                assert path != null;
+                if (path.startsWith("/get") && "GET".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200);
+                }
+                if (path.equals("/post") && "POST".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .addHeader("Content-Type", "application/json");
+                }
+                return new MockResponse().setResponseCode(404);
+            }
+        });
         commonTestData = new CommonTestData();
     }
 
     @AfterAll
     static void stopServer() throws Exception {
-        mockServer.close();
-        mockServer = null;
+        mockServer.shutdown();
     }
 
     @Test
