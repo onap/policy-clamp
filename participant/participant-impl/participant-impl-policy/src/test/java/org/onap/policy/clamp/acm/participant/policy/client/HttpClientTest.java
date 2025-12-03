@@ -28,14 +28,17 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentSubGroup;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.onap.policy.clamp.acm.participant.policy.main.utils.MockServer;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.common.parameters.rest.RestClientParameters;
-import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -43,22 +46,53 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  */
 class HttpClientTest {
 
-    private static int mockServerPort;
-
     private static PolicyApiHttpClient apiHttpClient;
 
     private static PolicyPapHttpClient papHttpClient;
-
-    private static MockServer mockServer;
 
     /**
      * Set up Mock server.
      */
     @BeforeAll
     static void setUpMockServer() throws IOException, InterruptedException {
-        mockServerPort = NetworkUtil.allocPort();
-        mockServer = new MockServer(mockServerPort);
-        mockServer.validate();
+        // Setup mock web server
+        int mockServerPort = 42545;
+        MockWebServer mockServer = new MockWebServer();
+        mockServer.start(mockServerPort);
+        mockServer.setDispatcher(new Dispatcher() {
+            @NotNull
+            @Override
+            public MockResponse dispatch(@NotNull RecordedRequest request) {
+                String path = request.getPath();
+                assert path != null;
+                if (path.equals("/policy/api/v1/policytypes") && "POST".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .addHeader("Content-Type", "application/json");
+                }
+                if (path.equals("/policy/api/v1/policies") && "POST".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .addHeader("Content-Type", "application/json");
+                }
+                if (path.matches("^/policy/api/v1/policytypes/[^/]+/versions/[^/]+$")
+                        && "DELETE".equals(request.getMethod())) {
+                    return new MockResponse().setResponseCode(200);
+                }
+                if (path.matches("^/policy/api/v1/policies/[^/]+/versions/[^/]+$")
+                        && "DELETE".equals(request.getMethod())) {
+                    return new MockResponse().setResponseCode(200);
+                }
+                if (path.equals("/policy/pap/v1/pdps/deployments/batch")
+                        && "POST".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .addHeader("Content-Type", "application/json");
+                }
+                return new MockResponse().setResponseCode(404);
+            }
+        });
+
         // Setup mock api and pap client
         ParticipantPolicyParameters params = new ParticipantPolicyParameters();
         RestClientParameters restClientParameters = getMockClientParameters(mockServerPort);
