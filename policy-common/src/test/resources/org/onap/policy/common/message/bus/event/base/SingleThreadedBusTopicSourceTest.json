@@ -1,0 +1,18 @@
+{
+  "servers" : [ "svra", "svrb" ],
+  "topic" : "my-topic",
+  "effectiveTopic" : "my-effective-topic",
+  "recentEvents" : [ ],
+  "alive" : false,
+  "locked" : false,
+  "apiKey" : "my-api-key",
+  "apiSecret" : "my-api-secret",
+  "useHttps" : true,
+  "allowTracing": true,
+  "allowSelfSignedCerts" : true,
+  "consumerGroup" : "my-cons-group",
+  "consumerInstance" : "my-cons-inst",
+  "fetchTimeout" : 101,
+  "fetchLimit" : 100,
+  "topicCommInfrastructure" : "NOOP"
+}

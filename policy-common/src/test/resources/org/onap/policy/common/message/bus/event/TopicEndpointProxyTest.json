@@ -1,0 +1,30 @@
+{
+  "locked": false,
+  "alive": false,
+  "topicSources": [
+    {
+      "servers": [
+        "my-server"
+      ],
+      "topic": "noop-source",
+      "effectiveTopic": "noop-source",
+      "recentEvents": [],
+      "alive": false,
+      "locked": false,
+      "topicCommInfrastructure": "NOOP"
+    }
+  ],
+  "topicSinks": [
+    {
+      "servers": [
+        "my-server"
+      ],
+      "topic": "noop-sink",
+      "effectiveTopic": "noop-sink",
+      "recentEvents": [],
+      "alive": false,
+      "locked": false,
+      "topicCommInfrastructure": "NOOP"
+    }
+  ]
+}

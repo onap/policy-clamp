@@ -1,0 +1,6 @@
+{
+    "port": 6969,
+    "userName": "username",
+    "password": "password",
+    "https": true
+}

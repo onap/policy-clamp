@@ -1,0 +1,6 @@
+{
+    "topicSources" : [{
+        "topic" : "ueb-source",
+        "servers" : ["my-server"]
+    }]
+}

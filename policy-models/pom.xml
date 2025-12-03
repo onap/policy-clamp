@@ -35,20 +35,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>common-parameters</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>utils</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>utils-test</artifactId>
-            <version>${policy.common.version}</version>
-            <scope>test</scope>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

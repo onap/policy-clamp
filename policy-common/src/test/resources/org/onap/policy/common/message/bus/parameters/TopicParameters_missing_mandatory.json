@@ -1,0 +1,12 @@
+{
+    "topicSources" : [ {
+        "topic" : "policy-pdp-pap1",
+        "servers" : [],
+        "topicCommInfrastructure" : "kafka"
+    }],
+    "topicSinks" : [ {
+        "topic" : "policy-pdp-pap2",
+        "servers" : [ "kafka1, kafka2" ],
+        "topicCommInfrastructure" : "kafka"
+    }]
+}

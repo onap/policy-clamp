@@ -1,0 +1,2 @@
+org.onap.policy.common.utils.services.OrderedServiceImplTest$HighPriorityService
+org.onap.policy.common.utils.services.OrderedServiceImplTest$LowPriorityService

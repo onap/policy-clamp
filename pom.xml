@@ -37,6 +37,7 @@
         This is the root Maven module for the policy-clamp project.
 
         It contains the following modules:
+        - policy-common: dependency code previously in policy/common repo
         - policy-models: dependency code previously in policy/models repo
         - policy-clamp-common: Common code for all Policy/CLAMP modules
         - policy-clamp-models: POJOs and other model code for REST and Kafka messages and for persistence
@@ -57,6 +58,7 @@
         <policy.models.version>5.0.0-SNAPSHOT</policy.models.version>
     </properties>
     <modules>
+        <module>policy-common</module>
         <module>policy-models</module>
         <module>common</module>
         <module>examples</module>

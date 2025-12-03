@@ -1,0 +1,21 @@
+---
+item: &top
+  boolVal: true
+  longVal: 1000
+  floatVal: 1010.1
+list:
+- intVal: 20
+  stringVal: string 30
+  nullVal:
+-
+- doubleVal: 40
+  another:
+    intVal: 50
+- *top
+map:
+  itemA:
+    stringVal: stringA
+  itemB:
+    stringVal: stringB
+    doubleVal: 123456789012345678901234567890
+  itemC: *top
