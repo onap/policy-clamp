@@ -27,6 +27,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,8 +39,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.onap.policy.clamp.acm.participant.a1pms.parameters.A1PmsParameters;
 import org.onap.policy.clamp.acm.participant.a1pms.utils.CommonTestData;
-import org.onap.policy.clamp.acm.participant.a1pms.utils.MockServerRest;
-import org.onap.policy.common.utils.network.NetworkUtil;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -43,7 +46,7 @@ class AcA1PmsClientTest {
 
     private static int mockServerPort;
 
-    private static MockServerRest mockServer;
+    private static MockWebServer mockServer;
 
     private static CommonTestData commonTestData;
 
@@ -61,10 +64,47 @@ class AcA1PmsClientTest {
      * Set up Mock server.
      */
     @BeforeAll
-    static void setUpMockServer() throws IOException, InterruptedException {
-        mockServerPort = NetworkUtil.allocPort();
-        mockServer = new MockServerRest(mockServerPort);
-        mockServer.validate();
+    static void setUpMockServer() throws IOException {
+        mockServerPort = 42545;
+        mockServer = new MockWebServer();
+        mockServer.start(mockServerPort);
+        mockServer.setDispatcher(new Dispatcher() {
+            @NotNull
+            @Override
+            public MockResponse dispatch(@NotNull RecordedRequest request) {
+                String path = request.getPath();
+                assert path != null;
+                if (path.equals("/healthy") && "GET".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200);
+                }
+                if (path.equals("/unhealthy") && "GET".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(500);
+                }
+                if (path.equals("/services/success") && "PUT".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .addHeader("Content-Type", "application/json");
+                }
+                if (path.equals("/services/failure") && "PUT".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(500)
+                            .addHeader("Content-Type", "application/json");
+                }
+                if (path.startsWith("/service/success/") && "DELETE".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(204)
+                            .addHeader("Content-Type", "application/json");
+                }
+
+                if (path.startsWith("/service/failure/") && "DELETE".equals(request.getMethod())) {
+                    return new MockResponse()
+                            .setResponseCode(500);
+                }
+                return new MockResponse().setResponseCode(404);
+            }
+        });
         commonTestData = new CommonTestData();
     }
 
