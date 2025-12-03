@@ -35,6 +35,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-clamp-common</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>common-parameters</artifactId>
             <version>${policy.common.version}</version>

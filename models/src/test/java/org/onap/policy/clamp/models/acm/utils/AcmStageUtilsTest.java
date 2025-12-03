@@ -25,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.common.acm.utils.resources.ResourceUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 
 class AcmStageUtilsTest {
 
