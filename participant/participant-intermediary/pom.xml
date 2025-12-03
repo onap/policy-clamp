@@ -36,26 +36,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>common-parameters</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>message-bus</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>policy-endpoints</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>utils</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
         </dependency>

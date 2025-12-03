@@ -1,0 +1,30 @@
+{
+    "topicSources" : [ {
+        "topic" : "ueb-source",
+        "servers" : [ "my-server" ],
+        "topicCommInfrastructure" : "ueb"
+    },{
+        "topic" : "policy-pdp-pap1",
+        "servers" : [ "kafka1, kafka2" ],
+        "topicCommInfrastructure" : "kafka"
+    },{
+        "topic" : "policy-pdp-pap2",
+        "servers" : [ "kafka2, kafka3" ],
+        "topicCommInfrastructure" : "kafka"
+    }],
+    "topicSinks" : [ {
+        "topic" : "ueb-sink",
+        "servers" : [ "my-server" ],
+        "topicCommInfrastructure" : "ueb"
+    },{
+        "topic" : "policy-pdp-pap2",
+        "servers" : [ "kafka1, kafka2" ],
+        "topicCommInfrastructure" : "kafka"
+    },{
+        "topic" : "policy-pdp-pap3",
+        "servers" : [ "kafka2, kafka3" ],
+        "topicCommInfrastructure" : "kafka",
+        "effectiveTopic":"effectiveTopic1",
+        "allowSelfSignedCerts":true
+    }]
+}

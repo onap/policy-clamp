@@ -1,0 +1,14 @@
+{
+  "servers" : [ "svra", "svrb" ],
+  "topic" : "my-topic",
+  "effectiveTopic" : "my-effective-topic",
+  "recentEvents" : [ ],
+  "alive" : false,
+  "locked" : false,
+  "apiKey" : "my-api-key",
+  "apiSecret" : "my-api-secret",
+  "useHttps" : true,
+  "allowTracing": true,
+  "allowSelfSignedCerts" : true,
+  "topicCommInfrastructure" : "NOOP"
+}
