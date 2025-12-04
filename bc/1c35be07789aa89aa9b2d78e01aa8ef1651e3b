@@ -1,0 +1,11 @@
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+1: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+1: Daniel Hanrahan <daniel.hanrahan@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Verified+1: ONAP Bypass GHA <releng+onap.bypass.gha@linuxfoundation.org>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Thu, 04 Dec 2025 10:44:30 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/142637
+Project: policy/clamp
+Branch: refs/heads/master
