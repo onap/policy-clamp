@@ -45,7 +45,7 @@ class JacksonExclusionStrategyTest {
     private static Gson gson;
 
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         strategy = new JacksonExclusionStrategy();
         gson = new GsonBuilder().setExclusionStrategies(strategy).create();
     }

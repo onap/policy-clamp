@@ -53,7 +53,7 @@ class KafkaTopicSourceFactoryTest extends KafkaTopicFactoryTestBase<KafkaTopicSo
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         factory.destroy();
     }
 

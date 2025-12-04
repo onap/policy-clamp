@@ -40,7 +40,7 @@ class VersionTest {
     private Version vers;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         vers = new Version(MAJOR, MINOR, PATCH);
     }
 

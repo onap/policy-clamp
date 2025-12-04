@@ -107,7 +107,7 @@ class TopicEndpointProxyTest {
      * Destroys all managed topics.
      */
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         NoopTopicFactories.getSinkFactory().destroy();
         NoopTopicFactories.getSourceFactory().destroy();
         KafkaTopicFactories.getSinkFactory().destroy();

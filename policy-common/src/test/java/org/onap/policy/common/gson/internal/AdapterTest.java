@@ -83,7 +83,7 @@ class AdapterTest {
     private Data dataField;
 
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         saveFactory = (Factory) ReflectionTestUtils.getField(Adapter.class, FACTORY_FIELD);
     }
 

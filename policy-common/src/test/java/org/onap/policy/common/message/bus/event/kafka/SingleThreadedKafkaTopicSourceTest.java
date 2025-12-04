@@ -43,7 +43,7 @@ class SingleThreadedKafkaTopicSourceTest extends TopicTestBase {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         source.shutdown();
     }
 

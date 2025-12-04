@@ -67,7 +67,7 @@ class ScoListenerTest {
      * Initializes statics.
      */
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         saveLevel = logger.getLevel();
         logger.setLevel(Level.INFO);
 
@@ -76,7 +76,7 @@ class ScoListenerTest {
     }
 
     @AfterAll
-    public static void tearDownAfterClass() {
+    static void tearDownAfterClass() {
         logger.setLevel(saveLevel);
         appender.stop();
     }
@@ -85,7 +85,7 @@ class ScoListenerTest {
      * Create various mocks and primary handler.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         appender.clearExtractions();
 
         primary = new ScoListener<MyMessage>(MyMessage.class) {
@@ -98,7 +98,7 @@ class ScoListenerTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         logger.detachAppender(appender);
     }
 

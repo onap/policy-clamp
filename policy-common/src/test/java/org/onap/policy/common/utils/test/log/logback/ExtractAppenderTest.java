@@ -60,13 +60,13 @@ class ExtractAppenderTest {
     private List<Thread> threads;
 
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         logger = (Logger) LoggerFactory.getLogger(ExtractAppenderTest.class);
         logger.setLevel(Level.INFO);
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         threads = new LinkedList<>();
     }
 
@@ -74,7 +74,7 @@ class ExtractAppenderTest {
      * Tear down all appenders and threads.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         logger.detachAndStopAllAppenders();
 
         for (Thread p : threads) {

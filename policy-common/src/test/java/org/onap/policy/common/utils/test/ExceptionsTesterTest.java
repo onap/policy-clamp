@@ -48,6 +48,7 @@ class ExceptionsTesterTest {
     public static class NoConstructorsException extends Exception {
         private static final long serialVersionUID = 1L;
 
+        @SuppressWarnings("unused")
         public NoConstructorsException(int value) {
             super();
         }

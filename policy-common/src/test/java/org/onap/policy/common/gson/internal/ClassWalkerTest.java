@@ -358,6 +358,7 @@ class ClassWalkerTest {
         }
 
         // has a param - shouldn't be serialized
+        @SuppressWarnings("unused")
         public int getWithParams(String text) {
             return 1000;
         }

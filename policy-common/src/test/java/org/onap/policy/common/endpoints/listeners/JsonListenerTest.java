@@ -64,7 +64,7 @@ class JsonListenerTest {
      * Initializes statics.
      */
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         saveLevel = logger.getLevel();
         logger.setLevel(Level.INFO);
 
@@ -73,7 +73,7 @@ class JsonListenerTest {
     }
 
     @AfterAll
-    public static void tearDownAfterClass() {
+    static void tearDownAfterClass() {
         logger.setLevel(saveLevel);
         appender.stop();
     }
@@ -82,7 +82,7 @@ class JsonListenerTest {
      * Initializes mocks and a listener.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         appender.clearExtractions();
 
         primary = new JsonListener() {
@@ -94,7 +94,7 @@ class JsonListenerTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         logger.detachAppender(appender);
     }
 

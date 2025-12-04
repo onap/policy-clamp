@@ -50,7 +50,7 @@ class NetLoggerUtilTest {
      * Obtains the test implementation of NetLoggerFeatureApi.
      */
     @BeforeAll
-    public static void setUp() {
+    static void setUp() {
         netLoggerFeature = (NetLoggerFeature) NetLoggerFeatureProviders.getProviders().getList().get(0);
     }
 
@@ -58,7 +58,7 @@ class NetLoggerUtilTest {
      * Clears events list and resets return/exceptions flags before invoking every unit test.
      */
     @BeforeEach
-    public void reset() {
+    void reset() {
         TestAppender.clear();
         netLoggerFeature.setReturnValue(false, false);
         netLoggerFeature.setExceptions(false, false);

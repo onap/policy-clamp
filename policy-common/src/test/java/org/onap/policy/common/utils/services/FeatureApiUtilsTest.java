@@ -43,7 +43,7 @@ class FeatureApiUtilsTest {
      * Initializes fields.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         tried = new LinkedList<>();
         errors = new LinkedList<>();
         pred = new MyPred();

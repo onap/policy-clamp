@@ -47,7 +47,7 @@ class GsonTestUtilsTest {
     private GsonTestUtils utils;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         utils = new GsonTestUtils();
     }
 

@@ -43,7 +43,7 @@ class StandardYamlCoderTest {
     private Container cont;
 
     @BeforeEach
-    public void setUp() throws CoderException {
+    void setUp() throws CoderException {
         coder = new StandardYamlCoder();
         cont = coder.decode(YAML_FILE, Container.class);
     }

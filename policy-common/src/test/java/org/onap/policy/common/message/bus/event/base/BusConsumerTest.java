@@ -72,7 +72,7 @@ class BusConsumerTest extends TopicTestBase {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         closeable.close();
     }
 
@@ -181,7 +181,7 @@ class BusConsumerTest extends TopicTestBase {
         KafkaConsumerWrapper kafkaConsumerWrapper = new KafkaConsumerWrapper(makeKafkaBuilder().build());
         kafkaConsumerWrapper.consumer = mockedKafkaConsumer;
 
-        when(mockedKafkaConsumer.poll(any())).thenReturn(new ConsumerRecords<>(Collections.emptyMap()));
+        when(mockedKafkaConsumer.poll(any())).thenReturn(ConsumerRecords.empty());
 
         Iterable<String> result = kafkaConsumerWrapper.fetch();
 
@@ -195,6 +195,7 @@ class BusConsumerTest extends TopicTestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void testFetchWithMessages() {
         // Setup
         KafkaConsumerWrapper kafkaConsumerWrapper = new KafkaConsumerWrapper(makeKafkaBuilder().build());
@@ -224,6 +225,7 @@ class BusConsumerTest extends TopicTestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void testFetchWithMessagesAndTraceParent() {
         // Setup
         KafkaConsumerWrapper kafkaConsumerWrapper = new KafkaConsumerWrapper(makeKafkaBuilder().build());

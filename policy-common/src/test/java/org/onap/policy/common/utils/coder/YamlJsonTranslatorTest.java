@@ -53,7 +53,7 @@ class YamlJsonTranslatorTest {
      * @throws IOException if an error occurs
      */
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         translator = new YamlJsonTranslator();
 
         try (FileReader rdr = new FileReader(YAML_FILE)) {

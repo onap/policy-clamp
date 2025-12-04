@@ -44,7 +44,7 @@ class NetLoggerFeatureApiTest {
     private NetLoggerFeatureApi featureApi;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         featureApi = new NetLoggerFeatureApi() {
             @Override
             public boolean beforeLog(Logger eventLogger, EventType type, CommInfrastructure protocol, String topic,

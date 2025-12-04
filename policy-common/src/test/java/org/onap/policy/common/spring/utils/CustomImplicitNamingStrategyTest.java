@@ -42,7 +42,7 @@ class CustomImplicitNamingStrategyTest {
     static ImplicitJoinColumnNameSource source;
 
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         strategy = new CustomImplicitNamingStrategy();
         source = mock(ImplicitJoinColumnNameSource.class);
     }

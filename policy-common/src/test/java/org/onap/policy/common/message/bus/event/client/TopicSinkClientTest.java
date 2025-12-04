@@ -54,7 +54,7 @@ class TopicSinkClientTest {
      * @throws Exception if an error occurs
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         sink = mock(TopicSink.class);
         when(sink.send(anyString())).thenReturn(true);
 
@@ -71,7 +71,7 @@ class TopicSinkClientTest {
     }
 
     @AfterAll
-    public static void tearDown() {
+    static void tearDown() {
         // clear all topics after the tests
         TopicEndpointManager.getManager().shutdown();
     }

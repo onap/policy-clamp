@@ -40,7 +40,7 @@ class OrderedServiceImplTest {
      * Saves the original state of the ordered service list to restore after each test.
      */
     @BeforeAll
-    public static void setup() {
+    static void setup() {
         List<GenericService> implementers = GenericService.providers.getList();
         highPrioService = implementers.get(0);
         lowPrioService = implementers.get(1);
@@ -50,7 +50,7 @@ class OrderedServiceImplTest {
      * Restores original state after each test.
      */
     @BeforeEach
-    public void resetOrder() {
+    void resetOrder() {
         highPrioService.setSequenceNumber(HIGH_PRIORITY_NUM);
         lowPrioService.setSequenceNumber(LOW_PRIORITY_NUM);
     }

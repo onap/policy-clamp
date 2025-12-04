@@ -57,7 +57,7 @@ class InlineBusTopicSinkTest extends TopicTestBase {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         sink.shutdown();
     }
 

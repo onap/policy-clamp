@@ -98,7 +98,7 @@ public abstract class NoopTopicFactoryTest<F extends NoopTopicFactory<T>, T exte
 
         // duplicate - should be the same, as these topics are managed
         List<String> randomServers = new ArrayList<>();
-        randomServers.add(RandomStringUtils.randomAlphanumeric(8));
+        randomServers.add(RandomStringUtils.secure().nextAlphanumeric(8));
         T item3 = buildTopic(randomServers, TOPIC2, true);
         assertSame(item2, item3);
 

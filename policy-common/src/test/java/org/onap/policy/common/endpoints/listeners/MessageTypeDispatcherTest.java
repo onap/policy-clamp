@@ -70,7 +70,7 @@ class MessageTypeDispatcherTest {
      * Initializes statics.
      */
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         saveLevel = logger.getLevel();
         logger.setLevel(Level.INFO);
 
@@ -79,7 +79,7 @@ class MessageTypeDispatcherTest {
     }
 
     @AfterAll
-    public static void tearDownAfterClass() {
+    static void tearDownAfterClass() {
         logger.setLevel(saveLevel);
         appender.stop();
     }
@@ -89,7 +89,7 @@ class MessageTypeDispatcherTest {
      */
     @BeforeEach
     @SuppressWarnings("unchecked")
-    public void setUp() {
+    void setUp() {
         appender.clearExtractions();
 
         secondary1 = mock(ScoListener.class);
@@ -99,7 +99,7 @@ class MessageTypeDispatcherTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         logger.detachAppender(appender);
     }
 

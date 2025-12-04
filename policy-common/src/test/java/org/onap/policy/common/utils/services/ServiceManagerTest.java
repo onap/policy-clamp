@@ -49,7 +49,7 @@ class ServiceManagerTest {
      * Initializes {@link #svcmgr}.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         svcmgr = new ServiceManager(MY_NAME);
     }
 

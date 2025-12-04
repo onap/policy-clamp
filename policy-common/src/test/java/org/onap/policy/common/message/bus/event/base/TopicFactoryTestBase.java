@@ -125,11 +125,10 @@ public abstract class TopicFactoryTestBase<T extends Topic> extends TopicTestBas
         List<T> lst = buildTopics(builder.build());
         assertEquals(4, lst.size());
 
-        int index = 0;
-        T item = lst.get(index++);
-        assertNotSame(item, lst.get(index++));
-        assertSame(item, lst.get(index++));
-        assertSame(item, lst.get(index++));
+        T item = lst.get(0);
+        assertNotSame(item, lst.get(1));
+        assertSame(item, lst.get(2));
+        assertSame(item, lst.get(3));
     }
 
     /**
@@ -140,9 +139,8 @@ public abstract class TopicFactoryTestBase<T extends Topic> extends TopicTestBas
 
         List<T> lst = buildTopics(makePropBuilder().makeTopic(MY_TOPIC).makeTopic(TOPIC2).build());
 
-        int index = 0;
-        T item1 = lst.get(index++);
-        T item2 = lst.get(index++);
+        T item1 = lst.get(0);
+        T item2 = lst.get(1);
 
         assertEquals(2, getInventory().size());
         assertTrue(getInventory().contains(item1));
@@ -192,9 +190,8 @@ public abstract class TopicFactoryTestBase<T extends Topic> extends TopicTestBas
 
         List<T> lst = buildTopics(makePropBuilder().makeTopic(MY_TOPIC).makeTopic(TOPIC2).build());
 
-        int index = 0;
-        T item1 = lst.get(index++);
-        T item2 = lst.get(index++);
+        T item1 = lst.get(0);
+        T item2 = lst.get(1);
 
         item1.start();
         item2.start();

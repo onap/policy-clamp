@@ -66,7 +66,7 @@ class StandardCoderTest {
     private StandardCoder coder;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         coder = new StandardCoder();
     }
 

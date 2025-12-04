@@ -39,7 +39,7 @@ class GsonTestUtilsBuilderTest {
     private GsonTestUtils utils;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         utils = new MyBuilder().build();
     }
 

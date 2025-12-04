@@ -119,6 +119,7 @@ class ThrowablesTesterTest {
     public static class NoConstructorsThrowable extends Throwable {
         private static final long serialVersionUID = 1L;
 
+        @SuppressWarnings("unused")
         public NoConstructorsThrowable(int value) {
             super();
         }

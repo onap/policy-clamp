@@ -43,7 +43,7 @@ class PropertyUtilsTest {
      * Initializes {@link #utils}.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Properties properties = new Properties();
         properties.put("myPrefix.my-string", "some text");
         properties.put("myPrefix.empty-string", "");

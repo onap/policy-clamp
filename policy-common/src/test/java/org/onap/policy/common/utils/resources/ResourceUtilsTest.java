@@ -64,7 +64,7 @@ class ResourceUtilsTest {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @BeforeEach
-    public void setupResourceUtilsTest() throws IOException {
+    void setupResourceUtilsTest() throws IOException {
         tmpDir = new File(System.getProperty("java.io.tmpdir"));
         tmpEmptyFile = File.createTempFile(this.getClass().getName(), ".tmp");
         tmpUsedFile = File.createTempFile(this.getClass().getName(), ".tmp");
@@ -81,7 +81,7 @@ class ResourceUtilsTest {
      * Clean resource utils test.
      */
     @AfterEach
-    public void cleanDownResourceUtilsTest() {
+    void cleanDownResourceUtilsTest() {
         assertTrue(tmpEmptyFile.delete());
         assertTrue(tmpUsedFile.delete());
     }

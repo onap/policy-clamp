@@ -52,7 +52,7 @@ class KafkaTopicSinkFactoryTest extends KafkaTopicFactoryTestBase<KafkaTopicSink
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         factory.destroy();
     }
 

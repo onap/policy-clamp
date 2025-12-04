@@ -46,7 +46,7 @@ class ServiceManagerContainerTest {
      * Set up.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         starter = mock(RunnableWithEx.class);
         stopper = mock(RunnableWithEx.class);
         startObj = mock(Startable.class);

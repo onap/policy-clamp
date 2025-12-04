@@ -50,7 +50,7 @@ class StandardCoderObjectTest {
      * @throws Exception if an error occurs
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         sco = new StandardCoderObject(gson.fromJson(JSON, JsonElement.class));
     }
 

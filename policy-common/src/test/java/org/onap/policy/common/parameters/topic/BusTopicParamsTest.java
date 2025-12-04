@@ -61,7 +61,7 @@ class BusTopicParamsTest {
     protected TopicParamsBuilder builder;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         addProps = new TreeMap<>();
         addProps.put("my-key-A", "my-value-A");
         addProps.put("my-key-B", "my-value-B");
