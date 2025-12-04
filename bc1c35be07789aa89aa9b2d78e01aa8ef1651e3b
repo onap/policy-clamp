@@ -16,6 +16,24 @@
       "message": "We observed an issue with json serialization in the policy participant due to the webclient using the jackson library. Was it resolved or we are expecting it to get fixed after the gson refactoring in the rest of the code base?",
       "revId": "bc1c35be07789aa89aa9b2d78e01aa8ef1651e3b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51f4c95c_ba9392ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-12-04T10:33:55Z",
+      "side": 1,
+      "message": "has been fixed using StandardCoder for the json serialization, so webclient just send a string",
+      "parentUuid": "5ac62a98_aceb2ea1",
+      "revId": "bc1c35be07789aa89aa9b2d78e01aa8ef1651e3b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
