@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.policy.main.handler;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -111,6 +112,24 @@ class AutomationCompositionElementHandlerTest {
                 "Deployed");
 
         clearInvocations(intermediaryApi);
+        handler.undeploy(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                "Undeployed");
+    }
+
+    @Test
+    void testUnDeploy() throws PfModelException {
+        var api = mock(PolicyApiHttpClient.class);
+        var pap = mock(PolicyPapHttpClient.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+
+        doThrow(new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "", null, null, null))
+                .when(api).deletePolicyType(any(), any());
+
+        var compositionElement = getCompositionElement();
+        var instanceElement = getInstanceElement();
         handler.undeploy(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,

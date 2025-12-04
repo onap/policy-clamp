@@ -108,7 +108,11 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         }
         // Delete all policy types of this automation composition from policy framework
         for (var policyType : policyTypeList) {
-            apiHttpClient.deletePolicyType(policyType.getName(), policyType.getVersion());
+            try {
+                apiHttpClient.deletePolicyType(policyType.getName(), policyType.getVersion());
+            } catch (WebClientResponseException e) {
+                LOGGER.warn(e.getMessage(), e);
+            }
         }
     }
 
