@@ -7,11 +7,11 @@ participant:
       topicSources:
         - topic: policy-acruntime-participant
           servers:
-            - ${topicServer:kafka:9092}
+            - kafka:9092
           topicCommInfrastructure: NOOP
           fetchTimeout: 15000
       topicSinks:
         - topic: policy-acruntime-participant
           servers:
-            - ${topicServer:kafka:9092}
+            - kafka:9092
           topicCommInfrastructure: NOOP

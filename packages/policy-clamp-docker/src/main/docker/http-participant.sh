@@ -19,16 +19,6 @@
 # ============LICENSE_END=========================================================
 #
 
-if [ "$#" -eq 1 ]; then
-    CONFIG_FILE=$1
-fi
-
-if [ -z "$CONFIG_FILE" ]; then
-    CONFIG_FILE="${POLICY_HOME}/etc/HttpParticipantParameters.yaml"
-fi
-
-echo "Policy clamp HTTP participant config file: $CONFIG_FILE"
-
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     echo "overriding logback xml file"
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
@@ -36,5 +26,4 @@ fi
 
 "$JAVA_HOME"/bin/java \
     -Dlogging.config="${POLICY_HOME}/etc/logback.xml" \
-    -jar /app/app.jar \
-    --spring.config.location="${CONFIG_FILE}"
+    -jar /app/app.jar

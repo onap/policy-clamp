@@ -19,16 +19,6 @@
 # ============LICENSE_END=========================================================
 #
 
-if [ "$#" -eq 1 ]; then
-    CONFIG_FILE=$1
-fi
-
-if [ -z "$CONFIG_FILE" ]; then
-    CONFIG_FILE="${POLICY_HOME}/etc/A1pmsParticipantParameters.yaml"
-fi
-
-echo "Policy clamp A1 Pms participant config file: $CONFIG_FILE"
-
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     echo "overriding logback xml file"
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
@@ -36,9 +26,4 @@ fi
 
 "$JAVA_HOME"/bin/java \
     -Dlogging.config="${POLICY_HOME}/etc/logback.xml" \
-    -Dserver.ssl.keyStore="${KEYSTORE}" \
-    -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
-    -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
-    -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
-    -jar /app/app.jar \
-    --spring.config.location="${CONFIG_FILE}"
+    -jar /app/app.jar

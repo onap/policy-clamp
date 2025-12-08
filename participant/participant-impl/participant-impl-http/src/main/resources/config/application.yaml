@@ -1,8 +1,10 @@
 spring:
+  application:
+    name: http-ppnt
   security:
     user:
-      name: participantUser
-      password: zb!XztG34
+      name: ${HTTP_USER:participantUser}
+      password: ${HTTP_PASSWORD:zb!XztG34}
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
@@ -18,37 +20,83 @@ participant:
       operationTopic: policy-acruntime-participant
       syncTopic: acm-ppnt-sync
     reportingTimeIntervalMs: 120000
-    description: Participant Description
+    description: Participant Http
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
     clampAutomationCompositionTopics:
       topicSources:
         - topic: ${participant.intermediaryParameters.topics.operationTopic}
           servers:
-            - ${topicServer:kafka:9092}
-          topicCommInfrastructure: NOOP
+            - ${kafkaServer:kafka:9092}
+          topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
           fetchTimeout: 15000
+          useHttps: ${kafkaUseHttps:false}
+          allowTracing: ${allowTracing:false}
+          additionalProps:
+            group.id: policy-clamp-ac-http-ppnt
+            allow.auto.create.topics: ${allowAutoCreateTopics:true}
+            security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
+            sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
+            sasl.jaas.config: ${kafkaSaslJaasConfig:}
         - topic: ${participant.intermediaryParameters.topics.syncTopic}
           servers:
-            - ${topicServer:kafka:9092}
-          topicCommInfrastructure: NOOP
+            - ${kafkaServer:kafka:9092}
+          topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
           fetchTimeout: 15000
+          useHttps: ${kafkaUseHttps:false}
+          allowTracing: ${allowTracing:false}
+          additionalProps:
+            allow.auto.create.topics: ${allowAutoCreateTopics:true}
+            security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
+            sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
+            sasl.jaas.config: ${kafkaSaslJaasConfig:}
       topicSinks:
         - topic: ${participant.intermediaryParameters.topics.operationTopic}
           servers:
-            - ${topicServer:kafka:9092}
-          topicCommInfrastructure: NOOP
+            - ${kafkaServer:kafka:9092}
+          topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
+          useHttps: ${kafkaUseHttps:false}
+          allowTracing: ${allowTracing:false}
+          additionalProps:
+            allow.auto.create.topics: ${allowAutoCreateTopics:true}
+            security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
+            sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
+            sasl.jaas.config: ${kafkaSaslJaasConfig:}
     participantSupportedElementTypes:
       -
         typeName: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
         typeVersion: 1.0.0
 
 management:
+  tracing:
+    propagation:
+      produce: ${jaegerProducerType:B3}
+    sampling:
+      probability: ${jaegerSamplingProbability:1.0}
   endpoints:
     web:
       base-path: /
       exposure:
         include: health, metrics, prometheus
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+
 server:
-  port: 8084
+  port: 6969
+  ssl:
+    enabled: false
   servlet:
     context-path: /onap/policy/clamp/acm/httpparticipant
+
+tracing:
+  enabled: ${allowTracing:false}
+  exporter:
+    endpoint: ${tracingExporterEndpoint:http://jaeger:4318/v1/traces}
+    protocol: ${tracingExporterProtocol:http}
+  sampler:
+    jaeger-remote:
+      endpoint: ${tracingSamplerEndpoint:http://jaeger:14250}

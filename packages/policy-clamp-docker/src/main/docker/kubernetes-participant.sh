@@ -19,14 +19,6 @@
 # ============LICENSE_END=========================================================
 #
 
-if [ "$#" -eq 1 ]; then
-    CONFIG_FILE=$1
-fi
-
-if [ -z "$CONFIG_FILE" ]; then
-    CONFIG_FILE="${POLICY_HOME}/etc/KubernetesParticipantParameters.yaml"
-fi
-
 echo "Policy clamp Kubernetes participant config file: $CONFIG_FILE"
 
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
@@ -36,5 +28,4 @@ fi
 
 "$JAVA_HOME"/bin/java \
     -Dlogging.config="${POLICY_HOME}/etc/logback.xml" \
-    -jar /app/app.jar \
-    --spring.config.location="${CONFIG_FILE}"
+    -jar /app/app.jar
