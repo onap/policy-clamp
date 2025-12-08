@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b85d1da0_b71e62d9",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/LiquibaseSessionLockTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-08T18:08:10Z",
+      "side": 1,
+      "message": "This image name is replicated in the other liquibase tests. It should be make configurable using src/test/resources/testcontainers.properties\n\n    hub.image.name.prefix\u003dregistry.nordix.org/onaptest/\n\nIt may be possible to use config file to set the exact version, e.g.\n\n    postgres.container.image\u003dpostgres:14.1",
+      "range": {
+        "startLine": 49,
+        "startChar": 34,
+        "endLine": 49,
+        "endChar": 78
+      },
+      "revId": "813465adf5c0751590c33a1e7ed082ee4f072f7b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18e40cec_24792def",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/LiquibaseSessionLockTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-08T18:08:10Z",
+      "side": 1,
+      "message": "This code is duplicated in LiquibaseRollbackTest and could be refactored to base class, or the tests could be merged into a single class LiquibaseTest.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 5
+      },
+      "revId": "813465adf5c0751590c33a1e7ed082ee4f072f7b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
