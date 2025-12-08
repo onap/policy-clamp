@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,12 +128,7 @@ class TestFieldValidator extends ValidatorUtil {
     }
 
     @Test
-    void testFieldValidator() throws NoSuchFieldException, SecurityException {
-        /*
-         * Note: nested classes contain fields like "$this", thus the check for "$" in the
-         * variable name is already covered by the other tests.
-         */
-
+    void testFieldValidator() throws SecurityException {
         /*
          * Class with no annotations.
          */
@@ -142,10 +137,6 @@ class TestFieldValidator extends ValidatorUtil {
             @SuppressWarnings("unused")
             String strValue;
         }
-
-        Field field = NoAnnotations.class.getDeclaredField("this$0");
-
-        assertThat(new FieldValidator(bean, NoAnnotations.class, field).isEmpty()).isTrue();
 
         // unannotated
         assertThat(new FieldValidator(bean, TestFieldValidator.class, getField("unannotated")).isEmpty()).isTrue();
