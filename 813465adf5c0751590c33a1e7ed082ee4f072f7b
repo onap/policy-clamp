@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de287d92_9d97b80f",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/LiquibaseSessionLockTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-09T13:16:54Z",
+      "side": 1,
+      "message": "A backlog ticket POLICY-5527 has been created to handle this separately.",
+      "parentUuid": "b85d1da0_b71e62d9",
+      "range": {
+        "startLine": 49,
+        "startChar": 34,
+        "endLine": 49,
+        "endChar": 78
+      },
+      "revId": "813465adf5c0751590c33a1e7ed082ee4f072f7b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18e40cec_24792def",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-12-08T18:08:10Z",
       "side": 1,
       "message": "This code is duplicated in LiquibaseRollbackTest and could be refactored to base class, or the tests could be merged into a single class LiquibaseTest.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 5
+      },
+      "revId": "813465adf5c0751590c33a1e7ed082ee4f072f7b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6102ed41_fcf281b9",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/LiquibaseSessionLockTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2025-12-09T13:16:54Z",
+      "side": 1,
+      "message": "A backlog ticket POLICY-5527 has been created to handle this separately.",
+      "parentUuid": "18e40cec_24792def",
       "range": {
         "startLine": 84,
         "startChar": 0,
