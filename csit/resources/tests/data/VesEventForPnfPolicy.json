@@ -1,0 +1,28 @@
+{
+  "event" : {
+    "commonEventHeader" : {
+      "startEpochMicrosec" : 1597953057126,
+      "sourceId" : "927b2580-36d9-4f13-8421-3c9d43b7a57e",
+      "eventId" : "8c7935a4-79d8-4ec0-b661-dcca3cd68006",
+      "lastEpochMicrosec" : 1597952499468,
+      "eventName" : "Report hostname & IP",
+      "sourceName" : "demo-pnf",
+      "reportingEntityName" : "DCAE",
+      "vesEventListenerVersion" : "7.1",
+      "internalHeaderFields" : { },
+      "version" : "4.0.1",
+      "priority" : "Normal",
+      "sequence" : 1,
+      "domain" : "other"
+    },
+    "otherFields" : {
+      "hashMap" : {
+        "hostname" : "UNDEFINED",
+        "pnfId": "927b2580-36d9-4f13-8421-3c9d43b7a57e",
+        "pnfName": "demo-pnf",
+        "ip" : "10.101.200.10"
+      },
+      "otherFieldsVersion" : "3.0"
+    }
+  }
+}

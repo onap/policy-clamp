@@ -1,0 +1,1094 @@
+{
+    "name": "DemoInstance0",
+    "version": "1.0.1",
+    "compositionId": "COMPOSITIONIDPLACEHOLDER",
+    "description": "Demo automation composition instance 0",
+    "elements": {
+        "709c62b3-8918-41b9-a747-d21eb79c6c20": {
+            "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+            "definition": {
+                "name": "onap.policy.clamp.ac.element.Policy_AutomationCompositionElement",
+                "version": "1.2.3"
+            },
+            "description": "Policy Automation Composition Element for the Demo",
+            "properties": {
+                "tosca_definitions_version": "tosca_simple_yaml_1_3",
+                "name": "NULL",
+                "version": "0.0.0",
+                "data_types": {
+                    "onap.datatypes.native.apex.EngineService": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Specifies the engine name",
+                                "required": false,
+                                "default": "ApexEngineService"
+                            },
+                            "version": {
+                                "type": "string",
+                                "description": "Specifies the engine version in double dotted format",
+                                "required": false,
+                                "default": "1.0.0"
+                            },
+                            "id": {
+                                "type": "integer",
+                                "description": "Specifies the engine id",
+                                "required": true
+                            },
+                            "instance_count": {
+                                "type": "integer",
+                                "description": "Specifies the number of engine threads that should be run",
+                                "required": true
+                            },
+                            "deployment_port": {
+                                "type": "integer",
+                                "description": "Specifies the port to connect to for engine administration",
+                                "required": false,
+                                "default": 1
+                            },
+                            "policy_model_file_name": {
+                                "type": "string",
+                                "description": "The name of the file from which to read the APEX policy model",
+                                "required": false
+                            },
+                            "policy_type_impl": {
+                                "type": "string",
+                                "description": "The policy type implementation from which to read the APEX policy model",
+                                "required": false
+                            },
+                            "periodic_event_period": {
+                                "type": "string",
+                                "description": "The time interval in milliseconds for the periodic scanning event, 0 means don't scan",
+                                "required": false
+                            },
+                            "engine": {
+                                "type": "onap.datatypes.native.apex.engineservice.Engine",
+                                "description": "The parameters for all engines in the APEX engine service",
+                                "required": true
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.EventHandler": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "Specifies the event handler name, if not specified this is set to the key name",
+                                "required": false
+                            },
+                            "carrier_technology": {
+                                "type": "onap.datatypes.native.apex.CarrierTechnology",
+                                "description": "Specifies the carrier technology of the event handler (such as REST/Web Socket/Kafka)",
+                                "required": true
+                            },
+                            "event_protocol": {
+                                "type": "onap.datatypes.native.apex.EventProtocol",
+                                "description": "Specifies the event protocol of events for the event handler (such as Yaml/JSON/XML/POJO)",
+                                "required": true
+                            },
+                            "event_name": {
+                                "type": "string",
+                                "description": "Specifies the event name for events on this event handler, if not specified, the event name is read from or written to the event being received or sent",
+                                "required": false
+                            },
+                            "event_name_filter": {
+                                "type": "string",
+                                "description": "Specifies a filter as a regular expression, events that do not match the filter are dropped, the default is to let all events through",
+                                "required": false
+                            },
+                            "synchronous_mode": {
+                                "type": "boolean",
+                                "description": "Specifies the event handler is syncronous (receive event and send response)",
+                                "required": false,
+                                "default": false
+                            },
+                            "synchronous_peer": {
+                                "type": "string",
+                                "description": "The peer event handler (output for input or input for output) of this event handler in synchronous mode, this parameter is mandatory if the event handler is in synchronous mode",
+                                "required": false
+                            },
+                            "synchronous_timeout": {
+                                "type": "integer",
+                                "description": "The timeout in milliseconds for responses to be issued by APEX torequests, this parameter is mandatory if the event handler is in synchronous mode",
+                                "required": false
+                            },
+                            "requestor_mode": {
+                                "type": "boolean",
+                                "description": "Specifies the event handler is in requestor mode (send event and wait for response mode)",
+                                "required": false,
+                                "default": false
+                            },
+                            "requestor_peer": {
+                                "type": "string",
+                                "description": "The peer event handler (output for input or input for output) of this event handler in requestor mode, this parameter is mandatory if the event handler is in requestor mode",
+                                "required": false
+                            },
+                            "requestor_timeout": {
+                                "type": "integer",
+                                "description": "The timeout in milliseconds for wait for responses to requests, this parameter is mandatory if the event handler is in requestor mode",
+                                "required": false
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.CarrierTechnology": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "label": {
+                                "type": "string",
+                                "description": "The label (name) of the carrier technology (such as REST, Kafka, WebSocket)",
+                                "required": true
+                            },
+                            "plugin_parameter_class_name": {
+                                "type": "string",
+                                "description": "The class name of the class that overrides default handling of event input or output for this carrier technology, defaults to the supplied input or output class",
+                                "required": false
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.EventProtocol": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "label": {
+                                "type": "string",
+                                "description": "The label (name) of the event protocol (such as Yaml, JSON, XML, or POJO)",
+                                "required": true
+                            },
+                            "event_protocol_plugin_class": {
+                                "type": "string",
+                                "description": "The class name of the class that overrides default handling of the event protocol for this carrier technology, defaults to the supplied event protocol class",
+                                "required": false
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.Environment": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the environment variable",
+                                "required": true
+                            },
+                            "value": {
+                                "type": "string",
+                                "description": "The value of the environment variable",
+                                "required": true
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.engineservice.Engine": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "context": {
+                                "type": "onap.datatypes.native.apex.engineservice.engine.Context",
+                                "description": "The properties for handling context in APEX engines, defaults to using Java maps for context",
+                                "required": false
+                            },
+                            "executors": {
+                                "type": "map",
+                                "description": "The plugins for policy executors used in engines such as javascript, MVEL, Jython",
+                                "required": true,
+                                "entry_schema": {
+                                    "description": "The plugin class path for this policy executor",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.engineservice.engine.Context": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "distributor": {
+                                "type": "onap.datatypes.native.apex.Plugin",
+                                "description": "The plugin to be used for distributing context between APEX PDPs at runtime",
+                                "required": false
+                            },
+                            "schemas": {
+                                "type": "map",
+                                "description": "The plugins for context schemas available in APEX PDPs such as Java and Avro",
+                                "required": false,
+                                "entry_schema": {
+                                    "type": "onap.datatypes.native.apex.Plugin"
+                                }
+                            },
+                            "locking": {
+                                "type": "onap.datatypes.native.apex.Plugin",
+                                "description": "The plugin to be used for locking context in and between APEX PDPs at runtime",
+                                "required": false
+                            },
+                            "persistence": {
+                                "type": "onap.datatypes.native.apex.Plugin",
+                                "description": "The plugin to be used for persisting context for APEX PDPs at runtime",
+                                "required": false
+                            }
+                        }
+                    },
+                    "onap.datatypes.native.apex.Plugin": {
+                        "derived_from": "tosca.datatypes.Root",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the executor such as Javascript, Jython or MVEL",
+                                "required": true
+                            },
+                            "plugin_class_name": {
+                                "type": "string",
+                                "description": "The class path of the plugin class for this executor"
+                            }
+                        }
+                    }
+                },
+                "policy_types": {
+                    "onap.policies.Native": {
+                        "derived_from": "tosca.policies.Root",
+                        "description": "a base policy type for all native PDP policies",
+                        "version": "1.0.0",
+                        "name": "onap.policies.Native"
+                    },
+                    "onap.policies.native.Apex": {
+                        "derived_from": "onap.policies.Native",
+                        "description": "a policy type for native apex policies",
+                        "version": "1.0.0",
+                        "name": "onap.policies.native.Apex",
+                        "properties": {
+                            "engine_service": {
+                                "type": "onap.datatypes.native.apex.EngineService",
+                                "description": "APEX Engine Service Parameters"
+                            },
+                            "inputs": {
+                                "type": "map",
+                                "description": "Inputs for handling events coming into the APEX engine",
+                                "entry_schema": {
+                                    "type": "onap.datatypes.native.apex.EventHandler"
+                                }
+                            },
+                            "outputs": {
+                                "type": "map",
+                                "description": "Outputs for handling events going out of the APEX engine",
+                                "entry_schema": {
+                                    "type": "onap.datatypes.native.apex.EventHandler"
+                                }
+                            },
+                            "environment": {
+                                "type": "list",
+                                "description": "Envioronmental parameters for the APEX engine",
+                                "entry_schema": {
+                                    "type": "onap.datatypes.native.apex.Environment"
+                                }
+                            }
+                        }
+                    }
+                },
+                "topology_template": {
+                    "policies": [
+                        {
+                            "onap.policies.native.apex.ac.element": {
+                                "type": "onap.policies.native.Apex",
+                                "type_version": "1.0.0",
+                                "properties": {
+                                    "engineServiceParameters": {
+                                        "name": "MyApexEngine",
+                                        "version": "0.0.1",
+                                        "id": 45,
+                                        "instanceCount": 2,
+                                        "deploymentPort": 12561,
+                                        "engineParameters": {
+                                            "executorParameters": {
+                                                "JAVASCRIPT": {
+                                                    "parameterClassName": "org.onap.policy.apex.plugins.executor.javascript.JavascriptExecutorParameters"
+                                                }
+                                            },
+                                            "contextParameters": {
+                                                "parameterClassName": "org.onap.policy.apex.context.parameters.ContextParameters",
+                                                "schemaParameters": {
+                                                    "Json": {
+                                                        "parameterClassName": "org.onap.policy.apex.plugins.context.schema.json.JsonSchemaHelperParameters"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "policy_type_impl": {
+                                            "policies": {
+                                                "key": {
+                                                    "name": "APEXacElementPolicy_Policies",
+                                                    "version": "0.0.1"
+                                                },
+                                                "policyMap": {
+                                                    "entry": [
+                                                        {
+                                                            "key": {
+                                                                "name": "ReceiveEventPolicy",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "policyKey": {
+                                                                    "name": "ReceiveEventPolicy",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "template": "Freestyle",
+                                                                "state": {
+                                                                    "entry": [
+                                                                        {
+                                                                            "key": "DecideForwardingState",
+                                                                            "value": {
+                                                                                "stateKey": {
+                                                                                    "parentKeyName": "ReceiveEventPolicy",
+                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                    "parentLocalName": "NULL",
+                                                                                    "localName": "DecideForwardingState"
+                                                                                },
+                                                                                "trigger": {
+                                                                                    "name": "AcElementEvent",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "stateOutputs": {
+                                                                                    "entry": [
+                                                                                        {
+                                                                                            "key": "CreateForwardPayload",
+                                                                                            "value": {
+                                                                                                "key": {
+                                                                                                    "parentKeyName": "ReceiveEventPolicy",
+                                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                                    "parentLocalName": "DecideForwardingState",
+                                                                                                    "localName": "CreateForwardPayload"
+                                                                                                },
+                                                                                                "outgoingEvent": {
+                                                                                                    "name": "KafkaResponseStatusEvent",
+                                                                                                    "version": "0.0.1"
+                                                                                                },
+                                                                                                "outgoingEventReference": [
+                                                                                                    {
+                                                                                                        "name": "KafkaResponseStatusEvent",
+                                                                                                        "version": "0.0.1"
+                                                                                                    }
+                                                                                                ],
+                                                                                                "nextState": {
+                                                                                                    "parentKeyName": "NULL",
+                                                                                                    "parentKeyVersion": "0.0.0",
+                                                                                                    "parentLocalName": "NULL",
+                                                                                                    "localName": "NULL"
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                "contextAlbumReference": [],
+                                                                                "taskSelectionLogic": {
+                                                                                    "key": {
+                                                                                        "parentKeyName": "NULL",
+                                                                                        "parentKeyVersion": "0.0.0",
+                                                                                        "parentLocalName": "NULL",
+                                                                                        "localName": "NULL"
+                                                                                    },
+                                                                                    "logicFlavour": "UNDEFINED",
+                                                                                    "logic": ""
+                                                                                },
+                                                                                "stateFinalizerLogicMap": {
+                                                                                    "entry": []
+                                                                                },
+                                                                                "defaultTask": {
+                                                                                    "name": "ForwardPayloadTask",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "taskReferences": {
+                                                                                    "entry": [
+                                                                                        {
+                                                                                            "key": {
+                                                                                                "name": "ForwardPayloadTask",
+                                                                                                "version": "0.0.1"
+                                                                                            },
+                                                                                            "value": {
+                                                                                                "key": {
+                                                                                                    "parentKeyName": "ReceiveEventPolicy",
+                                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                                    "parentLocalName": "DecideForwardingState",
+                                                                                                    "localName": "ReceiveEventPolicy"
+                                                                                                },
+                                                                                                "outputType": "DIRECT",
+                                                                                                "output": {
+                                                                                                    "parentKeyName": "ReceiveEventPolicy",
+                                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                                    "parentLocalName": "DecideForwardingState",
+                                                                                                    "localName": "CreateForwardPayload"
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "firstState": "DecideForwardingState"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "tasks": {
+                                                "key": {
+                                                    "name": "APEXacElementPolicy_Tasks",
+                                                    "version": "0.0.1"
+                                                },
+                                                "taskMap": {
+                                                    "entry": [
+                                                        {
+                                                            "key": {
+                                                                "name": "ForwardPayloadTask",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ForwardPayloadTask",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "inputEvent": {
+                                                                    "key": {
+                                                                        "name": "AcElementEvent",
+                                                                        "version": "0.0.1"
+                                                                    },
+                                                                    "nameSpace": "org.onap.policy.apex.ac.element",
+                                                                    "source": "Kafka",
+                                                                    "target": "APEX",
+                                                                    "parameter": {
+                                                                        "entry": [
+                                                                            {
+                                                                                "key": "KafkaResponseEvent",
+                                                                                "value": {
+                                                                                    "key": {
+                                                                                        "parentKeyName": "AcElementEvent",
+                                                                                        "parentKeyVersion": "0.0.1",
+                                                                                        "parentLocalName": "NULL",
+                                                                                        "localName": "KafkaResponseEvent"
+                                                                                    },
+                                                                                    "fieldSchemaKey": {
+                                                                                        "name": "ACEventType",
+                                                                                        "version": "0.0.1"
+                                                                                    },
+                                                                                    "optional": false
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    "toscaPolicyState": "ENTRY"
+                                                                },
+                                                                "outputEvents": {
+                                                                    "entry": [
+                                                                        {
+                                                                            "key": "KafkaResponseStatusEvent",
+                                                                            "value": {
+                                                                                "key": {
+                                                                                    "name": "KafkaResponseStatusEvent",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "nameSpace": "org.onap.policy.apex.ac.element",
+                                                                                "source": "APEX",
+                                                                                "target": "Kafka",
+                                                                                "parameter": {
+                                                                                    "entry": [
+                                                                                        {
+                                                                                            "key": "KafkaResponseStatusEvent",
+                                                                                            "value": {
+                                                                                                "key": {
+                                                                                                    "parentKeyName": "KafkaResponseStatusEvent",
+                                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                                    "parentLocalName": "NULL",
+                                                                                                    "localName": "KafkaResponseStatusEvent"
+                                                                                                },
+                                                                                                "fieldSchemaKey": {
+                                                                                                    "name": "ACEventType",
+                                                                                                    "version": "0.0.1"
+                                                                                                },
+                                                                                                "optional": false
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                "toscaPolicyState": ""
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "taskParameters": {
+                                                                    "entry": []
+                                                                },
+                                                                "contextAlbumReference": [
+                                                                    {
+                                                                        "name": "ACElementAlbum",
+                                                                        "version": "0.0.1"
+                                                                    }
+                                                                ],
+                                                                "taskLogic": {
+                                                                    "key": {
+                                                                        "parentKeyName": "ForwardPayloadTask",
+                                                                        "parentKeyVersion": "0.0.1",
+                                                                        "parentLocalName": "NULL",
+                                                                        "localName": "TaskLogic"
+                                                                    },
+                                                                    "logicFlavour": "JAVASCRIPT",
+                                                                    "logic": "/*\n * ============LICENSE_START=======================================================\n *  Copyright (C) 2022 Nordix. All rights reserved.\n * ================================================================================\n * Licensed under the Apache License, Version 2.0 (the 'License');\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an 'AS IS' BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * SPDX-License-Identifier: Apache-2.0\n * ============LICENSE_END=========================================================\n */\n\nexecutor.logger.info(executor.subject.id);\nexecutor.logger.info(executor.inFields);\n\nvar msgResponse = executor.inFields.get('KafkaResponseEvent');\nexecutor.logger.info('Task in progress with mesages: ' + msgResponse);\n\nvar elementId = msgResponse.get('elementId').get('name');\n\nif (msgResponse.get('messageType') == 'STATUS' &&\n    (elementId == 'onap.policy.clamp.ac.startertobridge'\n    || elementId == 'onap.policy.clamp.ac.bridgetosink')) {\n\n    var receiverId = '';\n    if (elementId == 'onap.policy.clamp.ac.startertobridge') {\n        receiverId = 'onap.policy.clamp.ac.bridge';\n    } else {\n        receiverId = 'onap.policy.clamp.ac.sink';\n    }\n\n    var elementIdResponse = new java.util.HashMap();\n    elementIdResponse.put('name', receiverId);\n    elementIdResponse.put('version', msgResponse.get('elementId').get('version'));\n\n    var kafkaResponse = new java.util.HashMap();\n    kafkaResponse.put('elementId', elementIdResponse);\n\n    var message = msgResponse.get('message') + ' trace added from policy';\n    kafkaResponse.put('message', message);\n    kafkaResponse.put('messageType', 'STATUS');\n    kafkaResponse.put('messageId', msgResponse.get('messageId'));\n    kafkaResponse.put('timestamp', msgResponse.get('timestamp'));\n\n    executor.logger.info('Sending forwarding Event to Ac element: ' + kafkaResponse);\n\n    executor.outFields.put('KafkaResponseStatusEvent', kafkaResponse);\n}\n\ntrue;"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "events": {
+                                                "key": {
+                                                    "name": "APEXacElementPolicy_Events",
+                                                    "version": "0.0.1"
+                                                },
+                                                "eventMap": {
+                                                    "entry": [
+                                                        {
+                                                            "key": {
+                                                                "name": "AcElementEvent",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "AcElementEvent",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "nameSpace": "org.onap.policy.apex.ac.element",
+                                                                "source": "Kafka",
+                                                                "target": "APEX",
+                                                                "parameter": {
+                                                                    "entry": [
+                                                                        {
+                                                                            "key": "KafkaResponseEvent",
+                                                                            "value": {
+                                                                                "key": {
+                                                                                    "parentKeyName": "AcElementEvent",
+                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                    "parentLocalName": "NULL",
+                                                                                    "localName": "KafkaResponseEvent"
+                                                                                },
+                                                                                "fieldSchemaKey": {
+                                                                                    "name": "ACEventType",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "optional": false
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "toscaPolicyState": "ENTRY"
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "KafkaResponseStatusEvent",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "KafkaResponseStatusEvent",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "nameSpace": "org.onap.policy.apex.ac.element",
+                                                                "source": "APEX",
+                                                                "target": "Kafka",
+                                                                "parameter": {
+                                                                    "entry": [
+                                                                        {
+                                                                            "key": "KafkaResponseStatusEvent",
+                                                                            "value": {
+                                                                                "key": {
+                                                                                    "parentKeyName": "KafkaResponseStatusEvent",
+                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                    "parentLocalName": "NULL",
+                                                                                    "localName": "KafkaResponseStatusEvent"
+                                                                                },
+                                                                                "fieldSchemaKey": {
+                                                                                    "name": "ACEventType",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "optional": false
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "toscaPolicyState": ""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "LogEvent",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "LogEvent",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "nameSpace": "org.onap.policy.apex.ac.element",
+                                                                "source": "APEX",
+                                                                "target": "file",
+                                                                "parameter": {
+                                                                    "entry": [
+                                                                        {
+                                                                            "key": "final_status",
+                                                                            "value": {
+                                                                                "key": {
+                                                                                    "parentKeyName": "LogEvent",
+                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                    "parentLocalName": "NULL",
+                                                                                    "localName": "final_status"
+                                                                                },
+                                                                                "fieldSchemaKey": {
+                                                                                    "name": "SimpleStringType",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "optional": false
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "key": "message",
+                                                                            "value": {
+                                                                                "key": {
+                                                                                    "parentKeyName": "LogEvent",
+                                                                                    "parentKeyVersion": "0.0.1",
+                                                                                    "parentLocalName": "NULL",
+                                                                                    "localName": "message"
+                                                                                },
+                                                                                "fieldSchemaKey": {
+                                                                                    "name": "SimpleStringType",
+                                                                                    "version": "0.0.1"
+                                                                                },
+                                                                                "optional": false
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "toscaPolicyState": ""
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "albums": {
+                                                "key": {
+                                                    "name": "APEXacElementPolicy_Albums",
+                                                    "version": "0.0.1"
+                                                },
+                                                "albums": {
+                                                    "entry": [
+                                                        {
+                                                            "key": {
+                                                                "name": "ACElementAlbum",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ACElementAlbum",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "scope": "policy",
+                                                                "isWritable": true,
+                                                                "itemSchema": {
+                                                                    "name": "ACEventType",
+                                                                    "version": "0.0.1"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "schemas": {
+                                                "key": {
+                                                    "name": "APEXacElementPolicy_Schemas",
+                                                    "version": "0.0.1"
+                                                },
+                                                "schemas": {
+                                                    "entry": [
+                                                        {
+                                                            "key": {
+                                                                "name": "ACEventType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ACEventType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "schemaFlavour": "Json",
+                                                                "schemaDefinition": "{\n    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"elementId\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"name\": {\n                    \"type\": \"string\"\n                },\n                \"version\": {\n                    \"type\": \"string\"\n                }\n            },\n            \"required\": [\n                \"name\",\n                \"version\"\n            ]\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"messageType\": {\n            \"type\": \"string\"\n        }\n    },\n    \"required\": [\n        \"elementId\",\n        \"message\",\n        \"messageType\"\n    ]\n}"
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "SimpleIntType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "SimpleIntType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "schemaFlavour": "Java",
+                                                                "schemaDefinition": "java.lang.Integer"
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "SimpleStringType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "SimpleStringType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "schemaFlavour": "Java",
+                                                                "schemaDefinition": "java.lang.String"
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "UUIDType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "UUIDType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "schemaFlavour": "Java",
+                                                                "schemaDefinition": "java.util.UUID"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "key": {
+                                                "name": "APEXacElementPolicy",
+                                                "version": "0.0.1"
+                                            },
+                                            "keyInformation": {
+                                                "key": {
+                                                    "name": "APEXacElementPolicy_KeyInfo",
+                                                    "version": "0.0.1"
+                                                },
+                                                "keyInfoMap": {
+                                                    "entry": [
+                                                        {
+                                                            "key": {
+                                                                "name": "ACElementAlbum",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ACElementAlbum",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "7cddfab8-6d3f-3f7f-8ac3-e2eb5979c900",
+                                                                "description": "Generated description for concept referred to by key \"ACElementAlbum:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "ACEventType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ACEventType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "dab78794-b666-3929-a75b-70d634b04fe5",
+                                                                "description": "Generated description for concept referred to by key \"ACEventType:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "da478611-7d77-3c46-b4be-be968769ba4e",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy_Albums",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy_Albums",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "fa8dc15e-8c8d-3de3-a0f8-585b76511175",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy_Albums:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy_Events",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy_Events",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "8508cd65-8dd2-342d-a5c6-1570810dbe2b",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy_Events:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy_KeyInfo",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy_KeyInfo",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "09e6927d-c5ac-3779-919f-9333994eed22",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy_KeyInfo:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy_Policies",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy_Policies",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "cade3c9a-1600-3642-a6f4-315612187f46",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy_Policies:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy_Schemas",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy_Schemas",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "5bb4a8e9-35fa-37db-9a49-48ef036a7ba9",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy_Schemas:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "APEXacElementPolicy_Tasks",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "APEXacElementPolicy_Tasks",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "2527eeec-0d1f-3094-ad3f-212622b12836",
+                                                                "description": "Generated description for concept referred to by key \"APEXacElementPolicy_Tasks:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "AcElementEvent",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "AcElementEvent",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "32c013e2-2740-3986-a626-cbdf665b63e9",
+                                                                "description": "Generated description for concept referred to by key \"AcElementEvent:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "KafkaResponseStatusEvent",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "KafkaResponseStatusEvent",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "2715cb6c-2778-3461-8b69-871e79f95935",
+                                                                "description": "Generated description for concept referred to by key \"KafkaResponseStatusEvent:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "ForwardPayloadTask",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ForwardPayloadTask",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "51defa03-1ecf-3314-bf34-2a652bce57fa",
+                                                                "description": "Generated description for concept referred to by key \"ForwardPayloadTask:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "LogEvent",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "LogEvent",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "c540f048-96af-35e3-a36e-e9c29377cba7",
+                                                                "description": "Generated description for concept referred to by key \"LogEvent:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "ReceiveEventPolicy",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "ReceiveEventPolicy",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "568b7345-9de1-36d3-b6a3-9b857e6809a1",
+                                                                "description": "Generated description for concept referred to by key \"ReceiveEventPolicy:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "SimpleIntType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "SimpleIntType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "153791fd-ae0a-36a7-88a5-309a7936415d",
+                                                                "description": "Generated description for concept referred to by key \"SimpleIntType:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "SimpleStringType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "SimpleStringType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "8a4957cf-9493-3a76-8c22-a208e23259af",
+                                                                "description": "Generated description for concept referred to by key \"SimpleStringType:0.0.1\""
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": {
+                                                                "name": "UUIDType",
+                                                                "version": "0.0.1"
+                                                            },
+                                                            "value": {
+                                                                "key": {
+                                                                    "name": "UUIDType",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "UUID": "6a8cc68e-dfc8-3403-9c6d-071c886b319c",
+                                                                "description": "Generated description for concept referred to by key \"UUIDType:0.0.1\""
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "eventInputParameters": {
+                                        "KafkaConsumer": {
+                                            "carrierTechnologyParameters": {
+                                                "carrierTechnology": "KAFKA",
+                                                "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.kafka.KafkaCarrierTechnologyParameters",
+                                                "parameters": {
+                                                    "bootstrapServers": "kafka:9092",
+                                                    "groupId": "apex-group-id",
+                                                    "enableAutoCommit": true,
+                                                    "autoCommitTime": 1000,
+                                                    "sessionTimeout": 30000,
+                                                    "consumerPollTime": 100,
+                                                    "consumerTopicList": [
+                                                        "ac_element_msg"
+                                                    ],
+                                                    "keyDeserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+                                                    "valueDeserializer": "org.apache.kafka.common.serialization.StringDeserializer"
+                                                }
+                                            },
+                                            "eventProtocolParameters": {
+                                                "eventProtocol": "JSON",
+                                                "parameters": {
+                                                    "pojoField": "KafkaResponseEvent"
+                                                }
+                                            },
+                                            "eventName": "AcElementEvent",
+                                            "eventNameFilter": "AcElementEvent"
+                                        }
+                                    },
+                                    "eventOutputParameters": {
+                                        "logOutputter": {
+                                            "carrierTechnologyParameters": {
+                                                "carrierTechnology": "FILE",
+                                                "parameters": {
+                                                    "fileName": "outputevents.log"
+                                                }
+                                            },
+                                            "eventProtocolParameters": {
+                                                "eventProtocol": "JSON"
+                                            }
+                                        },
+                                        "KafkaReplyProducer": {
+                                            "carrierTechnologyParameters": {
+                                                "carrierTechnology": "KAFKA",
+                                                "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.kafka.KafkaCarrierTechnologyParameters",
+                                                "parameters": {
+                                                    "bootstrapServers": "kafka:9092",
+                                                    "acks": "all",
+                                                    "retries": 0,
+                                                    "batchSize": 16384,
+                                                    "lingerTime": 1,
+                                                    "bufferMemory": 33554432,
+                                                    "producerTopic": "policy_update_msg",
+                                                    "keySerializer": "org.apache.kafka.common.serialization.StringSerializer",
+                                                    "valueSerializer": "org.apache.kafka.common.serialization.StringSerializer"
+                                                }
+                                            },
+                                            "eventProtocolParameters": {
+                                                "eventProtocol": "JSON",
+                                                "parameters": {
+                                                    "pojoField": "KafkaResponseStatusEvent"
+                                                }
+                                            },
+                                            "eventNameFilter": "(LogEvent|KafkaResponseStatusEvent)"
+                                        }
+                                    }
+                                },
+                                "name": "onap.policies.native.apex.ac.element",
+                                "version": "1.0.0"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

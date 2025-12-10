@@ -1,0 +1,30 @@
+{
+  "event": {
+    "commonEventHeader": {
+      "domain": "fault",
+      "eventId": "fault0000245",
+      "eventName": "Fault_Vscf:PilotNumberPoolExhaustion",
+      "lastEpochMicrosec": 1413378172000000,
+      "priority": "High",
+      "reportingEntityName": "ibcx0001vm002oam001",
+      "sequence": 1,
+      "sourceId": "de305d54-75b4-431b-adb2-eb6b9e5460141",
+      "sourceName": "vfw-cnf-cds-test-1-vnf",
+      "startEpochMicrosec": 1413378172000000,
+      "timeZoneOffset": "UTC-05:30",
+      "version": "4.0.1",
+      "vesEventListenerVersion": "7.0.1"
+    },
+    "faultFields": {
+      "alarmAdditionalInformation": {
+        "PilotNumberPoolSize": "1000"
+      },
+      "alarmCondition": "PilotNumberPoolExhaustion",
+      "eventSeverity": "CRITICAL",
+      "eventSourceType": "other",
+      "faultFieldsVersion": 4,
+      "specificProblem": "Calls cannot complete - pilot numbers are unavailable",
+      "vfStatus": "Active"
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "groups": [
+    {
+      "name": "defaultGroup",
+      "version": "1.0.0",
+      "description": "The default group that registers all supported policy types and pdps.",
+      "pdpGroupState": "ACTIVE",
+      "pdpSubgroups": [
+        {
+          "pdpType": "xacml",
+          "supportedPolicyTypes": [
+            {
+              "name": "onap.policies.controlloop.guard.common.FrequencyLimiter",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.controlloop.guard.common.MinMax",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.controlloop.guard.common.Blacklist",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.controlloop.guard.common.Filter",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.controlloop.guard.coordination.FirstBlocksSecond",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.monitoring.*",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.*",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.AffinityPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.DistancePolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.HpaPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.OptimizationPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.PciPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.service.QueryPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.service.SubscriberPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.Vim_fit",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.optimization.resource.VnfPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.native.Xacml",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.Naming",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.match.*",
+              "version": "1.0.0"
+            }
+          ],
+          "currentInstanceCount": 0,
+          "desiredInstanceCount": 1,
+          "policies": [
+            {
+              "name": "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP",
+              "version": "1.0.0"
+            }
+          ]
+        },
+        {
+          "pdpType": "drools",
+          "supportedPolicyTypes": [
+            {
+              "name": "onap.policies.controlloop.operational.common.Drools",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.native.drools.Controller",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.native.drools.Artifact",
+              "version": "1.0.0"
+            }
+          ],
+          "currentInstanceCount": 0,
+          "desiredInstanceCount": 1,
+          "policies": []
+        },
+        {
+          "pdpType": "apex",
+          "supportedPolicyTypes": [
+            {
+              "name": "onap.policies.controlloop.operational.common.Apex",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.native.Apex",
+              "version": "1.0.0"
+            }
+          ],
+          "currentInstanceCount": 0,
+          "desiredInstanceCount": 1,
+          "policies": []
+        }
+      ]
+    }
+  ]
+}

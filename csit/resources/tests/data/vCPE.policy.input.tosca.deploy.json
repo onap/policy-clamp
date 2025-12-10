@@ -1,0 +1,5 @@
+{"policies":[
+    {"policy-id":"onap.restart.tca"},
+    {"policy-id":"OSDF_CASABLANCA.Affinity_Default"}
+    ]
+}
