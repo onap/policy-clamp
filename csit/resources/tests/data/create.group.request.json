@@ -1,0 +1,49 @@
+{
+    "groups": [
+        {
+            "name": "testGroup",
+            "pdpGroupState": "PASSIVE",
+            "properties": {
+                "hello": "world"
+            },
+            "pdpSubgroups": [
+                {
+                    "pdpType": "pdpTypeA",
+                    "desiredInstanceCount": 2,
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.monitoring.tcagen2",
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "policies": []
+                },
+                {
+                    "pdpType": "pdpTypeB",
+                    "desiredInstanceCount": 1,
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.monitoring.tcagen2",
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "policies": []
+                },
+                {
+                    "pdpType": "pdpTypeC",
+                    "desiredInstanceCount": 1,
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.native.Apex",
+                            "version": "1.0.0"
+                        }
+                    ],
+                    "policies": []
+                }
+            ]
+        }
+    ]
+}

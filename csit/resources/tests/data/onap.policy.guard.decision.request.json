@@ -1,0 +1,16 @@
+{
+  "ONAPName": "Guard",
+  "ONAPComponent": "Guard-component",
+  "ONAPInstance": "Guard-component-instance",
+  "requestId": "unique-request-guard-1",
+  "action": "guard",
+  "resource": {
+    "guard": {
+      "actor": "APPC",
+      "operation": "ModifyConfig",
+      "target": "f17face5-69cb-4c88-9e0b-7426db7edddd",
+      "requestId": "c7c6a4aa-bb61-4a15-b831-ba1472dd4a65",
+      "clname": "ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a"
+    }
+  }
+}

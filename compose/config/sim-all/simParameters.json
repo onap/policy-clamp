@@ -1,0 +1,43 @@
+{
+    "restServers": [
+        {
+            "name": "A&AI simulator",
+            "providerClass": "org.onap.policy.simulators.AaiSimulatorJaxRs",
+            "host": "0.0.0.0",
+            "port": 6666,
+            "https": false,
+            "userName": "policy@policy.onap.org",
+            "password": "demo123456!",
+            "resourceLocation": "/opt/app/policy/simulators/etc/mounted/aairesponse/"
+        },
+        {
+            "name": "SDNC simulator",
+            "providerClass": "org.onap.policy.simulators.SdncSimulatorJaxRs",
+            "host": "0.0.0.0",
+            "port": 6668,
+            "https": false
+        },
+        {
+            "name": "SO simulator",
+            "providerClass": "org.onap.policy.simulators.SoSimulatorJaxRs",
+            "host": "0.0.0.0",
+            "port": 6669,
+            "https": false,
+            "userName": "InfraPortalClient",
+            "password": "password1$"
+        }
+    ],
+
+    "grpcServer": {
+        "name": "CDS simulator",
+        "providerClass": "org.onap.policy.simulators.CdsSimulator",
+        "host": "0.0.0.0",
+        "port": 6680,
+        "timeout": 30,
+        "username": "ccsdkapps",
+        "password": "ccsdkapps",
+        "resourceLocation": "/opt/app/policy/simulators/etc/mounted/cdsresponse/",
+        "successRepeatCount": 0,
+        "requestedResponseDelayMs": 0
+    }
+}
