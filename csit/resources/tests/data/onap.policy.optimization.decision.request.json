@@ -1,0 +1,15 @@
+{
+  "ONAPName": "OOF",
+  "ONAPComponent": "OOF-component",
+  "ONAPInstance": "OOF-component-instance",
+  "context" : {
+      "subscriberName": []
+  },
+  "action": "optimize",
+  "resource": {
+      "scope": [],
+      "services": [],
+      "resources": [],
+      "geography": []
+  }
+}

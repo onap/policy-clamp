@@ -1,0 +1,192 @@
+#
+# ===========LICENSE_START====================================================
+#  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
+# ============================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=====================================================
+#
+
+services:
+
+  simulator:
+    image: ${CONTAINER_LOCATION}onap/policy-models-simulator:${POLICY_MODELS_VERSION}
+    container_name: simulator
+    hostname: simulator
+    networks:
+      default:
+        aliases:
+          - aai-sim
+          - grpc-sim
+          - sdnc-sim
+          - so-sim
+    volumes:
+      - ./config/sim-all:/opt/app/policy/simulators/etc/mounted:ro
+      - ./config/sim-all/logback.xml:/opt/app/policy/simulators/etc/mounted/logback.xml:ro
+    expose:
+      - 6666
+      - 6668
+      - 6669
+      - 6680
+    ports:
+      - ${SIMULATOR_PORT}:6666
+
+  policy-clamp-ac-sim-ppnt-1:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    container_name: policy-clamp-ac-sim-ppnt-1
+    hostname: policy-clamp-ac-sim-ppnt-1
+    depends_on:
+      - kafka
+      - jaeger
+    environment:
+      HTTP_USER: participantUser
+      HTTP_PASSWORD: zb!XztG34
+      topicCommInfrastructure: kafka
+      allowTracing: true
+      OTEL_SERVICE_NAME: sim-ppnt-1
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      participantId: 101c62b3-8918-41b9-a747-d21eb79c6c90
+      applicationName: sim-ppnt-1
+      groupId: policy-clamp-ac-sim-ppnt-1
+      supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+    ports:
+      - ${SIM_PARTICIPANT1_PORT}:6969
+
+  policy-clamp-ac-sim-ppnt-2:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    container_name: policy-clamp-ac-sim-ppnt-2
+    hostname: policy-clamp-ac-sim-ppnt-2
+    depends_on:
+      - kafka
+      - jaeger
+    environment:
+      HTTP_USER: participantUser
+      HTTP_PASSWORD: zb!XztG34
+      topicCommInfrastructure: kafka
+      allowTracing: true
+      OTEL_SERVICE_NAME: sim-ppnt-2
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      participantId: 101c62b3-8918-41b9-a747-d21eb79c6c91
+      applicationName: sim-ppnt-2
+      groupId: policy-clamp-ac-sim-ppnt-2
+      supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement2
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+    ports:
+      - ${SIM_PARTICIPANT2_PORT}:6969
+
+  policy-clamp-ac-sim-ppnt-3:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    container_name: policy-clamp-ac-sim-ppnt-3
+    hostname: policy-clamp-ac-sim-ppnt-3
+    depends_on:
+      - kafka
+      - jaeger
+    environment:
+      HTTP_USER: participantUser
+      HTTP_PASSWORD: zb!XztG34
+      topicCommInfrastructure: kafka
+      allowTracing: true
+      OTEL_SERVICE_NAME: sim-ppnt-3
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      participantId: 101c62b3-8918-41b9-a747-d21eb79c6c92
+      applicationName: sim-ppnt-3
+      groupId: policy-clamp-ac-sim-ppnt-3
+      supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement3
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+    ports:
+      - ${SIM_PARTICIPANT3_PORT}:6969
+
+# metrics services:
+  prometheus:
+    image: nexus3.onap.org:10001/prom/prometheus:latest
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - ${PROMETHEUS_PORT}:9090
+    volumes:
+      - ./metrics/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: nexus3.onap.org:10001/grafana/grafana:latest
+    container_name: grafana
+    hostname: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - ${GRAFANA_PORT}:3000
+    volumes:
+      - ./metrics/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./metrics/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./metrics/dashboards:/var/lib/grafana/dashboards
+
+# messaging services:
+  zookeeper:
+    image: nexus3.onap.org:10001/confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: nexus3.onap.org:10001/confluentinc/cp-kafka:7.4.9
+    container_name: kafka
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+
+  jaeger:
+    image: nexus3.onap.org:10001/jaegertracing/all-in-one:1.58
+    container_name: jaeger
+    ports:
+      - "4318:4318"
+      - "4317:4317"
+      - "14250:14250"
+      - "16686:16686"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+
+# integration tests:
+  csit-tests:
+    image: onap/policy-csit-robot:latest
+    container_name: policy-csit
+    hostname: policy-csit
+    volumes:
+      - ${ROBOT_LOG_DIR:-/tmp}:/tmp/results
+      - /tmp/distribution:/tmp/distribution
+    environment:
+      ROBOT_FILE: ${ROBOT_FILES:-none}
+      TEST_ENV: ${TEST_ENV:-docker}
+      PROJECT: ${PROJECT:-policy}

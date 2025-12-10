@@ -1,0 +1,3198 @@
+{
+  "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+  "topology_template": {
+    "policies": [
+      {
+        "onap.policies.apex.vnf.Test": {
+          "type": "onap.policies.native.Apex",
+          "type_version": "1.0.0",
+          "name": "onap.policies.apex.vnf.Test",
+          "version": "1.0.0",
+          "properties": {
+            "engineServiceParameters": {
+              "name": "NSOApexEngine",
+              "version": "0.0.1",
+              "id": 45,
+              "instanceCount": 5,
+              "deploymentPort": 12561,
+              "engineParameters": {
+                "executorParameters": {
+                  "JAVASCRIPT": {
+                    "parameterClassName": "org.onap.policy.apex.plugins.executor.javascript.JavascriptExecutorParameters"
+                  }
+                },
+                "contextParameters": {
+                  "parameterClassName": "org.onap.policy.apex.context.parameters.ContextParameters",
+                  "schemaParameters": {
+                    "Avro": {
+                      "parameterClassName": "org.onap.policy.apex.plugins.context.schema.avro.AvroSchemaHelperParameters"
+                    }
+                  }
+                },
+                "taskParameters": [
+                  {
+                    "key": "logUrl",
+                    "value": "http://message-router:3904/events/APEX-CL-MGT"
+                  }
+                ]
+              },
+              "policy_type_impl": {
+                "apexPolicyModel": {
+                  "key": {
+                    "name": "onap.policies.apex.Example",
+                    "version": "0.0.1"
+                  },
+                  "keyInformation": {
+                    "key": {
+                      "name": "onap.policies.apex.Example_KeyInfo",
+                      "version": "0.0.1"
+                    },
+                    "keyInfoMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "fc0c1892-a2ae-3678-818f-b9b23939b241",
+                            "description": "Generated description for concept referred to by key \"ApexExample_AAIFailureResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ba931e7e-aee9-3af8-98d8-16b92a909e8a",
+                            "description": "Generated description for concept referred to by key \"ApexExample_AAIFailureResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIRequestErrorType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIRequestErrorType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b4dd59c5-0169-3810-800c-1396c2206de4",
+                            "description": "Generated description for concept referred to by key \"ApexExample_AAIRequestErrorType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "599c297e-96c8-3b21-ad1c-e643bddeacbf",
+                            "description": "Generated description for concept referred to by key \"ApexExample_AAIRequestEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAISuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAISuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b5e3f122-2dcd-3cdf-a0ec-8210b3f80478",
+                            "description": "Generated description for concept referred to by key \"ApexExample_AAISuccessResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAISuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAISuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "15504e23-78c5-305e-9fce-cf1f50e75013",
+                            "description": "Generated description for concept referred to by key \"ApexExample_AAISuccessResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSActionIdentifiersType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSActionIdentifiersType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "e2715e7d-835e-32c7-b433-a2e92bcad6ee",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSActionIdentifiersType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b492e841-2c03-36a9-9ec2-dda5852152c3",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifyFailureResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ef4e45f4-1181-3121-a3b6-507126df25e7",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifyFailureResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "91cb711a-0c73-3f51-83e6-fca9c547c71d",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifyFailureResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "dda3c648-dc8b-38e0-855d-9cb72397f957",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifyRequestEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "96b306bd-6dee-3d47-981c-eaac316d5ae1",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifyResponsePayloadType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifySuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifySuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "1b65abfb-ce35-3765-9b9c-d2ee02bef28b",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifySuccessResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "4dac3de7-3817-396f-91d6-ce701d162877",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifySuccessResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifySuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifySuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "92dc9e6b-2082-3d90-ba5e-f2dba18b72b6",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSConfigModifySuccessResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "a6801c93-f15b-3158-ba33-7760197d3609",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSFailureResponseCommonHeaderType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSFailureResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSFailureResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "e2da0a15-c542-3e77-874d-4512e9b4162e",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSFailureResponseStatusType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRequestCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRequestCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "f54edff0-532f-3142-8e65-a5c9d67888ef",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRequestCommonHeaderType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRequestPayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRequestPayloadType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b967dc44-a156-32d3-a796-f03dbf74316c",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRequestPayloadType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "f2aa4552-069d-3db8-8638-2d1f59124e7a",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartFailureResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "c2e3b07f-2c09-3195-9527-6b3ab0666d61",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartFailureResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "a7c28cc1-9fe5-30b7-9dd8-5a4f7f7d811e",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartFailureResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "d01d1022-48ac-391d-904d-282ccb063f8a",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartRequestEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartResponsePayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartResponsePayloadType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ad8cbd94-6eb5-3743-8a7d-42cbe49a5320",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartResponsePayloadType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartSuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartSuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "bbb06330-9161-392e-a0ca-a6bb5e3376af",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartSuccessResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "70c6c6e5-00da-30cb-8ec0-14437d657f39",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartSuccessResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartSuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartSuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "77f16151-80b5-304c-a448-19d8528feed1",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSRestartSuccessResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "2f17aee2-fbdf-3c41-a779-f9c17b5bda5b",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSSuccessResponseCommonHeaderType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSSuccessResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSSuccessResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "8c554852-3ed6-3027-a0d3-fccd2db19875",
+                            "description": "Generated description for concept referred to by key \"ApexExample_CDSSuccessResponseStatusType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_EventDetailsAlbum",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_EventDetailsAlbum",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b402baca-915b-3952-97fc-d9899f9ca81c",
+                            "description": "Generated description for concept referred to by key \"ApexExample_EventDetailsAlbum:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_EventDetailsAlbumType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_EventDetailsAlbumType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "3626f32a-eee6-3254-b3d4-e4829518c381",
+                            "description": "Generated description for concept referred to by key \"ApexExample_EventDetailsAlbumType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_HandleAAIFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_HandleAAIFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "87abb453-a919-3131-8ffb-3e5c910c6049",
+                            "description": "Generated description for concept referred to by key \"ApexExample_HandleAAIFailureResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_HandleAAISuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_HandleAAISuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "8881e644-3cca-3aec-8201-312ca6f719e0",
+                            "description": "Generated description for concept referred to by key \"ApexExample_HandleAAISuccessResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_HandleVesEventTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_HandleVesEventTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "057f6ddd-d6aa-3ce2-a060-d344de16d7f3",
+                            "description": "Generated description for concept referred to by key \"ApexExample_HandleVesEventTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_LogStatusEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_LogStatusEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "4867b1e7-a819-3b9f-be2b-a97fe6019827",
+                            "description": "Generated description for concept referred to by key \"ApexExample_LogStatusEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VesEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VesEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "975b3071-b775-3617-a888-f831fe5a31db",
+                            "description": "Generated description for concept referred to by key \"ApexExample_VesEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VesEventHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VesEventHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ad9efe17-a03e-3b64-8e8a-51e144f57d2c",
+                            "description": "Generated description for concept referred to by key \"ApexExample_VesEventHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VesEventType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VesEventType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "0054393c-10df-3214-af86-cb04a23325bf",
+                            "description": "Generated description for concept referred to by key \"ApexExample_VesEventType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VnfRelationShipListType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VnfRelationShipListType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "865a5903-201b-34ff-918b-2bfdde743576",
+                            "description": "Generated description for concept referred to by key \"ApexExample_VnfRelationShipListType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleBooleanType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleBooleanType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "7218fb2f-59e3-321d-9ae1-bc97b19eb4ae",
+                            "description": "Generated description for concept referred to by key \"SimpleBooleanType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleLongType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleLongType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "2dfcd9ec-a6f9-3f9f-958f-9b36cf4ac574",
+                            "description": "Generated description for concept referred to by key \"SimpleLongType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleStringType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleStringType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "8a4957cf-9493-3a76-8c22-a208e23259af",
+                            "description": "Generated description for concept referred to by key \"SimpleStringType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b2501730-8870-3475-b22a-4a4d22792ebb",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example_Albums",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example_Albums",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "7dc5f49d-c291-38de-bcae-1db30d00581f",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example_Albums:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example_Events",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example_Events",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "06b3112b-ae8b-3f37-8aa6-f539c0250550",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example_Events:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example_KeyInfo",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example_KeyInfo",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "454848e1-43ac-3ce4-bfdc-b9b6271dc563",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example_KeyInfo:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example_Policies",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example_Policies",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "24c3fca5-b0dd-398c-83ee-66a187296b32",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example_Policies:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example_Schemas",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example_Schemas",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "c6aff774-f50a-329d-a731-9c23a6e7e02e",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example_Schemas:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Example_Tasks",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Example_Tasks",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "f856a6df-6237-3acc-aa68-f55e64cc0ec9",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Example_Tasks:0.0.1\""
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "policies": {
+                    "key": {
+                      "name": "onap.policies.apex.Example_Policies",
+                      "version": "0.0.1"
+                    },
+                    "policyMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_AAIFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_ReceiveAAIFailureResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_AAIFailureResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_ReceiveAAIFailureResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_AAIFailureResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_AAIFailureStateOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_AAIFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveAAIFailureResponseState",
+                                              "localName": "ApexExample_AAIFailureStateOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_LogStatusEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_HandleAAIFailureResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_HandleAAIFailureResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_AAIFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveAAIFailureResponseState",
+                                              "localName": "ApexExample_AAIFailureResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_AAIFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveAAIFailureResponseState",
+                                              "localName": "ApexExample_AAIFailureStateOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_ReceiveAAIFailureResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAISuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_AAISuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_ReceiveAAISuccessResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_AAISuccessResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_ReceiveAAISuccessResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_AAISuccessResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_AAISuccessStateOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_AAISuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveAAISuccessResponseState",
+                                              "localName": "ApexExample_AAISuccessStateOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_CDSConfigModifyRequestEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_HandleAAISuccessResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_HandleAAISuccessResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_AAISuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveAAISuccessResponseState",
+                                              "localName": "ApexExample_AAISuccessResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_AAISuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveAAISuccessResponseState",
+                                              "localName": "ApexExample_AAISuccessStateOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_ReceiveAAISuccessResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_CDSConfigModifyFailureResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_CDSConfigModifyFailureResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_CDSConfigModifyFailureResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_ConfigModifyFailureResponseOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSConfigModifyFailureResponseState",
+                                              "localName": "ApexExample_ConfigModifyFailureResponseOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_LogStatusEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_CDSConfigModifyFailureResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_CDSConfigModifyFailureResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSConfigModifyFailureResponseState",
+                                              "localName": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_CDSConfigModifyFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSConfigModifyFailureResponseState",
+                                              "localName": "ApexExample_ConfigModifyFailureResponseOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_CDSConfigModifyFailureResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_CDSConfigModifySuccessResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_CDSConfigModifySuccessResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_CDSConfigModifySuccessResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_ConfigModifySuccessResponseOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSConfigModifySuccessResponseState",
+                                              "localName": "ApexExample_ConfigModifySuccessResponseOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_CDSRestartRequestEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_CDSConfigModifySuccessResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_CDSConfigModifySuccessResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSConfigModifySuccessResponseState",
+                                              "localName": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_CDSConfigModifySuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSConfigModifySuccessResponseState",
+                                              "localName": "ApexExample_ConfigModifySuccessResponseOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_CDSConfigModifySuccessResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_CDSRestartFailureResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_CDSRestartFailureResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_CDSRestartFailureResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_RestartFailureResponseOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSRestartFailureResponseState",
+                                              "localName": "ApexExample_RestartFailureResponseOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_LogStatusEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_CDSRestartFailureResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_CDSRestartFailureResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSRestartFailureResponseState",
+                                              "localName": "ApexExample_CDSRestartFailureResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_CDSRestartFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSRestartFailureResponseState",
+                                              "localName": "ApexExample_RestartFailureResponseOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_CDSRestartFailureResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_CDSRestartSuccessResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_CDSRestartSuccessResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_CDSRestartSuccessResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_RestartSuccessResponseOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSRestartSuccessResponseState",
+                                              "localName": "ApexExample_RestartSuccessResponseOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_LogStatusEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_CDSRestartSuccessResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_CDSRestartSuccessResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSRestartSuccessResponseState",
+                                              "localName": "ApexExample_CDSRestartSuccessResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_CDSRestartSuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_CDSRestartSuccessResponseState",
+                                              "localName": "ApexExample_RestartSuccessResponseOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_CDSRestartSuccessResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VesEventHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "ApexExample_VesEventHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "ApexExample_ReceiveVesState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "ApexExample_VesEventHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "ApexExample_ReceiveVesState"
+                                    },
+                                    "trigger": {
+                                      "name": "ApexExample_VesEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ApexExample_VesOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_VesEventHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveVesState",
+                                              "localName": "ApexExample_VesOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "ApexExample_AAIRequestEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "ApexExample_HandleVesEventTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "ApexExample_HandleVesEventTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "ApexExample_VesEventHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveVesState",
+                                              "localName": "ApexExample_VesEventHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "ApexExample_VesEventHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "ApexExample_ReceiveVesState",
+                                              "localName": "ApexExample_VesOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "ApexExample_ReceiveVesState"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "tasks": {
+                    "key": {
+                      "name": "onap.policies.apex.Example_Tasks",
+                      "version": "0.0.1"
+                    },
+                    "taskMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "message",
+                                  "value": {
+                                    "key": "message",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\n\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").get(albumID.toString());\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nvar timestamp = longType(new Date().getTime())\nvar errorMessage = \"CDS operation failed. Error message from CDS - \" + executor.inFields.get(\"status\").get(\"errorMessage\");\nerrorMessage = errorMessage.replace(/\"/g, '\\\\\\\"')\nsend(commonEventHeader.get(\"eventId\"), \"VNF\", commonEventHeader.get(\"sourceId\"), timestamp, \"FINAL_FAILURE\", \"Failed to process VES event. Reason: \" + errorMessage);\ntrue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifySuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifySuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestPayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").get(albumID.toString());\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nvar timestamp = longType(new Date().getTime());\nvar faultFields = eventDetailsAlbum.get(\"faultFields\");\nvar vnfDetails = eventDetailsAlbum.get(\"vnfDetails\");\nvar commonHeader = executor.subject.getOutFieldSchemaHelper(\"commonHeader\").createNewInstance();\ncommonHeader.put(\"subRequestId\", commonEventHeader.get(\"eventId\"));\ncommonHeader.put(\"requestId\", uuidType.randomUUID().toString());\ncommonHeader.put(\"originatorId\", \"POLICY\");\n\nvar actionIdentifiers = executor.subject.getOutFieldSchemaHelper(\"actionIdentifiers\").createNewInstance();\nactionIdentifiers.put(\"mode\", \"sync\");\nactionIdentifiers.put(\"blueprintName\", \"apex-example-cba\");\nactionIdentifiers.put(\"blueprintVersion\", \"1.0.0\");\nactionIdentifiers.put(\"actionName\", \"restart\");\n\nvar payloadProperties = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewSubInstance(\"update_DasH_properties_record\");\npayloadProperties.put(\"service_DasH_instance_DoT_service_DasH_instance_DasH_id\",  vnfDetails.get(\"service-id\").toString())\npayloadProperties.put(\"generic_DasH_vnf_DoT_vnf_DasH_id\",  vnfDetails.get(\"vnf-name\").toString())\nvar dataRecord = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewSubInstance(\"update_DasH_data_record\");\ndataRecord.put(\"active_DasH_streams\",\"7\")\npayloadProperties.put(\"data\", dataRecord)\nvar payloadEntry = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewSubInstance(\"CDSRequestPayloadEntry\");\npayloadEntry.put(\"update_DasH_properties\", payloadProperties)\npayloadEntry.put(\"vfStatus\", faultFields.get(\"vfStatus\"))\nvar payload = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewInstance();\npayload.put(\"restart_DasH_request\", payloadEntry);\n\nexecutor.outFields.put(\"commonHeader\", commonHeader);\nexecutor.outFields.put(\"actionIdentifiers\", actionIdentifiers);\nexecutor.outFields.put(\"payload\", payload);\n\nexecutor.logger.info(+executor.outFields);\n\nsend(commonEventHeader.get(\"eventId\"), \"VNF\", commonEventHeader.get(\"sourceId\"), timestamp, \"SUCCESS\", \"ConfigModify request is successful. Sending restart request to CDS.\")\ntrue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRestartResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "message",
+                                  "value": {
+                                    "key": "message",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").get(albumID.toString());\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nvar timestamp = longType(new Date().getTime())\nvar errorMessage = \"CDS operation failed. Error message from CDS - \" + executor.inFields.get(\"status\").get(\"errorMessage\");\nsend(commonEventHeader.get(\"eventId\"), \"VNF\", commonEventHeader.get(\"sourceId\"), timestamp, \"FINAL_FAILURE\", \"Failed to process VES event. Reason: \" + errorMessage);\ntrue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartSuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartSuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRestartResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "message",
+                                  "value": {
+                                    "key": "message",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar timestamp = longType(new Date().getTime());\n\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").get(albumID.toString());\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nsend(commonEventHeader.get(\"eventId\"), \"VNF\", commonEventHeader.get(\"sourceId\"), timestamp, \"FINAL_SUCCESS\", \"Successfully processed the VES Event. Restart is complete.\")\ntrue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_HandleAAIFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_HandleAAIFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "requestError",
+                                  "value": {
+                                    "key": "requestError",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_AAIRequestErrorType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "message",
+                                  "value": {
+                                    "key": "message",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\n\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").get(albumID.toString());\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\n\nvar aaiErrorMessage = \"AAI operation failed. Error message from AAI - \" + executor.inFields.get(\"requestError\").get(\"serviceException\").get(\"text\");\nvar timestamp = longType(new Date().getTime());\n\nsend(commonEventHeader.get(\"eventId\"), \"VNF\", commonEventHeader.get(\"sourceId\"), timestamp, \"FINAL_FAILURE\", \"Failed to process VES event. Reason: \" + aaiErrorMessage)\ntrue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_HandleAAISuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_HandleAAISuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "in-maint",
+                                  "value": {
+                                    "key": "in-maint",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleBooleanType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "is-closed-loop-disabled",
+                                  "value": {
+                                    "key": "is-closed-loop-disabled",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleBooleanType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "model-customization-id",
+                                  "value": {
+                                    "key": "model-customization-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "model-invariant-id",
+                                  "value": {
+                                    "key": "model-invariant-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "model-version-id",
+                                  "value": {
+                                    "key": "model-version-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "orchestration-status",
+                                  "value": {
+                                    "key": "orchestration-status",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "prov-status",
+                                  "value": {
+                                    "key": "prov-status",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "relationship-list",
+                                  "value": {
+                                    "key": "relationship-list",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_VnfRelationShipListType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "resource-version",
+                                  "value": {
+                                    "key": "resource-version",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "service-id",
+                                  "value": {
+                                    "key": "service-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "vnf-id",
+                                  "value": {
+                                    "key": "vnf-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "vnf-name",
+                                  "value": {
+                                    "key": "vnf-name",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "vnf-type",
+                                  "value": {
+                                    "key": "vnf-type",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestPayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar HashMapType = java.util.HashMap;\nvar longType = java.lang.Long;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").get(albumID.toString());\n\nvar vnfDetails = executor.inFields;\nexecutor.logger.info(\"ApexExample_HandleAAISuccessResponseTask processing event - \" + vnfDetails);\neventDetailsAlbum.put(\"vnfDetails\", vnfDetails);\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nvar faultFields = eventDetailsAlbum.get(\"faultFields\");\n\nvar commonHeader = executor.subject.getOutFieldSchemaHelper(\"commonHeader\").createNewInstance();\ncommonHeader.put(\"subRequestId\", commonEventHeader.get(\"eventId\"));\ncommonHeader.put(\"requestId\", uuidType.randomUUID().toString());\ncommonHeader.put(\"originatorId\", \"POLICY\");\n\nvar actionIdentifiers = executor.subject.getOutFieldSchemaHelper(\"actionIdentifiers\").createNewInstance();\nactionIdentifiers.put(\"mode\", \"sync\");\nactionIdentifiers.put(\"blueprintName\", \"apex-example-cba\");\nactionIdentifiers.put(\"blueprintVersion\", \"1.0.0\");\nactionIdentifiers.put(\"actionName\", \"modify-config\");\n\nvar payloadProperties = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewSubInstance(\"update_DasH_properties_record\");\npayloadProperties.put(\"service_DasH_instance_DoT_service_DasH_instance_DasH_id\",  vnfDetails.get(\"service-id\").toString())\npayloadProperties.put(\"generic_DasH_vnf_DoT_vnf_DasH_id\",  vnfDetails.get(\"vnf-id\").toString())\nvar dataRecord = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewSubInstance(\"update_DasH_data_record\");\ndataRecord.put(\"active_DasH_streams\",\"7\")\npayloadProperties.put(\"data\", dataRecord)\nvar payloadEntry = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewSubInstance(\"CDSRequestPayloadEntry\");\npayloadEntry.put(\"update_DasH_properties\", payloadProperties)\npayloadEntry.put(\"vfStatus\", faultFields.get(\"vfStatus\"))\nvar payload = executor.subject.getOutFieldSchemaHelper(\"payload\").createNewInstance();\nvar payloadSchemaHelper = executor.subject.getOutFieldSchemaHelper(\"payload\");\npayload.put(\"modify_DasH_config_DasH_request\", payloadEntry);\n\n//always use the executor.stringify2json method instead of JSON.strngify\nexecutor.logger.info(\"CDS modify config request payload - \" + executor.stringify2Json(payload, payloadSchemaHelper));\n\nexecutor.outFields.put(\"commonHeader\", commonHeader);\nexecutor.outFields.put(\"actionIdentifiers\", actionIdentifiers);\nexecutor.outFields.put(\"payload\", payload);\nvar timestamp = longType(new Date().getTime());\nsend(commonEventHeader.get(\"eventId\"), \"VNF\", commonEventHeader.get(\"sourceId\"), timestamp, \"SUCCESS\", \"VNF details are received from AAI successfully. Sending ConfigModify request to CDS.\")\ntrue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_HandleVesEventTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_HandleVesEventTask",
+                              "version": "0.0.1"
+                            },
+                            "inputFields": {
+                              "entry": [
+                                {
+                                  "key": "event",
+                                  "value": {
+                                    "key": "event",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_VesEventType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "outputFields": {
+                              "entry": [
+                                {
+                                  "key": "aaifield",
+                                  "value": {
+                                    "key": "aaifield",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "ApexExample_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar HashMapType = java.util.HashMap;\nvar longType = java.lang.Long;\n\nvar eventDetailsAlbum = executor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").getSchemaHelper().createNewInstance();\nvar returnValue = true;\n\nvar event = executor.inFields.get(\"event\");\nexecutor.logger.info(\"ApexExample_HandleVesEventTask processing VES event - \" + event);\n\nvar commonEventHeader = event.get(\"commonEventHeader\");\nvar faultFields = event.get(\"faultFields\");\n\n//albumID will be used to fetch info from our album later\nvar albumID = commonEventHeader.get(\"sourceId\");\n\n// save the event processing start time in apex\ncommonEventHeader.put(\"startEpochMicrosec\", longType(new Date().getTime()));\n//save the incoming fault event details to album\neventDetailsAlbum.put(\"commonEventHeader\", commonEventHeader)\neventDetailsAlbum.put(\"faultFields\", faultFields)\nexecutor.getContextAlbum(\"ApexExample_EventDetailsAlbum\").put(albumID.toString(), eventDetailsAlbum);\n\nexecutor.getExecutionProperties().setProperty(\"albumId\", albumID);\nexecutor.getExecutionProperties().setProperty(\"vnf-name\", eventDetailsAlbum.get(\"commonEventHeader\").get(\"sourceName\"));\n\nvar timestamp = longType(new Date().getTime());\nsend(eventDetailsAlbum.get(\"commonEventHeader\").get(\"eventId\"), \"VNF\", eventDetailsAlbum.get(\"commonEventHeader\").get(\"sourceId\"), timestamp, \"ACTIVE\", \"VES event has been received. Going to fetch VNF details from AAI.\")\n\nexecutor.logger.info(executor.outFields);\nreturnValue;\n\nfunction send(id, targetType, targetId, timestamp, status, message) {\n    var logData = '{'\n       +'\"id\" : \"' + id + '\",'\n       +'\"target\"  : {'\n            +'\"targetType\"  : \"' + targetType + '\",'\n            +'\"entityInfo\"  : {'\n                +'\"id\"  : \"' + targetId + '\"'\n            +'}'\n       +'},'\n       +'\"component\"  : {'\n            +'\"name\"  : \"Policy\",'\n            +'\"flavour\"  : \"Apex-PDP\",'\n            +'\"timestamp\"  : ' + timestamp + ','\n            +'\"status\"  : \"' + status + '\",'\n            +'\"message\"  : \"' + message + '\",'\n            +'\"artifacts\"  : {'\n                +'\"policyName\"  : \"onap.policies.apex.Example\",'\n                +'\"policyVersion\"  : \"1.0.0\"'\n            +'}'\n       +'},'\n       +'\"otherFields\"  : {'\n            +'\"useCaseName\"  : \"apex-pdp-policy-example\"'\n       +'}'\n    +'}';\n\n    executor.logger.info(\"sending the status to log.\");\n    fireLogEvent(logData);\n}\n\n\nfunction fireLogEvent(logEvent){\n    var headers = new HashMapType();\n    executor.logger.info(\"LogEvent:\"+logEvent);\n    var response = new org.onap.policy.rest.RestManager().post(\n            executor.getParameters().get(\"logUrl\"),\n            \"\",\n            \"\",\n            headers,\n            \"application/json\",\n            logEvent\n    );\n    executor.logger.info(\"DMaaP Response after sending LogEvent: \" + response);\n    return response;\n}"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "events": {
+                    "key": {
+                      "name": "onap.policies.apex.Example_Events",
+                      "version": "0.0.1"
+                    },
+                    "eventMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "AAI",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "requestError",
+                                  "value": {
+                                    "key": "requestError",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_AAIRequestErrorType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "EXIT_FAILURE"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "APEX",
+                            "target": "AAI",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "aaifield",
+                                  "value": {
+                                    "key": "aaifield",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_AAISuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAISuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "AAI",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "in-maint",
+                                  "value": {
+                                    "key": "in-maint",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleBooleanType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "is-closed-loop-disabled",
+                                  "value": {
+                                    "key": "is-closed-loop-disabled",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleBooleanType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "model-customization-id",
+                                  "value": {
+                                    "key": "model-customization-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "model-invariant-id",
+                                  "value": {
+                                    "key": "model-invariant-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "model-version-id",
+                                  "value": {
+                                    "key": "model-version-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "orchestration-status",
+                                  "value": {
+                                    "key": "orchestration-status",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "prov-status",
+                                  "value": {
+                                    "key": "prov-status",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "relationship-list",
+                                  "value": {
+                                    "key": "relationship-list",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_VnfRelationShipListType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "resource-version",
+                                  "value": {
+                                    "key": "resource-version",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "service-id",
+                                  "value": {
+                                    "key": "service-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "vnf-id",
+                                  "value": {
+                                    "key": "vnf-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "vnf-name",
+                                  "value": {
+                                    "key": "vnf-name",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "vnf-type",
+                                  "value": {
+                                    "key": "vnf-type",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "CDS",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "EXIT_FAILURE"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "APEX",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestPayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifySuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifySuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "CDS",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "CDS",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRestartResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSFailureResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "EXIT_FAILURE"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "APEX",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRequestPayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartSuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartSuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "CDS",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSRestartResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_CDSSuccessResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "EXIT_SUCCESS"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_LogStatusEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_LogStatusEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "APEX",
+                            "target": "DCAE",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "message",
+                                  "value": {
+                                    "key": "message",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VesEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VesEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.example",
+                            "source": "DCAE",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "event",
+                                  "value": {
+                                    "key": "event",
+                                    "fieldSchemaKey": {
+                                      "name": "ApexExample_VesEventType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "ENTRY"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "albums": {
+                    "key": {
+                      "name": "onap.policies.apex.Example_Albums",
+                      "version": "0.0.1"
+                    },
+                    "albums": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "ApexExample_EventDetailsAlbum",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_EventDetailsAlbum",
+                              "version": "0.0.1"
+                            },
+                            "scope": "policy",
+                            "isWritable": true,
+                            "itemSchema": {
+                              "name": "ApexExample_EventDetailsAlbumType",
+                              "version": "0.0.1"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "schemas": {
+                    "key": {
+                      "name": "onap.policies.apex.Example_Schemas",
+                      "version": "0.0.1"
+                    },
+                    "schemas": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "ApexExample_AAIRequestErrorType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_AAIRequestErrorType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"AAIRequestErrorType\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"serviceException\",\n      \"type\": {\n        \"name\": \"serviceException\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"messageId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"text\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"variables\",\n            \"type\": {\n              \"type\": \"array\",\n              \"items\": \"string\"\n            }\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSActionIdentifiersType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSActionIdentifiersType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSActionIdentifiers_Type\",\n    \"fields\": [\n        {\n            \"name\": \"actionName\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"blueprintName\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"blueprintVersion\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"mode\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSConfigModifyResponsePayloadType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"CDSConfigResponsePayloadEntry\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"modify_DasH_config_DasH_response\",\n      \"type\": {\n        \"name\": \"modify_DasH_config_DasH_response\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n              \"name\": \"execute_DasH_command_DasH_logs\",\n              \"type\": {\n                \"type\": \"array\",\n                \"items\": \"string\"\n              }\n          },\n          {\n              \"name\": \"prepare_DasH_environment_DasH_logs\",\n              \"type\": {\n                \"type\": \"array\",\n                \"items\": \"string\"\n              }\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSFailureResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseCommonHeader_Type\",\n    \"fields\": [\n        {\n            \"name\": \"originatorId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"requestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"subRequestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSFailureResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSFailureResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseStatus_Type\",\n    \"fields\": [\n        {\n            \"name\": \"code\",\n            \"type\": \"int\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"message\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"errorMessage\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRequestCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRequestCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSRequestCommonHeader_Type\",\n    \"fields\": [\n        {\n            \"name\": \"originatorId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"requestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"subRequestId\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRequestPayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRequestPayloadType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"type\": \"map\",\n  \"values\": {\n    \"type\": \"record\",\n    \"name\": \"CDSRequestPayloadEntry\",\n    \"fields\": [\n      {\n        \"name\": \"vfStatus\",\n        \"type\": \"string\"\n      },\n      {\n        \"name\": \"update_DasH_properties\",\n        \"type\": {\n          \"name\": \"update_DasH_properties_record\",\n          \"type\": \"record\",\n          \"fields\": [\n            {\n              \"name\": \"service_DasH_instance_DoT_service_DasH_instance_DasH_id\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"generic_DasH_vnf_DoT_vnf_DasH_id\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"data\",\n              \"type\": {\n                \"name\": \"update_DasH_data_record\",\n                \"type\": \"record\",\n                \"fields\": [\n                    {\n                        \"name\": \"active_DasH_streams\",\n                        \"type\": \"string\"\n                    }\n                ]\n            }\n            }\n          ]\n        }\n      }\n    ]\n  }\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSRestartResponsePayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSRestartResponsePayloadType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"CDSRestartResponsePayloadEntry\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"restart_DasH_response\",\n      \"type\": {\n        \"name\": \"restart_DasH_response\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n              \"name\": \"execute_DasH_command_DasH_logs\",\n              \"type\": {\n                \"type\": \"array\",\n                \"items\": \"string\"\n              }\n          },\n          {\n              \"name\": \"prepare_DasH_environment_DasH_logs\",\n              \"type\": {\n                \"type\": \"array\",\n                \"items\": \"string\"\n              }\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSSuccessResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseCommonHeader_Type\",\n    \"fields\": [\n        {\n            \"name\": \"originatorId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"requestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"subRequestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_CDSSuccessResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_CDSSuccessResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseStatus_Type\",\n    \"fields\": [\n        {\n            \"name\": \"code\",\n            \"type\": \"int\"\n        },\n        {\n            \"name\": \"eventType\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"message\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_EventDetailsAlbumType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_EventDetailsAlbumType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"eventDetails\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"commonEventHeader\",\n      \"type\": {\n        \"name\": \"commonEventHeader\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"domain\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"lastEpochMicrosec\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"priority\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"reportingEntityName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"sequence\",\n            \"type\": \"int\"\n          },\n          {\n            \"name\": \"sourceId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"sourceName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"startEpochMicrosec\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"timeZoneOffset\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"version\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"vesEventListenerVersion\",\n            \"type\": \"string\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"faultFields\",\n      \"type\": {\n        \"name\": \"faultFields\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"alarmAdditionalInformation\",\n            \"type\": {\n              \"name\": \"alarmAdditionalInformation\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"PilotNumberPoolSize\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          },\n          {\n            \"name\": \"alarmCondition\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventSeverity\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventSourceType\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"faultFieldsVersion\",\n            \"type\": \"int\"\n          },\n          {\n            \"name\": \"specificProblem\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"vfStatus\",\n            \"type\": \"string\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"vnfDetails\",\n      \"type\": {\n        \"name\": \"vnfDetails\",\n          \"type\": \"record\",\n          \"fields\": [\n            {\n              \"name\": \"vnf_DasH_id\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"vnf_DasH_name\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"vnf_DasH_type\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"service_DasH_id\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"prov_DasH_status\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"orchestration_DasH_status\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"in_DasH_maint\",\n              \"type\": \"boolean\"\n            },\n            {\n              \"name\": \"is_DasH_closed_DasH_loop_DasH_disabled\",\n              \"type\": \"boolean\"\n            },\n            {\n              \"name\": \"resource_DasH_version\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"model_DasH_invariant_DasH_id\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"model_DasH_version_DasH_id\",\n              \"type\": \"string\"\n            },\n            {\n              \"name\": \"model_DasH_customization_DasH_id\",\n              \"type\": \"string\"\n            }\n          ]\n        }\n    },\n    {\n      \"name\": \"target\",\n      \"type\": {\n        \"name\": \"target\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"targetType\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"entityInfo\",\n            \"type\": {\n              \"name\": \"entityInfo\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"name\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VesEventType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VesEventType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"event\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"commonEventHeader\",\n      \"type\": {\n        \"name\": \"commonEventHeader\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"domain\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"lastEpochMicrosec\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"priority\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"reportingEntityName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"sequence\",\n            \"type\": \"int\"\n          },\n          {\n            \"name\": \"sourceId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"sourceName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"startEpochMicrosec\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"timeZoneOffset\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"version\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"vesEventListenerVersion\",\n            \"type\": \"string\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"faultFields\",\n      \"type\": {\n        \"name\": \"faultFields\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"alarmAdditionalInformation\",\n            \"type\": {\n              \"name\": \"alarmAdditionalInformation\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"PilotNumberPoolSize\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          },\n          {\n            \"name\": \"alarmCondition\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventSeverity\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventSourceType\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"faultFieldsVersion\",\n            \"type\": \"int\"\n          },\n          {\n            \"name\": \"specificProblem\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"vfStatus\",\n            \"type\": \"string\"\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "ApexExample_VnfRelationShipListType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "ApexExample_VnfRelationShipListType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"VnfRelationShipListType\",\n    \"type\": \"record\",\n    \"fields\": [\n          {\n            \"name\": \"relationship\",\n            \"type\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"name\": \"relationship_record\",\n                \"type\": \"record\",\n                \"fields\": [\n                  {\n                    \"name\": \"related_DasH_to\",\n                    \"type\": \"string\"\n                  },\n                  {\n                    \"name\": \"relationship_DasH_label\",\n                    \"type\": \"string\"\n                  },\n                  {\n                    \"name\": \"related_DasH_link\",\n                    \"type\": \"string\"\n                  },\n                  {\n                    \"name\": \"relationship_DasH_data\",\n                    \"type\": {\n                      \"type\": \"array\",\n                      \"items\": {\n                        \"name\": \"relationship_DasH_data_record\",\n                        \"type\": \"record\",\n                        \"fields\": [\n                          {\n                            \"name\": \"relationship_DasH_key\",\n                            \"type\": \"string\"\n                          },\n                          {\n                            \"name\": \"relationship_DasH_value\",\n                            \"type\": \"string\"\n                          }\n                        ]\n                      }\n                    }\n                  },\n                  {\n                    \"name\": \"related_DasH_to_DasH_property\",\n                    \"type\": {\n                      \"type\": \"array\",\n                      \"items\": {\n                        \"name\": \"related_DasH_to_DasH_property_record\",\n                        \"type\": \"record\",\n                        \"fields\": [\n                          {\n                            \"name\": \"property_DasH_key\",\n                            \"type\": \"string\"\n                          },\n                          {\n                            \"name\": \"property_DasH_value\",\n                            \"type\": \"string\"\n                          }\n                        ]\n                      }\n                    }\n                  }\n                ]\n              }\n            }\n          }\n        ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleBooleanType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleBooleanType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Java",
+                            "schemaDefinition": "java.lang.Boolean"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleLongType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleLongType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Java",
+                            "schemaDefinition": "java.lang.Long"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleStringType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleStringType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Java",
+                            "schemaDefinition": "java.lang.String"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "eventInputParameters": {
+              "ApexExample_DCAEConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "RESTCLIENT",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters",
+                  "parameters": {
+                    "url": "http://message-router:3904/events/unauthenticated.DCAE_POLICY_EXAMPLE_OUTPUT/ApexExampleCG1/1?timeout=30000"
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "ApexExample_VesEvent"
+              },
+              "ApexExample_AAIResponseConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "RESTREQUESTOR",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.restrequestor.RestRequestorCarrierTechnologyParameters",
+                  "parameters": {
+                    "url": "http://aai-sim:6666/aai/v16/network/generic-vnfs/generic-vnf?vnf-name={vnf-name}",
+                    "httpMethod": "GET",
+                    "httpCodeFilter": "[245][0-9][0-9]",
+                    "httpHeaders": [
+                      [
+                        "Accept",
+                        "application/json"
+                      ],
+                      [
+                        "Content-Type",
+                        "application/json"
+                      ],
+                      [
+                        "X-FromAppId",
+                        "dcae-curl"
+                      ],
+                      [
+                        "x-transactionId",
+                        "9998"
+                      ],
+                      [
+                        "Authorization",
+                        "Basic QUFJOkFBSQ=="
+                      ]
+                    ]
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "ApexExample_AAISuccessResponseEvent|ApexExample_AAIFailureResponseEvent",
+                "requestorMode": true,
+                "requestorPeer": "ApexExample_AAIProducer",
+                "requestorTimeout": 2000
+              },
+              "ApexExample_CDSConfigModifyResponseConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "GRPC",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.grpc.GrpcCarrierTechnologyParameters"
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "ApexExample_CDSConfigModifySuccessResponseEvent|ApexExample_CDSConfigModifyFailureResponseEvent",
+                "requestorMode": true,
+                "requestorPeer": "ApexExample_CDSConfigModifyRequestProducer",
+                "requestorTimeout": 500
+              },
+              "ApexExample_CDSRestartResponseConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "GRPC",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.grpc.GrpcCarrierTechnologyParameters"
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "ApexExample_CDSRestartSuccessResponseEvent|ApexExample_CDSRestartFailureResponseEvent",
+                "requestorMode": true,
+                "requestorPeer": "ApexExample_CDSRestartRequestProducer",
+                "requestorTimeout": 500
+              }
+            },
+            "eventOutputParameters": {
+              "ApexExample_AAIProducer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "RESTREQUESTOR",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.restrequestor.RestRequestorCarrierTechnologyParameters"
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventNameFilter": "ApexExample_AAIRequestEvent",
+                "requestorMode": true,
+                "requestorPeer": "ApexExample_AAIResponseConsumer",
+                "requestorTimeout": 2000
+              },
+              "ApexExample_CDSConfigModifyRequestProducer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "GRPC",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.grpc.GrpcCarrierTechnologyParameters",
+                  "parameters": {
+                    "host": "grpc-sim",
+                    "port": 6680,
+                    "username": "ccsdkapps",
+                    "password": "ccsdkapps",
+                    "timeout": 10
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventNameFilter": "ApexExample_CDSConfigModifyRequestEvent",
+                "requestorMode": true,
+                "requestorPeer": "ApexExample_CDSConfigModifyResponseConsumer",
+                "requestorTimeout": 500
+              },
+              "ApexExample_CDSRestartRequestProducer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "GRPC",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.grpc.GrpcCarrierTechnologyParameters",
+                  "parameters": {
+                    "host": "grpc-sim",
+                    "port": 6680,
+                    "username": "ccsdkapps",
+                    "password": "ccsdkapps",
+                    "timeout": 10
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventNameFilter": "ApexExample_CDSRestartRequestEvent",
+                "requestorMode": true,
+                "requestorPeer": "ApexExample_CDSRestartResponseConsumer",
+                "requestorTimeout": 500
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

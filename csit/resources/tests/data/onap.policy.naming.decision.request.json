@@ -1,0 +1,13 @@
+{
+  "ONAPName": "SDNC",
+  "ONAPComponent": "SDNC-component",
+  "ONAPInstance": "SDNC-component-instance",
+  "requestId": "unique-request-sdnc-1",
+  "action": "naming",
+  "resource": {
+      "nfRole": [],
+      "naming-type": [],
+      "property-name": [],
+      "policy-type": ["onap.policies.Naming"]
+  }
+}
