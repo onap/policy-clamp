@@ -1,0 +1,2920 @@
+{
+  "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+  "topology_template": {
+    "policies": [
+      {
+        "onap.policies.apex.pnf.Test": {
+          "type": "onap.policies.native.Apex",
+          "type_version": "1.0.0",
+          "name": "onap.policies.apex.pnf.Test",
+          "version": "1.0.0",
+          "properties": {
+            "engineServiceParameters": {
+              "name": "NSOApexEngine",
+              "version": "0.0.1",
+              "id": 45,
+              "instanceCount": 4,
+              "deploymentPort": 12561,
+              "engineParameters": {
+                "executorParameters": {
+                  "JAVASCRIPT": {
+                    "parameterClassName": "org.onap.policy.apex.plugins.executor.javascript.JavascriptExecutorParameters"
+                  }
+                },
+                "contextParameters": {
+                  "parameterClassName": "org.onap.policy.apex.context.parameters.ContextParameters",
+                  "schemaParameters": {
+                    "Avro": {
+                      "parameterClassName": "org.onap.policy.apex.plugins.context.schema.avro.AvroSchemaHelperParameters"
+                    }
+                  }
+                },
+                "taskParameters": [
+                  {
+                    "key": "logUrl",
+                    "value": "http://localhost:8082/topics/apex-cl-mgt"
+                  }
+                ]
+              },
+              "policy_type_impl": {
+                "apexPolicyModel": {
+                  "key": {
+                    "name": "onap.policies.apex.Simplecontrolloop",
+                    "version": "0.0.1"
+                  },
+                  "keyInformation": {
+                    "key": {
+                      "name": "onap.policies.apex.Simplecontrolloop_KeyInfo",
+                      "version": "0.0.1"
+                    },
+                    "keyInfoMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "SimpleBooleanType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleBooleanType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "7218fb2f-59e3-321d-9ae1-bc97b19eb4ae",
+                            "description": "Generated description for concept referred to by key \"SimpleBooleanType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "c8a29e27-0a15-354a-84f9-4c7f207e5c81",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_AAIFailureResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "5e843cee-0180-39b9-8989-180b2ffe11c0",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_AAIFailureResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIRequestErrorType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIRequestErrorType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "90291c92-9b27-3cd9-8720-db572419c048",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_AAIRequestErrorType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "7b7e6751-4e0b-389d-98c0-5567bbc0294c",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_AAIRequestEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAISuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAISuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "63d5680c-14ef-3505-8d34-ebb646bba07b",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_AAISuccessResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "a84ca97d-6e94-39a2-91f9-59a6c9aa435e",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_AAISuccessResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSActionIdentifiersType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSActionIdentifiersType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "0e2ee622-7fd3-3e49-82e2-539c4f5e9624",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSActionIdentifiersType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "e84f8682-ea33-3ad0-8626-8bc4634581fc",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifyFailureResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "a252f835-2479-38ef-9ef4-20af62725752",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "cfc46ea9-b8c1-38dd-ac9c-304c916daf34",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifyFailureResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "1e7095d6-a455-3f89-acae-486e35d7e311",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifyRequestEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "d22ea83b-695d-3da9-b9f5-41f16ca433bf",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifyRequestPayloadType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyResponsePayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyResponsePayloadType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "e9fe2e40-1f0d-30dd-8b9e-885695878693",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifyResponsePayloadType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifySuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifySuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "5e04fa76-0a17-38a9-8524-23b2d1a23fa5",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifySuccessResponseEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "15866380-40f5-3f8e-87d9-13747a36d352",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifySuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifySuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "2c3d76ce-dd42-32ac-a397-ab418534e1cf",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSConfigModifySuccessResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSFailureResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSFailureResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "b99c44da-dae7-3c96-b528-58852537d063",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSFailureResponseCommonHeaderType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSFailureResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSFailureResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "1db688e2-3afe-3b03-9795-fdbfa80fa240",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSFailureResponseStatusType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSRequestCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSRequestCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "31022456-e85b-3a9b-9ecb-a09691792d3e",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSRequestCommonHeaderType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSSuccessResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSSuccessResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "d6075720-622e-3a0d-827a-aa4580a2f5d7",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSSuccessResponseCommonHeaderType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSSuccessResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSSuccessResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "948359ff-3308-3ac5-a5ec-6e3c1b9cd4d5",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_CDSSuccessResponseStatusType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_EventDetailsAlbum",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_EventDetailsAlbum",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "63a6fd26-2fd6-3a0e-8a27-49a5d2ea4644",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_EventDetailsAlbum:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_EventDetailsAlbumType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_EventDetailsAlbumType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "a0407d0b-5719-38bf-9529-25ad62ace8c4",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_EventDetailsAlbumType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_HandleAAIFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_HandleAAIFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "28e894dc-4ab8-3469-aab7-d81bd05bb4c9",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_HandleAAIFailureResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_HandleAAISuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_HandleAAISuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "073f1433-999e-3506-98ad-ef820d2fa7f0",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_HandleAAISuccessResponseTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_HandleVesEventTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_HandleVesEventTask",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "afc6ed46-6801-3c85-bb4c-0ab5b0dd4a74",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_HandleVesEventTask:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "317be184-a01a-3e2d-9ae4-cafaa405de70",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_LogEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEventComponentType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEventComponentType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "be7fc79b-9b73-381a-8e23-9dd6e6b1233d",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_LogEventComponentType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEventOtherFieldsType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEventOtherFieldsType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "1a082851-49e3-3f4c-b023-c05236cc8389",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_LogEventOtherFieldsType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEventTargetType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEventTargetType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "cab6cd51-ea7b-3241-a173-ea8a24e29737",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_LogEventTargetType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_VesEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_VesEvent",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "0f57665a-f0a9-314e-ad0a-04c1f5758174",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_VesEvent:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_VesEventHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_VesEventHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ba5d9a46-8cb4-3fbe-84fd-eabba5b7dd4b",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_VesEventHandlerPolicy:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_VesEventType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_VesEventType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "9fd7a967-57d4-36ef-81e9-c3396f3aa8d1",
+                            "description": "Generated description for concept referred to by key \"SimpleCL_VesEventType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleLongType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleLongType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "2dfcd9ec-a6f9-3f9f-958f-9b36cf4ac574",
+                            "description": "Generated description for concept referred to by key \"SimpleLongType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleStringType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleStringType",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "8a4957cf-9493-3a76-8c22-a208e23259af",
+                            "description": "Generated description for concept referred to by key \"SimpleStringType:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ecc97b87-f30b-344c-a476-d36501bf5cbd",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop_Albums",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop_Albums",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "1469671a-56dd-3a68-bf6c-77a5cf7a9487",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop_Albums:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop_Events",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop_Events",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "23c4eee4-aba5-36f6-96d6-46f40061bfed",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop_Events:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop_KeyInfo",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop_KeyInfo",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "ea9e73ff-483c-3827-896c-6eaa9d69bc6e",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop_KeyInfo:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop_Policies",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop_Policies",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "38c068e5-bb9a-3997-9e50-ec77c66825c8",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop_Policies:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop_Schemas",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop_Schemas",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "38514b27-8b9b-3d06-844a-3aced27deb0a",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop_Schemas:0.0.1\""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "onap.policies.apex.Simplecontrolloop_Tasks",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "onap.policies.apex.Simplecontrolloop_Tasks",
+                              "version": "0.0.1"
+                            },
+                            "UUID": "0e0387b5-07fa-30e4-8554-eb51d2e18939",
+                            "description": "Generated description for concept referred to by key \"onap.policies.apex.Simplecontrolloop_Tasks:0.0.1\""
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "policies": {
+                    "key": {
+                      "name": "onap.policies.apex.Simplecontrolloop_Policies",
+                      "version": "0.0.1"
+                    },
+                    "policyMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_ReceiveAAIFailureResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "SimpleCL_ReceiveAAIFailureResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "SimpleCL_AAIFailureResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "AAIFailureStateOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveAAIFailureResponseState",
+                                              "localName": "AAIFailureStateOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "SimpleCL_LogEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "outgoingEventReference": [
+                                              {
+                                                "name": "SimpleCL_LogEvent",
+                                                "version": "0.0.1"
+                                              }
+                                            ],
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "SimpleCL_HandleAAIFailureResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "SimpleCL_HandleAAIFailureResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveAAIFailureResponseState",
+                                              "localName": "SimpleCL_AAIFailureResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "SimpleCL_AAIFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveAAIFailureResponseState",
+                                              "localName": "AAIFailureStateOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "SimpleCL_ReceiveAAIFailureResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_ReceiveAAISuccessResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "SimpleCL_ReceiveAAISuccessResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "SimpleCL_AAISuccessResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "AAISuccessStateOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveAAISuccessResponseState",
+                                              "localName": "AAISuccessStateOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "outgoingEventReference": [
+                                              {
+                                                "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                                                "version": "0.0.1"
+                                              },
+                                              {
+                                                "name": "SimpleCL_LogEvent",
+                                                "version": "0.0.1"
+                                              }
+                                            ],
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "SimpleCL_HandleAAISuccessResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "SimpleCL_HandleAAISuccessResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveAAISuccessResponseState",
+                                              "localName": "SimpleCL_AAISuccessResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "SimpleCL_AAISuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveAAISuccessResponseState",
+                                              "localName": "AAISuccessStateOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "SimpleCL_ReceiveAAISuccessResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_CDSConfigModifyFailureResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "SimpleCL_CDSConfigModifyFailureResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "SimpleCL_CDSConfigModifyFailureResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ConfigModifyFailureResponseOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_CDSConfigModifyFailureResponseState",
+                                              "localName": "ConfigModifyFailureResponseOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "SimpleCL_LogEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "outgoingEventReference": [
+                                              {
+                                                "name": "SimpleCL_LogEvent",
+                                                "version": "0.0.1"
+                                              }
+                                            ],
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "SimpleCL_CDSConfigModifyFailureResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "SimpleCL_CDSConfigModifyFailureResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_CDSConfigModifyFailureResponseState",
+                                              "localName": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "SimpleCL_CDSConfigModifyFailureResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_CDSConfigModifyFailureResponseState",
+                                              "localName": "ConfigModifyFailureResponseOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "SimpleCL_CDSConfigModifyFailureResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_CDSConfigModifySuccessResponseState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "SimpleCL_CDSConfigModifySuccessResponseState"
+                                    },
+                                    "trigger": {
+                                      "name": "SimpleCL_CDSConfigModifySuccessResponseEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "ConfigModifySuccessResponseOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_CDSConfigModifySuccessResponseState",
+                                              "localName": "ConfigModifySuccessResponseOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "SimpleCL_LogEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "outgoingEventReference": [
+                                              {
+                                                "name": "SimpleCL_LogEvent",
+                                                "version": "0.0.1"
+                                              }
+                                            ],
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "SimpleCL_CDSConfigModifySuccessResponseTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "SimpleCL_CDSConfigModifySuccessResponseTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_CDSConfigModifySuccessResponseState",
+                                              "localName": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "SimpleCL_CDSConfigModifySuccessResponseHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_CDSConfigModifySuccessResponseState",
+                                              "localName": "ConfigModifySuccessResponseOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "SimpleCL_CDSConfigModifySuccessResponseState"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_VesEventHandlerPolicy",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "policyKey": {
+                              "name": "SimpleCL_VesEventHandlerPolicy",
+                              "version": "0.0.1"
+                            },
+                            "template": "Freestyle",
+                            "state": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_ReceiveVesState",
+                                  "value": {
+                                    "stateKey": {
+                                      "parentKeyName": "SimpleCL_VesEventHandlerPolicy",
+                                      "parentKeyVersion": "0.0.1",
+                                      "parentLocalName": "NULL",
+                                      "localName": "SimpleCL_ReceiveVesState"
+                                    },
+                                    "trigger": {
+                                      "name": "SimpleCL_VesEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "stateOutputs": {
+                                      "entry": [
+                                        {
+                                          "key": "VesOutput",
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_VesEventHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveVesState",
+                                              "localName": "VesOutput"
+                                            },
+                                            "outgoingEvent": {
+                                              "name": "SimpleCL_AAIRequestEvent",
+                                              "version": "0.0.1"
+                                            },
+                                            "outgoingEventReference": [
+                                              {
+                                                "name": "SimpleCL_AAIRequestEvent",
+                                                "version": "0.0.1"
+                                              },
+                                              {
+                                                "name": "SimpleCL_LogEvent",
+                                                "version": "0.0.1"
+                                              }
+                                            ],
+                                            "nextState": {
+                                              "parentKeyName": "NULL",
+                                              "parentKeyVersion": "0.0.0",
+                                              "parentLocalName": "NULL",
+                                              "localName": "NULL"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "contextAlbumReference": [],
+                                    "taskSelectionLogic": {
+                                      "key": "NULL",
+                                      "logicFlavour": "UNDEFINED",
+                                      "logic": ""
+                                    },
+                                    "stateFinalizerLogicMap": {
+                                      "entry": []
+                                    },
+                                    "defaultTask": {
+                                      "name": "SimpleCL_HandleVesEventTask",
+                                      "version": "0.0.1"
+                                    },
+                                    "taskReferences": {
+                                      "entry": [
+                                        {
+                                          "key": {
+                                            "name": "SimpleCL_HandleVesEventTask",
+                                            "version": "0.0.1"
+                                          },
+                                          "value": {
+                                            "key": {
+                                              "parentKeyName": "SimpleCL_VesEventHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveVesState",
+                                              "localName": "SimpleCL_VesEventHandlerPolicy"
+                                            },
+                                            "outputType": "DIRECT",
+                                            "output": {
+                                              "parentKeyName": "SimpleCL_VesEventHandlerPolicy",
+                                              "parentKeyVersion": "0.0.1",
+                                              "parentLocalName": "SimpleCL_ReceiveVesState",
+                                              "localName": "VesOutput"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "firstState": "SimpleCL_ReceiveVesState"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "tasks": {
+                    "key": {
+                      "name": "onap.policies.apex.Simplecontrolloop_Tasks",
+                      "version": "0.0.1"
+                    },
+                    "taskMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputEvent": {
+                              "key": {
+                                "name": "SimpleCL_CDSConfigModifyFailureResponseEvent",
+                                "version": "0.0.1"
+                              },
+                              "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                              "source": "CDS",
+                              "target": "APEX",
+                              "parameter": {
+                                "entry": [
+                                  {
+                                    "key": "actionIdentifiers",
+                                    "value": {
+                                      "key": "actionIdentifiers",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSActionIdentifiersType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "commonHeader",
+                                    "value": {
+                                      "key": "commonHeader",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSFailureResponseCommonHeaderType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "payload",
+                                    "value": {
+                                      "key": "payload",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "status",
+                                    "value": {
+                                      "key": "status",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSFailureResponseStatusType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  }
+                                ]
+                              },
+                              "toscaPolicyState": "EXIT_FAILURE"
+                            },
+                            "outputEvents": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_LogEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_LogEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "DCAE",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "component",
+                                          "value": {
+                                            "key": "component",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventComponentType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "key": "id",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleStringType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "otherFields",
+                                          "value": {
+                                            "key": "otherFields",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventOtherFieldsType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "target",
+                                          "value": {
+                                            "key": "target",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventTargetType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "SimpleCL_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").get(albumID.toString());\n\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nvar errorMessage = \"CDS operation failed. Error message from CDS - \" + executor.inFields.get(\"status\").get(\"errorMessage\");\nvar logEventFields = populateLogEventFields(commonEventHeader.get(\"eventId\"), eventDetailsAlbum.get(\"otherFields\").get(\"hashMap\").get(\"pnfName\"), \"PNF\", \"FINAL_FAILURE\", \"Failed to process VES event. Reason: \" + errorMessage);\nexecutor.addFieldsToOutput(logEventFields);\nexecutor.logger.info(executor.outFieldsList);\ntrue;\n\nfunction populateLogEventFields(eventId, pnfName, targetType, status, message) {\n    var timestamp = longType(new Date().getTime());\n    var logEventFields = java.util.HashMap();\n    logEventFields.put(\"id\", eventId);\n    \n    var entityInfo = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewSubInstance(\"entityInfo\");\n    entityInfo.put(\"pnf_DasH_name\", pnfName);\n    var target = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewInstance();\n    target.put(\"entityInfo\", entityInfo);\n    target.put(\"targetType\", targetType)\n    logEventFields.put(\"target\", target);\n    \n    var artifacts = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewSubInstance(\"artifacts\");\n    artifacts.put(\"policyName\", \"onap.policies.apex.Simplecontrolloop\");\n    artifacts.put(\"policyVersion\", \"1.0.0\");\n    var component = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewInstance();\n    component.put(\"artifacts\", artifacts);\n    component.put(\"name\", \"Policy\")\n    component.put(\"flavour\", \"Apex-PDP\")\n    component.put(\"timestamp\", timestamp)\n    component.put(\"status\", status)\n    component.put(\"message\", message)\n    logEventFields.put(\"component\", component);\n    \n    var otherFieldsEntry = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"otherFields\").createNewInstance();\n    otherFieldsEntry.put(\"useCaseName\", \"simple-controlloop-usecase\");\n    logEventFields.put(\"otherFields\", otherFieldsEntry);\n    \n    return logEventFields;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifySuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifySuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputEvent": {
+                              "key": {
+                                "name": "SimpleCL_CDSConfigModifySuccessResponseEvent",
+                                "version": "0.0.1"
+                              },
+                              "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                              "source": "CDS",
+                              "target": "APEX",
+                              "parameter": {
+                                "entry": [
+                                  {
+                                    "key": "actionIdentifiers",
+                                    "value": {
+                                      "key": "actionIdentifiers",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSActionIdentifiersType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "commonHeader",
+                                    "value": {
+                                      "key": "commonHeader",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSSuccessResponseCommonHeaderType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "payload",
+                                    "value": {
+                                      "key": "payload",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSConfigModifyResponsePayloadType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "status",
+                                    "value": {
+                                      "key": "status",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_CDSSuccessResponseStatusType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  }
+                                ]
+                              },
+                              "toscaPolicyState": "EXIT_SUCCESS"
+                            },
+                            "outputEvents": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_LogEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_LogEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "DCAE",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "component",
+                                          "value": {
+                                            "key": "component",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventComponentType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "key": "id",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleStringType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "otherFields",
+                                          "value": {
+                                            "key": "otherFields",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventOtherFieldsType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "target",
+                                          "value": {
+                                            "key": "target",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventTargetType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "SimpleCL_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").get(albumID.toString());\n\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\n\nvar logEventFields = populateLogEventFields(commonEventHeader.get(\"eventId\"), eventDetailsAlbum.get(\"otherFields\").get(\"hashMap\").get(\"pnfName\"), \"PNF\", \"FINAL_SUCCESS\", \"Successfully processed the VES event. Hostname is updated.\")\nexecutor.addFieldsToOutput(logEventFields);\nexecutor.logger.info(executor.outFieldsList);\ntrue;\n\nfunction populateLogEventFields(eventId, pnfName, targetType, status, message) {\n    var timestamp = longType(new Date().getTime());\n    var logEventFields = java.util.HashMap();\n    logEventFields.put(\"id\", eventId);\n    \n    var entityInfo = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewSubInstance(\"entityInfo\");\n    entityInfo.put(\"pnf_DasH_name\", pnfName);\n    var target = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewInstance();\n    target.put(\"entityInfo\", entityInfo);\n    target.put(\"targetType\", targetType)\n    logEventFields.put(\"target\", target);\n    \n    var artifacts = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewSubInstance(\"artifacts\");\n    artifacts.put(\"policyName\", \"onap.policies.apex.Simplecontrolloop\");\n    artifacts.put(\"policyVersion\", \"1.0.0\");\n    var component = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewInstance();\n    component.put(\"artifacts\", artifacts);\n    component.put(\"name\", \"Policy\")\n    component.put(\"flavour\", \"Apex-PDP\")\n    component.put(\"timestamp\", timestamp)\n    component.put(\"status\", status)\n    component.put(\"message\", message)\n    logEventFields.put(\"component\", component);\n    \n    var otherFieldsEntry = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"otherFields\").createNewInstance();\n    otherFieldsEntry.put(\"useCaseName\", \"simple-controlloop-usecase\");\n    logEventFields.put(\"otherFields\", otherFieldsEntry);\n    \n    return logEventFields;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_HandleAAIFailureResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_HandleAAIFailureResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputEvent": {
+                              "key": {
+                                "name": "SimpleCL_AAIFailureResponseEvent",
+                                "version": "0.0.1"
+                              },
+                              "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                              "source": "AAI",
+                              "target": "APEX",
+                              "parameter": {
+                                "entry": [
+                                  {
+                                    "key": "requestError",
+                                    "value": {
+                                      "key": "requestError",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_AAIRequestErrorType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  }
+                                ]
+                              },
+                              "toscaPolicyState": "EXIT_FAILURE"
+                            },
+                            "outputEvents": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_LogEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_LogEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "DCAE",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "component",
+                                          "value": {
+                                            "key": "component",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventComponentType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "key": "id",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleStringType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "otherFields",
+                                          "value": {
+                                            "key": "otherFields",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventOtherFieldsType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "target",
+                                          "value": {
+                                            "key": "target",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventTargetType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "SimpleCL_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar longType = java.lang.Long;\nvar HashMapType = java.util.HashMap;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").get(albumID.toString());\n\nvar aaiErrorMessage = \"AAI operation failed. Error message from AAI - \" + executor.inFields.get(\"requestError\").get(\"serviceException\").get(\"text\");\n\nvar logEventFields = populateLogEventFields(eventDetailsAlbum.get(\"commonEventHeader\").get(\"eventId\"), eventDetailsAlbum.get(\"otherFields\").get(\"hashMap\").get(\"pnfName\"), \"PNF\", \"FINAL_FAILURE\", \"Failed to process VES event. Reason: \" + aaiErrorMessage)\nexecutor.addFieldsToOutput(logEventFields);\nexecutor.logger.info(executor.outFieldsList);\ntrue;\n\nfunction populateLogEventFields(eventId, pnfName, targetType, status, message) {\n    var timestamp = longType(new Date().getTime());\n    var logEventFields = java.util.HashMap();\n    logEventFields.put(\"id\", eventId);\n    \n    var entityInfo = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewSubInstance(\"entityInfo\");\n    entityInfo.put(\"pnf_DasH_name\", pnfName);\n    var target = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewInstance();\n    target.put(\"entityInfo\", entityInfo);\n    target.put(\"targetType\", targetType)\n    logEventFields.put(\"target\", target);\n    \n    var artifacts = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewSubInstance(\"artifacts\");\n    artifacts.put(\"policyName\", \"onap.policies.apex.Simplecontrolloop\");\n    artifacts.put(\"policyVersion\", \"1.0.0\");\n    var component = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewInstance();\n    component.put(\"artifacts\", artifacts);\n    component.put(\"name\", \"Policy\")\n    component.put(\"flavour\", \"Apex-PDP\")\n    component.put(\"timestamp\", timestamp)\n    component.put(\"status\", status)\n    component.put(\"message\", message)\n    logEventFields.put(\"component\", component);\n    \n    var otherFieldsEntry = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"otherFields\").createNewInstance();\n    otherFieldsEntry.put(\"useCaseName\", \"simple-controlloop-usecase\");\n    logEventFields.put(\"otherFields\", otherFieldsEntry);\n    \n    return logEventFields;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_HandleAAISuccessResponseTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_HandleAAISuccessResponseTask",
+                              "version": "0.0.1"
+                            },
+                            "inputEvent": {
+                              "key": {
+                                "name": "SimpleCL_AAISuccessResponseEvent",
+                                "version": "0.0.1"
+                              },
+                              "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                              "source": "AAI",
+                              "target": "APEX",
+                              "parameter": {
+                                "entry": [
+                                  {
+                                    "key": "equip-model",
+                                    "value": {
+                                      "key": "equip-model",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "equip-type",
+                                    "value": {
+                                      "key": "equip-type",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "equip-vendor",
+                                    "value": {
+                                      "key": "equip-vendor",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "frame-id",
+                                    "value": {
+                                      "key": "frame-id",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "in-maint",
+                                    "value": {
+                                      "key": "in-maint",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleBooleanType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "ipaddress-v4-oam",
+                                    "value": {
+                                      "key": "ipaddress-v4-oam",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "nf-role",
+                                    "value": {
+                                      "key": "nf-role",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "pnf-ipv4-address",
+                                    "value": {
+                                      "key": "pnf-ipv4-address",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "pnf-name",
+                                    "value": {
+                                      "key": "pnf-name",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  },
+                                  {
+                                    "key": "resource-version",
+                                    "value": {
+                                      "key": "resource-version",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleStringType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  }
+                                ]
+                              },
+                              "toscaPolicyState": ""
+                            },
+                            "outputEvents": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_CDSConfigModifyRequestEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "APEX",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "actionIdentifiers",
+                                          "value": {
+                                            "key": "actionIdentifiers",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_CDSActionIdentifiersType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "commonHeader",
+                                          "value": {
+                                            "key": "commonHeader",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_CDSRequestCommonHeaderType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "payload",
+                                          "value": {
+                                            "key": "payload",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                },
+                                {
+                                  "key": "SimpleCL_LogEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_LogEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "DCAE",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "component",
+                                          "value": {
+                                            "key": "component",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventComponentType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "key": "id",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleStringType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "otherFields",
+                                          "value": {
+                                            "key": "otherFields",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventOtherFieldsType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "target",
+                                          "value": {
+                                            "key": "target",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventTargetType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "SimpleCL_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar HashMapType = java.util.HashMap;\nvar longType = java.lang.Long;\n\nvar albumID = executor.getExecutionProperties().getProperty(\"albumId\");\nvar eventDetailsAlbum = executor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").get(albumID.toString());\nexecutor.logger.info(\"HandleAAISuccessResponseTask extracted context album - \" + albumID.toString() + \"::\" + eventDetailsAlbum);\n\nvar commonEventHeader = eventDetailsAlbum.get(\"commonEventHeader\");\nvar otherFieldsMap = eventDetailsAlbum.get(\"otherFields\").get(\"hashMap\");\n\nvar targetEntityName = executor.inFields.get(\"pnf-name\")\nvar logMessage = \"\";\nvar existingHostname = executor.inFields.get(\"pnf-name2\");\nvar hostnameInVesEvent = otherFieldsMap.get(\"hostname\");\n\nvar albumSchemaHelper = executor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").getSchemaHelper();\nvar target = albumSchemaHelper.createNewSubInstance(\"target\");\ntarget.put(\"targetType\",  \"PNF\")\nvar entityInfo = albumSchemaHelper.createNewSubInstance(\"entityInfo\");\nentityInfo.put(\"name\",targetEntityName);\ntarget.put(\"entityInfo\", entityInfo);\neventDetailsAlbum.put(\"target\", target);\n\nvar returnVal = true;\nif ((String(hostnameInVesEvent) != \"UNDEFINED\") && (String(existingHostname) != String(hostnameInVesEvent))) {\n    logMessage = \"Hostname available in AAI does not match with the hostname received in the VES Event.\";\n    returnVal = false\n    var logEventFields = populateLogEventFields(commonEventHeader.get(\"eventId\"), otherFieldsMap.get(\"pnfName\"), \"PNF\", \"FINAL_FAILURE\", \"Failed to process VES event. Reason: \" + logMessage)\n    executor.addFieldsToOutput(logEventFields);\n} else {\n    logMessage = \"Received response from AAI successfully. Hostname in AAI matches with the one in Ves event. Going to make the update-config request to CDS.\";\n\n    var commonHeader = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_CDSConfigModifyRequestEvent\", \"commonHeader\").createNewInstance();\n    commonHeader.put(\"subRequestId\", albumID.toString());\n    commonHeader.put(\"requestId\", commonEventHeader.get(\"eventId\"));\n    commonHeader.put(\"originatorId\", \"POLICY\");\n\n    var blueprintName = \"controlloop-hostname-update\";\n    var blueprintVersion = \"1.0.4\";\n    var newHostname = \"host\" + Math.random().toString(36).substring(7);\n    eventDetailsAlbum.put(\"generatedHostname\", newHostname);\n\n    var actionIdentifiers = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_CDSConfigModifyRequestEvent\", \"actionIdentifiers\").createNewInstance();\n    actionIdentifiers.put(\"mode\", \"sync\");\n    actionIdentifiers.put(\"blueprintName\", blueprintName);\n    actionIdentifiers.put(\"blueprintVersion\", blueprintVersion);\n    actionIdentifiers.put(\"actionName\", \"update-config\");\n\n    var payloadEntry = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_CDSConfigModifyRequestEvent\", \"payload\").createNewSubInstance(\"CDSConfigModifyRequestPayloadEntry\");\n    payloadEntry.put(\"hostname\",  newHostname)\n    payloadEntry.put(\"IP\", executor.inFields.get(\"ipaddress-v4-oam\"));\n    payloadEntry.put(\"pnfName\", otherFieldsMap.get(\"pnfName\"));\n\n    var payload = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_CDSConfigModifyRequestEvent\", \"payload\").createNewInstance();\n    payload.put(\"update_DasH_config_DasH_request\", payloadEntry);\n\n    var cdsRequestEventFields = java.util.HashMap();\n    cdsRequestEventFields.put(\"commonHeader\", commonHeader);\n    cdsRequestEventFields.put(\"actionIdentifiers\", actionIdentifiers);\n    cdsRequestEventFields.put(\"payload\", payload);\n    executor.addFieldsToOutput(cdsRequestEventFields);\n\n    var logEventFields = populateLogEventFields(commonEventHeader.get(\"eventId\"), otherFieldsMap.get(\"pnfName\"), \"PNF\", \"SUCCESS\", logMessage)\n    executor.addFieldsToOutput(logEventFields);\n}\nexecutor.logger.info(executor.outFieldsList);\nreturnVal;\n\nfunction populateLogEventFields(eventId, pnfName, targetType, status, message) {\n    var timestamp = longType(new Date().getTime());\n    var logEventFields = java.util.HashMap();\n    logEventFields.put(\"id\", eventId);\n    \n    var entityInfo = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewSubInstance(\"entityInfo\");\n    entityInfo.put(\"pnf_DasH_name\", pnfName);\n    var target = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewInstance();\n    target.put(\"entityInfo\", entityInfo);\n    target.put(\"targetType\", targetType)\n    logEventFields.put(\"target\", target);\n    \n    var artifacts = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewSubInstance(\"artifacts\");\n    artifacts.put(\"policyName\", \"onap.policies.apex.Simplecontrolloop\");\n    artifacts.put(\"policyVersion\", \"1.0.0\");\n    var component = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewInstance();\n    component.put(\"artifacts\", artifacts);\n    component.put(\"name\", \"Policy\")\n    component.put(\"flavour\", \"Apex-PDP\")\n    component.put(\"timestamp\", timestamp)\n    component.put(\"status\", status)\n    component.put(\"message\", message)\n    logEventFields.put(\"component\", component);\n    \n    var otherFieldsEntry = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"otherFields\").createNewInstance();\n    otherFieldsEntry.put(\"useCaseName\", \"simple-controlloop-usecase\");\n    logEventFields.put(\"otherFields\", otherFieldsEntry);\n    \n    return logEventFields;\n}"
+                            }
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_HandleVesEventTask",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_HandleVesEventTask",
+                              "version": "0.0.1"
+                            },
+                            "inputEvent": {
+                              "key": {
+                                "name": "SimpleCL_VesEvent",
+                                "version": "0.0.1"
+                              },
+                              "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                              "source": "DCAE",
+                              "target": "APEX",
+                              "parameter": {
+                                "entry": [
+                                  {
+                                    "key": "event",
+                                    "value": {
+                                      "key": "event",
+                                      "fieldSchemaKey": {
+                                        "name": "SimpleCL_VesEventType",
+                                        "version": "0.0.1"
+                                      },
+                                      "optional": false
+                                    }
+                                  }
+                                ]
+                              },
+                              "toscaPolicyState": "ENTRY"
+                            },
+                            "outputEvents": {
+                              "entry": [
+                                {
+                                  "key": "SimpleCL_AAIRequestEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_AAIRequestEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "AAI",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "aaifield",
+                                          "value": {
+                                            "key": "aaifield",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleStringType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                },
+                                {
+                                  "key": "SimpleCL_LogEvent",
+                                  "value": {
+                                    "key": {
+                                      "name": "SimpleCL_LogEvent",
+                                      "version": "0.0.1"
+                                    },
+                                    "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                                    "source": "APEX",
+                                    "target": "DCAE",
+                                    "parameter": {
+                                      "entry": [
+                                        {
+                                          "key": "component",
+                                          "value": {
+                                            "key": "component",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventComponentType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "id",
+                                          "value": {
+                                            "key": "id",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleStringType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "otherFields",
+                                          "value": {
+                                            "key": "otherFields",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventOtherFieldsType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        },
+                                        {
+                                          "key": "target",
+                                          "value": {
+                                            "key": "target",
+                                            "fieldSchemaKey": {
+                                              "name": "SimpleCL_LogEventTargetType",
+                                              "version": "0.0.1"
+                                            },
+                                            "optional": false
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "toscaPolicyState": ""
+                                  }
+                                }
+                              ]
+                            },
+                            "taskParameters": {
+                              "entry": []
+                            },
+                            "contextAlbumReference": [
+                              {
+                                "name": "SimpleCL_EventDetailsAlbum",
+                                "version": "0.0.1"
+                              }
+                            ],
+                            "taskLogic": {
+                              "key": "TaskLogic",
+                              "logicFlavour": "JAVASCRIPT",
+                              "logic": "var uuidType = java.util.UUID;\nvar HashMapType = java.util.HashMap;\nvar longType = java.lang.Long;\n\nvar eventDetailsAlbum = executor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").getSchemaHelper().createNewInstance();\nvar returnValue = true;\n\nvar event = executor.inFields.get(\"event\");\nexecutor.logger.info(\"HandleVesEventTask processing VES event - \" + event);\n\nvar commonEventHeader = event.get(\"commonEventHeader\");\nvar otherFields = event.get(\"otherFields\");\n// albumID will be used to fetch info from our album later. Storing event data in album by sourceId / AAI pnf-id, the same will be sent to CDS request payload as subRequestId\nvar albumID = commonEventHeader.get(\"sourceId\");\n// save the event processing start time in apex\ncommonEventHeader.put(\"startEpochMicrosec\", longType(new Date().getTime()));\n//save the incoming event details to album\neventDetailsAlbum.put(\"commonEventHeader\", commonEventHeader);\neventDetailsAlbum.put(\"otherFields\", otherFields);\nexecutor.getContextAlbum(\"SimpleCL_EventDetailsAlbum\").put(albumID.toString(), eventDetailsAlbum);\nexecutor.logger.info(\"HandleVesEventTask storing context album - \" + albumID.toString() + \"::\" + eventDetailsAlbum);\n\nexecutor.getExecutionProperties().setProperty(\"albumId\", albumID);\nexecutor.getExecutionProperties().setProperty(\"pnfName\", otherFields.get(\"hashMap\").get(\"pnfName\"));\n\nvar logEventFields = populateLogEventFields(eventDetailsAlbum.get(\"commonEventHeader\").get(\"eventId\"), otherFields.get(\"hashMap\").get(\"pnfName\"), \"PNF\", \"ACTIVE\", \"VES event has been received. Going to fetch details from AAI.\")\n\nexecutor.addFieldsToOutput(logEventFields);\n\nexecutor.logger.info(executor.outFieldsList);\nreturnValue;\n\nfunction populateLogEventFields(eventId, pnfName, targetType, status, message) {\n    // populate logEventFields\n    var timestamp = longType(new Date().getTime());\n    var logEventFields = java.util.HashMap();\n    logEventFields.put(\"id\", eventId);\n    \n    var entityInfo = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewSubInstance(\"entityInfo\");\n    entityInfo.put(\"pnf_DasH_name\", pnfName);\n    var target = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"target\").createNewInstance();\n    target.put(\"entityInfo\", entityInfo);\n    target.put(\"targetType\", targetType)\n    logEventFields.put(\"target\", target);\n    \n    var artifacts = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewSubInstance(\"artifacts\");\n    artifacts.put(\"policyName\", \"onap.policies.apex.Simplecontrolloop\");\n    artifacts.put(\"policyVersion\", \"1.0.0\");\n    var component = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"component\").createNewInstance();\n    component.put(\"artifacts\", artifacts);\n    component.put(\"name\", \"Policy\")\n    component.put(\"flavour\", \"Apex-PDP\")\n    component.put(\"timestamp\", timestamp)\n    component.put(\"status\", status)\n    component.put(\"message\", message)\n    logEventFields.put(\"component\", component);\n    \n    var otherFieldsEntry = executor.subject.getOutFieldSchemaHelper(\"SimpleCL_LogEvent\", \"otherFields\").createNewInstance();\n    otherFieldsEntry.put(\"useCaseName\", \"simple-controlloop-usecase\");\n    logEventFields.put(\"otherFields\", otherFieldsEntry);\n    \n    return logEventFields;\n}"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "events": {
+                    "key": {
+                      "name": "onap.policies.apex.Simplecontrolloop_Events",
+                      "version": "0.0.1"
+                    },
+                    "eventMap": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "AAI",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "requestError",
+                                  "value": {
+                                    "key": "requestError",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_AAIRequestErrorType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "toscaPolicyState": "EXIT_FAILURE"
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "APEX",
+                            "target": "AAI",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "aaifield",
+                                  "value": {
+                                    "key": "aaifield",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAISuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAISuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "AAI",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "equip-model",
+                                  "value": {
+                                    "key": "equip-model",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "equip-type",
+                                  "value": {
+                                    "key": "equip-type",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "equip-vendor",
+                                  "value": {
+                                    "key": "equip-vendor",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "frame-id",
+                                  "value": {
+                                    "key": "frame-id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "in-maint",
+                                  "value": {
+                                    "key": "in-maint",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleBooleanType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "ipaddress-v4-oam",
+                                  "value": {
+                                    "key": "ipaddress-v4-oam",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "nf-role",
+                                  "value": {
+                                    "key": "nf-role",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "pnf-ipv4-address",
+                                  "value": {
+                                    "key": "pnf-ipv4-address",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "pnf-name",
+                                  "value": {
+                                    "key": "pnf-name",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "resource-version",
+                                  "value": {
+                                    "key": "resource-version",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyFailureResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyFailureResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "CDS",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSFailureResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSFailureResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "EXIT_FAILURE"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyRequestEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "APEX",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSRequestCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifySuccessResponseEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifySuccessResponseEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "CDS",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "actionIdentifiers",
+                                  "value": {
+                                    "key": "actionIdentifiers",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSActionIdentifiersType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "commonHeader",
+                                  "value": {
+                                    "key": "commonHeader",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSSuccessResponseCommonHeaderType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "payload",
+                                  "value": {
+                                    "key": "payload",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSConfigModifyResponsePayloadType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "status",
+                                  "value": {
+                                    "key": "status",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_CDSSuccessResponseStatusType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "EXIT_SUCCESS"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "APEX",
+                            "target": "DCAE",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "component",
+                                  "value": {
+                                    "key": "component",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_LogEventComponentType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "id",
+                                  "value": {
+                                    "key": "id",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleStringType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "otherFields",
+                                  "value": {
+                                    "key": "otherFields",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_LogEventOtherFieldsType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                },
+                                {
+                                  "key": "target",
+                                  "value": {
+                                    "key": "target",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_LogEventTargetType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": ""
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_VesEvent",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_VesEvent",
+                              "version": "0.0.1"
+                            },
+                            "nameSpace": "org.onap.policy.apex.simplecontrolloop",
+                            "source": "DCAE",
+                            "target": "APEX",
+                            "parameter": {
+                              "entry": [
+                                {
+                                  "key": "event",
+                                  "value": {
+                                    "key": "event",
+                                    "fieldSchemaKey": {
+                                      "name": "SimpleCL_VesEventType",
+                                      "version": "0.0.1"
+                                    },
+                                    "optional": false
+                                  }
+                                }
+                              ]
+                            },
+                            "toscaPolicyState": "ENTRY"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "albums": {
+                    "key": {
+                      "name": "onap.policies.apex.Simplecontrolloop_Albums",
+                      "version": "0.0.1"
+                    },
+                    "albums": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "SimpleCL_EventDetailsAlbum",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_EventDetailsAlbum",
+                              "version": "0.0.1"
+                            },
+                            "scope": "policy",
+                            "isWritable": true,
+                            "itemSchema": {
+                              "name": "SimpleCL_EventDetailsAlbumType",
+                              "version": "0.0.1"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "schemas": {
+                    "key": {
+                      "name": "onap.policies.apex.Simplecontrolloop_Schemas",
+                      "version": "0.0.1"
+                    },
+                    "schemas": {
+                      "entry": [
+                        {
+                          "key": {
+                            "name": "SimpleBooleanType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleBooleanType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Java",
+                            "schemaDefinition": "java.lang.Boolean"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_AAIRequestErrorType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_AAIRequestErrorType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"AAIRequestErrorType\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"serviceException\",\n      \"type\": {\n        \"name\": \"serviceException\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"messageId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"text\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"variables\",\n            \"type\": {\n              \"type\": \"array\",\n              \"items\": \"string\"\n            }\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSActionIdentifiersType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSActionIdentifiersType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSActionIdentifiers_Type\",\n    \"fields\": [\n        {\n            \"name\": \"actionName\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"blueprintName\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"blueprintVersion\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"mode\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyRequestPayloadType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"type\": \"map\",\n  \"values\": {\n    \"type\": \"record\",\n    \"name\": \"CDSConfigModifyRequestPayloadEntry\",\n    \"fields\": [\n      {\n        \"name\": \"hostname\",\n        \"type\": \"string\"\n      },\n      {\n        \"name\": \"IP\",\n        \"type\": \"string\"\n      },\n      {\n        \"name\": \"pnfName\",\n        \"type\": \"string\"\n      }\n    ]\n  }\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSConfigModifyResponsePayloadType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSConfigModifyResponsePayloadType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"CDSConfigResponsePayloadEntry\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"update_DasH_config_DasH_response\",\n      \"type\": {\n        \"name\": \"update_DasH_config_DasH_response\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n              \"name\": \"execute_DasH_command_DasH_logs\",\n              \"type\": {\n                \"type\": \"array\",\n                \"items\": \"string\"\n              }\n          },\n          {\n              \"name\": \"prepare_DasH_environment_DasH_logs\",\n              \"type\": {\n                \"type\": \"array\",\n                \"items\": \"string\"\n              }\n          }\n        ]\n      }\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSFailureResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSFailureResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseCommonHeader_Type\",\n    \"fields\": [\n        {\n            \"name\": \"originatorId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"requestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"subRequestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSFailureResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSFailureResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseStatus_Type\",\n    \"fields\": [\n        {\n            \"name\": \"code\",\n            \"type\": \"int\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"message\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"errorMessage\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSRequestCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSRequestCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSRequestCommonHeader_Type\",\n    \"fields\": [\n        {\n            \"name\": \"originatorId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"requestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"subRequestId\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSSuccessResponseCommonHeaderType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSSuccessResponseCommonHeaderType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseCommonHeader_Type\",\n    \"fields\": [\n        {\n            \"name\": \"originatorId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"requestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"subRequestId\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_CDSSuccessResponseStatusType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_CDSSuccessResponseStatusType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n    \"type\": \"record\",\n    \"name\": \"CDSResponseStatus_Type\",\n    \"fields\": [\n        {\n            \"name\": \"code\",\n            \"type\": \"int\"\n        },\n        {\n            \"name\": \"eventType\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"timestamp\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"message\",\n            \"type\": \"string\"\n        }\n    ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_EventDetailsAlbumType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_EventDetailsAlbumType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n  \"name\": \"eventDetails\",\n  \"type\": \"record\",\n  \"fields\": [\n    {\n      \"name\": \"commonEventHeader\",\n      \"type\": {\n        \"name\": \"commonEventHeader\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"domain\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"eventName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"lastEpochMicrosec\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"priority\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"reportingEntityName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"sequence\",\n            \"type\": \"int\"\n          },\n          {\n            \"name\": \"sourceId\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"sourceName\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"startEpochMicrosec\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"timeZoneOffset\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"version\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"internalHeaderFields\",\n            \"type\": {\n              \"name\": \"internalHeaderFields\",\n              \"type\": \"record\",\n              \"fields\": []\n            }\n          },\n          {\n            \"name\": \"vesEventListenerVersion\",\n            \"type\": \"string\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"otherFields\",\n      \"type\": {\n        \"name\": \"otherFields\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"hashMap\",\n            \"type\": {\n              \"name\": \"hashMap\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"hostname\",\n                  \"type\": \"string\"\n                },\n                {\n                  \"name\": \"pnfName\",\n                  \"type\": \"string\"\n                },\n                {\n                  \"name\": \"pnfId\",\n                  \"type\": \"string\"\n                },\n                {\n                  \"name\": \"ip\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          },\n          {\n            \"name\": \"otherFieldsVersion\",\n            \"type\": \"string\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"target\",\n      \"type\": {\n        \"name\": \"target\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"targetType\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"entityInfo\",\n            \"type\": {\n              \"name\": \"entityInfo\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"name\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"generatedHostname\",\n      \"type\": \"string\"\n    }\n  ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEventComponentType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEventComponentType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n        \"name\": \"component\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"name\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"flavour\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"timestamp\",\n            \"type\": \"long\"\n          },\n          {\n            \"name\": \"status\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"message\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"artifacts\",\n            \"type\": {\n              \"name\": \"artifacts\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"policyName\",\n                  \"type\": \"string\"\n                },\n                {\n                  \"name\": \"policyVersion\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          }\n        ]\n      }"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEventOtherFieldsType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEventOtherFieldsType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n        \"name\": \"otherFields\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"useCaseName\",\n            \"type\": \"string\"\n          }\n        ]\n      }"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_LogEventTargetType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_LogEventTargetType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n        \"name\": \"target\",\n        \"type\": \"record\",\n        \"fields\": [\n          {\n            \"name\": \"targetType\",\n            \"type\": \"string\"\n          },\n          {\n            \"name\": \"entityInfo\",\n            \"type\": {\n              \"name\": \"entityInfo\",\n              \"type\": \"record\",\n              \"fields\": [\n                {\n                  \"name\": \"pnf_DasH_name\",\n                  \"type\": \"string\"\n                }\n              ]\n            }\n          }\n        ]\n      }"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleCL_VesEventType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleCL_VesEventType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Avro",
+                            "schemaDefinition": "{\n   \"name\":\"event\",\n   \"type\":\"record\",\n   \"fields\":[\n      {\n         \"name\":\"commonEventHeader\",\n         \"type\":{\n            \"name\":\"commonEventHeader\",\n            \"type\":\"record\",\n            \"fields\":[\n               {\n                  \"name\":\"domain\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"eventId\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"eventName\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"lastEpochMicrosec\",\n                  \"type\":\"long\"\n               },\n               {\n                  \"name\":\"priority\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"reportingEntityName\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"sequence\",\n                  \"type\":\"int\"\n               },\n               {\n                  \"name\":\"sourceId\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"sourceName\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"startEpochMicrosec\",\n                  \"type\":\"long\"\n               },\n               {\n                  \"name\":\"version\",\n                  \"type\":\"string\"\n               },\n               {\n                  \"name\":\"internalHeaderFields\",\n                  \"type\":{\n                     \"name\":\"internalHeaderFields\",\n                     \"type\":\"record\",\n                     \"fields\":[\n\n                     ]\n                  }\n               },\n               {\n                  \"name\":\"vesEventListenerVersion\",\n                  \"type\":\"string\"\n               }\n            ]\n         }\n      },\n      {\n         \"name\":\"otherFields\",\n         \"type\":{\n            \"name\":\"otherFields\",\n            \"type\":\"record\",\n            \"fields\":[\n               {\n                  \"name\":\"hashMap\",\n                  \"type\":{\n                     \"name\":\"hashMap\",\n                     \"type\":\"record\",\n                     \"fields\":[\n                        {\n                           \"name\":\"hostname\",\n                           \"type\":\"string\"\n                        },\n                        {\n                           \"name\":\"pnfName\",\n                           \"type\":\"string\"\n                        },\n                        {\n                           \"name\":\"pnfId\",\n                           \"type\":\"string\"\n                        },\n                        {\n                           \"name\":\"ip\",\n                           \"type\":\"string\"\n                        }\n                     ]\n                  }\n               },\n               {\n                  \"name\":\"otherFieldsVersion\",\n                  \"type\":\"string\"\n               }\n            ]\n         }\n      }\n   ]\n}"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleLongType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleLongType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Java",
+                            "schemaDefinition": "java.lang.Long"
+                          }
+                        },
+                        {
+                          "key": {
+                            "name": "SimpleStringType",
+                            "version": "0.0.1"
+                          },
+                          "value": {
+                            "key": {
+                              "name": "SimpleStringType",
+                              "version": "0.0.1"
+                            },
+                            "schemaFlavour": "Java",
+                            "schemaDefinition": "java.lang.String"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "eventInputParameters": {
+              "SimpleCL_DCAEConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "KAFKA",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.kafka.KafkaCarrierTechnologyParameters",
+                  "parameters": {
+                    "bootstrapServers": "kafka:9092",
+                    "groupId": "apex-grp",
+                    "enableAutoCommit": true,
+                    "autoCommitTime": 1000,
+                    "sessionTimeout": 30000,
+                    "consumerPollTime": 100,
+                    "consumerTopicList": [
+                      "unauthenticated.dcae_cl_output"
+                    ],
+                    "keyDeserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+                    "valueDeserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+                    "kafkaProperties": [
+
+                    ]
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "SimpleCL_VesEvent"
+              },
+              "SimpleCL_AAIResponseConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "RESTREQUESTOR",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.restrequestor.RestRequestorCarrierTechnologyParameters",
+                  "parameters": {
+                    "url": "http://aai-sim:6666/aai/v16/network/pnfs/pnf/{pnfName}",
+                    "httpMethod": "GET",
+                    "httpCodeFilter": "[2-5][0-1][0-9]",
+                    "httpHeaders": [
+                      [
+                        "Accept",
+                        "application/json"
+                      ],
+                      [
+                        "Content-Type",
+                        "application/json"
+                      ],
+                      [
+                        "X-FromAppId",
+                        "dcae-curl"
+                      ],
+                      [
+                        "x-transactionId",
+                        "9998"
+                      ],
+                      [
+                        "Authorization",
+                        "Basic QUFJOkFBSQ=="
+                      ]
+                    ]
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "SimpleCL_AAISuccessResponseEvent|SimpleCL_AAIFailureResponseEvent",
+                "requestorMode": true,
+                "requestorPeer": "SimpleCL_AAIProducer",
+                "requestorTimeout": 2000
+              },
+              "SimpleCL_CDSConfigModifyResponseConsumer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "GRPC",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.grpc.GrpcCarrierTechnologyParameters"
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventName": "SimpleCL_CDSConfigModifySuccessResponseEvent|SimpleCL_CDSConfigModifyFailureResponseEvent",
+                "requestorMode": true,
+                "requestorPeer": "SimpleCL_CDSConfigModifyRequestProducer",
+                "requestorTimeout": 500
+              }
+            },
+            "eventOutputParameters": {
+              "SimpleCL_AAIProducer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "RESTREQUESTOR",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.restrequestor.RestRequestorCarrierTechnologyParameters"
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventNameFilter": "SimpleCL_AAIRequestEvent",
+                "requestorMode": true,
+                "requestorPeer": "SimpleCL_AAIResponseConsumer",
+                "requestorTimeout": 2000
+              },
+              "SimpleCL_CDSConfigModifyRequestProducer": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "GRPC",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.grpc.GrpcCarrierTechnologyParameters",
+                  "parameters": {
+                    "host": "grpc-sim",
+                    "port": 6680,
+                    "username": "ccsdkapps",
+                    "password": "ccsdkapps",
+                    "timeout": 60
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventNameFilter": "SimpleCL_CDSConfigModifyRequestEvent",
+                "requestorMode": true,
+                "requestorPeer": "SimpleCL_CDSConfigModifyResponseConsumer",
+                "requestorTimeout": 500
+              },
+              "SimpleCL_logOutputter": {
+                "carrierTechnologyParameters": {
+                  "carrierTechnology": "KAFKA",
+                  "parameterClassName": "org.onap.policy.apex.plugins.event.carrier.kafka.KafkaCarrierTechnologyParameters",
+                  "parameters": {
+                    "bootstrapServers": "kafka:9092",
+                    "acks": "all",
+                    "retries": 0,
+                    "batchSize": 16384,
+                    "lingerTime": 1,
+                    "bufferMemory": 33554432,
+                    "producerTopic": "apex-cl-mgt",
+                    "keySerializer": "org.apache.kafka.common.serialization.StringSerializer",
+                    "valueSerializer": "org.apache.kafka.common.serialization.StringSerializer",
+                    "kafkaProperties": [
+
+                    ]
+                  }
+                },
+                "eventProtocolParameters": {
+                  "eventProtocol": "JSON"
+                },
+                "eventNameFilter": "SimpleCL_LogEvent"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

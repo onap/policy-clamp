@@ -1,0 +1,44 @@
+{
+  "vnf-id": "37b008b9-b367-4359-93fd-74d3ce0ee1a0",
+  "vnf-name": "vfw-cnf-cds-test-1-vnf",
+  "vnf-type": "vfw_cnf_cds/null",
+  "service-id": "37b008b9-b367-4359-93fd-74d3ce0ee1a0",
+  "prov-status": "ACTIVE",
+  "orchestration-status": "Assigned",
+  "in-maint": false,
+  "is-closed-loop-disabled": false,
+  "resource-version": "1607506390862",
+  "model-invariant-id": "vTEST_XYZ",
+  "model-version-id": "vTEST",
+  "model-customization-id": "37b008b9-b367-4359-93fd-74d3ce0ee1a0",
+  "relationship-list": {
+    "relationship": [
+      {
+        "related-to": "service-instance",
+        "relationship-label": "org.onap.relationships.inventory.ComposedOf",
+        "related-link": "/aai/v14/business/customers/customer/DemoCust_47417dae-a821-4068-9736-e71c7da0d8bf/service-subscriptions/service-subscription/vFWDT/service-instances/service-instance/55322ada-145a-492e-b196-0d171539a4b2",
+        "relationship-data": [
+          {
+            "relationship-key": "customer.global-customer-id",
+            "relationship-value": "DemoCust_47417dae-a821-4068-9736-e71c7da0d8bf"
+          },
+          {
+            "relationship-key": "service-subscription.service-type",
+            "relationship-value": "vFWDT"
+          },
+          {
+            "relationship-key": "service-instance.service-instance-id",
+            "relationship-value": "55322ada-145a-492e-b196-0d171539a4b2"
+          }
+        ],
+        "related-to-property": [
+          {
+            "property-key": "service-instance.service-instance-name",
+            "property-value": "Service_Ete_Namea337dd5b-4620-4ea6-bc3f-6edf1124d659"
+          }
+        ]
+      }
+    ]
+  }
+}
+
