@@ -1,0 +1,125 @@
+spring:
+  application:
+    name: k8s-ppnt
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+  autoconfigure:
+    exclude: >
+      org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,
+      org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,
+      org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+security:
+  enable-csrf: false
+
+participant:
+  localChartDirectory: /home/policy/local-charts
+  infoFileName: CHART_INFO.json
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    description: Participant Description
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c02
+    topics:
+      operationTopic: policy-acruntime-participant
+      syncTopic: acm-ppnt-sync
+    clampAutomationCompositionTopics:
+      topicSources:
+        -
+          topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+          allowTracing: true
+          additionalProps:
+            group.id: policy-clamp-ac-k8s-ppnt
+        -
+          topic: ${participant.intermediaryParameters.topics.syncTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          additionalProps:
+            group.id: k8s-ppnt
+            security.protocol: PLAINTEXT
+          fetchTimeout: 15000
+          useHttps: false
+          allowTracing: true
+      topicSinks:
+        -
+          topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          additionalProps:
+            group.id: k8s-ppnt
+            security.protocol: PLAINTEXT
+          useHttps: false
+          allowTracing: true
+    participantSupportedElementTypes:
+      - typeName: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
+        typeVersion: 1.0.0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+
+server:
+  port: 6969
+  ssl:
+    enabled: false
+  servlet:
+    context-path: /onap/policy/clamp/acm/k8sparticipant
+
+logging:
+  # Configuration of logging
+  level:
+    ROOT: ERROR
+    org.springframework: ERROR
+    org.springframework.data: ERROR
+    org.springframework.web.reactive.function.client.ExchangeFunctions: ERROR
+    org.onap.policy.clamp.acm.participant.kubernetes: INFO
+  file:
+    name: /var/log/onap/policy/clamp/application.log
+
+chart:
+  api:
+    enabled: false
+
+# legacy config
+---
+
+spring:
+  config:
+    activate:
+      on-profile: legacy
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c02
+    clampAutomationCompositionTopics:
+      topicSources:
+        -
+          topic: policy-acruntime-participant
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+      topicSinks:
+        -
+          topic: policy-acruntime-participant
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          useHttps: false

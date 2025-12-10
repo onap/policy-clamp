@@ -1,0 +1,52 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the License);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an AS IS BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+name: Instance-Simple
+version: 1.0.1
+compositionId: COMPOSITIONIDPLACEHOLDER
+description: Demo automation composition instance simple
+elements:
+
+  709c62b3-8918-41b9-a747-d21eb80c6c34:
+    id: 709c62b3-8918-41b9-a747-d21eb80c6c34
+    definition:
+      name: onap.policy.clamp.ac.element.Sim_AutomationCompositionElement
+      version: 1.2.3
+    description: Automation Composition Element for the Demo
+    properties:
+      deployTimeoutMs: 200000
+      undeployTimeoutMs: 150000
+      updateTimeoutMs: 200000
+      migrateTimeoutMs: 200000
+      deleteTimeoutMs: 100000
+      baseUrl: http://address:30800
+      httpHeaders:
+        Content-Type: application/json
+        Authorization: Basic YWNtVXNlcjp6YiFYenRHMzQ=
+      configurationEntities:
+        - configurationEntityId:
+            name: onap.policy.clamp.ac.starter
+            version: 1.0.0
+          restSequence:
+            - restRequestId:
+                name: request1
+                version: 1.0.1
+              httpMethod: POST
+              path: /onap/policy/clamp/acelement/v2/activate
+              body: '{ "receiverId": { "name": "onap.policy.clamp.ac.startertobridge", "version": "1.0.0" }, "timerMs": 20000, "elementType": "STARTER", "topicParameterGroup": { "server": "message-router:3904", "listenerTopic": "POLICY_UPDATE_MSG", "publisherTopic": "AC_ELEMENT_MSG", "fetchTimeout": 15000, "topicCommInfrastructure": "dmaap" } }'
+              expectedResponse: 201
+          myParameterToUpdate: text

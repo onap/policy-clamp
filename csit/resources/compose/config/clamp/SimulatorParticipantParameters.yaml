@@ -1,0 +1,114 @@
+spring:
+  application:
+    name: ${applicationName}
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+
+security:
+  enable-csrf: false
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    description: Participant Description
+    participantId: ${participantId}
+    topics:
+      operationTopic: policy-acruntime-participant
+      syncTopic: acm-ppnt-sync
+    clampAutomationCompositionTopics:
+      topicSources:
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - kafka:9092
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+          allowTracing: true
+          additionalProps:
+            group.id: ${groupId}
+        - topic: ${participant.intermediaryParameters.topics.syncTopic}
+          servers:
+            - kafka:9092
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+          allowTracing: true
+      topicSinks:
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - kafka:9092
+          topicCommInfrastructure: kafka
+          useHttps: false
+          allowTracing: true
+    participantSupportedElementTypes:
+      -
+        typeName: ${supportedElementTypeName}
+        typeVersion: ${supportedElementTypeVersion:1.0.0}
+
+management:
+  tracing:
+    propagation:
+      produce: B3
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, metrics, prometheus
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+
+server:
+  port: 6969
+  ssl:
+    enabled: false
+  servlet:
+    context-path: /onap/policy/simparticipant
+
+tracing:
+  enabled: true
+  exporter:
+    endpoint: http://jaeger:4318/v1/traces
+    protocol: http
+  sampler:
+    jaeger-remote:
+      endpoint: http://jaeger:14250
+
+# legacy config
+---
+
+spring:
+  config:
+    activate:
+      on-profile: legacy
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    participantId: ${participantId:101c62b3-8918-41b9-a747-d21eb79c6c90}
+    clampAutomationCompositionTopics:
+      topicSources:
+        - topic: policy-acruntime-participant
+          servers:
+            - kafka:9092
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+      topicSinks:
+        - topic: policy-acruntime-participant
+          servers:
+            - kafka:9092
+          topicCommInfrastructure: kafka
+          useHttps: false

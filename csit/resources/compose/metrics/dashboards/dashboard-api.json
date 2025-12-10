@@ -1,0 +1,1612 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Grafana Dashboard for Policy API",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 9,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 19,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Quick Info",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Uptime per pod for Policy API application calculated in days",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "process_uptime_seconds{job=\"api-metrics\"}",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "process_uptime:{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Process Uptime (days)",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Policy API CPU Usage Monitoring",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "process-1h: dev-policy-api-69f54f45cc-wq6xq"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "process_1h: dev-policy-api-69f54f45cc-wq6xq"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 9,
+        "y": 1
+      },
+      "id": 26,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "system_cpu_usage{job=\"api-metrics\"} * 100",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Policy API Memory Usage Monitoring",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{area=\"heap\",container=\"policy-api\",endpoint=\"policy-api\",id=\"Tenured Gen\",instance=\"10.42.7.19:6969\",job=\"policy-api\",namespace=\"onap\",pod=\"dev-policy-api-69f54f45cc-sb56v\",service=\"policy-api\"}"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tenured Gen - dev-policy-api-69f54f45cc-wq6xq"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 17,
+        "y": 1
+      },
+      "id": 27,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "100 * sum by(job)(jvm_memory_used_bytes{area=\"heap\",job=\"api-metrics\"}) / sum by(job)(jvm_memory_max_bytes{area=\"heap\",job=\"api-metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Heap : {{pod}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "100 * sum by(job)(jvm_memory_used_bytes{area=\"nonheap\",job=\"api-metrics\"}) / sum by(job)(jvm_memory_max_bytes{area=\"nonheap\",job=\"api-metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Non Heap : {{pod}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Memory Usage",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 17,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "System",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Policy API CPU Usage Monitoring",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "process-1h: dev-policy-api-69f54f45cc-wq6xq"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "process_1h: dev-policy-api-69f54f45cc-wq6xq"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 11
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "system_cpu_usage{job=\"api-metrics\"} * 100",
+          "interval": "",
+          "legendFormat": "system: {{pod}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "process_cpu_usage{job=\"api-metrics\"} * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "process: {{pod}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "avg_over_time(process_cpu_usage{job=\"api-metrics\"}[$__range]) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "process_1h: {{pod}}",
+          "refId": "C"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Policy API Memory Usage Monitoring",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{area=\"heap\",container=\"policy-api\",endpoint=\"policy-api\",id=\"Tenured Gen\",instance=\"10.42.7.19:6969\",job=\"policy-api\",namespace=\"onap\",pod=\"dev-policy-api-69f54f45cc-sb56v\",service=\"policy-api\"}"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tenured Gen - dev-policy-api-69f54f45cc-wq6xq"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 11
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "100 * sum(jvm_memory_used_bytes{area=\"heap\",job=\"api-metrics\"}) / sum(jvm_memory_max_bytes{area=\"heap\",job=\"api-metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Heap",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "100 * sum(jvm_memory_used_bytes{area=\"nonheap\",job=\"api-metrics\"}) / sum(jvm_memory_max_bytes{area=\"nonheap\",job=\"api-metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Non Heap",
+          "refId": "B"
+        }
+      ],
+      "title": "Memory Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Policy API JVM Threads",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 16,
+        "y": 11
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "jvm_threads_live_threads{job=\"api-metrics\"}",
+          "interval": "",
+          "legendFormat": "Live Threads: {{ pod }}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "jvm_threads_peak_threads{job=\"api-metrics\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Peak Threads: {{ pod }}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "jvm_threads_daemon_threads{job=\"api-metrics\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Daemon Threads: {{ pod }}",
+          "refId": "C"
+        }
+      ],
+      "title": "JVM threads",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 15,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Garbage Collection",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "GC operations per second",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "rate(jvm_gc_pause_seconds_count{job=\"api-metrics\"}[$__range])",
+          "interval": "",
+          "legendFormat": "{{action}} ({{cause}}) : {{ pod }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Collection",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Average GC Time",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "rate(jvm_gc_pause_seconds_sum{job=\"api-metrics\"}[$__range])/rate(jvm_gc_pause_seconds_count{job=\"api-metrics\"}[$__range])",
+          "interval": "",
+          "legendFormat": "avg {{action}} ({{cause}})",
+          "refId": "A"
+        }
+      ],
+      "title": "Pause Durations",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 21,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Requests",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "HTTP API requests rate filtered by URI and REST method",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "avg by(method,uri) (rate(http_server_requests_seconds_count{job=\"api-metrics\"}[$__range]))",
+          "interval": "",
+          "legendFormat": "{{ method }} - {{ uri }}",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Request Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Time taken for an API request filtered by REST method and URI",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum by (method,uri)(http_server_requests_seconds_sum{job=\"api-metrics\"})/sum by(method,uri)(http_server_requests_seconds_count{job=\"api-metrics\"})",
+          "interval": "",
+          "legendFormat": "{{ method }} - {{ uri }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Stats for Policy API Operations",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 24,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 12
+        },
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"POST\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Create Policy - Total",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"POST\",outcome=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Create Policy - Successful",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"POST\",outcome!=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Create Policy - Failed",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"DELETE\",uri=~\"/metrics\"})",
+          "interval": "",
+          "legendFormat": "Delete Policy - Total",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"DELETE\",outcome=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Delete Policy - Successful",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"DELETE\",outcome!=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Delete Policy - Failed",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"GET\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Get Policy - Total",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"GET\",outcome=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Get Policy - Successful",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"GET\",outcome!=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Get Policy - Failed",
+          "refId": "I"
+        }
+      ],
+      "title": "Policy API Requests",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dkSf71fnz"
+      },
+      "description": "Stats for Policy Types API operations",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 28,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": false,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 12
+        },
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"POST\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Create Policy Type - Total",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"POST\",outcome=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Create Policy Type - Successful",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"POST\",outcome!=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Create Policy Type - Failed",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"DELETE\",uri=~\"/metrics\"})",
+          "interval": "",
+          "legendFormat": "Delete Policy Type - Total",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"DELETE\",outcome=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Delete Policy Type - Successful",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"DELETE\",outcome!=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Delete Policy Type - Failed",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"GET\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Get Policy Type - Total",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"GET\",outcome=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Get Policy Type - Successful",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dkSf71fnz"
+          },
+          "exemplar": true,
+          "expr": "sum(http_server_requests_seconds_count{job=\"api-metrics\",method=\"GET\",outcome!=\"SUCCESS\",uri=~\"/metrics\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Get Policy Type - Failed",
+          "refId": "I"
+        }
+      ],
+      "title": "Policy Types API Requests",
+      "transparent": true,
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Policy API",
+  "uid": "DM56uKltt",
+  "version": 3,
+  "weekStart": ""
+}

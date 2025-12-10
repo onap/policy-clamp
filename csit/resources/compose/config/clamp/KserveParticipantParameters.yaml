@@ -1,0 +1,98 @@
+spring:
+  application:
+    name: kserve-ppnt
+  cloud:
+    kubernetes:
+      enabled: false
+    discovery:
+      enabled: false
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+      - io.kubernetes.client.spring.extended.manifests.config.KubernetesManifestsAutoConfiguration
+      - io.kubernetes.client.spring.extended.network.config.KubernetesLoadBalancerAutoConfiguration
+
+security:
+  enable-csrf: false
+
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    description: Participant Description
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c04
+    clampAutomationCompositionTopics:
+      topicSources:
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          allowTracing: true
+          additionalProps:
+            group.id: policy-clamp-ac-kserve-ppnt
+
+        - topic: ${participant.intermediaryParameters.topics.syncTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+          allowTracing: true
+      topicSinks:
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          allowTracing: true
+    participantSupportedElementTypes:
+      -
+        typeName: org.onap.policy.clamp.acm.KserveAutomationCompositionElement
+        typeVersion: 1.0.1
+
+customresourcedefinition:
+  group: serving.kserve.io
+  version: v1beta1
+  plural: inferenceservices
+  grace-period: 10
+
+management:
+  tracing:
+    propagation:
+      produce: B3
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, metrics, prometheus
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+
+server:
+  port: 6969
+  servlet:
+    context-path: /onap/policy/clamp/acm/kserveparticipant
+  ssl:
+    enabled: false
+
+tracing:
+  enabled: true
+  exporter:
+    endpoint: http://jaeger:4318/v1/traces
+    protocol: http
+  sampler:
+    jaeger-remote:
+      endpoint: http://jaeger:14250

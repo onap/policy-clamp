@@ -1,0 +1,93 @@
+spring:
+  application:
+    name: a1pms-ppnt
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+security:
+  enable-csrf: false
+
+a1pms:
+  baseUrl: http://a1policymanagement.onap:8081
+  headers:
+    content-type: application/json
+  endpoints:
+    health: /a1-policy/v2/rics
+    services: /a1-policy/v2/services
+    service: /a1-policy/v2/services/{service_id}
+
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    description: Participant Description
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c00
+    topics:
+      operationTopic: policy-acruntime-participant
+      syncTopic: acm-ppnt-sync
+    clampAutomationCompositionTopics:
+      topicSources:
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          allowTracing: true
+          additionalProps:
+            group.id: policy-clamp-ac-a1pms-ppnt
+
+        - topic: ${participant.intermediaryParameters.topics.syncTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          fetchTimeout: 15000
+          useHttps: false
+          allowTracing: true
+      topicSinks:
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: kafka
+          allowTracing: true
+
+
+management:
+  tracing:
+    propagation:
+      produce: B3
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, metrics, prometheus
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+
+server:
+  port: 6969
+  ssl:
+    enabled: false
+  servlet:
+    context-path: /onap/policy/clamp/acm/a1pmsparticipant
+
+tracing:
+  enabled: true
+  exporter:
+    endpoint: http://jaeger:4318/v1/traces
+    protocol: http
+  sampler:
+    jaeger-remote:
+      endpoint: http://jaeger:14250
