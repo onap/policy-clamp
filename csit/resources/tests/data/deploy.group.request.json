@@ -1,0 +1,29 @@
+{
+    "groups": [
+        {
+            "name": "testGroup",
+            "deploymentSubgroups": [
+                {
+                    "pdpType": "pdpTypeA",
+                    "action": "POST",
+                    "policies": [
+                        {
+                            "name": "onap.restart.tca",
+                            "version": "1.0.0"
+                        }
+                    ]
+                },
+                {
+                    "pdpType": "pdpTypeC",
+                    "action": "POST",
+                    "policies": [
+                        {
+                            "name": "operational.apex.decisionMaker",
+                            "version": "1.0.0"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

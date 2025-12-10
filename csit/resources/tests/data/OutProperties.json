@@ -1,0 +1,13 @@
+{
+  "outProperties": {
+    "test": {
+        "object": "TEXTPLACEHOLDER",
+        "from": "Participant",
+        "to": "Runtime"
+      }
+  },
+  "automationCompositionId": "INSTACEIDPLACEHOLDER",
+  "automationCompositionElementId": "709c62b3-8918-41b9-a747-d21eb79c6c34",
+  "useState": "IDLE",
+  "operationalState": "ENABLED"
+}

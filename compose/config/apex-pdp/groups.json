@@ -1,0 +1,28 @@
+{
+  "groups": [
+    {
+      "name": "defaultGroup",
+      "version": "1.0.0",
+      "description": "The default group that registers all supported policy types and pdps.",
+      "pdpGroupState": "ACTIVE",
+      "pdpSubgroups": [
+        {
+          "pdpType": "apex",
+          "supportedPolicyTypes": [
+            {
+              "name": "onap.policies.controlloop.operational.common.Apex",
+              "version": "1.0.0"
+            },
+            {
+              "name": "onap.policies.native.Apex",
+              "version": "1.0.0"
+            }
+          ],
+          "currentInstanceCount": 0,
+          "desiredInstanceCount": 1,
+          "policies": []
+        }
+      ]
+    }
+  ]
+}

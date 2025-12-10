@@ -1,0 +1,9 @@
+{
+  "ONAPName": "DCAE",
+  "ONAPComponent": "PolicyHandler",
+  "ONAPInstance": "622431a4-9dea-4eae-b443-3b2164639c64",
+  "action": "configure",
+  "resource": {
+      "policy-id": "onap.restart.tca"
+  }
+}

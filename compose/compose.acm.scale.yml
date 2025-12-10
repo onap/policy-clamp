@@ -1,0 +1,171 @@
+#
+# ===========LICENSE_START====================================================
+#  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
+# ============================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=====================================================
+#
+
+include:
+  - compose.yaml
+
+services:
+  policy-clamp-runtime-acm-replica:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-runtime-acm:${POLICY_CLAMP_VERSION}
+    hostname: policy-clamp-runtime-acm
+    depends_on:
+      - policy-db-migrator
+      - apex-pdp
+      - kafka
+      - jaeger
+      - policy-clamp-ac-pf-ppnt
+      - policy-clamp-ac-sim-ppnt-1
+      - policy-clamp-ac-sim-ppnt-2
+      - policy-clamp-ac-sim-ppnt-3
+    expose:
+      - 6969
+    deploy:
+      mode: replicated
+      replicas: ${REPLICAS:-2}
+    restart:
+      on-failure:3
+    environment:
+      OTEL_SERVICE_NAME: acm-r
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      JAVA_TOOL_OPTIONS: >-
+        -Dlogging.config="/opt/app/policy/clamp/etc/logback.xml"
+        -Dcom.sun.management.jmxremote.rmi.port=9090
+        -Dcom.sun.management.jmxremote=true
+        -Dcom.sun.management.jmxremote.port=9090
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.local.only=false
+        -Dotel.java.global-autoconfigure.enabled=true
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/AcRuntimeParameters.yaml
+      # Tracing can be configured for grpc or http - default is http
+      #OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      #OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: grpc
+      #OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    volumes:
+      - ./config/clamp/AcRuntimeParameters.yaml:/opt/app/policy/clamp/etc/AcRuntimeParameters.yaml
+      - ./config/clamp/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    healthcheck:
+      test: "curl --fail --silent http://localhost:6969/onap/policy/clamp/acm/health/readiness | grep UP || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    entrypoint: java -jar /app/app.jar
+
+  policy-clamp-ac-http-ppnt-replica:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-http-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    hostname: policy-clamp-ac-http-ppnt
+    depends_on:
+      - kafka
+      - jaeger
+    expose:
+      - 6969
+    deploy:
+      mode: replicated
+      replicas: ${REPLICAS:-2}
+    environment:
+      HTTP_USER: participantUser
+      HTTP_PASSWORD: zb!XztG34
+      topicCommInfrastructure: kafka
+      allowTracing: true
+      OTEL_SERVICE_NAME: http-ppnt
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+    healthcheck:
+      test: "curl --fail --silent http://localhost:6969/onap/policy/clamp/acm/httpparticipant/health/readiness | grep UP || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  policy-clamp-ac-k8s-ppnt-replica:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-k8s-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    hostname: policy-clamp-ac-k8s-ppnt
+    depends_on:
+      - kafka
+      - jaeger
+    environment:
+      HTTP_USER: participantUser
+      HTTP_PASSWORD: zb!XztG34
+      topicCommInfrastructure: kafka
+      allowTracing: true
+      OTEL_SERVICE_NAME: k8s-ppnt
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+    expose:
+      - 6969
+    deploy:
+      mode: replicated
+      replicas: ${REPLICAS:-2}
+    healthcheck:
+      test: "curl --fail --silent http://localhost:6969/onap/policy/clamp/acm/k8sparticipant/health/readiness | grep UP || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  policy-clamp-ac-pf-ppnt-replica:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-pf-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    hostname: policy-clamp-ac-pf-ppnt
+    depends_on:
+      - kafka
+      - jaeger
+    expose:
+      - 6969
+    deploy:
+      mode: replicated
+      replicas: ${REPLICAS:-2}
+    environment:
+      API_USER: policyadmin
+      API_PASSWORD: zb!XztG34
+      PAP_USER: policyadmin
+      PAP_PASSWORD: zb!XztG34
+      HTTP_USER: participantUser
+      HTTP_PASSWORD: zb!XztG34
+      topicCommInfrastructure: kafka
+      allowTracing: true
+      OTEL_SERVICE_NAME: policy-ppnt
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+    healthcheck:
+      test: "curl --fail --silent http://localhost:6969/onap/policy/clamp/acm/policyparticipant/health/readiness | grep UP || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  nginx:
+    image: ${CONTAINER_LOCATION}library/nginx:latest
+    volumes:
+      - ./config/nginx/nginx-acm.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - policy-clamp-runtime-acm-replica
+    ports:
+      - ${ACM_PORT}:${ACM_PORT}
