@@ -35,7 +35,6 @@ import org.onap.policy.models.base.PfKey;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ToscaUtils {
-    private static final String ROOT_KEY_NAME_SUFFIX = ".Root";
 
     // @formatter:off
     private static final Set<PfConceptKey> PREDEFINED_TOSCA_DATA_TYPES = Set.of(

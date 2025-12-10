@@ -21,8 +21,6 @@
 
 package org.onap.policy.models.base;
 
-import jakarta.ws.rs.core.Response;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -160,29 +158,5 @@ public final class PfUtils {
      */
     public static <K, T, R> Map<K, R> mapMap(Map<K, T> source, Function<T, R> mapFunc) {
         return mapMap(source, mapFunc, null);
-    }
-
-    /**
-     * Makes a copy of an object using the copy constructor from the object's class.
-     *
-     * @param source object to be copied
-     * @return a copy of the source, or {@code null} if the source is {@code null}
-     * @throws PfModelRuntimeException if the object cannot be copied
-     */
-    public static <T> T makeCopy(T source) {
-        if (source == null) {
-            return null;
-        }
-
-        try {
-            @SuppressWarnings("unchecked") Class<? extends T> clazz = (Class<? extends T>) source.getClass();
-
-            return clazz.getConstructor(clazz).newInstance(source);
-
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException
-                 | RuntimeException e) {
-            throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,
-                "error copying concept key class: " + source.getClass().getName(), e);
-        }
     }
 }

@@ -138,15 +138,6 @@ class PfKeyImplTest {
         assertEquals(Compatibility.MAJOR, someKey5.getCompatibility(someKey1));
         assertEquals(Compatibility.MAJOR, someKey6.getCompatibility(someKey1));
         assertEquals(Compatibility.MAJOR, buildKey3.getCompatibility(someKey1));
-
-        assertTrue(someKey1.isCompatible(someKey2));
-        assertTrue(someKey1.isCompatible(someKey3));
-        assertTrue(someKey1.isCompatible(someKey4));
-        assertFalse(someKey1.isCompatible(someKey0));
-        assertFalse(someKey1.isCompatible(someKey5));
-        assertFalse(someKey1.isCompatible(buildKey3));
-        assertFalse(someKey1.isCompatible(buildKey4));
-        assertFalse(someKey1.isCompatible(new DummyPfKey()));
     }
 
     @Test
@@ -183,12 +174,6 @@ class PfKeyImplTest {
         MyKey someKey8 = new MyKey();
         someKey8.setVersion(VERSION001);
         assertFalse(someKey8.isNullKey());
-
-        someKey8.setVersion("10");
-        assertEquals(0, someKey8.getMinorVersion());
-
-        someKey8.setVersion("10.11");
-        assertEquals(0, someKey8.getPatchVersion());
     }
 
     @Test
@@ -205,8 +190,6 @@ class PfKeyImplTest {
 
         assertThatThrownBy(() -> new MyKey(null, VERSION001))
             .hasMessageMatching("^name is marked .*on.*ull but is null$");
-
-        assertThatThrownBy(() -> new MyKey("AKey", VERSION001).isCompatible(null)).hasMessageMatching(OTHER_IS_NULL);
     }
 
     @Test
@@ -231,80 +214,6 @@ class PfKeyImplTest {
         versionField.setAccessible(false);
         assertThat(validationResult2.getResult()).doesNotContain("\"name\"").contains("\"version\"")
             .contains("does not match regular expression " + PfKey.VERSION_REGEXP);
-    }
-
-    @Test
-    void testkeynewerThan() {
-        MyKey key1 = new MyKey("Key1", VERSION123);
-
-        assertThatThrownBy(() -> key1.isNewerThan(null)).hasMessageMatching(OTHER_IS_NULL);
-
-        assertThatThrownBy(() -> key1.isNewerThan(new PfReferenceKey())).hasMessage(
-            "org.onap.policy.models.base.PfReferenceKey is not " + "an instance of " + PfKeyImpl.class.getName());
-
-        assertFalse(key1.isNewerThan(key1));
-
-        MyKey key1a = new MyKey("Key1a", VERSION123);
-        assertFalse(key1.isNewerThan(key1a));
-
-        MyKey key1b = new MyKey("Key0", VERSION123);
-        assertTrue(key1.isNewerThan(key1b));
-
-        key1a.setName("Key1");
-        assertFalse(key1.isNewerThan(key1a));
-
-        key1a.setVersion("0.2.3");
-        assertTrue(key1.isNewerThan(key1a));
-        key1a.setVersion("2.2.3");
-        assertFalse(key1.isNewerThan(key1a));
-        key1a.setVersion(VERSION123);
-        assertFalse(key1.isNewerThan(key1a));
-
-        key1a.setVersion("1.1.3");
-        assertTrue(key1.isNewerThan(key1a));
-        key1a.setVersion("1.3.3");
-        assertFalse(key1.isNewerThan(key1a));
-        key1a.setVersion(VERSION123);
-        assertFalse(key1.isNewerThan(key1a));
-
-        key1a.setVersion("1.2.2");
-        assertTrue(key1.isNewerThan(key1a));
-        key1a.setVersion("1.2.4");
-        assertFalse(key1.isNewerThan(key1a));
-        key1a.setVersion(VERSION123);
-        assertFalse(key1.isNewerThan(key1a));
-
-        key1.setVersion(VERSION100);
-        assertFalse(key1.isNewerThan(key1a));
-        key1a.setVersion(VERSION100);
-        assertFalse(key1.isNewerThan(key1a));
-
-        PfReferenceKey refKey = new PfReferenceKey();
-
-        assertThatThrownBy(() -> refKey.isNewerThan(null)).hasMessageMatching(OTHER_IS_NULL);
-
-        assertThatThrownBy(() -> refKey.isNewerThan(new MyKey()))
-            .hasMessage(MyKey.class.getName() + " is not an instance of " + PfReferenceKey.class.getName());
-
-        assertFalse(refKey.isNewerThan(refKey));
-    }
-
-    @Test
-    void testmajorMinorPatch() {
-        MyKey key = new MyKey("Key", VERSION100);
-        assertEquals(1, key.getMajorVersion());
-        assertEquals(0, key.getMinorVersion());
-        assertEquals(0, key.getPatchVersion());
-
-        key = new MyKey("Key", "1.2.0");
-        assertEquals(1, key.getMajorVersion());
-        assertEquals(2, key.getMinorVersion());
-        assertEquals(0, key.getPatchVersion());
-
-        key = new MyKey("Key", VERSION123);
-        assertEquals(1, key.getMajorVersion());
-        assertEquals(2, key.getMinorVersion());
-        assertEquals(3, key.getPatchVersion());
     }
 
     @Getter

@@ -26,7 +26,6 @@ import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.common.parameters.ValueValidator;
-import org.onap.policy.models.base.validation.annotations.PfMin;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 
 public class PfValidator extends BeanValidator {
@@ -36,29 +35,6 @@ public class PfValidator extends BeanValidator {
         super.addValidators(validator);
 
         validator.addAnnotation(VerifyKey.class, this::verKey);
-        validator.addAnnotation(PfMin.class, this::verPfMin);
-    }
-
-    /**
-     * Verifies that the value is >= the minimum value.
-     *
-     * @param result where to add the validation result
-     * @param fieldName field whose value is being verified
-     * @param annot annotation against which the value is being verified
-     * @param value value to be verified
-     * @return {@code true} if the next check should be performed, {@code false} otherwise
-     */
-    public boolean verPfMin(BeanValidationResult result, String fieldName, PfMin annot, Object value) {
-        if (!(value instanceof Number num)) {
-            return true;
-        }
-
-        if (num.longValue() == annot.allowed()) {
-            // this value is always allowed
-            return true;
-        }
-
-        return verMin(result, fieldName, annot.value(), value);
     }
 
     /**

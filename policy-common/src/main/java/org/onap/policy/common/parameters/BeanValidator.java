@@ -26,13 +26,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
-import org.onap.policy.common.parameters.annotations.ClassName;
-import org.onap.policy.common.parameters.annotations.Max;
 import org.onap.policy.common.parameters.annotations.Min;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Pattern;
-import org.onap.policy.common.parameters.annotations.Size;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,11 +74,8 @@ public class BeanValidator {
     protected void addValidators(ValueValidator validator) {
         validator.addAnnotation(NotNull.class, this::verNotNull);
         validator.addAnnotation(NotBlank.class, this::verNotBlank);
-        validator.addAnnotation(Size.class, this::verSize);
-        validator.addAnnotation(Max.class, this::verMax);
         validator.addAnnotation(Min.class, this::verMin);
         validator.addAnnotation(Pattern.class, this::verRegex);
-        validator.addAnnotation(ClassName.class, this::verClassName);
         validator.addAnnotation(Valid.class, this::verCascade);
     }
 
@@ -136,37 +130,6 @@ public class BeanValidator {
     }
 
     /**
-     * Verifies that the value has the specified number of elements.
-     *
-     * @param result where to add the validation result
-     * @param fieldName field whose value is being verified
-     * @param annot annotation against which the value is being verified
-     * @param value value to be verified
-     * @return {@code true} if the next check should be performed, {@code false} otherwise
-     */
-    public boolean verSize(BeanValidationResult result, String fieldName, Size annot, Object value) {
-        int size;
-        if (value instanceof Collection) {
-            size = ((Collection<?>) value).size();
-
-        } else if (value instanceof Map) {
-            size = ((Map<?, ?>) value).size();
-
-        } else {
-            return true;
-        }
-
-
-        if (size < annot.min()) {
-            result.addResult(fieldName, xlate(value), ValidationStatus.INVALID,
-                            "minimum number of elements: " + annot.min());
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Verifies that the value matches a regular expression.
      *
      * @param result where to add the validation result
@@ -187,40 +150,6 @@ public class BeanValidator {
 
         result.addResult(fieldName, xlate(value), ValidationStatus.INVALID,
                         "does not match regular expression " + annot.regexp());
-        return false;
-    }
-
-    /**
-     * Verifies that the value is <= the minimum value.
-     *
-     * @param result where to add the validation result
-     * @param fieldName field whose value is being verified
-     * @param annot annotation against which the value is being verified
-     * @param value value to be verified
-     * @return {@code true} if the next check should be performed, {@code false} otherwise
-     */
-    public boolean verMax(BeanValidationResult result, String fieldName, Max annot, Object value) {
-        if (!(value instanceof Number)) {
-            return true;
-        }
-
-        Number num = (Number) value;
-        if (num instanceof Integer || num instanceof Long) {
-            if (num.longValue() <= annot.value()) {
-                return true;
-            }
-
-        } else if (num instanceof Float || num instanceof Double) {
-            if (num.doubleValue() <= annot.value()) {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-
-        result.addResult(fieldName, xlate(value), ValidationStatus.INVALID,
-                        "exceeds the maximum value: " + annot.value());
         return false;
     }
 
@@ -269,29 +198,6 @@ public class BeanValidator {
         result.addResult(fieldName, xlate(value), ValidationStatus.INVALID,
                         "is below the minimum value: " + min);
         return false;
-    }
-
-    /**
-     * Verifies that the value is a valid class name.
-     *
-     * @param result where to add the validation result
-     * @param fieldName field whose value is being verified
-     * @param value value to be verified
-     * @return {@code true} if the next check should be performed, {@code false} otherwise
-     */
-    public boolean verClassName(BeanValidationResult result, String fieldName, Object value) {
-        if (!(value instanceof String)) {
-            return true;
-        }
-
-        try {
-            Class.forName(value.toString());
-            return true;
-
-        } catch (final ClassNotFoundException exp) {
-            result.addResult(fieldName, value, ValidationStatus.INVALID, "class is not in the classpath");
-            return false;
-        }
     }
 
     /**

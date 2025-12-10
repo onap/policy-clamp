@@ -61,11 +61,6 @@ public class DummyPfKey extends PfKey {
     }
 
     @Override
-    public boolean isCompatible(@NonNull PfKey otherKey) {
-        return false;
-    }
-
-    @Override
     public PfKey getKey() {
         return null;
     }
@@ -97,26 +92,6 @@ public class DummyPfKey extends PfKey {
 
     @Override
     public int hashCode() {
-        return 0;
-    }
-
-    @Override
-    public boolean isNewerThan(@NonNull PfKey otherKey) {
-        return false;
-    }
-
-    @Override
-    public int getMajorVersion() {
-        return 0;
-    }
-
-    @Override
-    public int getMinorVersion() {
-        return 0;
-    }
-
-    @Override
-    public int getPatchVersion() {
         return 0;
     }
 }

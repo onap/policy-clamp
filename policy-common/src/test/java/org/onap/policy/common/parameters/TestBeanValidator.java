@@ -24,7 +24,6 @@ package org.onap.policy.common.parameters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +32,10 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.parameters.annotations.ClassName;
-import org.onap.policy.common.parameters.annotations.Max;
 import org.onap.policy.common.parameters.annotations.Min;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Pattern;
-import org.onap.policy.common.parameters.annotations.Size;
 import org.onap.policy.common.parameters.annotations.Valid;
 
 class TestBeanValidator {
@@ -47,7 +43,6 @@ class TestBeanValidator {
     private static final String STR_FIELD = "strValue";
     private static final String INT_FIELD = "intValue";
     private static final String NUM_FIELD = "numValue";
-    private static final String ITEMS_FIELD = "items";
     private static final String STRING_VALUE = "string value";
     private static final int INT_VALUE = 20;
 
@@ -172,83 +167,6 @@ class TestBeanValidator {
         assertTrue(validator.validateTop(TOP, notBlankInt).isValid());
     }
 
-    /**
-     * Tests verSize with a collection.
-     */
-    @Test
-    void testVerSizeCollection() {
-        @Getter
-        class CollectionSizeCheck {
-            @Size(min = 3)
-            Collection<Integer> items;
-        }
-
-        CollectionSizeCheck collCheck = new CollectionSizeCheck();
-
-        // valid length - exact
-        collCheck.items = List.of(1, 2, 3);
-        assertThat(validator.validateTop(TOP, collCheck).isValid()).isTrue();
-
-        // valid length - extra
-        collCheck.items = List.of(1, 2, 3, 4);
-        assertThat(validator.validateTop(TOP, collCheck).isValid()).isTrue();
-
-        // too few
-        collCheck.items = List.of(1, 2);
-        assertInvalid("testVerSize", validator.validateTop(TOP, collCheck), ITEMS_FIELD, "minimum", "3");
-
-        // null
-        collCheck.items = null;
-        assertThat(validator.validateTop(TOP, collCheck).isValid()).isTrue();
-    }
-
-    /**
-     * Tests verSize with a map.
-     */
-    @Test
-    void testVerSizeMap() {
-        @Getter
-        class MapSizeCheck {
-            @Size(min = 3)
-            Map<Integer, Integer> items;
-        }
-
-        MapSizeCheck mapCheck = new MapSizeCheck();
-
-        // valid length - exact
-        mapCheck.items = Map.of(1, 10, 2, 20, 3, 30);
-        assertThat(validator.validateTop(TOP, mapCheck).isValid()).isTrue();
-
-        // valid length - extra
-        mapCheck.items = Map.of(1, 10, 2, 20, 3, 30, 4, 40);
-        assertThat(validator.validateTop(TOP, mapCheck).isValid()).isTrue();
-
-        // too few
-        mapCheck.items = Map.of(1, 10, 2, 20);
-        assertInvalid("testVerSize", validator.validateTop(TOP, mapCheck), ITEMS_FIELD, "minimum", "3");
-
-        // null
-        mapCheck.items = null;
-        assertThat(validator.validateTop(TOP, mapCheck).isValid()).isTrue();
-    }
-
-    /**
-     * Tests verSize with an object for which it doesn't apply.
-     */
-    @Test
-    void testVerSizeOther() {
-        @Getter
-        class OtherSizeCheck {
-            @Size(min = 3)
-            Integer items;
-        }
-
-        OtherSizeCheck otherCheck = new OtherSizeCheck();
-
-        otherCheck.items = 10;
-        assertThat(validator.validateTop(TOP, otherCheck).isValid()).isTrue();
-    }
-
     @Test
     void testVerRegex() {
         @Getter
@@ -299,100 +217,6 @@ class TestBeanValidator {
         regexInt.intValue = 0;
         assertInvalid("testVerRegex", validator.validateTop(TOP, regexInt), INT_FIELD,
                         "does not match regular expression [a-f]");
-    }
-
-    @Test
-    void testVerMax() {
-        /*
-         * Field is not a number.
-         */
-        @Getter
-        class NonNumeric {
-            @Max(100)
-            String strValue;
-        }
-
-        NonNumeric nonNumeric = new NonNumeric();
-        nonNumeric.strValue = STRING_VALUE;
-        assertTrue(validator.validateTop(TOP, nonNumeric).isValid());
-
-        /*
-         * Integer field.
-         */
-        @Getter
-        class IntField {
-            @Max(100)
-            Integer intValue;
-        }
-
-        // ok value
-        IntField intField = new IntField();
-        assertNumeric(intField, value -> {
-            intField.intValue = value;
-        }, INT_FIELD, "maximum", 100, 101);
-
-        /*
-         * Long field.
-         */
-        @Getter
-        class LongField {
-            @Max(100)
-            Long numValue;
-        }
-
-        // ok value
-        LongField longField = new LongField();
-        assertNumeric(longField, value -> {
-            longField.numValue = (long) value;
-        }, NUM_FIELD, "maximum", 100, 101);
-
-        /*
-         * Float field.
-         */
-        @Getter
-        class FloatField {
-            @Max(100)
-            Float numValue;
-        }
-
-        // ok value
-        FloatField floatField = new FloatField();
-        assertNumeric(floatField, value -> {
-            floatField.numValue = (float) value;
-        }, NUM_FIELD, "maximum", 100, 101);
-
-        /*
-         * Double field.
-         */
-        @Getter
-        class DoubleField {
-            @Max(100)
-            Double numValue;
-        }
-
-        // ok value
-        DoubleField doubleField = new DoubleField();
-        assertNumeric(doubleField, value -> {
-            doubleField.numValue = (double) value;
-        }, NUM_FIELD, "maximum", 100, 101);
-
-        /*
-         * Atomic Integer field (which is a subclass of Number).
-         */
-        @Getter
-        class AtomIntValue {
-            @Max(100)
-            AtomicInteger numValue;
-        }
-
-        // ok value
-        AtomIntValue atomIntField = new AtomIntValue();
-        atomIntField.numValue = new AtomicInteger(INT_VALUE);
-        assertTrue(validator.validateTop(TOP, atomIntField).isValid());
-
-        // invalid value - should be OK, because it isn't an Integer
-        atomIntField.numValue.set(101);
-        assertTrue(validator.validateTop(TOP, atomIntField).isValid());
     }
 
     @Test
@@ -487,30 +311,6 @@ class TestBeanValidator {
         // invalid value - should be OK, because it isn't an Integer
         atomIntField.numValue.set(101);
         assertTrue(validator.validateTop(TOP, atomIntField).isValid());
-    }
-
-    @Test
-    void testVerClassName() {
-        @Getter
-        class ClassNameCheck {
-            @ClassName
-            String strValue;
-        }
-
-        ClassNameCheck classCheck = new ClassNameCheck();
-
-        // null should be OK
-        classCheck.strValue = null;
-        assertTrue(validator.validateTop(TOP, classCheck).isValid());
-
-        // valid class name
-        classCheck.strValue = getClass().getName();
-        assertTrue(validator.validateTop(TOP, classCheck).isValid());
-
-        // invalid class name
-        classCheck.strValue = "<unknown class>";
-        assertInvalid("testVerClassName", validator.validateTop(TOP, classCheck),
-                        STR_FIELD, "class is not in the classpath");
     }
 
     @Test

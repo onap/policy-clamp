@@ -95,46 +95,9 @@ public abstract class PfKey extends PfConcept {
     public abstract Compatibility getCompatibility(@NonNull PfKey otherKey);
 
     /**
-     * Check if two keys are compatible, that is the keys are IDENTICAL or have only MINOR, PATCH differences.
-     *
-     * @param otherKey the key to check compatibility against
-     * @return true, if the keys are compatible
-     */
-    public abstract boolean isCompatible(@NonNull PfKey otherKey);
-
-    /**
-     * Check if this key is a newer version than the other key.
-     *
-     * @param otherKey the key to check against
-     * @return true, if this key is newer than the other key
-     */
-    public abstract boolean isNewerThan(@NonNull PfKey otherKey);
-
-    /**
      * Check if a key equals its null key.
      *
      * @return true, if the key is a null key
      */
     public abstract boolean isNullKey();
-
-    /**
-     * Get the major version of a key.
-     *
-     * @return the major version of a key
-     */
-    public abstract int getMajorVersion();
-
-    /**
-     * Get the minor version of a key.
-     *
-     * @return the minor version of a key
-     */
-    public abstract int getMinorVersion();
-
-    /**
-     * Get the patch version of a key.
-     *
-     * @return the patch version of a key
-     */
-    public abstract int getPatchVersion();
 }

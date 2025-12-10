@@ -87,35 +87,4 @@ class PfUtilsTest {
         newMap.remove("abcX");
         newMap.put("something", 789);
     }
-
-    @Test
-    void testMakeCopy() {
-        assertNull(PfUtils.makeCopy((MyObject) null));
-        NoCopyConstructor noCopyConstructor = new NoCopyConstructor();
-        MyObject origObject = new MyObject();
-        origObject.name = HELLO;
-        assertEquals(origObject.toString(), PfUtils.makeCopy(origObject).toString());
-
-        assertThatThrownBy(() -> PfUtils.makeCopy(noCopyConstructor)).isInstanceOf(PfModelRuntimeException.class);
-    }
-
-    @Getter
-    @ToString
-    private static class MyObject {
-        private String name;
-
-        public MyObject() {
-            // do nothing
-        }
-
-        @SuppressWarnings("unused")
-        public MyObject(MyObject source) {
-            this.name = source.name;
-        }
-    }
-
-    @Getter
-    private static class NoCopyConstructor {
-        private String name;
-    }
 }
