@@ -22,17 +22,12 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.onap.policy.parent</groupId>
-        <artifactId>integration</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
-        <relativePath />
-    </parent>
     <groupId>org.onap.policy.clamp</groupId>
     <artifactId>policy-clamp</artifactId>
     <version>9.0.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
+
     <description>
         This is the root Maven module for the policy-clamp project.
 
@@ -53,11 +48,9 @@
         o policy-clamp-participant-impl-a1pms: A standard participant for accessing A1-Policy Management Service
         o policy-clamp-participant-impl-kserve: A standard participant for Kserve
     </description>
-    <properties>
-        <policy.common.version>4.0.0-SNAPSHOT</policy.common.version>
-        <policy.models.version>5.0.0-SNAPSHOT</policy.models.version>
-    </properties>
+
     <modules>
+        <module>clamp-parent</module>
         <module>policy-common</module>
         <module>policy-models</module>
         <module>common</module>
@@ -68,24 +61,4 @@
         <module>participant</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- Fix transitive dependencies' vulnerabilities -->
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-bom</artifactId>
-                <version>4.2.7.Final</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- Dependencies specific to clamp repo -->
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
-                <version>1.21.3</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>

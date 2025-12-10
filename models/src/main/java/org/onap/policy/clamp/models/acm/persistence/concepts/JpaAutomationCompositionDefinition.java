@@ -126,7 +126,7 @@ public class JpaAutomationCompositionDefinition extends Validated
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
         setName(this.serviceTemplate.getName());
         setVersion(this.serviceTemplate.getVersion());
-        this.elements = new HashSet<>(copyConcept.getElementStateMap().size());
+        this.elements = HashSet.newHashSet(copyConcept.getElementStateMap().size());
         for (var element : copyConcept.getElementStateMap().values()) {
             var nodeTemplateStateId = element.getNodeTemplateStateId().toString();
             var jpaNodeTemplateState = new JpaNodeTemplateState(nodeTemplateStateId, this.compositionId);

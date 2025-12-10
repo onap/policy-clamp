@@ -25,8 +25,9 @@
 
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
-        <artifactId>policy-clamp</artifactId>
+        <artifactId>dependencies</artifactId>
         <version>9.0.0-SNAPSHOT</version>
+        <relativePath>../clamp-parent/dependencies/pom.xml</relativePath>
     </parent>
 
     <artifactId>policy-clamp-runtime-acm</artifactId>
@@ -237,12 +238,10 @@
         <dependency>
             <groupId>com.github.blagerweij</groupId>
             <artifactId>liquibase-sessionlock</artifactId>
-            <version>1.6.9</version>
         </dependency>
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
-            <version>4.7.7</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -294,7 +293,6 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

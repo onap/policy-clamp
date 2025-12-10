@@ -22,8 +22,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
-        <artifactId>policy-clamp</artifactId>
+        <artifactId>dependencies</artifactId>
         <version>9.0.0-SNAPSHOT</version>
+        <relativePath>../clamp-parent/dependencies/pom.xml</relativePath>
     </parent>
 
     <artifactId>clamp-packages</artifactId>
@@ -67,31 +68,6 @@
                 <docker.clamp-acm-element-impl.dockerFile>ElementParticipant.Dockerfile
                 </docker.clamp-acm-element-impl.dockerFile>
                 <docker.clamp-ac-sim-ppnt.dockerFile>SimParticipant.Dockerfile</docker.clamp-ac-sim-ppnt.dockerFile>
-            </properties>
-        </profile>
-        <profile>
-            <id>dockersuse</id>
-            <modules>
-                <module>policy-clamp-tarball</module>
-                <module>policy-clamp-docker</module>
-            </modules>
-            <properties>
-                <docker.skip.push>false</docker.skip.push>
-                <docker.clamp-runtime-acm.dockerFile>AcmRuntime-Suse.Dockerfile</docker.clamp-runtime-acm.dockerFile>
-                <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant-Suse.Dockerfile
-                </docker.clamp-ac-pf-ppnt.dockerFile>
-                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant-Suse.Dockerfile
-                </docker.clamp-ac-k8s-ppnt.dockerFile>
-                <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant-Suse.Dockerfile
-                </docker.clamp-ac-http-ppnt.dockerFile>
-                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant-Suse.Dockerfile
-                </docker.clamp-ac-a1pms-ppnt.dockerFile>
-                <docker.clamp-ac-kserve-ppnt.dockerFile>KserveParticipant-Suse.Dockerfile
-                </docker.clamp-ac-kserve-ppnt.dockerFile>
-                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant-Suse.Dockerfile
-                </docker.clamp-acm-element-impl.dockerFile>
-                <docker.clamp-ac-sim-ppnt.dockerFile>SimParticipant-Suse.Dockerfile
-                </docker.clamp-ac-sim-ppnt.dockerFile>
             </properties>
         </profile>
     </profiles>

@@ -178,7 +178,7 @@ public final class AcmUtils {
      */
     public static Map<String, NodeTemplateState> createElementStateMap(
             List<Entry<String, ToscaNodeTemplate>> acElements, AcTypeState state) {
-        Map<String, NodeTemplateState> result = new HashMap<>(acElements.size());
+        Map<String, NodeTemplateState> result = HashMap.newHashMap(acElements.size());
         for (var entry : acElements) {
             var nodeTemplateState = new NodeTemplateState();
             nodeTemplateState.setNodeTemplateStateId(UUID.randomUUID());

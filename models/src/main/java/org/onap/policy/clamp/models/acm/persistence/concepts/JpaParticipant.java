@@ -132,7 +132,7 @@ public class JpaParticipant extends Validated
         var participant = new Participant();
 
         participant.setParticipantId(UUID.fromString(participantId));
-        participant.setParticipantSupportedElementTypes(new LinkedHashMap<>(this.supportedElements.size()));
+        participant.setParticipantSupportedElementTypes(LinkedHashMap.newLinkedHashMap(this.supportedElements.size()));
         for (var element : this.supportedElements) {
             participant.getParticipantSupportedElementTypes()
                 .put(UUID.fromString(element.getId()), element.toAuthorative());
