@@ -35,9 +35,4 @@ public final class ParameterConstants {
 
     // By default we do not show validation results for parameters that are validated as clean
     public static final boolean DO_NOT_SHOW_CLEAN_RESULTS = false;
-
-    // Messages for clean validations
-    public static final String PARAMETER_GROUP_HAS_STATUS_MESSAGE = "parameter group has status ";
-    public static final String PARAMETER_GROUP_MAP_HAS_STATUS_MESSAGE = "parameter group map has status ";
-    public static final String PARAMETER_HAS_STATUS_MESSAGE       = "parameter has status ";
 }

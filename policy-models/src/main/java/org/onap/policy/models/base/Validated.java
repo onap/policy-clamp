@@ -32,12 +32,9 @@ import org.onap.policy.common.parameters.ValidationStatus;
  * utility class.
  */
 public class Validated {
-    public static final String IS_BLANK = "is blank";
     public static final String IS_A_NULL_KEY = "is a null key";
     public static final String IS_NULL = "is null";
-    public static final String NOT_DEFINED = "not defined";
     public static final String NOT_FOUND = "not found";
-
     public static final String KEY_TOKEN = "key";
     public static final String VALUE_TOKEN = "value";
 

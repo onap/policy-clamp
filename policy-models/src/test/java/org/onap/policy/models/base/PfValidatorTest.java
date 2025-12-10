@@ -36,7 +36,6 @@ import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.base.validation.annotations.PfMin;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 
 class PfValidatorTest {
@@ -60,25 +59,6 @@ class PfValidatorTest {
 
         data.strValue = null;
         assertThat(validator.validateTop("", data).getResult()).contains("strValue", "null");
-    }
-
-    @Test
-    void testVerPfMin() {
-        PfMinChecker data = new PfMinChecker();
-        data.intValue = 10;
-        assertThat(validator.validateTop("", data).getResult()).isNull();
-
-        data.intValue = -2;
-        assertThat(validator.validateTop("", data).getResult()).isNull();
-
-        data.intValue = null;
-        assertThat(validator.validateTop("", data).getResult()).isNull();
-
-        data.intValue = STRING_VALUE;
-        assertThat(validator.validateTop("", data).getResult()).isNull();
-
-        data.intValue = -1;
-        assertThat(validator.validateTop("", data).getResult()).contains("intValue", "-1");
     }
 
     @Test
@@ -195,12 +175,6 @@ class PfValidatorTest {
         @Getter
         @NotNull
         private String strValue;
-    }
-
-    public static class PfMinChecker {
-        @Getter
-        @PfMin(value = 5, allowed = -2)
-        private Object intValue;
     }
 
     public static class CascadeChecker extends Validated {

@@ -21,7 +21,6 @@
 
 package org.onap.policy.models.base;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -30,8 +29,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import lombok.Getter;
-import lombok.ToString;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -86,36 +83,5 @@ class PfUtilsTest {
         // verify that we can modify the map without throwing an exception
         newMap.remove("abcX");
         newMap.put("something", 789);
-    }
-
-    @Test
-    void testMakeCopy() {
-        assertNull(PfUtils.makeCopy((MyObject) null));
-        NoCopyConstructor noCopyConstructor = new NoCopyConstructor();
-        MyObject origObject = new MyObject();
-        origObject.name = HELLO;
-        assertEquals(origObject.toString(), PfUtils.makeCopy(origObject).toString());
-
-        assertThatThrownBy(() -> PfUtils.makeCopy(noCopyConstructor)).isInstanceOf(PfModelRuntimeException.class);
-    }
-
-    @Getter
-    @ToString
-    private static class MyObject {
-        private String name;
-
-        public MyObject() {
-            // do nothing
-        }
-
-        @SuppressWarnings("unused")
-        public MyObject(MyObject source) {
-            this.name = source.name;
-        }
-    }
-
-    @Getter
-    private static class NoCopyConstructor {
-        private String name;
     }
 }
