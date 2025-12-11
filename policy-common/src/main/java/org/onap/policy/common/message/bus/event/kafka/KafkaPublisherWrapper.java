@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024 Nordix Foundation.
+ * Copyright (C) 2024-2025 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Kafka based library publisher.
+ * Kafka-based library publisher.
  */
 public class KafkaPublisherWrapper implements BusPublisher {
 
@@ -79,7 +79,19 @@ public class KafkaPublisherWrapper implements BusPublisher {
                 TracingProducerInterceptor.class.getName());
         }
 
-        producer = new KafkaProducer<>(kafkaProps);
+        producer = createProducer(kafkaProps);
+    }
+
+    /**
+     * Creates a Kafka Producer with the given properties.
+     *
+     * @param kafkaProps the properties to configure the Kafka Producer, including
+     *                   details such as bootstrap servers, serializers, and other
+     *                   configurations.
+     * @return a configured KafkaProducer instance ready for sending messages to Kafka topics.
+     */
+    protected KafkaProducer<String, String> createProducer(Properties kafkaProps) {
+        return new KafkaProducer<>(kafkaProps);
     }
 
     @Override
