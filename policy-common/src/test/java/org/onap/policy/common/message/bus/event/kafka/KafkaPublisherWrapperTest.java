@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024 Nordix Foundation
+ * Copyright (C) 2024-2025 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.onap.policy.common.message.bus.event.kafka;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -29,7 +30,6 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ import org.onap.policy.common.parameters.topic.BusTopicParams;
 class KafkaPublisherWrapperTest {
 
     private KafkaPublisherWrapper kafkaPublisherWrapper;
-    private Producer<String, String> mockProducer;
+    private KafkaProducer<String, String> mockProducer;
     private BusTopicParams mockBusTopicParams;
 
     @BeforeEach
@@ -54,7 +54,7 @@ class KafkaPublisherWrapperTest {
         when(mockBusTopicParams.isAllowTracing()).thenReturn(false);
 
         kafkaPublisherWrapper = new KafkaPublisherWrapper(mockBusTopicParams) {
-            private Producer<String, String> createProducer(Properties props) { // NOSONAR instance creation
+            public KafkaProducer<String, String> createProducer(Properties props) { // NOSONAR instance creation
                 return mockProducer;
             }
         };
@@ -88,7 +88,7 @@ class KafkaPublisherWrapperTest {
     @Test
     void testSendFailure() {
         when(mockProducer.send(ArgumentMatchers.any(ProducerRecord.class))).thenThrow(RuntimeException.class);
-        assertTrue(kafkaPublisherWrapper.send("partitionId", "testMessage"));
+        assertFalse(kafkaPublisherWrapper.send("partitionId", "testMessage"));
     }
 
     @Test

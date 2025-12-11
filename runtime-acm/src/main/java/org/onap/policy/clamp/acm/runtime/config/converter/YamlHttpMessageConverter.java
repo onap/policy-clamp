@@ -1,24 +1,23 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023 Bell Canada. All rights reserved.
- * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved
+ *  ================================================================================
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
- * ============LICENSE_END=========================================================
+ *  SPDX-License-Identifier: Apache-2.0
+ *  ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.spring.utils;
+package org.onap.policy.clamp.acm.runtime.config.converter;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,6 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractGenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
@@ -54,13 +54,15 @@ public class YamlHttpMessageConverter extends AbstractGenericHttpMessageConverte
     }
 
     @Override
-    public final Object read(Type type, @Nullable Class<?> contextClass, HttpInputMessage inputMessage)
-        throws IOException {
+    @NonNull
+    public final Object read(@NonNull Type type, @Nullable Class<?> contextClass,
+                             @NonNull HttpInputMessage inputMessage) {
         return readResolved(GenericTypeResolver.resolveType(type, contextClass), inputMessage);
     }
 
     @Override
-    protected final Object readInternal(Class<?> clazz, HttpInputMessage inputMessage) throws IOException {
+    @NonNull
+    protected final Object readInternal(@NonNull Class<?> clazz, @NonNull HttpInputMessage inputMessage) {
         return readResolved(clazz, inputMessage);
     }
 
@@ -70,8 +72,8 @@ public class YamlHttpMessageConverter extends AbstractGenericHttpMessageConverte
     }
 
     @Override
-    protected final void writeInternal(Object object, @Nullable Type type, HttpOutputMessage outputMessage)
-        throws IOException {
+    protected final void writeInternal(@NonNull Object object, @Nullable Type type,
+                                       @NonNull HttpOutputMessage outputMessage) {
         try (var writer = getWriter(outputMessage)) {
             writeInternal(object, writer);
             writer.flush();
@@ -84,7 +86,7 @@ public class YamlHttpMessageConverter extends AbstractGenericHttpMessageConverte
         TRANSLATOR.toYaml(writer, object);
     }
 
-    private Object readResolved(Type resolvedType, HttpInputMessage inputMessage) throws IOException {
+    private Object readResolved(Type resolvedType, HttpInputMessage inputMessage) {
         try (var reader = getReader(inputMessage)) {
             return readInternal(resolvedType, reader);
         } catch (Exception ex) {

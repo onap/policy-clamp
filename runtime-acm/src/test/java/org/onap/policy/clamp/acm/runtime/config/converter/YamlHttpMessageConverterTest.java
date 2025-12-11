@@ -1,24 +1,23 @@
 /*
  * ============LICENSE_START=======================================================
- * ONAP
- * ================================================================================
- * Copyright (C) 2024 Nordix Foundation.
- * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved
+ *  ================================================================================
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ============LICENSE_END=========================================================
+ *  SPDX-License-Identifier: Apache-2.0
+ *  ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.spring.utils;
+package org.onap.policy.clamp.acm.runtime.config.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -93,7 +92,7 @@ class YamlHttpMessageConverterTest {
         // Mocking HttpHeaders
         HttpHeaders headers = mock(HttpHeaders.class);
         when(headers.getContentType()).thenReturn(MediaType.APPLICATION_JSON);  // Return JSON media type
-        when(headers.getAcceptCharset()).thenReturn(null);  // Return null to use default charset
+        when(headers.getAcceptCharset()).thenReturn(null);  // Return null to use the default charset
 
         // Mocking HttpOutputMessage
         HttpOutputMessage outputMessage = mock(HttpOutputMessage.class);
@@ -118,7 +117,7 @@ class YamlHttpMessageConverterTest {
     void testWriteInternalWithException() throws IOException {
         // Mocking HttpHeaders
         HttpHeaders headers = mock(HttpHeaders.class);
-        when(headers.getContentType()).thenReturn(MediaType.APPLICATION_JSON);  // Return YAML media type
+        when(headers.getContentType()).thenReturn(MediaType.APPLICATION_JSON);  // Should return YAML media type
 
         // Mocking HttpOutputMessage to throw an IOException when getBody() is called
         HttpOutputMessage outputMessage = mock(HttpOutputMessage.class);
@@ -131,6 +130,21 @@ class YamlHttpMessageConverterTest {
 
         // We expect the write method to throw a HttpMessageNotWritableException
         assertThrows(HttpMessageNotWritableException.class, () -> converter.write(map, null, outputMessage));
+    }
+
+    @Test
+    void testThrowException_NullValues() {
+        assertThrows(NullPointerException.class, () -> converter.write(null, null, null));
+        assertThrows(HttpMessageNotReadableException.class, () -> converter.read(null, null, null));
+        assertThrows(HttpMessageNotReadableException.class, () -> converter.read(Map.class, null, null));
+        assertThrows(HttpMessageNotWritableException.class, () -> converter.writeInternal(null, null, null));
+        assertThrows(HttpMessageNotReadableException.class, () -> converter.readInternal(null, null));
+        assertThrows(HttpMessageNotReadableException.class, () -> converter.readInternal(Map.class, null));
+
+        var map = new HashMap<>();
+        map.put("key", "value");
+        assertThrows(NullPointerException.class, () -> converter.write(map, null, null));
+        assertThrows(HttpMessageNotWritableException.class, () -> converter.writeInternal(map, null, null));
     }
 
 }
