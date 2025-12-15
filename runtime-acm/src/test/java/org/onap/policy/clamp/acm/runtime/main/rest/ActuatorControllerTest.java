@@ -43,7 +43,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 class ActuatorControllerTest {
 
     public static final String HEALTH = "/actuator/health";
-    public static final String STATUS_CODE = "$.status.code";
+    public static final String STATUS_CODE = "$.status";
 
     @Autowired
     private WebTestClient webClient;

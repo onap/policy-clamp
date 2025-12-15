@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import java.util.UUID;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class ParticipantAckMessage {
 
     // The responseTo field should match the original request id in the request.

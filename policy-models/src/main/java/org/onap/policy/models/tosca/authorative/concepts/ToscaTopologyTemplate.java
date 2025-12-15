@@ -3,7 +3,7 @@
  * ONAP Policy Model
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2021,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,11 +45,12 @@ public class ToscaTopologyTemplate {
 
     private Map<String, ToscaParameter> inputs;
 
-    @SerializedName("node_templates")
+    @JsonProperty("node_templates")
     private Map<String, ToscaNodeTemplate> nodeTemplates;
 
     private List<Map<String, ToscaPolicy>> policies;
 
+    @JsonIgnore
     public Map<ToscaEntityKey, ToscaPolicy> getPoliciesAsMap() {
         return ToscaEntity.getEntityListMapAsMap(policies);
     }
@@ -56,7 +58,7 @@ public class ToscaTopologyTemplate {
     /**
      * Copy constructor.
      *
-     * @param copyObject the obejct to copy from.
+     * @param copyObject the object to copy from.
      */
     public ToscaTopologyTemplate(@NonNull ToscaTopologyTemplate copyObject) {
         this.description = copyObject.description;

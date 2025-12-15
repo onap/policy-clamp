@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,6 +105,7 @@ class MsgExecutorTest {
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
         var parameters = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameters);
+        assertThat(cacheProvider.getMessagesOnHold()).isEmpty();
         cacheProvider.addElementDefinition(compositionId, definitions, revisionIdComposition);
 
         var publisher = mock(ParticipantMessagePublisher.class);
