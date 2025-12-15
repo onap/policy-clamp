@@ -3,7 +3,7 @@
  * ONAP Policy Model
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,11 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class ToscaPolicyType extends ToscaWithToscaProperties {
 
+    private String type;
+
+    @JsonProperty("type_version")
+    private String typeVersion;
+
     /**
      * Copy Constructor.
      *
@@ -45,5 +51,17 @@ public class ToscaPolicyType extends ToscaWithToscaProperties {
      */
     public ToscaPolicyType(@NonNull ToscaPolicyType copyObject) {
         super(copyObject);
+        this.type = copyObject.type;
+        this.typeVersion = copyObject.typeVersion;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String getTypeVersion() {
+        return typeVersion;
     }
 }

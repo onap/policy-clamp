@@ -28,7 +28,6 @@ import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 
@@ -49,7 +48,7 @@ class VerifyKeyValidatorTest {
     }
 
     @Test
-    void testVerifyKey() throws CoderException {
+    void testVerifyKey() {
         FullKeyAnnot data = new FullKeyAnnot();
 
         // null key - Jakarta validation will include all constraint violations
@@ -58,8 +57,16 @@ class VerifyKeyValidatorTest {
             .contains(KEY_FIELD, IS_A_NULL_KEY);
 
         // invalid version - should invoke cascade validation
-        data.key = new StandardCoder().decode("{'name':'abc', 'version':'xyzzy'}".replace('\'', '"'),
-            PfConceptKey.class);
+
+        // Create object with invalid version using reflection to bypass setter validation
+        data.key = new PfConceptKey("abc", "1.0.0"); // Create with valid version first
+        try {
+            var versionField = PfConceptKey.class.getDeclaredField("version");
+            versionField.setAccessible(true);
+            versionField.set(data.key, "xyzzy"); // Set invalid version directly
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to set invalid version for test", e);
+        }
         assertThat(BeanValidator.validate("", data).getResult())
             .contains(KEY_FIELD, "version", "xyzzy", "must match");
 
@@ -72,8 +79,15 @@ class VerifyKeyValidatorTest {
         assertThat(BeanValidator.validate("", data).getResult()).contains(KEY_FIELD, "version", IS_NULL);
 
         // null name, invalid version - should get two messages
-        data.key = new StandardCoder().decode("{'name':'NULL', 'version':'xyzzy'}".replace('\'', '"'),
-            PfConceptKey.class);
+        // Create object with invalid version using reflection to bypass setter validation
+        data.key = new PfConceptKey("NULL", "1.0.0"); // Create with valid version first
+        try {
+            var versionField = PfConceptKey.class.getDeclaredField("version");
+            versionField.setAccessible(true);
+            versionField.set(data.key, "xyzzy"); // Set invalid version directly
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to set invalid version for test", e);
+        }
         assertThat(BeanValidator.validate("", data).getResult())
             .contains(KEY_FIELD, "name", IS_NULL, "version", "xyzzy", "must match");
     }
