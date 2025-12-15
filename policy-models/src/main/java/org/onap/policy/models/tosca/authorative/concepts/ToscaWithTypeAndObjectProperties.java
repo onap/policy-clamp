@@ -1,7 +1,7 @@
 /*
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Data;
@@ -41,7 +42,7 @@ import lombok.ToString;
 public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
     private String type;
 
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     private String typeVersion;
 
     private Map<String, Object> properties;
@@ -67,6 +68,7 @@ public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
      *
      * @return this policy's identifier
      */
+    @JsonIgnore
     public ToscaConceptIdentifier getIdentifier() {
         return new ToscaConceptIdentifier(getName(), getVersion());
     }
@@ -74,9 +76,13 @@ public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
     /**
      * Gets the type identifier for this policy.
      *
-     * @return this policy's type identifier
+     * @return this policy's type identifier, or null if type is null
      */
+    @JsonIgnore
     public ToscaConceptIdentifier getTypeIdentifier() {
+        if (getType() == null) {
+            return null;
+        }
         return new ToscaConceptIdentifier(getType(), getTypeVersion());
     }
 }

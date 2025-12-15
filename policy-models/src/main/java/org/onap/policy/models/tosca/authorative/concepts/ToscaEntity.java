@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Model
  * ================================================================================
- * Copyright (C) 2019-2023 Nordix Foundation.
+ * Copyright (C) 2019-2023,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.core.Response;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,11 +44,12 @@ import org.onap.policy.models.base.PfNameVersion;
  */
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ToscaEntity implements PfNameVersion {
     private String name = PfKey.NULL_KEY_NAME;
     private String version = PfKey.NULL_KEY_VERSION;
 
-    @SerializedName("derived_from")
+    @JsonProperty("derived_from")
     private String derivedFrom;
 
     private Map<String, Object> metadata;
@@ -76,6 +79,7 @@ public class ToscaEntity implements PfNameVersion {
      *
      * @return a ToscaEntityKey for this entry
      */
+    @JsonIgnore
     public ToscaEntityKey getKey() {
         return new ToscaEntityKey(name, version);
     }

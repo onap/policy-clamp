@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.element.handler.messages;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.Instant;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -46,6 +47,7 @@ public class ElementMessage {
      * Time-stamp, in milliseconds, when the message was created. Defaults to the
      * current time.
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Instant timestamp = Instant.now();
 
     /**
