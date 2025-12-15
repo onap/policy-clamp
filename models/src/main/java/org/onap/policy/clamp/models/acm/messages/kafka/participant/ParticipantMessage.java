@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
@@ -37,6 +39,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class ParticipantMessage {
     @Setter(AccessLevel.NONE)
     private ParticipantMessageType messageType;
@@ -46,6 +49,7 @@ public class ParticipantMessage {
     /**
      * Time-stamp, in milliseconds, when the message was created. Defaults to the current time.
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Instant timestamp = Instant.now();
 
     /**

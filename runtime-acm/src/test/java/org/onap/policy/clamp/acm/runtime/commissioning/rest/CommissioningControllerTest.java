@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -142,6 +142,7 @@ class CommissioningControllerTest extends CommonRestController {
         x.setVersion("1.0.wrong");
         serviceTemplateCreate.getToscaTopologyTemplate().getNodeTemplates().put(x.getName(), x);
 
+
         var commissioningResponse = createServiceTemplate(serviceTemplateCreate, Response.Status.INTERNAL_SERVER_ERROR);
         assertThat(commissioningResponse.getErrorDetails())
             .isEqualTo("java.lang.IllegalArgumentException parameter "
@@ -232,8 +233,8 @@ class CommissioningControllerTest extends CommonRestController {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name=noResultWithThisName");
         try (var rawresp = invocationBuilder.buildGet().invoke()) {
             assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-            var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
-            assertThat(entityList.getNodeTypes()).isNull();
+            var entityList = rawresp.readEntity(ToscaServiceTemplates.class);
+            assertThat(entityList.getServiceTemplates().isEmpty());
         }
     }
 

@@ -1,9 +1,7 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * ONAP
- * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +14,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.common.utils.coder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,84 +38,65 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import org.onap.policy.common.gson.DoubleConverter;
-import org.onap.policy.common.gson.GsonMessageBodyHandler;
 
 /**
- * JSON encoder and decoder using the "standard" mechanism, which is currently gson.
+ * JSON encoder and decoder using the "standard" mechanism, which is currently jackson.
  */
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class StandardCoder implements Coder {
 
-    /**
-     * Gson object used to encode and decode messages.
-     */
-    private static final Gson GSON_STD;
+    private static final ObjectMapper MAPPER = createMapper();
+    private static final ObjectMapper MAPPER_PRETTY = createMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
-    /**
-     * Gson object used to encode messages in "pretty" format.
-     */
-    private static final Gson GSON_STD_PRETTY;
+    private static ObjectMapper createMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        // Configure to handle empty beans (like test classes with no getters/setters)
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        // Configure to ignore unknown properties (similar to Gson behavior)
+        mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // Configure to handle null values more gracefully
+        mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        // Configure to handle circular references - disable self-reference detection entirely
+        mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
+        // Don't write self references as null, just ignore them
+        mapper.configure(SerializationFeature.WRITE_SELF_REFERENCES_AS_NULL, false);
+        
+        // Register modules for Java 8 time support (JSR310)
+        mapper.findAndRegisterModules();
 
-    static {
-        GsonBuilder builder = GsonMessageBodyHandler.configBuilder(
-                        new GsonBuilder().registerTypeAdapter(StandardCoderObject.class, new StandardTypeAdapter()));
-
-        GSON_STD = builder.create();
-        GSON_STD_PRETTY = builder.setPrettyPrinting().create();
+        return mapper;
     }
 
-    /**
-     * Gson object used to encode and decode messages.
-     */
-    protected final Gson gson;
+    protected final ObjectMapper mapper;
+    protected final ObjectMapper mapperPretty;
 
-    /**
-     * Gson object used to encode messages in "pretty" format.
-     */
-    protected final Gson gsonPretty;
-
-    /**
-     * Constructs the object.
-     */
     public StandardCoder() {
-        this(GSON_STD, GSON_STD_PRETTY);
+        this(MAPPER, MAPPER_PRETTY);
+    }
+
+    protected StandardCoder(ObjectMapper mapper, ObjectMapper mapperPretty) {
+        this.mapper = mapper;
+        this.mapperPretty = mapperPretty;
     }
 
     @Override
     public <S, T> T convert(S source, Class<T> clazz) throws CoderException {
         if (source == null) {
             return null;
-
-        } else if (clazz == source.getClass()) {
-            // same class - just cast it
+        }
+        if (clazz.isInstance(source)) {
             return clazz.cast(source);
-
-        } else if (clazz == String.class) {
-            // target is a string - just encode the source
-            return (clazz.cast(encode(source)));
-
-        } else if (source.getClass() == String.class) {
-            // source is a string - just decode it
-            return decode(source.toString(), clazz);
-
-        } else {
-            /*
-             * Do it the long way: encode to a tree and then decode the tree. This entire
-             * method could have been left out and the default Coder.convert() used
-             * instead, but this should perform slightly better as it only uses a
-             * JsonElement as the intermediate data structure, while Coder.convert() goes
-             * all the way to a String as the intermediate data structure.
-             */
-            try {
-                return fromJson(toJsonTree(source), clazz);
-            } catch (RuntimeException e) {
-                throw new CoderException(e);
-            }
+        }
+        if (clazz == String.class) {
+            return clazz.cast(encode(source));
+        }
+        if (source instanceof String) {
+            return decode((String) source, clazz);
+        }
+        try {
+            var node = mapper.valueToTree(source);
+            return fromJson(node, clazz);
+        } catch (Exception e) {
+            throw new CoderException(e);
         }
     }
 
@@ -128,14 +108,8 @@ public class StandardCoder implements Coder {
     @Override
     public String encode(Object object, boolean pretty) throws CoderException {
         try {
-            if (pretty) {
-                return toPrettyJson(object);
-
-            } else {
-                return toJson(object);
-            }
-
-        } catch (RuntimeException e) {
+            return pretty ? toPrettyJson(object) : toJson(object);
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
@@ -144,34 +118,27 @@ public class StandardCoder implements Coder {
     public void encode(Writer target, Object object) throws CoderException {
         try {
             toJson(target, object);
-
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
 
     @Override
     public void encode(OutputStream target, Object object) throws CoderException {
+        var writer = makeWriter(target);
         try {
-            var wtr = makeWriter(target);
-            toJson(wtr, object);
-
-            // flush, but don't close
-            wtr.flush();
-
-        } catch (RuntimeException | IOException e) {
+            toJson(writer, object);
+            //writer.flush();
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
 
     @Override
     public void encode(File target, Object object) throws CoderException {
-        try (var wtr = makeWriter(target)) {
-            toJson(wtr, object);
-
-            // no need to flush or close here
-
-        } catch (RuntimeException | IOException e) {
+        try (var writer = makeWriter(target)) {
+            toJson(writer, object);
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
@@ -180,7 +147,7 @@ public class StandardCoder implements Coder {
     public <T> T decode(String json, Class<T> clazz) throws CoderException {
         try {
             return fromJson(json, clazz);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
@@ -189,73 +156,62 @@ public class StandardCoder implements Coder {
     public <T> T decode(Reader source, Class<T> clazz) throws CoderException {
         try {
             return fromJson(source, clazz);
-
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
 
     @Override
     public <T> T decode(InputStream source, Class<T> clazz) throws CoderException {
-        try {
-            return fromJson(makeReader(source), clazz);
-
-        } catch (RuntimeException e) {
+        try (var reader = makeReader(source)) {
+            return fromJson(reader, clazz);
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
 
     @Override
     public <T> T decode(File source, Class<T> clazz) throws CoderException {
-        try (var input = makeReader(source)) {
-            return fromJson(input, clazz);
-
-        } catch (RuntimeException | IOException e) {
+        try (var reader = makeReader(source)) {
+            return fromJson(reader, clazz);
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
 
-    /**
-     * Encodes the object as "pretty" json.
-     *
-     * @param object object to be encoded
-     * @return the encoded object
-     */
-    protected String toPrettyJson(Object object) {
-        return gsonPretty.toJson(object);
-    }
-
     @Override
     public StandardCoderObject toStandard(Object object) throws CoderException {
+        if (object instanceof Class) {
+            throw new CoderException("Cannot serialize Class objects");
+        }
         try {
-            return new StandardCoderObject(gson.toJsonTree(object));
-
-        } catch (RuntimeException e) {
+            return new StandardCoderObject(mapper.valueToTree(object));
+        } catch (IllegalArgumentException e) {
             throw new CoderException(e);
         }
     }
 
     @Override
     public <T> T fromStandard(StandardCoderObject sco, Class<T> clazz) throws CoderException {
+        if (sco == null || clazz == null) {
+            throw new CoderException("null argument");
+        }
         try {
-            return gson.fromJson(sco.getData(), clazz);
-
-        } catch (RuntimeException e) {
+            return mapper.treeToValue(sco.getData(), clazz);
+        } catch (Exception e) {
             throw new CoderException(e);
         }
     }
 
-    // the remaining methods are wrappers that can be overridden by junit tests
-
     /**
      * Makes a writer for the given file.
      *
-     * @param target file of interest
+     * @param file file of interest
      * @return a writer for the file
      * @throws FileNotFoundException if the file cannot be created
      */
-    protected Writer makeWriter(File target) throws FileNotFoundException {
-        return makeWriter(new FileOutputStream(target));
+    protected Writer makeWriter(File file) throws FileNotFoundException {
+        return new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
     }
 
     /**
@@ -271,12 +227,12 @@ public class StandardCoder implements Coder {
     /**
      * Makes a reader for the given file.
      *
-     * @param source file of interest
+     * @param file file of interest
      * @return a reader for the file
      * @throws FileNotFoundException if the file does not exist
      */
-    protected Reader makeReader(File source) throws FileNotFoundException {
-        return makeReader(new FileInputStream(source));
+    protected Reader makeReader(File file) throws FileNotFoundException {
+        return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
     }
 
     /**
@@ -290,23 +246,13 @@ public class StandardCoder implements Coder {
     }
 
     /**
-     * Encodes an object into a json tree, without catching exceptions.
-     *
-     * @param object object to be encoded
-     * @return a json element representing the object
-     */
-    protected JsonElement toJsonTree(Object object) {
-        return gson.toJsonTree(object);
-    }
-
-    /**
      * Encodes an object into json, without catching exceptions.
      *
      * @param object object to be encoded
      * @return a json string representing the object
      */
-    protected String toJson(Object object) {
-        return gson.toJson(object);
+    protected String toJson(Object object) throws JsonProcessingException {
+        return mapper.writeValueAsString(object);
     }
 
     /**
@@ -315,19 +261,23 @@ public class StandardCoder implements Coder {
      * @param target target to which to write the encoded json
      * @param object object to be encoded
      */
-    protected void toJson(Writer target, Object object) {
-        gson.toJson(object, object.getClass(), target);
+    protected void toJson(Writer target, Object object) throws IOException {
+        mapper.writeValue(target, object);
     }
 
     /**
      * Decodes a json element into an object, without catching exceptions.
      *
-     * @param json json element to be decoded
+     * @param node json element to be decoded
      * @param clazz class of object to be decoded
      * @return the object represented by the given json element
      */
-    protected <T> T fromJson(JsonElement json, Class<T> clazz) {
-        return convertFromDouble(clazz, gson.fromJson(json, clazz));
+    protected <T> T fromJson(JsonNode node, Class<T> clazz) throws CoderException {
+        try {
+            return mapper.treeToValue(node, clazz);
+        } catch (Exception e) {
+            throw new CoderException(e);
+        }
     }
 
     /**
@@ -337,8 +287,8 @@ public class StandardCoder implements Coder {
      * @param clazz class of object to be decoded
      * @return the object represented by the given json string
      */
-    protected <T> T fromJson(String json, Class<T> clazz) {
-        return convertFromDouble(clazz, gson.fromJson(json, clazz));
+    protected <T> T fromJson(String json, Class<T> clazz) throws IOException {
+        return mapper.readValue(json, clazz);
     }
 
     /**
@@ -348,46 +298,12 @@ public class StandardCoder implements Coder {
      * @param clazz class of object to be decoded
      * @return the object represented by the given json string
      */
-    protected <T> T fromJson(Reader source, Class<T> clazz) {
-        return convertFromDouble(clazz, gson.fromJson(source, clazz));
+    protected <T> T fromJson(Reader source, Class<T> clazz) throws IOException {
+        return mapper.readValue(source, clazz);
     }
 
-    /**
-     * Converts a value from Double to Integer/Long, walking the value's contents if it's
-     * a List/Map. Only applies if the specified class refers to the Object class.
-     * Otherwise, it leaves the value unchanged.
-     *
-     * @param clazz class of object to be decoded
-     * @param value value to be converted
-     * @return the converted value
-     */
-    protected <T> T convertFromDouble(Class<T> clazz, T value) {
-        if (clazz != Object.class && !Map.class.isAssignableFrom(clazz) && !List.class.isAssignableFrom(clazz)) {
-            return value;
-        }
-
-        return clazz.cast(DoubleConverter.convertFromDouble(value));
+    protected String toPrettyJson(Object object) throws JsonProcessingException {
+        return mapperPretty.writeValueAsString(object);
     }
 
-    /**
-     * Adapter for standard objects.
-     */
-    @AllArgsConstructor
-    protected static class StandardTypeAdapter extends TypeAdapter<StandardCoderObject> {
-
-        /**
-         * Used to read/write a JsonElement.
-         */
-        private static final TypeAdapter<JsonElement> elementAdapter = new Gson().getAdapter(JsonElement.class);
-
-        @Override
-        public void write(JsonWriter out, StandardCoderObject value) throws IOException {
-            elementAdapter.write(out, value.getData());
-        }
-
-        @Override
-        public StandardCoderObject read(JsonReader in) throws IOException {
-            return new StandardCoderObject(elementAdapter.read(in));
-        }
-    }
 }

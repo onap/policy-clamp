@@ -1,9 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * policy-management
- * ================================================================================
- * Copyright (C) 2017-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
@@ -23,11 +22,12 @@ package org.onap.policy.common.utils.gson;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.re2j.Pattern;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,25 +35,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.Map;
 import lombok.Getter;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlContext;
 import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.MapContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utilities used to test encoding and decoding of Policy objects.
  */
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class GsonTestUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(GsonTestUtils.class);
+public class JacksonTestUtils {
 
     /**
      * Matches script items, of the form ${xxx}, within text.
@@ -65,102 +58,93 @@ public class GsonTestUtils {
      */
     private static JexlEngine engineInstance = null;
 
-    /**
-     * Used to encode and decode an object via gson.
-     */
-    private Gson gson;
+    private final ObjectMapper objectMapper;
 
     /**
      * Constructs the object.
      */
-    public GsonTestUtils() {
-        GsonTestUtils other = new GsonTestUtilsBuilder().build();
-
-        gson = other.gson;
+    public JacksonTestUtils() {
+        this.objectMapper = new ObjectMapper();
     }
 
     /**
-     * Serializes and then deserializes an object using gson.
-     *
-     * @param object the object to be serialized
-     * @param clazz the class of object to deserialize
-     * @return the deserialized object
-     */
-    public <T> T gsonRoundTrip(T object, Class<T> clazz) {
-        String sgson = gsonEncode(object);
-        return gson.fromJson(sgson, clazz);
-    }
-
-    /**
-     * Encodes an object using gson and then compares it to the expected value, after
+     * Encodes an object using jackson and then compares it to the expected value, after
      * sorting the elements. The class name is used to find the json file, whose contents
      * is interpolated (i.e., script elements, of the form ${obj.xxx}, are expanded).
      *
      * @param object the object to be encoded
      * @param expected the expected value
      */
-    public void compareGson(Object object, Class<?> expected) {
-        compareGson(object, new File(expected.getSimpleName() + ".json"));
+    public void compareJson(Object object, Class<?> expected) throws JsonParseException {
+        compareJson(object, new File(expected.getSimpleName() + ".json"));
     }
 
     /**
-     * Encodes an object using gson and then compares it to the expected value, after
+     * Encodes an object using jackson and then compares it to the expected value, after
      * sorting the elements. The content of the file is interpolated (i.e., script
      * elements, of the form ${obj.xxx}, are expanded).
      *
      * @param object the object to be encoded
      * @param expected the expected value
      */
-    public void compareGson(Object object, File expected) {
-        // file is not required to have a full path - find it via getResource()
+    public void compareJson(Object object, File expected) throws JsonParseException {
         var url = object.getClass().getResource(expected.getName());
         if (url == null) {
-            throw new JsonParseException(new FileNotFoundException(expected.getName()));
+            throw new JsonParseException(new FileNotFoundException(expected.getName()).getMessage());
         }
 
         String expectedText;
         try {
             expectedText = readFile(new File(url.getFile()));
-
         } catch (IOException e) {
-            throw new JsonParseException("error reading: " + expected, e);
+            throw new JsonParseException("error reading: " + e.getMessage());
         }
 
-        compareGson(object, expectedText);
+        compareJson(object, expectedText);
     }
 
     /**
-     * Encodes an object using gson and then compares it to the expected value, after
+     * Encodes an object using jackson and then compares it to the expected value, after
      * sorting the elements. The expected value is interpolated (i.e., script elements, of
      * the form ${obj.xxx}, are expanded).
      *
      * @param object the object to be encoded
      * @param expected the expected value
      */
-    public void compareGson(Object object, String expected) {
-        String result = applyScripts(expected, object);
-        compareGson(object, gson.fromJson(result, JsonElement.class));
+    public void compareJson(Object object, String expected) throws JsonParseException {
+        var result = applyScripts(expected, object);
+        try {
+            compareJson(object, objectMapper.readTree(result));
+        } catch (IOException e) {
+            throw new JsonParseException(e.getMessage());
+        }
     }
 
     /**
-     * Encodes an object using gson and then compares it to the expected value, after
+     * Encodes an object using jackson and then compares it to the expected value, after
      * sorting the elements.
      *
      * @param object the object to be encoded
      * @param expected the expected value
      */
-    public void compareGson(Object object, JsonElement expected) {
-        String sgson = gsonEncode(object);
+    public void compareJson(Object object, JsonNode expected) throws JsonParseException {
+        try {
+            var json = objectMapper.writeValueAsString(object);
 
-        JsonElement gsonjo = reorder(gson.fromJson(sgson, JsonElement.class));
-        JsonElement expjo = reorder(expected);
+            var actualNode = reorder(objectMapper.readTree(json));
+            var expectedNode = reorder(expected);
 
-        /*
-         * As this method is only used within junit tests, it is OK to use assert calls,
-         * thus sonar is disabled.
-         */
-        assertEquals(expjo.toString(), gsonjo.toString());      // NOSONAR
+            /*
+             * As this method is only used within junit tests, it is OK to use assert calls,
+             * thus sonar is disabled.
+             */
+            assertEquals(expectedNode.toString(), actualNode.toString()); // NOSONAR
+        } catch (IOException e) {
+            throw new JsonParseException(e.getMessage());
+        }
     }
+
+
 
     /**
      * Reads the content of a file.
@@ -171,7 +155,6 @@ public class GsonTestUtils {
     protected String readFile(File file) throws IOException {
         return Files.readString(file.toPath());
     }
-
 
     /**
      * Interpolates script elements, of the form ${obj.xxx}, within some text. The script
@@ -236,79 +219,67 @@ public class GsonTestUtils {
         return engineInstance;
     }
 
-    /**
-     * Encodes an object using gson.
-     *
-     * @param object the object to be encoded
-     * @return the encoded object
-     */
-    public String gsonEncode(Object object) {
-        String sgson = gson.toJson(object);
-        logger.debug("gson={}", sgson);
-        return sgson;
-    }
 
     /**
-     * Recursively re-orders a json object, arranging the keys alphabetically and removing
-     * null items.
-     *
-     * @param jsonObj object from which nulls are to be removed
-     * @return a new object, without the null items
+     * Recursively re-orders a JSON object, arranging the keys alphabetically
+     * and removing null items.
      */
-    public JsonObject reorder(JsonObject jsonObj) {
-        var newjo = new JsonObject();
+    public ObjectNode reorder(ObjectNode jsonObj) {
+        var newObj = objectMapper.createObjectNode();
 
-        // sort the keys before copying to the new object
-        List<Entry<String, JsonElement>> sortedSet = new ArrayList<>(jsonObj.entrySet());
-        sortedSet.sort(Entry.comparingByKey());
+        // Collect and sort fields by key
+        List<Map.Entry<String, JsonNode>> fields = new ArrayList<>();
+        jsonObj.fields().forEachRemaining(fields::add);
+        fields.sort(Map.Entry.comparingByKey());
 
-        for (Entry<String, JsonElement> ent : sortedSet) {
-            JsonElement val = ent.getValue();
-            if (val.isJsonNull()) {
+        for (var entry : fields) {
+            var value = entry.getValue();
+            if (value == null || value.isNull()) {
                 continue;
             }
 
-            newjo.add(ent.getKey(), reorder(val));
+            newObj.set(entry.getKey(), reorder(value));
         }
 
-        return newjo;
+        return newObj;
     }
 
     /**
-     * Recursively re-orders a json array, arranging the keys alphabetically and removing
-     * null items.
-     *
-     * @param jsonArray array from which nulls are to be removed
-     * @return a new array, with null items removed from all elements
+     * Recursively re-orders a JSON array, removing null items
+     * from all elements.
      */
-    public JsonArray reorder(JsonArray jsonArray) {
-        var newarr = new JsonArray();
-        for (JsonElement ent : jsonArray) {
-            newarr.add(reorder(ent));
+    public ArrayNode reorder(ArrayNode jsonArray) {
+        var newArr = objectMapper.createArrayNode();
+
+        for (var element : jsonArray) {
+            if (element == null || element.isNull()) {
+                continue;
+            }
+            newArr.add(reorder(element));
         }
 
-        return newarr;
+        return newArr;
     }
 
     /**
-     * Recursively re-orders a json element, arranging the keys alphabetically and
-     * removing null items.
-     *
-     * @param jsonEl element from which nulls are to be removed
-     * @return a new element, with null items removed
+     * Recursively re-orders a JSON node, arranging object keys
+     * alphabetically and removing null items.
      */
-    public JsonElement reorder(JsonElement jsonEl) {
-        if (jsonEl == null) {
-            return null;
-
-        } else if (jsonEl.isJsonObject()) {
-            return reorder(jsonEl.getAsJsonObject());
-
-        } else if (jsonEl.isJsonArray()) {
-            return reorder(jsonEl.getAsJsonArray());
-
-        } else {
-            return jsonEl;
+    public JsonNode reorder(JsonNode jsonNode) {
+        if (jsonNode == null || jsonNode.isNull()) {
+            return NullNode.getInstance();
         }
+
+        if (jsonNode.isObject()) {
+            return reorder((ObjectNode) jsonNode);
+        }
+
+        if (jsonNode.isArray()) {
+            return reorder((ArrayNode) jsonNode);
+        }
+
+        // Primitive nodes are returned as-is
+        return jsonNode;
     }
+
 }
