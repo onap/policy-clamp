@@ -20,7 +20,8 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
@@ -56,7 +57,7 @@ public class DocToscaEntity<T extends ToscaEntity> extends Validated
     @NotNull
     private String version = PfKey.NULL_KEY_VERSION;
 
-    @SerializedName("derived_from")
+    @JsonProperty("derived_from")
     private String derivedFrom;
 
     @SuppressWarnings("squid:S1948")
@@ -71,6 +72,7 @@ public class DocToscaEntity<T extends ToscaEntity> extends Validated
      *
      * @return a ToscaEntityKey for this entry
      */
+    @JsonIgnore
     public ToscaEntityKey getKey() {
         return new ToscaEntityKey(name, version);
     }
@@ -80,20 +82,24 @@ public class DocToscaEntity<T extends ToscaEntity> extends Validated
      *
      * @return a PfConceptKey for this entry
      */
+    @JsonIgnore
     public PfConceptKey getConceptKey() {
         return new PfConceptKey(name, version);
     }
 
+    @JsonIgnore
     public DocConceptKey getDocConceptKey() {
         return new DocConceptKey(name, version);
     }
 
     @Override
+    @JsonIgnore
     public String getDefinedName() {
         return (PfKey.NULL_KEY_NAME.equals(name) ? null : name);
     }
 
     @Override
+    @JsonIgnore
     public String getDefinedVersion() {
         return (PfKey.NULL_KEY_VERSION.equals(version) ? null : version);
     }
@@ -103,6 +109,7 @@ public class DocToscaEntity<T extends ToscaEntity> extends Validated
      *
      * @return the type of the entity or null if it has no type
      */
+    @JsonIgnore
     public String getType() {
         return null;
     }
@@ -112,6 +119,7 @@ public class DocToscaEntity<T extends ToscaEntity> extends Validated
      *
      * @return the type of the entity or null if it has no type
      */
+    @JsonIgnore
     public String getTypeVersion() {
         return null;
     }
