@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2017-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2022-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2022-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 
 package org.onap.policy.common.message.bus.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,6 @@ import java.util.Objects;
 import java.util.Properties;
 import lombok.Getter;
 import org.onap.policy.common.capabilities.Startable;
-import org.onap.policy.common.gson.annotation.GsonJsonIgnore;
 import org.onap.policy.common.message.bus.event.kafka.KafkaTopicFactories;
 import org.onap.policy.common.message.bus.event.kafka.KafkaTopicSink;
 import org.onap.policy.common.message.bus.event.kafka.KafkaTopicSource;
@@ -267,25 +267,25 @@ public class TopicEndpointProxy implements TopicEndpoint {
         return sinks;
     }
 
-    @GsonJsonIgnore
+    @JsonIgnore
     @Override
     public List<KafkaTopicSource> getKafkaTopicSources() {
         return KafkaTopicFactories.getSourceFactory().inventory();
     }
 
-    @GsonJsonIgnore
+    @JsonIgnore
     @Override
     public List<NoopTopicSource> getNoopTopicSources() {
         return NoopTopicFactories.getSourceFactory().inventory();
     }
 
     @Override
-    @GsonJsonIgnore
+    @JsonIgnore
     public List<KafkaTopicSink> getKafkaTopicSinks() {
         return KafkaTopicFactories.getSinkFactory().inventory();
     }
 
-    @GsonJsonIgnore
+    @JsonIgnore
     @Override
     public List<NoopTopicSink> getNoopTopicSinks() {
         return NoopTopicFactories.getSinkFactory().inventory();
@@ -352,7 +352,7 @@ public class TopicEndpointProxy implements TopicEndpoint {
      *
      * @return list of managed endpoints
      */
-    @GsonJsonIgnore
+    @JsonIgnore
     protected List<Startable> getEndpoints() {
         final List<Startable> endpoints = new ArrayList<>();
 

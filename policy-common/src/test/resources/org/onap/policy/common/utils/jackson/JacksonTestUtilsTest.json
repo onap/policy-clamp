@@ -1,4 +1,4 @@
 {
-    "id": ${obj.id},
+    "id": "${obj.id}",
     "text": "${obj.text}"
 }
