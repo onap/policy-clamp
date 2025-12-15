@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class AutomationCompositionDefinitionTest {
     private static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     @Test
-    void testCopyContructor() {
+    void testCopyConstructor() {
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setCompositionId(UUID.randomUUID());
         var nodeTemplateState = new NodeTemplateState();
