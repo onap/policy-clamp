@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2026 OpenInfra Foundation Europe. All rights reserved..
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,33 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.DefaultValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class A1PolicyServiceEntity {
 
     @NotNull
-    @JsonIgnore
+    @JsonProperty("a1PolicyServiceEntityId")
     private ToscaConceptIdentifier a1PolicyServiceEntityId;
 
     @NotNull
-    @Getter(onMethod_ = {@JsonGetter(value = "service_id")})
+    @JsonProperty("clientId")
     private String clientId;
 
     @NotNull
+    @JsonProperty("callbackUrl")
     private String callbackUrl;
 
     @NotNull

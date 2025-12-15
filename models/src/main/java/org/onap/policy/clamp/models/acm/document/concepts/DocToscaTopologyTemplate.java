@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import java.io.Serial;
 import java.io.Serializable;
@@ -49,7 +49,7 @@ public class DocToscaTopologyTemplate extends Validated
 
     private Map<String, @Valid DocToscaParameter> inputs;
 
-    @SerializedName("node_templates")
+    @JsonProperty("node_templates")
     private Map<String, @Valid DocToscaNodeTemplate> nodeTemplates;
 
     private Map<String, @Valid DocToscaPolicy> policies;
