@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,20 @@
 
 package org.onap.policy.clamp.acm.participant.http.main.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.DefaultValue;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ConfigRequest {
 
     @NotBlank
@@ -45,7 +47,7 @@ public class ConfigRequest {
     private List<ConfigurationEntity> configurationEntities;
 
     @Min(value = 1)
-    @DefaultValue("20")
+    @JsonProperty(defaultValue = "20")
     private int uninitializedToPassiveTimeout;
 
 }

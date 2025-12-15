@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
@@ -45,26 +45,26 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
     public static final String DEFAULT_NAME = "tosca";
     public static final String DEFAULT_VERSION = "1.0.0";
 
-    @SerializedName("tosca_definitions_version")
+    @JsonProperty("tosca_definitions_version")
     @NotBlank
     private String toscaDefinitionsVersion;
 
-    @SerializedName("data_types")
+    @JsonProperty("data_types")
     private Map<String, @Valid DocToscaDataType> dataTypes;
 
-    @SerializedName("capability_types")
+    @JsonProperty("capability_types")
     private Map<String, @Valid DocToscaCapabilityType> capabilityTypes;
 
-    @SerializedName("node_types")
+    @JsonProperty("node_types")
     private Map<String, @Valid DocToscaNodeType> nodeTypes;
 
-    @SerializedName("relationship_types")
+    @JsonProperty("relationship_types")
     private Map<String, @Valid DocToscaRelationshipType> relationshipTypes;
 
-    @SerializedName("policy_types")
+    @JsonProperty("policy_types")
     private Map<String, @Valid DocToscaPolicyType> policyTypes;
 
-    @SerializedName("topology_template")
+    @JsonProperty("topology_template")
     @Valid
     private DocToscaTopologyTemplate toscaTopologyTemplate;
 
@@ -109,13 +109,16 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
         super.toAuthorative();
 
         toscaServiceTemplate.setToscaDefinitionsVersion(toscaDefinitionsVersion);
-        toscaServiceTemplate.setDataTypes(DocUtil.docMapToMap(dataTypes, DocToscaDataType::toAuthorative));
-        toscaServiceTemplate
-                .setCapabilityTypes(DocUtil.docMapToMap(capabilityTypes, DocToscaCapabilityType::toAuthorative));
-        toscaServiceTemplate
-                .setRelationshipTypes(DocUtil.docMapToMap(relationshipTypes, DocToscaRelationshipType::toAuthorative));
-        toscaServiceTemplate.setNodeTypes(DocUtil.docMapToMap(nodeTypes, DocToscaNodeType::toAuthorative));
-        toscaServiceTemplate.setPolicyTypes(DocUtil.docMapToMap(policyTypes, DocToscaPolicyType::toAuthorative));
+        toscaServiceTemplate.setDataTypes(
+                DocUtil.docMapToMap(dataTypes, DocToscaDataType::toAuthorative));
+        toscaServiceTemplate.setCapabilityTypes(
+                DocUtil.docMapToMap(capabilityTypes, DocToscaCapabilityType::toAuthorative));
+        toscaServiceTemplate.setRelationshipTypes(
+                DocUtil.docMapToMap(relationshipTypes, DocToscaRelationshipType::toAuthorative));
+        toscaServiceTemplate.setNodeTypes(
+                DocUtil.docMapToMap(nodeTypes, DocToscaNodeType::toAuthorative));
+        toscaServiceTemplate.setPolicyTypes(
+                DocUtil.docMapToMap(policyTypes, DocToscaPolicyType::toAuthorative));
         if (toscaTopologyTemplate != null) {
             toscaServiceTemplate.setToscaTopologyTemplate(toscaTopologyTemplate.toAuthorative());
         }
@@ -149,7 +152,7 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
                 new LinkedHashMap<>());
 
         policyTypes = DocUtil.mapToDocMap(toscaServiceTemplate.getPolicyTypes(), DocToscaPolicyType::new,
-                new LinkedHashMap<>());
+                    new LinkedHashMap<>());
 
         if (toscaServiceTemplate.getToscaTopologyTemplate() != null) {
             toscaTopologyTemplate = new DocToscaTopologyTemplate(toscaServiceTemplate.getToscaTopologyTemplate());
