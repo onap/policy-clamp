@@ -5,9 +5,6 @@ spring:
     user:
       name: ${RUNTIME_USER}
       password:  ${RUNTIME_PASSWORD}
-  http:
-    converters:
-      preferred-json-mapper: gson
   datasource:
     url: jdbc:postgresql://${SQL_HOST:localhost}:${SQL_PORT:5432}/clampacm
     driverClassName: org.postgresql.Driver

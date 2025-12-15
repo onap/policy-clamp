@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023, 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022-2023, 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,11 +88,13 @@ class InstantiationControllerStubTest extends CommonRestController {
 
     @Test
     void testPost() {
+        var ac = new AutomationComposition();
+        ac.setCompositionId(UUID.randomUUID());
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT);
-        var respPost = invocationBuilder.post(Entity.json(new AutomationComposition()));
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        var respPost = invocationBuilder.post(Entity.json(ac));
+        assertThat(respPost.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         respPost.close();
     }
 

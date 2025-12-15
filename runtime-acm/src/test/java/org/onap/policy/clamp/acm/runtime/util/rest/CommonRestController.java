@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.onap.policy.common.gson.GsonMessageBodyHandler;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.onap.policy.common.utils.network.NetworkUtil;
 
 /**
@@ -100,7 +100,7 @@ public class CommonRestController {
         client = ClientBuilder.newBuilder().build();
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
-        client.register(GsonMessageBodyHandler.class);
+        client.register(JacksonFeature.class);
 
         if (includeAuth) {
             client.register(HttpAuthenticationFeature.basic("runtimeUser", "zb!XztG34"));

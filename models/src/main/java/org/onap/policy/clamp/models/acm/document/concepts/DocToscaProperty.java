@@ -20,7 +20,8 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
@@ -50,13 +51,13 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
     @NotNull
     private String type;
 
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     @NotNull
     private String typeVersion;
 
     private String description;
 
-    @SerializedName("default")
+    @JsonProperty("default")
     @SuppressWarnings("squid:S1948")
     private Object defaultValue;
 
@@ -64,11 +65,11 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
     private ToscaProperty.Status status;
     private List<@NotNull @Valid DocToscaConstraint> constraints;
 
-    @SerializedName("key_schema")
+    @JsonProperty("key_schema")
     @Valid
     private DocToscaSchemaDefinition keySchema;
 
-    @SerializedName("entry_schema")
+    @JsonProperty("entry_schema")
     @Valid
     private DocToscaSchemaDefinition entrySchema;
 
@@ -150,6 +151,7 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
         metadata = PfUtils.mapMap(toscaProperty.getMetadata(), metadataItem -> metadataItem);
     }
 
+    @JsonIgnore
     public DocConceptKey getTypeDocConceptKey() {
         return new DocConceptKey(type, typeVersion);
     }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Model
  * ================================================================================
- * Copyright (C) 2020 Nordix Foundation.
+ * Copyright (C) 2020,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +33,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ToscaServiceTemplates {
-    @SerializedName("service_templates")
+    @JsonProperty("service_templates")
     private List<ToscaServiceTemplate> serviceTemplates;
 }
