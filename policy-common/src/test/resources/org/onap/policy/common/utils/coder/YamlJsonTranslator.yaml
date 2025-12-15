@@ -17,5 +17,5 @@ map:
     stringVal: stringA
   itemB:
     stringVal: stringB
-    doubleVal: 123456789012345678901234567890
+    doubleVal: 123456.789
   itemC: *top

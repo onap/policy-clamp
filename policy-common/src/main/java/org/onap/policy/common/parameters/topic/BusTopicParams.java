@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2018-2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 
 package org.onap.policy.common.parameters.topic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -93,55 +94,68 @@ public class BusTopicParams {
      * Methods to Check if the property is INVALID.
      */
 
+    @JsonIgnore
     boolean isEnvironmentInvalid() {
         return StringUtils.isBlank(environment);
     }
 
+    @JsonIgnore
     boolean isAftEnvironmentInvalid() {
         return StringUtils.isBlank(aftEnvironment);
     }
 
+    @JsonIgnore
     boolean isLatitudeInvalid() {
         return StringUtils.isBlank(latitude);
     }
 
+    @JsonIgnore
     boolean isLongitudeInvalid() {
         return StringUtils.isBlank(longitude);
     }
 
+    @JsonIgnore
     public boolean isConsumerInstanceInvalid() {
         return StringUtils.isBlank(consumerInstance);
     }
 
+    @JsonIgnore
     public boolean isConsumerGroupInvalid() {
         return StringUtils.isBlank(consumerGroup);
     }
 
+    @JsonIgnore
     public boolean isClientNameInvalid() {
         return StringUtils.isBlank(clientName);
     }
 
+    @JsonIgnore
     boolean isPartnerInvalid() {
         return StringUtils.isBlank(partner);
     }
 
+    @JsonIgnore
     boolean isServersInvalid() {
         return (servers == null || servers.isEmpty()
             || (servers.size() == 1 && ("".equals(servers.get(0)))));
     }
 
+    @JsonIgnore
     public boolean isTopicInvalid() {
         return StringUtils.isBlank(topic);
     }
 
+    @JsonIgnore
     public boolean isPartitionIdInvalid() {
         return StringUtils.isBlank(partitionId);
     }
 
+    @JsonIgnore
     public boolean isHostnameInvalid() {
         return StringUtils.isBlank(hostname);
     }
 
+    @JsonIgnore
     public boolean isPortInvalid() {
         return (getPort() <= 0 || getPort() >= 65535);
     }
@@ -150,22 +164,27 @@ public class BusTopicParams {
      * Methods to Check if the property is Valid.
      */
 
+    @JsonIgnore
     boolean isApiKeyValid() {
         return StringUtils.isNotBlank(apiKey);
     }
 
+    @JsonIgnore
     boolean isApiSecretValid() {
         return StringUtils.isNotBlank(apiSecret);
     }
 
+    @JsonIgnore
     boolean isUserNameValid() {
         return StringUtils.isNotBlank(userName);
     }
 
+    @JsonIgnore
     boolean isPasswordValid() {
         return StringUtils.isNotBlank(password);
     }
 
+    @JsonIgnore
     public boolean isAdditionalPropsValid() {
         return additionalProps != null;
     }

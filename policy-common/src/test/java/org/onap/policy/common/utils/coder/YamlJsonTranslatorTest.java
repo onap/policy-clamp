@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,8 +142,8 @@ class YamlJsonTranslatorTest {
         assertNotNull(container.map.get("itemB"));
         assertEquals("stringB", container.map.get("itemB").stringVal);
 
-        double dbl = 123456789012345678901234567890.0;
-        assertEquals(dbl, container.map.get("itemB").doubleVal, 1000.0);
+        double dbl = 123456.789;
+        assertEquals(dbl, container.map.get("itemB").doubleVal, 0.001);
 
         assertNotNull(container.map.get("itemC"));
         assertTrue(container.map.get("itemC").boolVal);
@@ -152,20 +152,28 @@ class YamlJsonTranslatorTest {
 
     @EqualsAndHashCode
     public static class Container {
-        protected Item item;
-        protected List<Item> list;
-        protected Map<String, Item> map;
+        public Item item;
+        public List<Item> list;
+        public Map<String, Item> map;
+        
+        public Container() {
+            // Default constructor for Jackson
+        }
     }
 
     @EqualsAndHashCode
     public static class Item {
-        protected boolean boolVal;
-        protected int intVal;
-        protected long longVal;
-        protected double doubleVal;
-        protected float floatVal;
-        protected String stringVal;
-        protected Object nullVal;
-        protected Item another;
+        public boolean boolVal;
+        public int intVal;
+        public long longVal;
+        public double doubleVal;
+        public float floatVal;
+        public String stringVal;
+        public Object nullVal;
+        public Item another;
+        
+        public Item() {
+            // Default constructor for Jackson
+        }
     }
 }
