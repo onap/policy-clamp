@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class AcElementDeployAck {
 
