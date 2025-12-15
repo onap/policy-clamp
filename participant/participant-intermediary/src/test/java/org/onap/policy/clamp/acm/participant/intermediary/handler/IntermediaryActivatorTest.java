@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,11 +78,11 @@ class IntermediaryActivatorTest {
             verify(publisherFirst, times(1)).active(anyList());
             verify(publisherSecond, times(1)).active(anyList());
 
-            var sco = CODER.decode("{messageType:" + TOPIC_FIRST + "}", StandardCoderObject.class);
+            var sco = CODER.decode("{\"messageType\":\"" + TOPIC_FIRST + "\"}", StandardCoderObject.class);
             activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerFirst, times(1)).onTopicEvent(any(), any(), any());
 
-            sco = CODER.decode("{messageType:" + TOPIC_SECOND + "}", StandardCoderObject.class);
+            sco = CODER.decode("{\"messageType\":\"" + TOPIC_SECOND + "\"}", StandardCoderObject.class);
             activator.getSyncMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerSecond, times(1)).onTopicEvent(any(), any(), any());
 
