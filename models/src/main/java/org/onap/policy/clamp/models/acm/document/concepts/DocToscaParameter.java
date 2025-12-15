@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
@@ -45,7 +45,7 @@ public class DocToscaParameter implements PfAuthorative<ToscaParameter>, Seriali
     private String type;
 
     @NotNull
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     private String typeVersion;
 
     @SuppressWarnings("squid:S1948")

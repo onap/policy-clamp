@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -131,8 +131,6 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
         message.setParticipantIdList(participantIds);
         message.setTimestamp(Instant.now());
         message.setRevisionIdComposition(revisionId);
-        // DeCommission the automation composition but deleting participantdefinitions on participants
-        message.setParticipantDefinitionUpdates(null);
 
         LOGGER.debug("Participant Update sent {}", message.getMessageId());
         super.send(message);

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
@@ -35,6 +37,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"typeDocConceptKey"})
 public class DocToscaSchemaDefinition
         implements PfAuthorative<ToscaSchemaDefinition>, Serializable, Comparable<DocToscaSchemaDefinition> {
 
@@ -44,7 +47,7 @@ public class DocToscaSchemaDefinition
     private String name;
     private String type;
 
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     private String typeVersion;
 
     private String description;
@@ -99,6 +102,7 @@ public class DocToscaSchemaDefinition
         }
     }
 
+    @JsonIgnore
     public DocConceptKey getTypeDocConceptKey() {
         return new DocConceptKey(type, typeVersion);
     }
