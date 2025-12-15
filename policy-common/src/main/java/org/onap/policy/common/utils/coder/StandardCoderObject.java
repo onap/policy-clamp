@@ -1,9 +1,7 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * ONAP
- * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,44 +14,43 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.common.utils.coder;
 
-import com.google.gson.JsonElement;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.Serial;
 import java.io.Serializable;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 /**
  * Object type used by the {@link StandardCoder}. Different serialization tools have
- * different "standard objects". For instance, GSON uses {@link JsonElement}. This class
+ * different "standard objects". For instance, Jackson uses {@link JsonNode}. This class
  * wraps that object so that it can be used without exposing the object, itself.
  */
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class StandardCoderObject implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    private final transient JsonNode data;
 
-    /**
-     * Data wrapped by this.
-     */
-    /*
-     * this should not be transient, but since it isn't serializable, we're stuck with it
-     * until there's time to address the issue
-     */
-    @Getter(AccessLevel.PROTECTED)
-    private final transient JsonElement data;
-
-    /**
-     * Constructs the object.
-     */
     public StandardCoderObject() {
-        data = null;
+        this.data = null;
+    }
+
+    @JsonCreator
+    public StandardCoderObject(JsonNode data) {
+        this.data = data;
+    }
+
+    @JsonValue
+    public JsonNode value() {
+        return data;
     }
 
     /**
@@ -64,26 +61,20 @@ public class StandardCoderObject implements Serializable {
      * @return the field value or {@code null} if the field does not exist or is not a primitive
      */
     public String getString(Object... fields) {
-
-        JsonElement jel = data;
-
+        JsonNode node = this.data;
         for (Object field : fields) {
-            if (jel == null) {
+            if (node == null) {
                 return null;
             }
-
             if (field instanceof String) {
-                jel = getFieldFromObject(jel, field.toString());
-
+                node = getFieldFromObject(node, (String) field);
             } else if (field instanceof Integer) {
-                jel = getItemFromArray(jel, (int) field);
-
+                node = getItemFromArray(node, (Integer) field);
             } else {
                 throw new IllegalArgumentException("subscript is not a string or integer: " + field);
             }
         }
-
-        return (jel != null && jel.isJsonPrimitive() ? jel.getAsString() : null);
+        return (node != null && (node.isValueNode() || node.isTextual())) ? node.asText() : null;
     }
 
     /**
@@ -93,12 +84,8 @@ public class StandardCoderObject implements Serializable {
      * @param field   name of the field from which to extract the item
      * @return the item, or {@code null} if the element is not an object or if the field does not exist
      */
-    protected JsonElement getFieldFromObject(JsonElement element, String field) {
-        if (!element.isJsonObject()) {
-            return null;
-        }
-
-        return element.getAsJsonObject().get(field);
+    protected JsonNode getFieldFromObject(JsonNode element, String field) {
+        return element.isObject() ? element.get(field) : null;
     }
 
     /**
@@ -108,21 +95,18 @@ public class StandardCoderObject implements Serializable {
      * @param index   index of the item to extract
      * @return the item, or {@code null} if the element is not an array or if the index is out of bounds
      */
-    protected JsonElement getItemFromArray(JsonElement element, int index) {
+    protected JsonNode getItemFromArray(JsonNode element, int index) {
         if (index < 0) {
             throw new IllegalArgumentException("subscript is invalid: " + index);
         }
-
-        if (!element.isJsonArray()) {
+        if (!element.isArray()) {
             return null;
         }
+        var array = (ArrayNode) element;
+        return index >= array.size() ? null : array.get(index);
+    }
 
-        var array = element.getAsJsonArray();
-
-        if (index >= array.size()) {
-            return null;
-        }
-
-        return array.get(index);
+    protected JsonNode getData() {
+        return this.data;
     }
 }

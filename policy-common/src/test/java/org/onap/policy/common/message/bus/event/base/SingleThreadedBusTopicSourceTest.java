@@ -1,7 +1,7 @@
 /*
  * ============LICENSE_START=======================================================
  * Copyright (C) 2018-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import org.mockito.stubbing.Answer;
 import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
 import org.onap.policy.common.message.bus.event.TopicListener;
 import org.onap.policy.common.parameters.topic.BusTopicParams;
-import org.onap.policy.common.utils.gson.GsonTestUtils;
+import org.onap.policy.common.utils.gson.JacksonTestUtils;
 import org.onap.policy.common.utils.network.NetworkUtil;
 
 class SingleThreadedBusTopicSourceTest extends TopicTestBase {
@@ -74,8 +74,9 @@ class SingleThreadedBusTopicSourceTest extends TopicTestBase {
 
     @Test
     void testSerialize() {
-        assertThatCode(() -> new GsonTestUtils().compareGson(source, SingleThreadedBusTopicSourceTest.class))
-                        .doesNotThrowAnyException();
+        assertThatCode(() -> new JacksonTestUtils()
+                .compareJson(source, SingleThreadedBusTopicSourceTest.class))
+                .doesNotThrowAnyException();
     }
 
     @Test

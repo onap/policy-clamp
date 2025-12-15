@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,11 +80,11 @@ class MessageDispatcherActivatorTest {
             verify(publisherFirst, times(1)).active(any());
             verify(publisherSecond, times(1)).active(any());
 
-            var sco = CODER.decode("{messageType:" + TOPIC_FIRST + "}", StandardCoderObject.class);
+            var sco = CODER.decode("{\"messageType\":\"" + TOPIC_FIRST + "\"}", StandardCoderObject.class);
             activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerFirst, times(1)).onTopicEvent(any(), any(), any());
 
-            sco = CODER.decode("{messageType:" + TOPIC_SECOND + "}", StandardCoderObject.class);
+            sco = CODER.decode("{\"messageType\":\"" + TOPIC_SECOND + "\"}", StandardCoderObject.class);
             activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerSecond, times(1)).onTopicEvent(any(), any(), any());
 

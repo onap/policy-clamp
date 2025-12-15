@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022, 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022, 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class StubUtils {
     private final HttpServletRequest request;
 
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
-    private static final Gson JSON_TRANSLATOR = new Gson();
+    private static final StandardCoder JSON_TRANSLATOR = new StandardCoder();
     private static final String YAML = "application/yaml";
     private static final String ACCEPT = "Accept";
 
@@ -59,7 +60,7 @@ public class StubUtils {
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             } else {
                 final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                var targetObject = JSON_TRANSLATOR.fromJson(string, clazz);
+                var targetObject = JSON_TRANSLATOR.decode(string, clazz);
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             }
         } catch (IOException | CoderException exception) {
@@ -73,9 +74,9 @@ public class StubUtils {
         final var resource = new ClassPathResource(path);
         try (var inputStream = resource.getInputStream()) {
             final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            var targetObject = JSON_TRANSLATOR.fromJson(string, ArrayList.class);
+            var targetObject = JSON_TRANSLATOR.decode(string, ArrayList.class);
             return new ResponseEntity<>(targetObject, HttpStatus.OK);
-        } catch (IOException exception) {
+        } catch (IOException | CoderException exception) {
             log.error("Error reading the file.", exception);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

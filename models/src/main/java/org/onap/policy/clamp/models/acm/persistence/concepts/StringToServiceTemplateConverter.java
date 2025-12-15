@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021, 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021, 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@ public class StringToServiceTemplateConverter extends AbstractConverter
     public DocToscaServiceTemplate convertToEntityAttribute(String dbData) {
         if (dbData == null) {
             return new DocToscaServiceTemplate();
+        }
+        if (dbData.isEmpty()) {
+            return null;
         }
         return decode(dbData, DocToscaServiceTemplate.class);
     }
