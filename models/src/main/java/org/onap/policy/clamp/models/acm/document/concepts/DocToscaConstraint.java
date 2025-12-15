@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,24 +37,24 @@ public class DocToscaConstraint implements PfAuthorative<ToscaConstraint>, Seria
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @SerializedName("valid_values")
+    @JsonProperty("valid_values")
     private List<String> validValues;
 
     private String equal;
 
-    @SerializedName("greater_than")
+    @JsonProperty("greater_than")
     private String greaterThan;
 
-    @SerializedName("greater_or_equal")
+    @JsonProperty("greater_or_equal")
     private String greaterOrEqual;
 
-    @SerializedName("less_than")
+    @JsonProperty("less_than")
     private String lessThan;
 
-    @SerializedName("less_or_equal")
+    @JsonProperty("less_or_equal")
     private String lessOrEqual;
 
-    @SerializedName("in_range")
+    @JsonProperty("in_range")
     private List<String> rangeValues;
 
     public DocToscaConstraint(ToscaConstraint toscaConstraint) {

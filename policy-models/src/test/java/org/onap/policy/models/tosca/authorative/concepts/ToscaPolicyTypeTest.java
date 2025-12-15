@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2021 Nordix Foundation.
- *  Modifications Copyright (C) 2024 Nordix Foundation
+ *  Copyright (C) 2019-2021,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +22,7 @@ package org.onap.policy.models.tosca.authorative.concepts;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.Test;
@@ -45,9 +45,13 @@ class ToscaPolicyTypeTest {
         tpt.setVersion("1.2.3");
         tpt.setDerivedFrom("AParentType");
         tpt.setDescription("Desc");
+        tpt.setType("test");
+        tpt.setTypeVersion("1.0.0");
 
         ToscaPolicyType clonedTpt0 = new ToscaPolicyType(tpt);
         assertEquals(0, new ToscaEntityComparator<ToscaPolicyType>().compare(tpt, clonedTpt0));
+        assertNotNull(tpt.getType());
+        assertNotNull(tpt.getTypeVersion());
 
         tpt.setMetadata(new LinkedHashMap<>());
         tpt.setProperties(new LinkedHashMap<>());

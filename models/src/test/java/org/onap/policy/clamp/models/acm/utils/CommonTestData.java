@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class CommonTestData {
         try {
             return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
         } catch (CoderException e) {
-            fail("Cannot read or decode " + path);
+            fail("Cannot read or decode " + e.getMessage());
             return null;
         }
     }
@@ -155,6 +155,8 @@ public class CommonTestData {
         toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
         toscaNodeTemplate.setDescription("Description of nodeTemplate");
         toscaNodeTemplate.setVersion("1.2.3");
+        toscaNodeTemplate.setType("org.onap.policy.clamp.acm.TestNodeType");
+        toscaNodeTemplate.setTypeVersion("1.0.0");
 
         var acDefinition = new AutomationCompositionElementDefinition();
         acDefinition.setAcElementDefinitionId(id);

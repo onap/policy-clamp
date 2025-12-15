@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Ericsson. All rights reserved.
  *  Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2020-2021, 2023-2024 Nordix Foundation.
+ *  Modifications Copyright (C) 2020-2021, 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -313,12 +313,12 @@ class ResourceUtilsTest {
                 normalizePath(resultD2.iterator().next()));
 
         Set<String> resultJ0 = ResourceUtils.getDirectoryContents("com");
-        assertTrue(resultJ0.contains("com/google/"));
-        assertEquals("com/google/", normalizePath(resultJ0.iterator().next()));
+        assertTrue(resultJ0.contains("com/fasterxml/"));
+        assertEquals("com/fasterxml/", normalizePath(resultJ0.iterator().next()));
 
-        Set<String> resultJ1 = ResourceUtils.getDirectoryContents("com/google/gson");
+        Set<String> resultJ1 = ResourceUtils.getDirectoryContents("com/fasterxml/jackson/core");
         assertTrue(resultJ1.size() > 1);
-        assertTrue(resultJ1.contains("com/google/gson/JsonElement.class"));
+        assertTrue(resultJ1.contains("com/fasterxml/jackson/core/Base64Variants.class"));
 
         URL dummyUrl = new URL("http://even/worse");
         assertTrue(ResourceUtils.getDirectoryContentsJar(dummyUrl, "nonexistantdirectory").isEmpty());
