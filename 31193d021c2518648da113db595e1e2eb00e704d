@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c347ee72_98ee5e06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-12-16T10:37:00Z",
+      "side": 1,
+      "message": "Hi Wayne, what is the plan to trigger the csit from clamp repo? The compose files are using the tag latest. How will it run as part of the build?",
+      "revId": "31193d021c2518648da113db595e1e2eb00e704d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
