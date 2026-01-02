@@ -23,13 +23,17 @@ participant:
     description: Participant Simulator
     participantId: ${participantId:101c62b3-8918-41b9-a747-d21eb79c6c90}
     threadPoolSize: 10
-    topicValidation: ${topicValidation:false}
+    topicValidation: ${TOPIC_VALIDATION:false}
     clampAdminTopics:
       servers:
         - ${kafkaServer:kafka:9092}
       topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
       fetchTimeout: 15000
       useHttps: ${kafkaUseHttps:false}
+      additionalProps:
+        security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
+        sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
+        sasl.jaas.config: ${kafkaSaslJaasConfig:}
     clampAutomationCompositionTopics:
       topicSources:
         - topic: ${participant.intermediaryParameters.topics.operationTopic}

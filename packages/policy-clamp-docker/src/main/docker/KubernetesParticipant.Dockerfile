@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,6 @@ RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
 COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY --chown=policy:policy kubernetes-participant.sh bin/
 COPY --chown=policy:policy /maven/policy-clamp-participant-impl-kubernetes.jar /app/app.jar
 
 RUN chmod 755 bin/*.sh && \
@@ -65,7 +64,5 @@ RUN chmod 755 bin/*.sh && \
 EXPOSE 8083
 
 USER policy
-WORKDIR $POLICY_HOME/bin
-ENTRYPOINT [ "./kubernetes-participant.sh" ]
-
-
+WORKDIR $POLICY_HOME
+ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]
