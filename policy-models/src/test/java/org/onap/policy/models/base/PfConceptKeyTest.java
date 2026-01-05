@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2020, 2024 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.models.base.testconcepts.DummyPfConcept;
 
 class PfConceptKeyTest {
 
@@ -57,7 +56,7 @@ class PfConceptKeyTest {
         assertEquals(someKey2, someKey1.getKey());
         assertEquals(1, someKey1.getKeys().size());
 
-        PfConcept pfc = new DummyPfConcept();
+        PfConcept pfc = new PfConceptKey();
         assertEquals(PfConceptKey.getNullKey().getId(), pfc.getId());
 
         assertTrue(PfConceptKey.getNullKey().matchesId(pfc.getId()));

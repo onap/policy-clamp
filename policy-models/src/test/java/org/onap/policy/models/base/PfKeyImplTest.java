@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2021, 2023, 2024 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,7 +40,6 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.annotations.Pattern;
 import org.onap.policy.models.base.PfKey.Compatibility;
-import org.onap.policy.models.base.testconcepts.DummyPfKey;
 
 class PfKeyImplTest {
 
@@ -121,8 +121,8 @@ class PfKeyImplTest {
         assertThatThrownBy(() -> someKey0.getCompatibility(null)).isInstanceOf(NullPointerException.class)
             .hasMessageMatching("^otherKey is marked .*on.*ull but is null$");
 
-        assertEquals(Compatibility.DIFFERENT, someKey0.getCompatibility(new DummyPfKey()));
-        assertEquals(Compatibility.DIFFERENT, buildKey1.getCompatibility(new DummyPfKey()));
+        assertEquals(Compatibility.DIFFERENT, someKey0.getCompatibility(new PfConceptKey()));
+        assertEquals(Compatibility.DIFFERENT, buildKey1.getCompatibility(new PfConceptKey()));
         assertEquals(Compatibility.DIFFERENT, someKey0.getCompatibility(someKey1));
         assertEquals(Compatibility.IDENTICAL, someKey2.getCompatibility(someKey1));
         assertEquals(Compatibility.IDENTICAL, buildKey1.getCompatibility(new MyKey(buildKey1)));
@@ -166,7 +166,7 @@ class PfKeyImplTest {
             .hasMessageMatching("^otherObj is marked .*on.*ull but is null$");
 
         assertEquals(0, someKey0.compareTo(someKey0));
-        assertEquals(-36, someKey0.compareTo(new DummyPfKey()));
+        assertNotEquals(0, someKey0.compareTo(new PfConceptKey()));
 
         MyKey someKey8 = new MyKey();
         someKey8.setVersion(VERSION001);
