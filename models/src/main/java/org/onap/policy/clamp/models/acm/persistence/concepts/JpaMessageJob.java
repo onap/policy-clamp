@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 Nordix Foundation.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.base.Validated;
 
@@ -61,15 +60,5 @@ public class JpaMessageJob extends Validated {
 
     public JpaMessageJob(@NonNull final String identificationId) {
         this.identificationId = identificationId;
-    }
-
-    @Override
-    public BeanValidationResult validate(@NonNull String fieldName) {
-        var result = super.validate(fieldName);
-        if (!result.isValid()) {
-            return result;
-        }
-
-        return result;
     }
 }
