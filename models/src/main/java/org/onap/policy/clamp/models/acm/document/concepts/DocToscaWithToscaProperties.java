@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,9 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -68,20 +66,6 @@ public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> ext
         var tosca = super.toAuthorative();
         tosca.setProperties(PfUtils.mapMap(properties, DocToscaProperty::toAuthorative));
         return tosca;
-    }
-
-    /**
-     * Validates the fields of the object, including its key.
-     *
-     * @param fieldName name of the field containing this
-     * @return the result, or {@code null}
-     */
-    protected BeanValidationResult validateWithKey(@NonNull String fieldName) {
-        var result = super.validate(fieldName);
-
-        validateKeyVersionNotNull(result, "key", getConceptKey());
-
-        return result;
     }
 
     @Override
