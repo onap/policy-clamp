@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import lombok.Data;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.Validated;
@@ -82,16 +81,6 @@ public class JpaMessage extends Validated implements PfAuthorative<DocMessage> {
     public JpaMessage(@NonNull final String identificationId, @NonNull final DocMessage docMessage) {
         this.identificationId = identificationId;
         fromAuthorative(docMessage);
-    }
-
-    @Override
-    public BeanValidationResult validate(@NonNull String fieldName) {
-        var result = super.validate(fieldName);
-        if (!result.isValid()) {
-            return result;
-        }
-
-        return result;
     }
 
     @Override
