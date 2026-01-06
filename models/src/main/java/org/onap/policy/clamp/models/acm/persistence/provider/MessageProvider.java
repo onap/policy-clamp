@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -233,14 +233,8 @@ public class MessageProvider {
             return Optional.empty();
         }
         var job = new JpaMessageJob(identificationId.toString());
-        try {
-            var result = messageJobRepository.save(job);
-            return Optional.of(result.getJobId());
-        } catch (RuntimeException ex) {
-            // already exist a job with this identificationId
-            LOGGER.warn(ex.getMessage());
-        }
-        return Optional.empty();
+        var result = messageJobRepository.save(job);
+        return Optional.of(result.getJobId());
     }
 
     /**
