@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 Nordix Foundation.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.scanner.MonitoringScanner;
@@ -72,7 +73,7 @@ public class SupervisionScanner {
     }
 
     private void scanAcDefinition(UUID compositionId) {
-        var optJobId = messageProvider.createJob(compositionId);
+        var optJobId = createJob(compositionId);
         if (optJobId.isEmpty()) {
             return;
         }
@@ -82,11 +83,27 @@ public class SupervisionScanner {
 
     private void scanAutomationComposition(UUID instanceId,
             Map<UUID, AutomationCompositionDefinition> acDefinitionMap) {
-        var optJobId = messageProvider.createJob(instanceId);
+        var optJobId = createJob(instanceId);
         if (optJobId.isEmpty()) {
             return;
         }
         monitoringScanner.scanAutomationComposition(instanceId, acDefinitionMap);
         messageProvider.removeJob(optJobId.get());
+    }
+
+    /**
+     * Create new Job related to the identificationId.
+     *
+     * @param identificationId the instanceId or compositionId
+     *
+     * @return the jobId if the job has been created or empty if identificationId is already used
+     */
+    public Optional<String> createJob(UUID identificationId) {
+        try {
+            return messageProvider.createJob(identificationId);
+        } catch (RuntimeException ex) {
+            LOGGER.debug("Job with this identificationId {} already exists", identificationId);
+        }
+        return Optional.empty();
     }
 }
