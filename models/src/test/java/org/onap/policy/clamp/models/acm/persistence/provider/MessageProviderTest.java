@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -232,16 +232,6 @@ class MessageProviderTest {
 
         when(messageJobRepository.findByIdentificationId(identificationId.toString())).thenReturn(Optional.of(jpaJob));
         opt = messageProvider.createJob(identificationId);
-        assertThat(opt).isEmpty();
-    }
-
-    @Test
-    void testCreateJobFail() {
-        var messageJobRepository = mock(MessageJobRepository.class);
-        var identificationId = UUID.randomUUID();
-        when(messageJobRepository.save(any())).thenThrow(new ConstraintViolationException("", null, ""));
-        var messageProvider = new MessageProvider(mock(MessageRepository.class), messageJobRepository);
-        var opt = messageProvider.createJob(identificationId);
         assertThat(opt).isEmpty();
     }
 

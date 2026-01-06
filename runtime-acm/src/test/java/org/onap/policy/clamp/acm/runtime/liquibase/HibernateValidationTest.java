@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,14 @@
 
 package org.onap.policy.clamp.acm.runtime.liquibase;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionScanner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -49,6 +55,11 @@ class HibernateValidationTest {
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             DockerImageName.parse("registry.nordix.org/onaptest/postgres:14.1").asCompatibleSubstituteFor("postgres"));
 
+    @Autowired
+    private SupervisionScanner scanner;
+
+    private static final AtomicInteger parallelCount = new AtomicInteger();
+
     @DynamicPropertySource
     static void overrideProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
@@ -57,9 +68,18 @@ class HibernateValidationTest {
         registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
     }
 
-    // Dummy test: Hibernate validation runs during context startup and throws exception on validation failure
     @Test
-    void contextStartsAndHibernateValidationPasses() {
-        Assertions.assertTrue(true);
+    void createJobTest() {
+        var list = List.of(1, 2, 3, 4, 5);
+        var id = UUID.randomUUID();
+        list.stream().parallel().forEach(
+                x -> {
+                    var optJob = scanner.createJob(id);
+                    if (optJob.isPresent()) {
+                        parallelCount.getAndIncrement();
+                    }
+                }
+        );
+        assertEquals(1, parallelCount.get());
     }
 }
