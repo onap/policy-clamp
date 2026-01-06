@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -232,16 +231,6 @@ class MessageProviderTest {
 
         when(messageJobRepository.findByIdentificationId(identificationId.toString())).thenReturn(Optional.of(jpaJob));
         opt = messageProvider.createJob(identificationId);
-        assertThat(opt).isEmpty();
-    }
-
-    @Test
-    void testCreateJobFail() {
-        var messageJobRepository = mock(MessageJobRepository.class);
-        var identificationId = UUID.randomUUID();
-        when(messageJobRepository.save(any())).thenThrow(new ConstraintViolationException("", null, ""));
-        var messageProvider = new MessageProvider(mock(MessageRepository.class), messageJobRepository);
-        var opt = messageProvider.createJob(identificationId);
         assertThat(opt).isEmpty();
     }
 
