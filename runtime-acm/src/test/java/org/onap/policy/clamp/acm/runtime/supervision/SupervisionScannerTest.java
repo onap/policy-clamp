@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
@@ -289,6 +290,45 @@ class SupervisionScannerTest {
         verify(stageScanner, times(0)).scanStage(any(), any(), any(), any());
         verify(simpleScanner, times(0)).simpleScan(any(), any());
         verify(phaseScanner, times(0)).scanWithPhase(any(), any(), any());
+    }
+
+    @Test
+    void testScannerJobFail() {
+        var automationComposition = new AutomationComposition();
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
+        when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(Optional.of(automationComposition));
+
+        var stageScanner = mock(StageScanner.class);
+        var simpleScanner = mock(SimpleScanner.class);
+        when(simpleScanner.scanMessage(any(), any())).thenReturn(new UpdateSync());
+        var phaseScanner = mock(PhaseScanner.class);
+
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId()))
+                .thenThrow(new ConstraintViolationException("", null, ""));
+        var message = new  DocMessage();
+        when(messageProvider.getAllMessages(INSTANCE_ID)).thenReturn(List.of(message));
+        when(messageProvider.findInstanceMessages()).thenReturn(Set.of(INSTANCE_ID));
+
+        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMED);
+        var monitoringScanner = new MonitoringScanner(automationCompositionProvider, acDefinitionProvider,
+                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner, messageProvider);
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+                messageProvider, monitoringScanner);
+
+        supervisionScanner.run();
+        verify(stageScanner, times(0)).scanStage(any(), any(), any(), any());
+        verify(simpleScanner, times(0)).simpleScan(any(), any());
+        verify(phaseScanner, times(0)).scanWithPhase(any(), any(), any());
+        verify(messageProvider, times(0)).removeMessage(message.getMessageId());
+        verify(messageProvider, times(0)).removeJob(JOB_ID);
     }
 
     @Test
