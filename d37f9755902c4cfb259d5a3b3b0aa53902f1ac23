@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6dcac3f_4ce6c8e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-01-12T14:13:03Z",
+      "side": 1,
+      "message": "Dont we require to uplift the versions in pom first?",
+      "revId": "d37f9755902c4cfb259d5a3b3b0aa53902f1ac23",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
