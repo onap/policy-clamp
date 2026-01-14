@@ -22,8 +22,6 @@ package org.onap.policy.clamp.acm.runtime.liquibase;
 
 import java.io.PrintStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Stream;
 import liquibase.Liquibase;
@@ -41,19 +39,12 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 // This test class verifies that rollbacks for each Liquibase release tag works correctly.
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class LiquibaseRollbackTest {
-
-    @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            DockerImageName.parse("registry.nordix.org/onaptest/postgres:14.1").asCompatibleSubstituteFor("postgres"));
+class LiquibaseRollbackTest extends AbstractLiquibaseTestBase {
 
     private Liquibase liquibase;
 
@@ -158,12 +149,4 @@ class LiquibaseRollbackTest {
         database.setDefaultSchemaName(schema);
         return new Liquibase("db/changelog/db.changelog-master.yaml", new ClassLoaderResourceAccessor(), database);
     }
-
-    private Connection initConnection() throws SQLException {
-        return DriverManager.getConnection(
-                postgres.getJdbcUrl(),
-                postgres.getUsername(),
-                postgres.getPassword());
-    }
-
 }
