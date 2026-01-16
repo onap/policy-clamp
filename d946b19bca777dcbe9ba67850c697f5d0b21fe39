@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "feedb99f_370bccc8",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-01-16T11:13:55Z",
+      "side": 1,
+      "message": "I was mistaken, it is ConstraintViolationException is the one thrown here",
+      "range": {
+        "startLine": 105,
+        "startChar": 17,
+        "endLine": 105,
+        "endChar": 48
+      },
+      "revId": "d946b19bca777dcbe9ba67850c697f5d0b21fe39",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
