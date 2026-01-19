@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021-2022, 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2022, 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,43 +20,35 @@ package org.onap.policy.clamp.acm.participant.kubernetes.service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import lombok.NoArgsConstructor;
-import org.onap.policy.clamp.acm.participant.kubernetes.configurations.HelmRepositoryConfig;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.HelmClient;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
+import org.onap.policy.clamp.acm.participant.kubernetes.parameters.HelmRepositoryConfig;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ChartService {
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private ChartStore chartStore;
+    private final ChartStore chartStore;
 
-    private HelmClient helmClient;
+    private final HelmClient helmClient;
 
-    private HelmRepositoryConfig helmRepositoryConfig;
+    private final HelmRepositoryConfig helmRepositoryConfig;
 
-    /**
-     * Instantiates the ChartService with the specified dependencies.
-     *
-     * @param chartStore the store for managing Helm chart information
-     * @param helmClient the client for interacting with Helm
-     * @param helmRepositoryConfig the configuration for Helm repositories
-     */
-    @Autowired
-    public ChartService(ChartStore chartStore, HelmClient helmClient, HelmRepositoryConfig helmRepositoryConfig) {
-        this.chartStore = chartStore;
-        this.helmClient = helmClient;
-        this.helmRepositoryConfig = helmRepositoryConfig;
-    }
+    private static final Coder coder = new StandardCoder();
 
     /**
      * Get all the installed charts.
@@ -98,6 +90,8 @@ public class ChartService {
         chartStore.deleteChart(chart);
     }
 
+    private static class Repositories extends ArrayList<HelmRepository> {}
+
     /**
      * Install a helm chart.
      * @param chart name and version.
@@ -108,22 +102,28 @@ public class ChartService {
     public boolean installChart(ChartInfo chart) throws ServiceException, IOException {
         boolean permittedRepo = false;
         if (chart.getRepository() == null) {
-            String repoName = findChartRepo(chart);
+            var repoName = findChartRepo(chart);
             if (repoName == null) {
                 logger.error("Chart repository could not be found. Skipping chart Installation "
                     + "for the chart {} ", chart.getChartId().getName());
                 return false;
             } else {
-                HelmRepository repo = HelmRepository.builder().repoName(repoName).build();
+                var repo = HelmRepository.builder().repoName(repoName).build();
                 chart.setRepository(repo);
             }
         } else {
             // Add a remote repository if passed via TOSCA
             // and check whether the repo is permitted
-            for (HelmRepository repo : helmRepositoryConfig.getRepos()) {
+            Repositories repos = null;
+            try {
+                repos = coder.decode(helmRepositoryConfig.getRepos(), Repositories.class);
+            } catch (CoderException e) {
+                throw new ServiceException(e.getMessage());
+            }
+            for (var repo : repos) {
+                var protocols = Arrays.stream(helmRepositoryConfig.getProtocols().split(",")).toList();
                 if (repo.getAddress().equals(chart.getRepository().getAddress())
-                        && helmRepositoryConfig.getProtocols()
-                    .contains(chart.getRepository().getAddress().split(":")[0])) {
+                        && protocols.contains(chart.getRepository().getAddress().split(":")[0])) {
                     configureRepository(chart.getRepository());
                     permittedRepo = true;
                     break;

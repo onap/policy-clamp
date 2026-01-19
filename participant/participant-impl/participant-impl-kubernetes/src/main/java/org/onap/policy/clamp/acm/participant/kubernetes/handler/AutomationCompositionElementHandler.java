@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -55,10 +54,20 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
     private static final Coder CODER = new StandardCoder();
 
     private final ChartService chartService;
+    private final PodStatusValidator podStatusValidator;
 
-    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, ChartService chartService) {
+    /**
+     * Constructor.
+     *
+     * @param intermediaryApi the ParticipantIntermediaryApi
+     * @param chartService the ChartService
+     * @param podStatusValidator the PodStatusValidator
+     */
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, ChartService chartService,
+            PodStatusValidator podStatusValidator) {
         super(intermediaryApi);
         this.chartService = chartService;
+        this.podStatusValidator = podStatusValidator;
     }
 
 
@@ -153,8 +162,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
             int podStatusCheckInterval, InstanceElementDto instanceElement) throws InterruptedException,
             PfModelException {
 
-        var result = new PodStatusValidator(chart, timeout, podStatusCheckInterval);
-        result.run();
+        podStatusValidator.run(timeout, podStatusCheckInterval, chart);
         LOGGER.info("Pod Status Validator Completed");
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
