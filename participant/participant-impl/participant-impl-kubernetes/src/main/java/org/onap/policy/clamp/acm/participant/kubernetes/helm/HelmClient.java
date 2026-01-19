@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ======================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ======================================================================
@@ -26,7 +26,7 @@ import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -35,28 +35,22 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Client to talk with Helm cli. Supports helm3 + version
  */
 @Component
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class HelmClient {
 
-    private ChartStore chartStore;
+    private final ChartStore chartStore;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String PATH_DELIMITER = "/";
     public static final String COMMAND_SH = "/bin/sh";
     private static final String COMMAND_HELM = "/usr/local/bin/helm";
     public static final String COMMAND_KUBECTL = "/usr/local/bin/kubectl";
-
-    @Autowired
-    public HelmClient(ChartStore chartStore) {
-        this.chartStore = chartStore;
-    }
 
     /**
      * Install a chart.
@@ -95,7 +89,6 @@ public class HelmClient {
         return false;
     }
 
-
     /**
      * Finds helm chart repository for the chart.
      *
@@ -129,11 +122,9 @@ public class HelmClient {
      */
     public String verifyConfiguredRepo(ChartInfo chart) throws ServiceException {
         logger.info("Looking for helm chart {} in all the configured helm repositories", chart.getChartId().getName());
-        String repository;
         var builder = helmRepoVerifyCommand(chart.getChartId().getName());
-        String output = executeCommand(builder);
-        repository = verifyOutput(output, chart.getChartId().getName());
-        return repository;
+        var output = executeCommand(builder);
+        return verifyOutput(output, chart.getChartId().getName());
     }
 
     /**
@@ -145,7 +136,6 @@ public class HelmClient {
     public void uninstallChart(ChartInfo chart) throws ServiceException {
         executeCommand(prepareUnInstallCommand(chart));
     }
-
 
     /**
      * Execute helm cli bash commands.
@@ -184,7 +174,7 @@ public class HelmClient {
 
     private boolean checkNamespaceExists(String namespace) throws ServiceException {
         logger.info("Check if namespace {} exists on the cluster", namespace);
-        String output = executeCommand(prepareVerifyNamespaceCommand(namespace));
+        var output = executeCommand(prepareVerifyNamespaceCommand(namespace));
         return !output.isEmpty();
     }
 
@@ -218,7 +208,7 @@ public class HelmClient {
         try {
             logger.debug("Verify the repo already exist in helm repositories");
             var helmArguments = List.of(COMMAND_SH, "-c", COMMAND_HELM + " repo list | grep " + repo.getRepoName());
-            String response = executeCommand(new ProcessBuilder().command(helmArguments));
+            var response = executeCommand(new ProcessBuilder().command(helmArguments));
             if (StringUtils.isEmpty(response)) {
                 return false;
             }

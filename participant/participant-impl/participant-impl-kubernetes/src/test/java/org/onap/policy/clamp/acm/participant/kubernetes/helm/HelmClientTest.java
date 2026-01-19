@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021,2025-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,10 +40,6 @@ import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
@@ -51,27 +48,14 @@ import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartStore;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.FileSystemUtils;
 
 
-@ExtendWith(SpringExtension.class)
 class HelmClientTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
-
-    @InjectMocks
-    @Spy
-    private HelmClient helmClient = new HelmClient();
-
-    @Mock
-    ChartStore chartStore;
-
-    @Mock
-    HelmRepository repo;
-
 
     @BeforeAll
     static void init() throws CoderException {
@@ -85,6 +69,8 @@ class HelmClientTest {
 
     @Test
     void test_installChart() throws ServiceException {
+        var chartStore = mock(ChartStore.class);
+        var helmClient = spy(new HelmClient(chartStore));
         doReturn("success").when(helmClient).executeCommand(any());
         doReturn(new File("/target/tmp/override.yaml")).when(chartStore)
             .getOverrideFile(any());
@@ -96,14 +82,17 @@ class HelmClientTest {
 
         doReturn("").when(helmClient).executeCommand(any());
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
-
     }
 
     @Test
     void test_addRepository() throws ServiceException {
+        var chartStore = mock(ChartStore.class);
+        var helmClient = spy(new HelmClient(chartStore));
         doReturn("").when(helmClient).executeCommand(any());
-        when(repo.getRepoName()).thenReturn("RepoName");
-        when(repo.getAddress()).thenReturn("http://localhost:8080");
+
+        var repo = new HelmRepository();
+        repo.setRepoName("RepoName");
+        repo.setAddress("http://localhost:8080");
         assertDoesNotThrow(() -> helmClient.addRepository(repo));
 
         doReturn("failed").when(helmClient).executeCommand(any());
@@ -112,6 +101,8 @@ class HelmClientTest {
 
     @Test
     void test_findChartRepository() throws IOException, ServiceException {
+        var chartStore = mock(ChartStore.class);
+        var helmClient = spy(new HelmClient(chartStore));
         String tmpPath = "target/tmp/dummyChart/1.0/";
         doReturn("nginx-stable/nginx-ingress\t0.9.3\t1.11.3"
                 + " \tNGINX Ingress Controller").when(helmClient).executeCommand(any());
@@ -135,6 +126,8 @@ class HelmClientTest {
 
     @Test
     void test_uninstallChart() throws ServiceException {
+        var chartStore = mock(ChartStore.class);
+        var helmClient = spy(new HelmClient(chartStore));
         doReturn("success").when(helmClient).executeCommand(any());
         helmClient.uninstallChart(charts.get(0));
         doThrow(ServiceException.class).when(helmClient).executeCommand(any());
@@ -145,9 +138,10 @@ class HelmClientTest {
 
     @Test
     void test_verifyConfiguredRepoForInvalidChart() throws ServiceException {
+        var chartStore = mock(ChartStore.class);
+        var helmClient = spy(new HelmClient(chartStore));
         doReturn("").when(helmClient).executeCommand(any());
         String configuredRepo = helmClient.verifyConfiguredRepo(charts.get(1));
         assertNull(configuredRepo);
     }
-
 }
