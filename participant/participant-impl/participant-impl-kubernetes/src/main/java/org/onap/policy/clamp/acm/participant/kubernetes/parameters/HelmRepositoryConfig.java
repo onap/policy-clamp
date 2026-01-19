@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022, 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,16 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.kubernetes.configurations;
+package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 
-import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
-import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
-@Component
 @ConfigurationProperties(prefix = "helm")
 @Data
 public class HelmRepositoryConfig {
 
-    private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private String repos = "[]";
 
-    private List<HelmRepository> repos = new ArrayList<>();
-
-    private List<String> protocols = new ArrayList<>();
+    private String protocols = "";
 }
