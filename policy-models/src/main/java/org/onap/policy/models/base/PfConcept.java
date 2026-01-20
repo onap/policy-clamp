@@ -23,7 +23,6 @@ package org.onap.policy.models.base;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -55,37 +54,6 @@ public abstract class PfConcept implements Serializable, Comparable<PfConcept> {
     public abstract PfKey getKey();
 
     /**
-     * Gets a list of all keys for this concept and all concepts that are defined or referenced by this concept and its
-     * sub-concepts.
-     *
-     * @return the keys used by this concept and its contained concepts
-     */
-    public abstract List<PfKey> getKeys();
-
-    /**
-     * Clean this concept, tidy up any superfluous information such as leading and trailing white space.
-     */
-    public abstract void clean();
-
-    @Override
-    public abstract boolean equals(Object otherObject);
-
-    @Override
-    public abstract String toString();
-
-    @Override
-    public abstract int hashCode();
-
-    /**
-     * Gets the ID string of this concept.
-     *
-     * @return the ID string of this concept
-     */
-    public String getId() {
-        return getKey().getId();
-    }
-
-    /**
      * Gets the name of this concept.
      *
      * @return the name of this concept
@@ -101,16 +69,5 @@ public abstract class PfConcept implements Serializable, Comparable<PfConcept> {
      */
     public String getVersion() {
         return getKey().getVersion();
-    }
-
-    /**
-     * Checks if this key matches the given key ID.
-     *
-     * @param id the key ID to match against
-     * @return true, if this key matches the ID
-     */
-    public final boolean matchesId(@NonNull final String id) {
-        // Check the ID
-        return getId().equals(id);
     }
 }

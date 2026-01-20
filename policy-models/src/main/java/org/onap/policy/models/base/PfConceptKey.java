@@ -33,8 +33,7 @@ import org.onap.policy.common.utils.validation.Assertions;
 
 /**
  * A concept key uniquely identifies every first order entity in the system. Every first order concept in the system
- * must have an {@link PfConceptKey} to identify it. Concepts that are wholly contained in another concept are
- * identified using a {@link PfReferenceKey} key.
+ * must have an {@link PfConceptKey} to identify it.
  *
  * <p>Key validation checks that the name and version fields match the NAME_REGEXP and VERSION_REGEXP
  * regular expressions respectively.
@@ -96,14 +95,5 @@ public class PfConceptKey extends PfKeyImpl {
 
     public void setVersion(@NonNull final String version) {
         this.version = Assertions.validateStringParameter(VERSION_TOKEN, version, getVersionRegEx());
-    }
-
-    /**
-     * Get a null concept key.
-     *
-     * @return a null concept key
-     */
-    public static PfConceptKey getNullKey() {
-        return new PfConceptKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION);
     }
 }

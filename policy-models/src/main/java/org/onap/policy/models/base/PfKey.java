@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019, 2023 Nordix Foundation.
+ *  Copyright (C) 2019, 2023,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,9 +83,6 @@ public abstract class PfKey extends PfConcept {
         super(copyConcept);
     }
 
-    @Override
-    public abstract String getId();
-
     /**
      * Return the result of a compatibility check of two keys.
      *
@@ -93,11 +90,4 @@ public abstract class PfKey extends PfConcept {
      * @return the compatibility result of the check
      */
     public abstract Compatibility getCompatibility(@NonNull PfKey otherKey);
-
-    /**
-     * Check if a key equals its null key.
-     *
-     * @return true, if the key is a null key
-     */
-    public abstract boolean isNullKey();
 }

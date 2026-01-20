@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022,2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.PfNameVersion;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -134,7 +135,7 @@ public final class DocUtil {
             var authoritiveImpl = mapFunc.apply(incomingConceptEntry.getValue());
 
             // After all that, save the map entry
-            conceptMap.put(conceptKey.getId(), authoritiveImpl);
+            conceptMap.put(PfUtils.getId(conceptKey), authoritiveImpl);
         }
 
         return conceptMap;
@@ -148,8 +149,9 @@ public final class DocUtil {
         if (StringUtils.isBlank(conceptField) || keyFieldValue.equals(conceptField)) {
             return keyFieldValue;
         } else {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Key " + conceptKey.getId() + " field "
-                    + keyFieldValue + " does not match the value " + conceptField + " in the concept field");
+            var msg = "Key " + PfUtils.getId(conceptKey) + " field "
+                    + keyFieldValue + " does not match the value " + conceptField + " in the concept field";
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, msg);
         }
     }
 
@@ -300,7 +302,7 @@ public final class DocUtil {
     private static <A extends DocToscaEntity<?>> Set<String> toSetToscaReferences(Map<String, A> map) {
         Set<String> result = new HashSet<>();
         for (var entity : map.values()) {
-            result.add(entity.getDocConceptKey().getId()); // ref for type
+            result.add(PfUtils.getId(entity.getDocConceptKey())); // ref for type
             result.add(entity.getDocConceptKey().getName()); // ref for derived from
         }
         return result;

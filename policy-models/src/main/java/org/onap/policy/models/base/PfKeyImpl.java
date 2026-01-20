@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2020, 2023 Nordix Foundation.
+ *  Copyright (C) 2019-2020, 2023,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,6 @@
 package org.onap.policy.models.base;
 
 import java.io.Serial;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -100,41 +98,6 @@ public abstract class PfKeyImpl extends PfKey {
     }
 
     @Override
-    public List<PfKey> getKeys() {
-        final List<PfKey> keyList = new ArrayList<>();
-        keyList.add(getKey());
-        return keyList;
-    }
-
-    @Override
-    public String getId() {
-        return getName() + ':' + getVersion();
-    }
-
-    @Override
-    public boolean isNullKey() {
-        return (PfKey.NULL_KEY_NAME.equals(getName()) && PfKey.NULL_KEY_VERSION.equals(getVersion()));
-    }
-
-    /**
-     * Determines if the name is "null".
-     *
-     * @return {@code true} if the name is null, {@code false} otherwise
-     */
-    public boolean isNullName() {
-        return PfKey.NULL_KEY_NAME.equals(getName());
-    }
-
-    /**
-     * Determines if the version is "null".
-     *
-     * @return {@code true} if the version is null, {@code false} otherwise
-     */
-    public boolean isNullVersion() {
-        return PfKey.NULL_KEY_VERSION.equals(getVersion());
-    }
-
-    @Override
     public PfKey.Compatibility getCompatibility(@NonNull final PfKey otherKey) {
         if (!(otherKey instanceof PfKeyImpl otherConceptKey)) {
             return Compatibility.DIFFERENT;
@@ -161,12 +124,6 @@ public abstract class PfKeyImpl extends PfKey {
         }
 
         return Compatibility.PATCH;
-    }
-
-    @Override
-    public void clean() {
-        setName(getName());
-        setVersion(getVersion());
     }
 
     @Override
