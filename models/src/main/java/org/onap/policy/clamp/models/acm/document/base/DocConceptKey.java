@@ -23,14 +23,12 @@ package org.onap.policy.clamp.models.acm.document.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serial;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
 import org.onap.policy.common.utils.validation.Assertions;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfKeyImpl;
 
 @Data
@@ -52,12 +50,6 @@ public class DocConceptKey extends PfKeyImpl {
      */
     public DocConceptKey() {
         this(NULL_KEY_NAME, NULL_KEY_VERSION);
-    }
-
-    @Override
-    @JsonIgnore
-    public String getId() {
-        return name + ":" + version;
     }
 
     /**
@@ -93,11 +85,5 @@ public class DocConceptKey extends PfKeyImpl {
     @JsonIgnore
     public PfKeyImpl getKey() {
         return this;
-    }
-
-    @Override
-    @JsonIgnore
-    public List<PfKey> getKeys() {
-        return super.getKeys();
     }
 }

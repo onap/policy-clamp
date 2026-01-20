@@ -55,7 +55,6 @@ class PfKeyImplTest {
     private static final MyKey buildKey1 = new MyKey(NAME, "0.0.3+1");
     private static final MyKey buildKey2 = new MyKey(NAME, "0.1.0-1");
     private static final MyKey buildKey3 = new MyKey(NAME, "3.0.0-SNAPSHOT");
-    private static final MyKey buildKey4 = new MyKey(NAME, "1.0.0-rc.1");
 
     /**
      * Sets data in Keys for the tests.
@@ -67,7 +66,7 @@ class PfKeyImplTest {
         someKey0 = new MyKey();
         someKey1 = new MyKey(NAME, VERSION001);
         someKey2 = new MyKey(someKey1);
-        someKey3 = new MyKey(someKey1.getId());
+        someKey3 = new MyKey(PfUtils.getId(someKey1));
 
         someKey0.setName("zero");
         someKey0.setVersion("0.0.2");
@@ -95,24 +94,23 @@ class PfKeyImplTest {
         assertThatThrownBy(() -> new MyKey((MyKey) null))
             .hasMessageMatching("^copyConcept is marked non-null but is null$");
 
-        assertTrue(someKey.isNullKey());
+        assertTrue(PfUtils.isNullKey(someKey));
         assertEquals(new MyKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION), someKey);
 
         MyKey someKey11 = new MyKey(NAME, VERSION001);
         MyKey someKey22 = new MyKey(someKey11);
-        MyKey someKey33 = new MyKey(someKey11.getId());
+        MyKey someKey33 = new MyKey(PfUtils.getId(someKey11));
         assertEquals(someKey11, someKey22);
         assertEquals(someKey11, someKey33);
-        assertFalse(someKey11.isNullKey());
-        assertFalse(someKey11.isNullVersion());
+        assertFalse(PfUtils.isNullKey(someKey11));
+        assertFalse(PfUtils.isNullVersion(someKey11));
 
         assertEquals(someKey22, someKey11.getKey());
-        assertEquals(1, someKey11.getKeys().size());
     }
 
     @Test
     void testCompatibilityConceptKey() {
-        assertEquals("name:0.1.2", someKey4.getId());
+        assertEquals("name:0.1.2", PfUtils.getId(someKey4));
 
         assertThatThrownBy(() -> someKey0.getCompatibility(null)).isInstanceOf(NullPointerException.class)
             .hasMessageMatching("^otherKey is marked non-null but is null$");
@@ -135,7 +133,6 @@ class PfKeyImplTest {
 
     @Test
     void testCleanConceptKey() {
-        someKey0.clean();
         assertNotNull(someKey0.toString());
 
         MyKey someKey7 = new MyKey(someKey1);
@@ -151,7 +148,7 @@ class PfKeyImplTest {
 
         MyKey someKey8 = new MyKey();
         someKey8.setVersion(VERSION001);
-        assertFalse(someKey8.isNullKey());
+        assertFalse(PfUtils.isNullKey(someKey8));
     }
 
     @Test

@@ -32,38 +32,27 @@ import org.junit.jupiter.api.Test;
 class PfConceptKeyTest {
 
     private static final String VERSION001 = "0.0.1";
-    private static final String ID_IS_NULL = "id is marked non-null but is null$";
 
     @Test
     void testConceptKey() {
         PfConceptKey someKey0 = new PfConceptKey();
-        assertEquals(PfConceptKey.getNullKey(), someKey0);
-        assertTrue(someKey0.isNullKey());
+        assertEquals(PfUtils.getNullKey(), someKey0);
+        assertTrue(PfUtils.isNullKey(someKey0));
         assertEquals("PfConceptKey(name=NULL, version=0.0.0)", someKey0.toString());
 
         PfConceptKey someKey1 = new PfConceptKey("my-name", VERSION001);
         PfConceptKey someKey2 = new PfConceptKey(someKey1);
-        PfConceptKey someKey3 = new PfConceptKey(someKey1.getId());
+        PfConceptKey someKey3 = new PfConceptKey(PfUtils.getId(someKey1));
         assertEquals(someKey1, someKey2);
         assertEquals(someKey1, someKey3);
-        assertFalse(someKey1.isNullVersion());
-        assertFalse(someKey1.isNullName());
+        assertFalse(PfUtils.isNullVersion(someKey1));
+        assertFalse(PfUtils.isNullName(someKey1));
         assertEquals("PfConceptKey(name=my-name, version=0.0.1)", someKey1.toString());
 
         assertEquals("my-name", someKey1.getName());
         assertEquals(VERSION001, someKey1.getVersion());
-
         assertEquals(someKey2, someKey1.getKey());
-        assertEquals(1, someKey1.getKeys().size());
-
-        PfConcept pfc = new PfConceptKey();
-        assertEquals(PfConceptKey.getNullKey().getId(), pfc.getId());
-
-        assertTrue(PfConceptKey.getNullKey().matchesId(pfc.getId()));
-
-        assertTrue(PfConceptKey.getNullKey().isNullKey());
-
-        assertThatThrownBy(() -> PfConceptKey.getNullKey().matchesId(null)).hasMessageMatching(ID_IS_NULL);
+        assertTrue(PfUtils.isNullKey(PfUtils.getNullKey()));
 
         assertThatThrownBy(() -> someKey0.setName(null)).isInstanceOf(NullPointerException.class)
             .hasMessageMatching("^name is marked non-null but is null$");

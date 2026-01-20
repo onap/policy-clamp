@@ -235,6 +235,5 @@ class DocToscaServiceTemplateTest {
         assertThatThrownBy(() -> docConceptKey.setName(null)).   isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> docConceptKey.setVersion(null)).   isInstanceOf(NullPointerException.class);
         assertEquals("NULL", docConceptKey.getKey().getName());
-        assertThat(docConceptKey.getKeys()).hasSize(1);
     }
 }

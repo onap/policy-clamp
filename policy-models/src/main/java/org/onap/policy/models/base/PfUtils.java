@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2021, 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2019-2021, 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,55 @@ import org.apache.commons.collections4.MapUtils;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PfUtils {
+
+    /**
+     * Gets the ID string of this concept.
+     *
+     * @param key  the PfKey object
+     * @return the ID string of this concept
+     */
+    public static String getId(PfKey key) {
+        return key.getName() + ':' + key.getVersion();
+    }
+
+    /**
+     * Determines if the name is "null".
+     *
+     * @param key  the PfKeyImpl object
+     * @return {@code true} if the name is null, {@code false} otherwise
+     */
+    public static boolean isNullName(PfKeyImpl key) {
+        return PfKey.NULL_KEY_NAME.equals(key.getName());
+    }
+
+    /**
+     * Determines if the version is "null".
+     *
+     * @param key  the PfKeyImpl object
+     * @return {@code true} if the version is null, {@code false} otherwise
+     */
+    public static boolean isNullVersion(PfKeyImpl key) {
+        return PfKey.NULL_KEY_VERSION.equals(key.getVersion());
+    }
+
+    /**
+     * Check if a key equals its null key.
+     *
+     * @param key  the PfKey object
+     * @return true, if the key is a null key
+     */
+    public static boolean isNullKey(PfKey key) {
+        return (PfKey.NULL_KEY_NAME.equals(key.getName()) && PfKey.NULL_KEY_VERSION.equals(key.getVersion()));
+    }
+
+    /**
+     * Get a null concept key.
+     *
+     * @return a null concept key
+     */
+    public static PfConceptKey getNullKey() {
+        return new PfConceptKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION);
+    }
 
     /**
      * Compare two objects using their equals methods, nulls are allowed.

@@ -24,6 +24,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfKeyImpl;
+import org.onap.policy.models.base.PfUtils;
 
 public class VerifyKeyValidator implements ConstraintValidator<VerifyKey, PfKey> {
 
@@ -43,19 +44,19 @@ public class VerifyKeyValidator implements ConstraintValidator<VerifyKey, PfKey>
         context.disableDefaultConstraintViolation();
         boolean valid = true;
 
-        if (annotation.keyNotNull() && pfkey.isNullKey()) {
+        if (annotation.keyNotNull() && PfUtils.isNullKey(pfkey)) {
             context.buildConstraintViolationWithTemplate("is a null key").addConstraintViolation();
             return false;
         }
 
-        if (pfkey instanceof PfKeyImpl keyimpl) {
-            if (annotation.nameNotNull() && keyimpl.isNullName()) {
+        if (pfkey instanceof PfKeyImpl keyImpl) {
+            if (annotation.nameNotNull() && PfUtils.isNullName(keyImpl)) {
                 context.buildConstraintViolationWithTemplate("is null")
                     .addPropertyNode("name").addConstraintViolation();
                 valid = false;
             }
 
-            if (annotation.versionNotNull() && keyimpl.isNullVersion()) {
+            if (annotation.versionNotNull() && PfUtils.isNullVersion(keyImpl)) {
                 context.buildConstraintViolationWithTemplate("is null")
                     .addPropertyNode("version").addConstraintViolation();
                 valid = false;

@@ -32,6 +32,7 @@ import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplat
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaTopologyTemplate;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
+import org.onap.policy.models.base.PfUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ToscaServiceTemplateValidation {
@@ -153,7 +154,8 @@ public final class ToscaServiceTemplateValidation {
             final Collection<DocConceptKey> dataTypeKeyCollection, Map<String, Set<String>> references) {
         for (DocConceptKey dataTypeKey : dataTypeKeyCollection) {
             if (!isTypePresent(dataTypeKey, references.get(DocUtil.REF_DATA_TYPES))) {
-                result.addResult("data type", dataTypeKey.getId(), ValidationStatus.INVALID, NOT_FOUND);
+                result.addResult(
+                        "data type", PfUtils.getId(dataTypeKey), ValidationStatus.INVALID, NOT_FOUND);
             }
         }
     }
@@ -198,7 +200,7 @@ public final class ToscaServiceTemplateValidation {
         if (reference.isEmpty()) {
             return false;
         }
-        return reference.contains(key.getId());
+        return reference.contains(PfUtils.getId(key));
     }
 
     private static String extractDerivedFrom(DocToscaEntity<?> entityType, final BeanValidationResult result) {
@@ -211,7 +213,7 @@ public final class ToscaServiceTemplateValidation {
             return null;
         }
         if (entityType.getName().equals(parentEntityTypeKey)) {
-            result.addResult("entity type", entityType.getDocConceptKey().getId(), ValidationStatus.INVALID,
+            result.addResult("entity type", PfUtils.getId(entityType.getDocConceptKey()), ValidationStatus.INVALID,
                     "ancestor of itself");
             return null;
         }

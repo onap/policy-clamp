@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -42,7 +42,7 @@ public class AutomationCompositionElement {
     private UUID id = UUID.randomUUID();
 
     @NonNull
-    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
+    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfUtils.getNullKey());
 
     @NonNull
     private UUID participantId = UUID.randomUUID();
