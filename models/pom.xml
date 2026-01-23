@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
         <artifactId>dependencies</artifactId>
-        <version>9.0.0-SNAPSHOT</version>
+        <version>9.0.0</version>
         <relativePath>../clamp-parent/dependencies/pom.xml</relativePath>
     </parent>
 
