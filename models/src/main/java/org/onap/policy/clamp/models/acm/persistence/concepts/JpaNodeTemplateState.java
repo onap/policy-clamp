@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -35,8 +37,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
@@ -62,6 +62,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     @Column
     private String participantId;
 
+    @Valid
     @VerifyKey
     @NotNull
     @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name"))

@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import jakarta.validation.constraints.Pattern;
 import java.lang.reflect.Field;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,8 +38,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.ValidationResult;
-import org.onap.policy.common.parameters.annotations.Pattern;
 import org.onap.policy.models.base.PfKey.Compatibility;
 
 class PfKeyImplTest {
@@ -201,7 +202,7 @@ class PfKeyImplTest {
         nameField.set(testKey, "TheKey");
         nameField.setAccessible(false);
         assertThat(validationResult.getResult()).contains("\"name\"").doesNotContain("\"version\"")
-            .contains("does not match regular expression " + PfKey.NAME_REGEXP);
+            .contains("must match \"" + PfKey.NAME_REGEXP + "\"");
 
         Field versionField = testKey.getClass().getDeclaredField("version");
         versionField.setAccessible(true);
@@ -210,7 +211,7 @@ class PfKeyImplTest {
         versionField.set(testKey, VERSION001);
         versionField.setAccessible(false);
         assertThat(validationResult2.getResult()).doesNotContain("\"name\"").contains("\"version\"")
-            .contains("does not match regular expression " + PfKey.VERSION_REGEXP);
+                .contains("must match \"" + PfKey.VERSION_REGEXP + "\"");
     }
 
     @Getter

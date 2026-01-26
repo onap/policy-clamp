@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019, 2024 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,23 +21,21 @@
 
 package org.onap.policy.common.parameters.topic;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
 
 /**
  * Class to hold topic details such as name, server and topicCommInfrastructure.
  *
  * @author Ajith Sreekumar (ajith.sreekumar@est.tech)
  */
-@NotNull
-@NotBlank
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class TopicParameters extends BusTopicParams {
+    @NotBlank
     private String topicCommInfrastructure;
 
     public TopicParameters() {
