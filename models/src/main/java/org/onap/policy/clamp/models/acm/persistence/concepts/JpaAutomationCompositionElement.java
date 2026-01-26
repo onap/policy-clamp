@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -30,6 +30,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -42,12 +44,9 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -60,8 +59,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Table(name = "AutomationCompositionElement")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaAutomationCompositionElement extends Validated
+@EqualsAndHashCode
+public class JpaAutomationCompositionElement
     implements PfAuthorative<AutomationCompositionElement>, Comparable<JpaAutomationCompositionElement> {
 
     @Id
@@ -72,6 +71,7 @@ public class JpaAutomationCompositionElement extends Validated
     @NotNull
     private String instanceId;
 
+    @Valid
     @VerifyKey
     @NotNull
     @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))

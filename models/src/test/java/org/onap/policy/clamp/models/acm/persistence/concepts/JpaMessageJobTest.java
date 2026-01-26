@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.BeanValidator;
 
 
 class JpaMessageJobTest {
@@ -32,19 +33,16 @@ class JpaMessageJobTest {
     @Test
     void testJpaMessageJobConstructor() {
         assertThatThrownBy(() -> new JpaMessageJob(null))
-                .hasMessageMatching("identificationId is marked .*ull but is null");
+                .hasMessageMatching("identificationId is marked non-null but is null");
     }
 
     @Test
     void testJpaMessageValidation() {
         var jpaMessageJob = new JpaMessageJob();
 
-        assertThatThrownBy(() -> jpaMessageJob.validate(null))
-                .hasMessageMatching("fieldName is marked .*ull but is null");
-
-        assertTrue(jpaMessageJob.validate("").isValid());
+        assertTrue(BeanValidator.validate("", jpaMessageJob).isValid());
 
         jpaMessageJob.setJobStarted(null);
-        assertFalse(jpaMessageJob.validate("").isValid());
+        assertFalse(BeanValidator.validate("", jpaMessageJob).isValid());
     }
 }

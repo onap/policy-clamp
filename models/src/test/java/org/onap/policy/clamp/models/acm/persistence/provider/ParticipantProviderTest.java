@@ -69,7 +69,7 @@ class ParticipantProviderTest {
         "src/test/resources/providers/TestAutomationCompositions.json";
 
     private static final String NODE_TEMPLATE_STATE_JSON = "src/test/resources/providers/NodeTemplateState.json";
-    private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
+    private static final String LIST_IS_NULL = ".*. is marked non-null but is null";
     private static final UUID INVALID_ID = UUID.randomUUID();
 
     private final List<Participant> inputParticipants = new ArrayList<>();

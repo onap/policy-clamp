@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 package org.onap.policy.clamp.models.acm.document.concepts;
 
 import com.google.gson.annotations.SerializedName;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,9 +30,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -47,7 +46,6 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
     public static final String DEFAULT_VERSION = "1.0.0";
 
     @SerializedName("tosca_definitions_version")
-    @NotNull
     @NotBlank
     private String toscaDefinitionsVersion;
 

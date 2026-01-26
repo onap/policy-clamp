@@ -30,11 +30,11 @@ class StateDefinitionTest {
     void testNonNull() {
         var stateDefinition = new StateDefinition<String>(2, null);
         assertThatThrownBy(() -> stateDefinition.put(null, null))
-            .hasMessageMatching("keys is marked .*ull but is null");
+            .hasMessageMatching("keys is marked non-null but is null");
         assertThatThrownBy(() -> stateDefinition.put(new String[] {"", ""}, null))
-            .hasMessageMatching("value is marked .*ull but is null");
+            .hasMessageMatching("value is marked non-null but is null");
         assertThatThrownBy(() -> stateDefinition.get(null))
-            .hasMessageMatching("keys is marked .*ull but is null");
+            .hasMessageMatching("keys is marked non-null but is null");
     }
 
     @Test

@@ -35,7 +35,7 @@ class ToscaTopologyTemplateTest {
     void testToscTopologyTemplate() {
         assertThatThrownBy(() -> {
             new ToscaTopologyTemplate(null);
-        }).hasMessageMatching("copyObject is marked .*on.*ull but is null");
+        }).hasMessageMatching("copyObject is marked non-null but is null");
 
         assertNotNull(new ToscaTopologyTemplate(new ToscaTopologyTemplate()));
 

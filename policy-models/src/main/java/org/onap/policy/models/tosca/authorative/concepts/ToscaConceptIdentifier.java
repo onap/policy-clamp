@@ -3,7 +3,7 @@
  * ONAP Policy Models
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import java.io.Serializable;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.onap.policy.common.parameters.BeanValidationResult;
-import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.models.base.PfKey;
 
 /**
@@ -38,7 +36,6 @@ public class ToscaConceptIdentifier extends ToscaNameVersion
                 implements Serializable, Comparable<ToscaConceptIdentifier> {
     private static final long serialVersionUID = 8010649773816325786L;
 
-
     public ToscaConceptIdentifier(@NonNull String name, @NonNull String version) {
         super(name, version);
     }
@@ -49,20 +46,6 @@ public class ToscaConceptIdentifier extends ToscaNameVersion
 
     public ToscaConceptIdentifier(ToscaConceptIdentifier source) {
         super(source);
-    }
-
-    /**
-     * Validates that appropriate fields are populated for an incoming call to the PAP REST API.
-     *
-     * @return the validation result
-     */
-    public ValidationResult validatePapRest() {
-        var result = new BeanValidationResult("identifier", this);
-
-        result.validateNotNull("name", getName());
-        result.validateNotNull("version", getVersion());
-
-        return result;
     }
 
     @Override

@@ -38,12 +38,13 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
+import org.onap.policy.common.parameters.BeanValidator;
 
 /**
  * Test the{@link JpaAutomationCompositionTest} class.
  */
 class JpaAutomationCompositionTest {
-    private static final String NULL_ERROR = " is marked .*ull but is null";
+    private static final String NULL_ERROR = " is marked non-null but is null";
     private static final String INSTANCE_ID = "709c62b3-8918-41b9-a747-d21eb79c6c20";
     private static final String COMPOSITION_ID = "709c62b3-8918-41b9-a747-e21eb79c6c41";
 
@@ -94,10 +95,7 @@ class JpaAutomationCompositionTest {
     void testJpaAutomationCompositionValidation() {
         var testJpaAutomationComposition = new JpaAutomationComposition(createAutomationCompositionInstance());
 
-        assertThatThrownBy(() -> testJpaAutomationComposition.validate(null))
-                .hasMessageMatching("fieldName is marked .*ull but is null");
-
-        assertTrue(testJpaAutomationComposition.validate("").isValid());
+        assertTrue(BeanValidator.validate("", testJpaAutomationComposition).isValid());
     }
 
     @Test

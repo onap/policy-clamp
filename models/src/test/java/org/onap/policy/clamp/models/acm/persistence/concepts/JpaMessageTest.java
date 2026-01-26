@@ -30,15 +30,16 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
+import org.onap.policy.common.parameters.BeanValidator;
 
 class JpaMessageTest {
 
     @Test
     void testJpaMessageConstructor() {
         assertThatThrownBy(() -> new JpaMessage(null, new DocMessage()))
-                .hasMessageMatching("identificationId is marked .*ull but is null");
+                .hasMessageMatching("identificationId is marked non-null but is null");
         assertThatThrownBy(() -> new JpaMessage(UUID.randomUUID().toString(), null))
-                .hasMessageMatching("docMessage is marked .*ull but is null");
+                .hasMessageMatching("docMessage is marked non-null but is null");
     }
 
     @Test
@@ -46,13 +47,10 @@ class JpaMessageTest {
         var docMessage = createDocMessage();
         var jpaMessage = new JpaMessage(docMessage.getInstanceId().toString(), docMessage);
 
-        assertThatThrownBy(() -> jpaMessage.validate(null))
-                .hasMessageMatching("fieldName is marked .*ull but is null");
-
-        assertTrue(jpaMessage.validate("").isValid());
+        assertTrue(BeanValidator.validate("", jpaMessage).isValid());
 
         jpaMessage.setLastMsg(null);
-        assertFalse(jpaMessage.validate("").isValid());
+        assertFalse(BeanValidator.validate("", jpaMessage).isValid());
     }
 
     @Test
@@ -64,7 +62,7 @@ class JpaMessageTest {
         assertEquals(docMessage, jpaMessage.toAuthorative());
 
         assertThatThrownBy(() -> jpaMessage.fromAuthorative(null))
-                .hasMessageMatching("docMessage is marked .*ull but is null");
+                .hasMessageMatching("docMessage is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaMessage((JpaMessage) null)).isInstanceOf(NullPointerException.class);
 

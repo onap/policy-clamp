@@ -34,7 +34,7 @@ class ToscaServiceTemplateTest {
     void testToscServiceTemplate() {
         assertThatThrownBy(() -> {
             new ToscaServiceTemplate(null);
-        }).hasMessageMatching("copyObject is marked .*on.*ull but is null");
+        }).hasMessageMatching("copyObject is marked non-null but is null");
 
         assertNotNull(new ToscaServiceTemplate(new ToscaServiceTemplate()));
 

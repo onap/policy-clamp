@@ -22,10 +22,8 @@ package org.onap.policy.common.parameters;
 
 public enum ValidationStatus {
     CLEAN,
-    OBSERVATION,
-    WARNING,
     INVALID;
-    
+
     /**
      * The result of a validation is valid unless the status is INVALID.
      * @return true if the validation has passed
@@ -33,7 +31,7 @@ public enum ValidationStatus {
     public boolean isValid() {
         return !this.equals(INVALID);
     }
-    
+
     /**
      * Check if the validation was clean.
      * @return true if the validation is clean

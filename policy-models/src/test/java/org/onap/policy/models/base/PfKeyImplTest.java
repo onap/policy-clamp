@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import jakarta.validation.constraints.Pattern;
 import java.lang.reflect.Field;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,13 +38,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.ValidationResult;
-import org.onap.policy.common.parameters.annotations.Pattern;
 import org.onap.policy.models.base.PfKey.Compatibility;
 
 class PfKeyImplTest {
 
-    private static final String ID_IS_NULL = "^id is marked .*on.*ull but is null$";
+    private static final String ID_IS_NULL = "^id is marked non-null but is null$";
     private static final String VERSION001 = "0.0.1";
     private static final String NAME = "name";
     private static MyKey someKey;
@@ -97,7 +98,7 @@ class PfKeyImplTest {
                 + PfKey.KEY_ID_REGEXP + "\"");
 
         assertThatThrownBy(() -> new MyKey((MyKey) null))
-            .hasMessageMatching("^copyConcept is marked .*on.*ull but is null$");
+            .hasMessageMatching("^copyConcept is marked non-null but is null$");
 
         assertTrue(someKey.isNullKey());
         assertEquals(new MyKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION), someKey);
@@ -119,7 +120,7 @@ class PfKeyImplTest {
         assertEquals("name:0.1.2", someKey4.getId());
 
         assertThatThrownBy(() -> someKey0.getCompatibility(null)).isInstanceOf(NullPointerException.class)
-            .hasMessageMatching("^otherKey is marked .*on.*ull but is null$");
+            .hasMessageMatching("^otherKey is marked non-null but is null$");
 
         assertEquals(Compatibility.DIFFERENT, someKey0.getCompatibility(new PfConceptKey()));
         assertEquals(Compatibility.DIFFERENT, buildKey1.getCompatibility(new PfConceptKey()));
@@ -139,17 +140,17 @@ class PfKeyImplTest {
 
     @Test
     void testValidityConceptKey() {
-        assertTrue(someKey0.validate("").isValid());
-        assertTrue(someKey1.validate("").isValid());
-        assertTrue(someKey2.validate("").isValid());
-        assertTrue(someKey3.validate("").isValid());
-        assertTrue(someKey4.validate("").isValid());
-        assertTrue(someKey5.validate("").isValid());
-        assertTrue(someKey6.validate("").isValid());
-        assertTrue(buildKey1.validate("").isValid());
-        assertTrue(buildKey2.validate("").isValid());
-        assertTrue(buildKey3.validate("").isValid());
-        assertTrue(buildKey4.validate("").isValid());
+        assertTrue(BeanValidator.validate("", someKey0).isValid());
+        assertTrue(BeanValidator.validate("", someKey1).isValid());
+        assertTrue(BeanValidator.validate("", someKey2).isValid());
+        assertTrue(BeanValidator.validate("", someKey3).isValid());
+        assertTrue(BeanValidator.validate("", someKey4).isValid());
+        assertTrue(BeanValidator.validate("", someKey5).isValid());
+        assertTrue(BeanValidator.validate("", someKey6).isValid());
+        assertTrue(BeanValidator.validate("", buildKey1).isValid());
+        assertTrue(BeanValidator.validate("", buildKey2).isValid());
+        assertTrue(BeanValidator.validate("", buildKey3).isValid());
+        assertTrue(BeanValidator.validate("", buildKey4).isValid());
     }
 
     @Test
@@ -163,7 +164,7 @@ class PfKeyImplTest {
         assertEquals(-12, someKey7.compareTo(someKey0));
 
         assertThatThrownBy(() -> someKey0.compareTo(null)).isInstanceOf(NullPointerException.class)
-            .hasMessageMatching("^otherObj is marked .*on.*ull but is null$");
+            .hasMessageMatching("^otherObj is marked non-null but is null$");
 
         assertEquals(0, someKey0.compareTo(someKey0));
         assertNotEquals(0, someKey0.compareTo(new PfConceptKey()));
@@ -178,15 +179,15 @@ class PfKeyImplTest {
         assertThatThrownBy(() -> new MyKey((String) null)).hasMessageMatching(ID_IS_NULL);
 
         assertThatThrownBy(() -> new MyKey((MyKey) null))
-            .hasMessageMatching("^copyConcept is marked .*on.*ull but is null$");
+            .hasMessageMatching("^copyConcept is marked non-null but is null$");
 
-        assertThatThrownBy(() -> new MyKey(null, null)).hasMessageMatching("name is marked .*on.*ull but is null$");
+        assertThatThrownBy(() -> new MyKey(null, null)).hasMessageMatching("name is marked non-null but is null$");
 
         assertThatThrownBy(() -> new MyKey(NAME, null))
-            .hasMessageMatching("^version is marked .*on.*ull but is null$");
+            .hasMessageMatching("^version is marked non-null but is null$");
 
         assertThatThrownBy(() -> new MyKey(null, VERSION001))
-            .hasMessageMatching("^name is marked .*on.*ull but is null$");
+            .hasMessageMatching("^name is marked non-null but is null$");
     }
 
     @Test
@@ -197,20 +198,20 @@ class PfKeyImplTest {
         Field nameField = testKey.getClass().getDeclaredField(NAME);
         nameField.setAccessible(true);
         nameField.set(testKey, "Key Name");
-        ValidationResult validationResult = testKey.validate("");
+        ValidationResult validationResult = BeanValidator.validate("", testKey);
         nameField.set(testKey, "TheKey");
         nameField.setAccessible(false);
         assertThat(validationResult.getResult()).contains("\"name\"").doesNotContain("\"version\"")
-            .contains("does not match regular expression " + PfKey.NAME_REGEXP);
+            .contains("must match \"" + PfKey.NAME_REGEXP + "\"");
 
         Field versionField = testKey.getClass().getDeclaredField("version");
         versionField.setAccessible(true);
         versionField.set(testKey, "Key Version");
-        ValidationResult validationResult2 = testKey.validate("");
+        ValidationResult validationResult2 = BeanValidator.validate("", testKey);
         versionField.set(testKey, VERSION001);
         versionField.setAccessible(false);
         assertThat(validationResult2.getResult()).doesNotContain("\"name\"").contains("\"version\"")
-            .contains("does not match regular expression " + PfKey.VERSION_REGEXP);
+                .contains("must match \"" + PfKey.VERSION_REGEXP + "\"");
     }
 
     @Getter
