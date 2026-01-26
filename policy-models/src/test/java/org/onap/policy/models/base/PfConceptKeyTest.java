@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 class PfConceptKeyTest {
 
     private static final String VERSION001 = "0.0.1";
-    private static final String ID_IS_NULL = "id is marked .*on.*ull but is null$";
+    private static final String ID_IS_NULL = "id is marked non-null but is null$";
 
     @Test
     void testConceptKey() {
@@ -66,10 +66,10 @@ class PfConceptKeyTest {
         assertThatThrownBy(() -> PfConceptKey.getNullKey().matchesId(null)).hasMessageMatching(ID_IS_NULL);
 
         assertThatThrownBy(() -> someKey0.setName(null)).isInstanceOf(NullPointerException.class)
-            .hasMessageMatching("^name is marked .*on.*ull but is null$");
+            .hasMessageMatching("^name is marked non-null but is null$");
 
         assertThatThrownBy(() -> someKey0.setVersion(null)).isInstanceOf(NullPointerException.class)
-            .hasMessageMatching("^version is marked .*on.*ull but is null$");
+            .hasMessageMatching("^version is marked non-null but is null$");
 
         assertThatIllegalArgumentException().isThrownBy(() -> new PfConceptKey("my-name.*", VERSION001)).withMessage(
             "parameter 'name': value 'my-name.*', does not match regular expression '^[A-Za-z0-9\\-_\\.]+$'"

@@ -36,9 +36,9 @@ class JpaMessageTest {
     @Test
     void testJpaMessageConstructor() {
         assertThatThrownBy(() -> new JpaMessage(null, new DocMessage()))
-                .hasMessageMatching("identificationId is marked .*ull but is null");
+                .hasMessageMatching("identificationId is marked non-null but is null");
         assertThatThrownBy(() -> new JpaMessage(UUID.randomUUID().toString(), null))
-                .hasMessageMatching("docMessage is marked .*ull but is null");
+                .hasMessageMatching("docMessage is marked non-null but is null");
     }
 
     @Test
@@ -47,7 +47,7 @@ class JpaMessageTest {
         var jpaMessage = new JpaMessage(docMessage.getInstanceId().toString(), docMessage);
 
         assertThatThrownBy(() -> jpaMessage.validate(null))
-                .hasMessageMatching("fieldName is marked .*ull but is null");
+                .hasMessageMatching("fieldName is marked non-null but is null");
 
         assertTrue(jpaMessage.validate("").isValid());
 
@@ -64,7 +64,7 @@ class JpaMessageTest {
         assertEquals(docMessage, jpaMessage.toAuthorative());
 
         assertThatThrownBy(() -> jpaMessage.fromAuthorative(null))
-                .hasMessageMatching("docMessage is marked .*ull but is null");
+                .hasMessageMatching("docMessage is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaMessage((JpaMessage) null)).isInstanceOf(NullPointerException.class);
 

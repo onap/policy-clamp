@@ -32,7 +32,7 @@ class JpaMessageJobTest {
     @Test
     void testJpaMessageJobConstructor() {
         assertThatThrownBy(() -> new JpaMessageJob(null))
-                .hasMessageMatching("identificationId is marked .*ull but is null");
+                .hasMessageMatching("identificationId is marked non-null but is null");
     }
 
     @Test
@@ -40,7 +40,7 @@ class JpaMessageJobTest {
         var jpaMessageJob = new JpaMessageJob();
 
         assertThatThrownBy(() -> jpaMessageJob.validate(null))
-                .hasMessageMatching("fieldName is marked .*ull but is null");
+                .hasMessageMatching("fieldName is marked non-null but is null");
 
         assertTrue(jpaMessageJob.validate("").isValid());
 

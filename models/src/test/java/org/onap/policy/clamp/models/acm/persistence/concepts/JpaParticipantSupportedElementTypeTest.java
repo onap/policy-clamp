@@ -34,9 +34,9 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
  */
 class JpaParticipantSupportedElementTypeTest {
 
-    private static final String NULL_PARTICIPANT_ID_ERROR = "participantId is marked .*ull but is null";
-    private static final String NULL_ID_ERROR = "id is marked .*ull but is null";
-    private static final String NULL_ERROR = " is marked .*ull but is null";
+    private static final String NULL_PARTICIPANT_ID_ERROR = "participantId is marked non-null but is null";
+    private static final String NULL_ID_ERROR = "id is marked non-null but is null";
+    private static final String NULL_ERROR = " is marked non-null but is null";
     private static final String ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
     private static final String PARTICIPANT_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
 
@@ -44,7 +44,7 @@ class JpaParticipantSupportedElementTypeTest {
     void testJpaAutomationCompositionElementConstructor() {
         assertThatThrownBy(() -> {
             new JpaParticipantSupportedElementType((JpaParticipantSupportedElementType) null);
-        }).hasMessageMatching("copyConcept is marked .*ull but is null");
+        }).hasMessageMatching("copyConcept is marked non-null but is null");
 
         assertThatThrownBy(() -> {
             new JpaParticipantSupportedElementType("key", null);
@@ -90,7 +90,7 @@ class JpaParticipantSupportedElementTypeTest {
 
         assertThatThrownBy(() -> {
             testJpaSupportElement.fromAuthorative(null);
-        }).hasMessageMatching("participantSupportedElementType is marked .*ull but is null");
+        }).hasMessageMatching("participantSupportedElementType is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaParticipantSupportedElementType((JpaParticipantSupportedElementType) null))
             .isInstanceOf(NullPointerException.class);

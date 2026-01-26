@@ -43,7 +43,7 @@ import org.onap.policy.models.base.PfKey.Compatibility;
 
 class PfKeyImplTest {
 
-    private static final String ID_IS_NULL = "^id is marked .*on.*ull but is null$";
+    private static final String ID_IS_NULL = "^id is marked non-null but is null$";
     private static final String VERSION001 = "0.0.1";
     private static final String NAME = "name";
     private static MyKey someKey;
@@ -97,7 +97,7 @@ class PfKeyImplTest {
                 + PfKey.KEY_ID_REGEXP + "\"");
 
         assertThatThrownBy(() -> new MyKey((MyKey) null))
-            .hasMessageMatching("^copyConcept is marked .*on.*ull but is null$");
+            .hasMessageMatching("^copyConcept is marked non-null but is null$");
 
         assertTrue(someKey.isNullKey());
         assertEquals(new MyKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION), someKey);
@@ -119,7 +119,7 @@ class PfKeyImplTest {
         assertEquals("name:0.1.2", someKey4.getId());
 
         assertThatThrownBy(() -> someKey0.getCompatibility(null)).isInstanceOf(NullPointerException.class)
-            .hasMessageMatching("^otherKey is marked .*on.*ull but is null$");
+            .hasMessageMatching("^otherKey is marked non-null but is null$");
 
         assertEquals(Compatibility.DIFFERENT, someKey0.getCompatibility(new PfConceptKey()));
         assertEquals(Compatibility.DIFFERENT, buildKey1.getCompatibility(new PfConceptKey()));
@@ -163,7 +163,7 @@ class PfKeyImplTest {
         assertEquals(-12, someKey7.compareTo(someKey0));
 
         assertThatThrownBy(() -> someKey0.compareTo(null)).isInstanceOf(NullPointerException.class)
-            .hasMessageMatching("^otherObj is marked .*on.*ull but is null$");
+            .hasMessageMatching("^otherObj is marked non-null but is null$");
 
         assertEquals(0, someKey0.compareTo(someKey0));
         assertNotEquals(0, someKey0.compareTo(new PfConceptKey()));
@@ -178,15 +178,15 @@ class PfKeyImplTest {
         assertThatThrownBy(() -> new MyKey((String) null)).hasMessageMatching(ID_IS_NULL);
 
         assertThatThrownBy(() -> new MyKey((MyKey) null))
-            .hasMessageMatching("^copyConcept is marked .*on.*ull but is null$");
+            .hasMessageMatching("^copyConcept is marked non-null but is null$");
 
-        assertThatThrownBy(() -> new MyKey(null, null)).hasMessageMatching("name is marked .*on.*ull but is null$");
+        assertThatThrownBy(() -> new MyKey(null, null)).hasMessageMatching("name is marked non-null but is null$");
 
         assertThatThrownBy(() -> new MyKey(NAME, null))
-            .hasMessageMatching("^version is marked .*on.*ull but is null$");
+            .hasMessageMatching("^version is marked non-null but is null$");
 
         assertThatThrownBy(() -> new MyKey(null, VERSION001))
-            .hasMessageMatching("^name is marked .*on.*ull but is null$");
+            .hasMessageMatching("^name is marked non-null but is null$");
     }
 
     @Test

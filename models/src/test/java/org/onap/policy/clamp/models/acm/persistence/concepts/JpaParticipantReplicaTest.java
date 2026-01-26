@@ -35,10 +35,10 @@ class JpaParticipantReplicaTest {
     @Test
     void testJpaParticipantReplicaConstructor() {
         assertThatThrownBy(() -> new JpaParticipantReplica(UUID.randomUUID().toString(), null))
-                .hasMessageMatching("participantId is marked .*ull but is null");
+                .hasMessageMatching("participantId is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaParticipantReplica(null, UUID.randomUUID().toString()))
-                .hasMessageMatching("replicaId is marked .*ull but is null");
+                .hasMessageMatching("replicaId is marked non-null but is null");
 
         assertDoesNotThrow(() -> new JpaParticipantReplica(UUID.randomUUID().toString(), UUID.randomUUID().toString()));
     }

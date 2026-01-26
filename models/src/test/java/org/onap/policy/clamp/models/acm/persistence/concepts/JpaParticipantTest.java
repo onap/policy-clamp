@@ -38,24 +38,24 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
  */
 class JpaParticipantTest {
 
-    private static final String NULL_KEY_ERROR = "participantId is marked .*ull but is null";
+    private static final String NULL_KEY_ERROR = "participantId is marked non-null but is null";
 
     @Test
     void testJpaParticipantConstructor() {
         assertThatThrownBy(() -> new JpaParticipant((Participant) null))
-            .hasMessageMatching("authorativeConcept is marked .*ull but is null");
+            .hasMessageMatching("authorativeConcept is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaParticipant((JpaParticipant) null))
-            .hasMessageMatching("copyConcept is marked .*ull but is null");
+            .hasMessageMatching("copyConcept is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaParticipant(null, new ArrayList<>(), new ArrayList<>()))
             .hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), null, new ArrayList<>()))
-            .hasMessageMatching("supportedElements is marked .*ull but is null");
+            .hasMessageMatching("supportedElements is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), new ArrayList<>(), null))
-            .hasMessageMatching("replicas is marked .*ull but is null");
+            .hasMessageMatching("replicas is marked non-null but is null");
 
         assertDoesNotThrow(() -> new JpaParticipant(UUID.randomUUID().toString(),
                 new ArrayList<>(), new ArrayList<>()));
@@ -69,7 +69,7 @@ class JpaParticipantTest {
         assertEquals(participant, testJpaParticipant.toAuthorative());
 
         assertThatThrownBy(() -> testJpaParticipant.fromAuthorative(null))
-            .hasMessageMatching("participant is marked .*ull but is null");
+            .hasMessageMatching("participant is marked non-null but is null");
 
         assertThatThrownBy(() -> new JpaParticipant((JpaParticipant) null)).isInstanceOf(NullPointerException.class);
 
@@ -88,7 +88,7 @@ class JpaParticipantTest {
         var testJpaParticipant = new JpaParticipant(createParticipantInstance());
 
         assertThatThrownBy(() -> testJpaParticipant.validate(null))
-            .hasMessageMatching("fieldName is marked .*ull but is null");
+            .hasMessageMatching("fieldName is marked non-null but is null");
 
         assertTrue(testJpaParticipant.validate("").isValid());
     }

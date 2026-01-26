@@ -35,7 +35,7 @@ class ToscaNodeTemplateTest {
     void testToscaNodeTemplate() {
         assertThatThrownBy(() -> {
             new ToscaNodeTemplate(null);
-        }).hasMessageMatching("copyObject is marked .*on.*ull but is null");
+        }).hasMessageMatching("copyObject is marked non-null but is null");
 
         assertNotNull(new ToscaNodeTemplate(new ToscaNodeTemplate()));
 

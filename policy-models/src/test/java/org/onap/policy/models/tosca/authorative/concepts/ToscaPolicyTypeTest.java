@@ -38,7 +38,7 @@ class ToscaPolicyTypeTest {
     void testToscaPolicyType() {
         assertThatThrownBy(() -> {
             new ToscaPolicyType(null);
-        }).hasMessageMatching("copyObject is marked .*on.*ull but is null");
+        }).hasMessageMatching("copyObject is marked non-null but is null");
 
         ToscaPolicyType tpt = new ToscaPolicyType();
         tpt.setName("AType");

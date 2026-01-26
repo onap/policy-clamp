@@ -32,8 +32,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 
 class JpaAutomationCompositionRollbackTest {
 
-    private static final String NULL_INSTANCE_ID_ERROR = "instanceId is marked .*ull but is null";
-    private static final String NULL_ERROR = " is marked .*ull but is null";
+    private static final String NULL_INSTANCE_ID_ERROR = "instanceId is marked non-null but is null";
+    private static final String NULL_ERROR = " is marked non-null but is null";
     private static final String INSTANCE_ID = "709c62b3-8918-41b9-a747-d21eb79c6c20";
     private static final String COMPOSITION_ID = "709c62b3-8918-41b9-a747-e21eb79c6c41";
 

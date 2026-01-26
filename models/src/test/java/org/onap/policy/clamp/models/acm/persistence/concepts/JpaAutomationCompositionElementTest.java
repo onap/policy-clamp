@@ -44,9 +44,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 class JpaAutomationCompositionElementTest {
 
-    private static final String NULL_INSTANCE_ID_ERROR = "instanceId is marked .*ull but is null";
-    private static final String NULL_ELEMENT_ID_ERROR = "elementId is marked .*ull but is null";
-    private static final String NULL_ERROR = " is marked .*ull but is null";
+    private static final String NULL_INSTANCE_ID_ERROR = "instanceId is marked non-null but is null";
+    private static final String NULL_ELEMENT_ID_ERROR = "elementId is marked non-null but is null";
+    private static final String NULL_ERROR = " is marked non-null but is null";
     private static final String ELEMENT_ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
     private static final String INSTANCE_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
     private static final String KEY = "key";
