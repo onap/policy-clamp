@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @AutoConfigureObservability(tracing = false)
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"management.server.port:"})
 @ActiveProfiles({"prometheus-noauth", "default"})
 class PrometheusNoAuthTest {
 
@@ -42,7 +42,7 @@ class PrometheusNoAuthTest {
 
     @Test
     void testGetPrometheus() {
-        webClient.get().uri("/prometheus").accept(TEXT_PLAIN)
+        webClient.get().uri("/actuator/prometheus").accept(TEXT_PLAIN)
             .exchange().expectStatus().isOk();
     }
 }
