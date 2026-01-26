@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-
+import org.onap.policy.common.parameters.BeanValidator;
 
 class JpaMessageJobTest {
 
@@ -39,12 +39,9 @@ class JpaMessageJobTest {
     void testJpaMessageValidation() {
         var jpaMessageJob = new JpaMessageJob();
 
-        assertThatThrownBy(() -> jpaMessageJob.validate(null))
-                .hasMessageMatching("fieldName is marked non-null but is null");
-
-        assertTrue(jpaMessageJob.validate("").isValid());
+        assertTrue(BeanValidator.validate("", jpaMessageJob).isValid());
 
         jpaMessageJob.setJobStarted(null);
-        assertFalse(jpaMessageJob.validate("").isValid());
+        assertFalse(BeanValidator.validate("", jpaMessageJob).isValid());
     }
 }

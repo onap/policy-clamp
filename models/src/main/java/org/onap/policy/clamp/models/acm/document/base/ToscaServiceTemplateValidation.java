@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,13 @@ import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplat
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaTopologyTemplate;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.models.base.Validated;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ToscaServiceTemplateValidation {
 
     private static final String ROOT_KEY_NAME_SUFFIX = ".Root";
     private static final String TOPOLOGY_TEMPLATE = "TopologyTemplate";
+    private static final String NOT_FOUND = "not found";
 
     /**
      * validate a serviceTemplate.
@@ -153,7 +153,7 @@ public final class ToscaServiceTemplateValidation {
             final Collection<DocConceptKey> dataTypeKeyCollection, Map<String, Set<String>> references) {
         for (DocConceptKey dataTypeKey : dataTypeKeyCollection) {
             if (!isTypePresent(dataTypeKey, references.get(DocUtil.REF_DATA_TYPES))) {
-                result.addResult("data type", dataTypeKey.getId(), ValidationStatus.INVALID, Validated.NOT_FOUND);
+                result.addResult("data type", dataTypeKey.getId(), ValidationStatus.INVALID, NOT_FOUND);
             }
         }
     }
@@ -173,7 +173,7 @@ public final class ToscaServiceTemplateValidation {
             for (var policy : serviceTemplate.getToscaTopologyTemplate().getPolicies().values()) {
                 var key = policy.getTypeDocConceptKey();
                 if (!isTypePresent(key, references.get(DocUtil.REF_POLICY_TYPES))) {
-                    result.addResult("policy type", key, ValidationStatus.INVALID, Validated.NOT_FOUND);
+                    result.addResult("policy type", key, ValidationStatus.INVALID, NOT_FOUND);
                 }
             }
         }
@@ -181,7 +181,7 @@ public final class ToscaServiceTemplateValidation {
             for (var nodeTemplate : serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().values()) {
                 var key = nodeTemplate.getTypeDocConceptKey();
                 if (!isTypePresent(key, references.get(DocUtil.REF_NODE_TYPES))) {
-                    result.addResult("node Template", key, ValidationStatus.INVALID, Validated.NOT_FOUND);
+                    result.addResult("node Template", key, ValidationStatus.INVALID, NOT_FOUND);
                 }
             }
         }
@@ -233,7 +233,7 @@ public final class ToscaServiceTemplateValidation {
                     continue;
                 }
                 if (!isTypePresent(parentEntityTypeKey, reference)) {
-                    result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID, Validated.NOT_FOUND);
+                    result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID, NOT_FOUND);
                 }
             }
         }
@@ -255,7 +255,7 @@ public final class ToscaServiceTemplateValidation {
                         continue;
                     }
                     if (!isTypePresent(parentEntityTypeKey, reference)) {
-                        result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID, Validated.NOT_FOUND);
+                        result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID, NOT_FOUND);
                     }
                 }
             }

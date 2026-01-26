@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import jakarta.validation.constraints.Pattern;
 import java.lang.reflect.Field;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,8 +38,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.ValidationResult;
-import org.onap.policy.common.parameters.annotations.Pattern;
 import org.onap.policy.models.base.PfKey.Compatibility;
 
 class PfKeyImplTest {
@@ -139,17 +140,17 @@ class PfKeyImplTest {
 
     @Test
     void testValidityConceptKey() {
-        assertTrue(someKey0.validate("").isValid());
-        assertTrue(someKey1.validate("").isValid());
-        assertTrue(someKey2.validate("").isValid());
-        assertTrue(someKey3.validate("").isValid());
-        assertTrue(someKey4.validate("").isValid());
-        assertTrue(someKey5.validate("").isValid());
-        assertTrue(someKey6.validate("").isValid());
-        assertTrue(buildKey1.validate("").isValid());
-        assertTrue(buildKey2.validate("").isValid());
-        assertTrue(buildKey3.validate("").isValid());
-        assertTrue(buildKey4.validate("").isValid());
+        assertTrue(BeanValidator.validate("", someKey0).isValid());
+        assertTrue(BeanValidator.validate("", someKey1).isValid());
+        assertTrue(BeanValidator.validate("", someKey2).isValid());
+        assertTrue(BeanValidator.validate("", someKey3).isValid());
+        assertTrue(BeanValidator.validate("", someKey4).isValid());
+        assertTrue(BeanValidator.validate("", someKey5).isValid());
+        assertTrue(BeanValidator.validate("", someKey6).isValid());
+        assertTrue(BeanValidator.validate("", buildKey1).isValid());
+        assertTrue(BeanValidator.validate("", buildKey2).isValid());
+        assertTrue(BeanValidator.validate("", buildKey3).isValid());
+        assertTrue(BeanValidator.validate("", buildKey4).isValid());
     }
 
     @Test
@@ -197,20 +198,20 @@ class PfKeyImplTest {
         Field nameField = testKey.getClass().getDeclaredField(NAME);
         nameField.setAccessible(true);
         nameField.set(testKey, "Key Name");
-        ValidationResult validationResult = testKey.validate("");
+        ValidationResult validationResult = BeanValidator.validate("", testKey);
         nameField.set(testKey, "TheKey");
         nameField.setAccessible(false);
         assertThat(validationResult.getResult()).contains("\"name\"").doesNotContain("\"version\"")
-            .contains("does not match regular expression " + PfKey.NAME_REGEXP);
+            .contains("must match \"" + PfKey.NAME_REGEXP + "\"");
 
         Field versionField = testKey.getClass().getDeclaredField("version");
         versionField.setAccessible(true);
         versionField.set(testKey, "Key Version");
-        ValidationResult validationResult2 = testKey.validate("");
+        ValidationResult validationResult2 = BeanValidator.validate("", testKey);
         versionField.set(testKey, VERSION001);
         versionField.setAccessible(false);
         assertThat(validationResult2.getResult()).doesNotContain("\"name\"").contains("\"version\"")
-            .contains("does not match regular expression " + PfKey.VERSION_REGEXP);
+                .contains("must match \"" + PfKey.VERSION_REGEXP + "\"");
     }
 
     @Getter

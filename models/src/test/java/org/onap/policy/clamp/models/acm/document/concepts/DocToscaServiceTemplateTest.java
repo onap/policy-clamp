@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConstraint;
@@ -94,7 +95,7 @@ class DocToscaServiceTemplateTest {
         doc2.setPolicyTypes(doc.getPolicyTypes());
         assertThat(doc).isEqualByComparingTo(doc2);
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
-        assertThat(doc.validate("serviceTemplate")).isNotNull();
+        assertThat(BeanValidator.validate("serviceTemplate", doc)).isNotNull();
 
         serviceTemplate.setName(NAME);
         serviceTemplate.setVersion("1.1.1");
@@ -231,9 +232,6 @@ class DocToscaServiceTemplateTest {
 
     @Test
     void testNullPointer() {
-        var docCapabilityType = new DocToscaCapabilityType();
-        assertThatThrownBy(() -> docCapabilityType.validate(null)).   isInstanceOf(NullPointerException.class);
-
         var docConceptKey = new DocConceptKey();
         assertThatThrownBy(() -> docConceptKey.setName(null)).   isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> docConceptKey.setVersion(null)).   isInstanceOf(NullPointerException.class);

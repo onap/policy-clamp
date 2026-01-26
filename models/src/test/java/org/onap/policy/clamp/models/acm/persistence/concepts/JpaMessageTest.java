@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
+import org.onap.policy.common.parameters.BeanValidator;
 
 class JpaMessageTest {
 
@@ -46,13 +47,10 @@ class JpaMessageTest {
         var docMessage = createDocMessage();
         var jpaMessage = new JpaMessage(docMessage.getInstanceId().toString(), docMessage);
 
-        assertThatThrownBy(() -> jpaMessage.validate(null))
-                .hasMessageMatching("fieldName is marked non-null but is null");
-
-        assertTrue(jpaMessage.validate("").isValid());
+        assertTrue(BeanValidator.validate("", jpaMessage).isValid());
 
         jpaMessage.setLastMsg(null);
-        assertFalse(jpaMessage.validate("").isValid());
+        assertFalse(BeanValidator.validate("", jpaMessage).isValid());
     }
 
     @Test

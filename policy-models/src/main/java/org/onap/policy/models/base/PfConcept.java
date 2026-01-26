@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019, 2023 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,7 @@ import lombok.NonNull;
  */
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class PfConcept extends Validated implements Serializable, Comparable<PfConcept> {
+public abstract class PfConcept implements Serializable, Comparable<PfConcept> {
     @Serial
     private static final long serialVersionUID = -7434939557282697490L;
 

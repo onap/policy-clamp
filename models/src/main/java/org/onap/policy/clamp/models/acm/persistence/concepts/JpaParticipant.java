@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.io.Serial;
-import java.io.Serializable;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,10 +42,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.Validated;
 
 /**
  * Class to represent a participant in the database.
@@ -56,12 +53,8 @@ import org.onap.policy.models.base.Validated;
 @Table(name = "Participant")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaParticipant extends Validated
-        implements PfAuthorative<Participant>, Comparable<JpaParticipant>, Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -4697758484642403483L;
+@EqualsAndHashCode
+public class JpaParticipant implements PfAuthorative<Participant>, Comparable<JpaParticipant> {
 
     @Id
     @NotNull

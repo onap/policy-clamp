@@ -20,6 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -33,9 +36,6 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaWithToscaProperties;
 import org.onap.policy.models.tosca.utils.ToscaUtils;
@@ -49,7 +49,7 @@ public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> ext
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("squid:S1948")
-    private Map<@NotNull @NotBlank String, @NotNull @Valid DocToscaProperty> properties;
+    private Map<@NotBlank String, @NotNull @Valid DocToscaProperty> properties;
 
     /**
      * Copy constructor.
