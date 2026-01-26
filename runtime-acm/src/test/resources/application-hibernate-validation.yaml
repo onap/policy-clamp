@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      name: runtimeUser
+      password: zb!XztG34
   liquibase:
     enabled: true
   jpa:
