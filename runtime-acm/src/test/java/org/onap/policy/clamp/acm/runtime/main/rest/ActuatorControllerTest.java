@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.message.bus.event.TopicEndpoint;
 import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +42,9 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 @ActiveProfiles("test")
 class ActuatorControllerTest {
 
+    public static final String HEALTH = "/actuator/health";
+    public static final String STATUS_CODE = "$.status.code";
+
     @Autowired
     private WebTestClient webClient;
 
@@ -59,43 +61,43 @@ class ActuatorControllerTest {
 
     @Test
     void testGetHealth() {
-        webClient.get().uri("/health").accept(APPLICATION_JSON)
+        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
             .exchange().expectStatus().isOk()
-            .expectBody().jsonPath("$.status.code").isEqualTo("UP");
+            .expectBody().jsonPath(STATUS_CODE).isEqualTo("UP");
 
-        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
+        var topicEndpoint = TopicEndpointManager.getManager();
         topicEndpoint.stop();
-        webClient.get().uri("/health").accept(APPLICATION_JSON)
+        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
             .exchange().expectStatus().is5xxServerError()
-            .expectBody().jsonPath("$.status.code").isEqualTo("DOWN");
+            .expectBody().jsonPath(STATUS_CODE).isEqualTo("DOWN");
         topicEndpoint.start();
     }
 
     @Test
     void testHealthIndicator() {
-        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
+        var topicEndpoint = TopicEndpointManager.getManager();
         topicEndpoint.getNoopTopicSource("policy-acruntime-participant").stop();
-        webClient.get().uri("/health").accept(APPLICATION_JSON)
+        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
             .exchange().expectStatus().is5xxServerError()
-            .expectBody().jsonPath("$.status.code").isEqualTo("OUT_OF_SERVICE");
+            .expectBody().jsonPath(STATUS_CODE).isEqualTo("OUT_OF_SERVICE");
         topicEndpoint.getNoopTopicSource("policy-acruntime-participant").start();
 
         topicEndpoint.getNoopTopicSink("acm-ppnt-sync").stop();
-        webClient.get().uri("/health").accept(APPLICATION_JSON)
+        webClient.get().uri(HEALTH).accept(APPLICATION_JSON)
             .exchange().expectStatus().is5xxServerError()
-            .expectBody().jsonPath("$.status.code").isEqualTo("OUT_OF_SERVICE");
+            .expectBody().jsonPath(STATUS_CODE).isEqualTo("OUT_OF_SERVICE");
         topicEndpoint.getNoopTopicSink("acm-ppnt-sync").start();
     }
 
     @Test
     void testGetMetrics() {
-        webClient.get().uri("/metrics").accept(APPLICATION_JSON)
+        webClient.get().uri("/actuator/metrics").accept(APPLICATION_JSON)
             .exchange().expectStatus().isOk();
     }
 
     @Test
     void testGetPrometheus() {
-        webClient.get().uri("/prometheus").accept(TEXT_PLAIN)
+        webClient.get().uri("/actuator/prometheus").accept(TEXT_PLAIN)
             .exchange().expectStatus().isOk();
     }
 
