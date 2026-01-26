@@ -26,13 +26,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.base.Validated;
 
 @Entity

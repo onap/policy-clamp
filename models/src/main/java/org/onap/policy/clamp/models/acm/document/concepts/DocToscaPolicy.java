@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
-import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 
 @Data
@@ -85,11 +86,8 @@ public class DocToscaPolicy extends DocToscaWithTypeAndStringProperties<ToscaPol
     }
 
     @Override
-    public BeanValidationResult validate(String fieldName) {
-        var result = super.validate(fieldName);
-
-        validateKeyVersionNotNull(result, "key", getConceptKey());
-
-        return result;
+    @VerifyKey(keyNotNull = false, nameNotNull = false, versionNotNull = true)
+    public PfConceptKey getConceptKey() {
+        return super.getConceptKey();
     }
 }

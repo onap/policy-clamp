@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019, 2024 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,8 @@
 
 package org.onap.policy.common.parameters.topic;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,22 +30,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
 
 /**
  * Class to hold all parameters needed for topic properties.
  *
  * @author Ajith Sreekumar (ajith.sreekumar@est.tech)
  */
-@NotNull
-@NotBlank
 @Getter
 @Setter
 public class TopicParameterGroup extends ParameterGroupImpl {
 
-    private List<TopicParameters> topicSources;
-    private List<TopicParameters> topicSinks;
+    @NotNull
+    private List<@Valid TopicParameters> topicSources;
+    @NotNull
+    private List<@Valid TopicParameters> topicSinks;
 
     public TopicParameterGroup() {
         super(TopicParameterGroup.class.getSimpleName());

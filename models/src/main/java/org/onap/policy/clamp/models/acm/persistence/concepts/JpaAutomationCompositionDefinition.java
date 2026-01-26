@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,9 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,9 +46,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Pattern;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.Validated;
