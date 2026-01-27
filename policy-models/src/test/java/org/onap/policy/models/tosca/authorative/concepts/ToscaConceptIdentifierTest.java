@@ -3,7 +3,7 @@
  * ONAP Policy Models
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021, 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,8 @@ package org.onap.policy.models.tosca.authorative.concepts;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.models.base.PfConceptKey;
 
 /**
@@ -77,27 +72,6 @@ class ToscaConceptIdentifierTest extends ToscaIdentifierTestBase<ToscaConceptIde
         assertEquals(origKey.getName(), new ToscaConceptIdentifier(origKey).getName());
 
         assertEquals(origKey, new ToscaConceptIdentifier(origKey).asConceptKey());
-    }
-
-    @Test
-    void testValidatePapRest() throws Exception {
-        ToscaConceptIdentifier ident = new ToscaConceptIdentifier(NAME, VERSION);
-        ValidationResult result = ident.validatePapRest();
-        assertNotNull(result);
-        assertTrue(result.isValid());
-        assertNull(result.getResult());
-
-        ident = makeIdent(NAME, null);
-        result = ident.validatePapRest();
-        assertNotNull(result);
-        assertFalse(result.isValid());
-        assertNotNull(result.getResult());
-
-        ident = makeIdent(null, VERSION);
-        result = ident.validatePapRest();
-        assertNotNull(result);
-        assertFalse(result.isValid());
-        assertNotNull(result.getResult());
     }
 
     @Test

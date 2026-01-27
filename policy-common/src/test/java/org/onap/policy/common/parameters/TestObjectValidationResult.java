@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ package org.onap.policy.common.parameters;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,27 +47,11 @@ class TestObjectValidationResult {
         result = new ObjectValidationResult(NAME, OBJECT);
         assertEquals(ValidationStatus.CLEAN, result.getStatus());
         assertNull(result.getResult());
-        assertEquals(requote("xxx item 'my-name' value 'my-object' CLEAN, item has status CLEAN\n"),
-                        result.getResult("xxx ", "yyy", true));
-
-        result.setResult(ValidationStatus.WARNING, "a warning");
-        assertEquals(ValidationStatus.WARNING, result.getStatus());
-
-        // should not override warning
-        result.setResult(ValidationStatus.OBSERVATION, "an observation");
-        assertEquals(ValidationStatus.WARNING, result.getStatus());
-
-        assertTrue(result.isValid());
-        assertEquals(requote("item 'my-name' value 'my-object' WARNING, a warning\n"), result.getResult());
 
         result.setResult(ValidationStatus.INVALID, "is invalid");
         assertEquals(ValidationStatus.INVALID, result.getStatus());
 
         assertFalse(result.isValid());
-        assertEquals(requote("item 'my-name' value 'my-object' INVALID, is invalid\n"), result.getResult());
-    }
-
-    private String requote(String text) {
-        return text.replace('\'', '"');
+        assertEquals("item \"my-name\" value \"my-object\" INVALID, is invalid\n", result.getResult());
     }
 }

@@ -40,7 +40,6 @@ import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -48,8 +47,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Table(name = "NodeTemplateState")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaNodeTemplateState extends Validated implements PfAuthorative<NodeTemplateState> {
+@EqualsAndHashCode
+public class JpaNodeTemplateState implements PfAuthorative<NodeTemplateState> {
 
     @Id
     @NotNull

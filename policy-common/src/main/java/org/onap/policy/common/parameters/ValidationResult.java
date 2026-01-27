@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Ericsson. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ *  Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ package org.onap.policy.common.parameters;
  * This interface defines the result of a parameter validation.
  */
 public interface ValidationResult {
+    // Indentation is 0 on the left and 2 for each level of hierarchy
+    String DEFAULT_INITIAL_RESULT_INDENTATION = "";
+    String DEFAULT_RESULT_INDENTATION = "  ";
+
     /**
      * Gets the name of the entity being validated.
      *
@@ -63,10 +67,7 @@ public interface ValidationResult {
      * @return the full validation result
      */
     default String getResult() {
-        return getResult(
-            ParameterConstants.DEFAULT_INITIAL_RESULT_INDENTATION,
-            ParameterConstants.DEFAULT_RESULT_INDENTATION,
-            ParameterConstants.DO_NOT_SHOW_CLEAN_RESULTS);
+        return getResult(DEFAULT_INITIAL_RESULT_INDENTATION, DEFAULT_RESULT_INDENTATION);
     }
 
     /**
@@ -74,10 +75,9 @@ public interface ValidationResult {
      *
      * @param initialIndentation the indentation to use on the main result output
      * @param subIndentation     the indentation to use on sub parts of the result output
-     * @param showClean          output information on clean fields
      * @return the result
      */
-    String getResult(final String initialIndentation, final String subIndentation, final boolean showClean);
+    String getResult(final String initialIndentation, final String subIndentation);
 
     /**
      * Set a validation result.

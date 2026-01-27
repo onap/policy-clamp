@@ -36,13 +36,12 @@ import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.Validated;
 
 @Entity
 @Table(name = "Message", indexes = {@Index(name = "m_identificationId", columnList = "identificationId")})
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-public class JpaMessage extends Validated implements PfAuthorative<DocMessage> {
+public class JpaMessage implements PfAuthorative<DocMessage> {
 
     @Id
     @NotNull

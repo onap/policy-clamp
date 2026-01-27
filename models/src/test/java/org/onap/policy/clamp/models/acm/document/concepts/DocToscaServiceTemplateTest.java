@@ -95,7 +95,6 @@ class DocToscaServiceTemplateTest {
         doc2.setPolicyTypes(doc.getPolicyTypes());
         assertThat(doc).isEqualByComparingTo(doc2);
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
-        assertThat(doc.validate("serviceTemplate")).isNotNull();
 
         serviceTemplate.setName(NAME);
         serviceTemplate.setVersion("1.1.1");
@@ -232,9 +231,6 @@ class DocToscaServiceTemplateTest {
 
     @Test
     void testNullPointer() {
-        var docCapabilityType = new DocToscaCapabilityType();
-        assertThatThrownBy(() -> docCapabilityType.validate(null)).   isInstanceOf(NullPointerException.class);
-
         var docConceptKey = new DocConceptKey();
         assertThatThrownBy(() -> docConceptKey.setName(null)).   isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> docConceptKey.setVersion(null)).   isInstanceOf(NullPointerException.class);
