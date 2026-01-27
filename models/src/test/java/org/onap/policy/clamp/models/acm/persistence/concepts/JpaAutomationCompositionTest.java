@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
+import org.onap.policy.common.parameters.BeanValidator;
 
 /**
  * Test the{@link JpaAutomationCompositionTest} class.
@@ -93,11 +94,7 @@ class JpaAutomationCompositionTest {
     @Test
     void testJpaAutomationCompositionValidation() {
         var testJpaAutomationComposition = new JpaAutomationComposition(createAutomationCompositionInstance());
-
-        assertThatThrownBy(() -> testJpaAutomationComposition.validate(null))
-                .hasMessageMatching("fieldName is marked non-null but is null");
-
-        assertTrue(testJpaAutomationComposition.validate("").isValid());
+        assertTrue(BeanValidator.isValid(testJpaAutomationComposition));
     }
 
     @Test

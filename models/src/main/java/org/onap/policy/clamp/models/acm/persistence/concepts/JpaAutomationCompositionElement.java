@@ -47,7 +47,6 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -60,8 +59,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Table(name = "AutomationCompositionElement")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaAutomationCompositionElement extends Validated
+@EqualsAndHashCode
+public class JpaAutomationCompositionElement
     implements PfAuthorative<AutomationCompositionElement>, Comparable<JpaAutomationCompositionElement> {
 
     @Id

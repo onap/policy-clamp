@@ -48,7 +48,6 @@ import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplat
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.Validated;
 
 /**
  * Class to represent an automation composition definition in the database.
@@ -57,9 +56,8 @@ import org.onap.policy.models.base.Validated;
 @Table(name = "AutomationCompositionDefinition")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaAutomationCompositionDefinition extends Validated
-        implements PfAuthorative<AutomationCompositionDefinition> {
+@EqualsAndHashCode
+public class JpaAutomationCompositionDefinition implements PfAuthorative<AutomationCompositionDefinition> {
 
     @Id
     @NotNull
