@@ -36,14 +36,13 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.Validated;
 
 @Entity
 @Table(name = "ParticipantReplica")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaParticipantReplica extends Validated implements PfAuthorative<ParticipantReplica> {
+@EqualsAndHashCode
+public class JpaParticipantReplica implements PfAuthorative<ParticipantReplica> {
 
     @Id
     @NotNull

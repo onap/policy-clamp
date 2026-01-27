@@ -43,6 +43,6 @@ public class ParameterGroupImpl implements ParameterGroup {
 
     @Override
     public BeanValidationResult validate() {
-        return BeanValidator.validate(getClass().getSimpleName(), this);
+        return BeanValidator.validate(this);
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.base.Validated;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProviderUtils {
@@ -42,7 +42,7 @@ public final class ProviderUtils {
      * @param conceptDescription the description used for validation result
      * @return the list of Jpa objects
      */
-    public static <A, J extends Validated & PfAuthorative<A>> List<J> getJpaAndValidateList(
+    public static <A, J extends PfAuthorative<A>> List<J> getJpaAndValidateList(
             List<A> authorativeConceptList, Supplier<J> jpaSupplier, String conceptDescription) {
         var validationResult = new BeanValidationResult(conceptDescription + " List", authorativeConceptList);
 
@@ -53,7 +53,7 @@ public final class ProviderUtils {
             jpaConcept.fromAuthorative(authorativeConcept);
             jpaConceptList.add(jpaConcept);
 
-            validationResult.addResult(jpaConcept.validate(conceptDescription));
+            validationResult.addResult(BeanValidator.validate(conceptDescription, jpaConcept));
         }
 
         if (!validationResult.isValid()) {
@@ -70,7 +70,7 @@ public final class ProviderUtils {
      * @param conceptDescription the description used for validation result
      * @return the Jpa object
      */
-    public static <A, J extends Validated & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
+    public static <A, J extends PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
             Supplier<J> jpaSupplier, String conceptDescription) {
         var jpaConcept = jpaSupplier.get();
         jpaConcept.fromAuthorative(authorativeConcept);
@@ -85,11 +85,11 @@ public final class ProviderUtils {
      * @param jpaConcept  the Jpa of the concept
      * @param conceptDescription the description used for validation result
      */
-    public static <A, J extends Validated & PfAuthorative<A>> void validate(A authorativeConcept,
+    public static <A, J extends PfAuthorative<A>> void validate(A authorativeConcept,
             J jpaConcept, String conceptDescription) {
         var validationResult = new BeanValidationResult(conceptDescription, authorativeConcept);
 
-        validationResult.addResult(jpaConcept.validate(conceptDescription));
+        validationResult.addResult(BeanValidator.validate(conceptDescription, jpaConcept));
 
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());

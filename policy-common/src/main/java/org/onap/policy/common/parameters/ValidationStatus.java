@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Ericsson. All rights reserved.
+ *  Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +23,8 @@ package org.onap.policy.common.parameters;
 
 public enum ValidationStatus {
     CLEAN,
-    OBSERVATION,
-    WARNING,
     INVALID;
-    
+
     /**
      * The result of a validation is valid unless the status is INVALID.
      * @return true if the validation has passed
@@ -33,7 +32,7 @@ public enum ValidationStatus {
     public boolean isValid() {
         return !this.equals(INVALID);
     }
-    
+
     /**
      * Check if the validation was clean.
      * @return true if the validation is clean

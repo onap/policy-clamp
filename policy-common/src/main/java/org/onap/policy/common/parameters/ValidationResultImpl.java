@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +51,7 @@ public abstract class ValidationResultImpl implements ValidationResult {
     /**
      * Validation message.
      */
-    private String message = ITEM_HAS_STATUS_MESSAGE + status.toString();
+    private String message = ITEM_HAS_STATUS_MESSAGE + status;
 
 
     /**
@@ -62,21 +63,6 @@ public abstract class ValidationResultImpl implements ValidationResult {
     protected ValidationResultImpl(String name, Object object) {
         this.name = name;
         this.object = object;
-    }
-
-    /**
-     * Validates that the value is not {@code null}.
-     *
-     * @return {@code true} if the value is not null, {@code false} otherwise
-     */
-    public boolean validateNotNull() {
-        if (object == null) {
-            setResult(ValidationStatus.INVALID, "is null");
-            return false;
-
-        } else {
-            return true;
-        }
     }
 
     /**

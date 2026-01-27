@@ -38,14 +38,13 @@ import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfNameVersion;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityKey;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @NoArgsConstructor
-public class DocToscaEntity<T extends ToscaEntity> extends Validated
+public class DocToscaEntity<T extends ToscaEntity>
         implements PfNameVersion, PfAuthorative<T>, Serializable, Comparable<DocToscaEntity<T>> {
 
     @Serial

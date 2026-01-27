@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ package org.onap.policy.common.parameters;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,45 +48,8 @@ class TestValidationResultImpl {
     }
 
     @Test
-    void testValidateNotNull() {
-        assertTrue(result.validateNotNull());
-        assertTrue(result.isValid());
-        assertNull(result.getResult());
-
-        // now try with null
-        result = new MyResult(NAME, null);
-        assertFalse(result.validateNotNull());
-        assertFalse(result.isValid());
-        assertEquals("INVALID is null", result.getResult());
-    }
-
-    @Test
-    void testSetResultValidationStatus() {
-        result.setResult(ValidationStatus.WARNING);
-        assertEquals(ValidationStatus.WARNING, result.getStatus());
-
-        // should not override warning
-        result.setResult(ValidationStatus.OBSERVATION);
-        assertEquals(ValidationStatus.WARNING, result.getStatus());
-
-        assertTrue(result.isValid());
-        assertEquals("WARNING item has status WARNING", result.getResult());
-    }
-
-    @Test
     void testSetResult_testGetResult_testGetStatus() {
         assertEquals(ValidationStatus.CLEAN, result.getStatus());
-        assertEquals("CLEAN item has status CLEAN", result.getResult("xxx ", "yyy", true));
-
-        result.setResult(ValidationStatus.WARNING, "a warning");
-        assertEquals(ValidationStatus.WARNING, result.getStatus());
-
-        // should not override warning
-        result.setResult(ValidationStatus.OBSERVATION, "an observation");
-        assertEquals(ValidationStatus.WARNING, result.getStatus());
-
-        assertTrue(result.isValid());
-        assertEquals("WARNING a warning", result.getResult());
 
         result.setResult(ValidationStatus.INVALID, "is invalid");
         assertEquals(ValidationStatus.INVALID, result.getStatus());
@@ -112,8 +73,8 @@ class TestValidationResultImpl {
         }
 
         @Override
-        public String getResult(String initialIndentation, String subIndentation, boolean showClean) {
-            if (!showClean && getStatus() == ValidationStatus.CLEAN) {
+        public String getResult(String initialIndentation, String subIndentation) {
+            if (getStatus() == ValidationStatus.CLEAN) {
                 return null;
             }
 
