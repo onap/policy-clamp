@@ -34,14 +34,13 @@ import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.Validated;
 
 @Entity
 @Table(name = "ParticipantSupportedAcElements")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaParticipantSupportedElementType extends Validated
+@EqualsAndHashCode
+public class JpaParticipantSupportedElementType
     implements PfAuthorative<ParticipantSupportedElementType>, Comparable<JpaParticipantSupportedElementType> {
 
     @NotNull

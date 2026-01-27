@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.common.parameters.BeanValidator;
 
 /**
  * Test the {@link JpaParticipant} class.
@@ -86,11 +87,7 @@ class JpaParticipantTest {
     @Test
     void testJpaParticipantValidation() {
         var testJpaParticipant = new JpaParticipant(createParticipantInstance());
-
-        assertThatThrownBy(() -> testJpaParticipant.validate(null))
-            .hasMessageMatching("fieldName is marked non-null but is null");
-
-        assertTrue(testJpaParticipant.validate("").isValid());
+        assertTrue(BeanValidator.isValid(testJpaParticipant));
     }
 
     @Test

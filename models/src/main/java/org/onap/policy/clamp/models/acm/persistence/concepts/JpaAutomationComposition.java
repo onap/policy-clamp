@@ -52,7 +52,6 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 
 /**
  * Class to represent an automation composition in the database.
@@ -63,9 +62,9 @@ import org.onap.policy.models.base.Validated;
 @Table(name = "AutomationComposition", indexes = {@Index(name = "ac_compositionId", columnList = "compositionId")})
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @NoArgsConstructor
-public class JpaAutomationComposition extends Validated
+public class JpaAutomationComposition
         implements PfAuthorative<AutomationComposition>, Comparable<JpaAutomationComposition> {
 
     @Id
