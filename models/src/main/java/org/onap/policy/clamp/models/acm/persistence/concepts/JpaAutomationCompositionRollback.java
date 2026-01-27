@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,14 +42,13 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 
 @Entity
 @Table(name = "AutomationCompositionRollback")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaAutomationCompositionRollback extends Validated
+@EqualsAndHashCode
+public class JpaAutomationCompositionRollback
         implements PfAuthorative<AutomationCompositionRollback>, Comparable<JpaAutomationCompositionRollback> {
 
     @Id

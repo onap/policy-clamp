@@ -52,4 +52,26 @@ public class BeanValidator {
         }
         return result;
     }
+
+    /**
+     * Validates the given bean.
+     *
+     * @param <T>  the type of the bean
+     * @param bean the bean to validate
+     * @return the validation result
+     */
+    public static <T> BeanValidationResult validate(final T bean) {
+        return validate(bean.getClass().getSimpleName(), bean);
+    }
+
+    /**
+     * Validates the given bean.
+     *
+     * @param <T>  the type of the bean
+     * @param bean the bean to validate
+     * @return true if the bean is valid
+     */
+    public static <T> boolean isValid(final T bean) {
+        return validate(bean).isValid();
+    }
 }
