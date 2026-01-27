@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -110,11 +111,7 @@ class JpaAutomationCompositionElementTest {
     @Test
     void testJpaAutomationCompositionElementValidation() {
         var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
-
-        assertThatThrownBy(() -> testJpaAutomationCompositionElement.validate(null))
-                .hasMessageMatching("fieldName" + NULL_ERROR);
-
-        assertTrue(testJpaAutomationCompositionElement.validate("").isValid());
+        assertTrue(BeanValidator.isValid(testJpaAutomationCompositionElement));
     }
 
     @Test

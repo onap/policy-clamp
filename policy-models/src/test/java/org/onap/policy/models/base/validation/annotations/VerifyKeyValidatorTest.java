@@ -42,10 +42,10 @@ class VerifyKeyValidatorTest {
     void testStandardAnnotation() {
         StdAnnotation data = new StdAnnotation();
         data.strValue = STRING_VALUE;
-        assertThat(BeanValidator.validate("", data).getResult()).isNull();
+        assertThat(BeanValidator.validate(data).getResult()).isNull();
 
         data.strValue = null;
-        assertThat(BeanValidator.validate("", data).getResult()).contains("strValue", "null");
+        assertThat(BeanValidator.validate(data).getResult()).contains("strValue", "null");
     }
 
     @Test
@@ -54,27 +54,27 @@ class VerifyKeyValidatorTest {
 
         // null key - Jakarta validation will include all constraint violations
         data.key = new PfConceptKey();
-        assertThat(BeanValidator.validate("", data).getResult())
+        assertThat(BeanValidator.validate(data).getResult())
             .contains(KEY_FIELD, IS_A_NULL_KEY);
 
         // invalid version - should invoke cascade validation
         data.key = new StandardCoder().decode("{'name':'abc', 'version':'xyzzy'}".replace('\'', '"'),
             PfConceptKey.class);
-        assertThat(BeanValidator.validate("", data).getResult())
+        assertThat(BeanValidator.validate(data).getResult())
             .contains(KEY_FIELD, "version", "xyzzy", "must match");
 
         // null name
         data.key = new PfConceptKey(PfKey.NULL_KEY_NAME, "2.3.4");
-        assertThat(BeanValidator.validate("", data).getResult()).contains(KEY_FIELD, "name", IS_NULL);
+        assertThat(BeanValidator.validate(data).getResult()).contains(KEY_FIELD, "name", IS_NULL);
 
         // null version
         data.key = new PfConceptKey(STRING_VALUE, PfKey.NULL_KEY_VERSION);
-        assertThat(BeanValidator.validate("", data).getResult()).contains(KEY_FIELD, "version", IS_NULL);
+        assertThat(BeanValidator.validate(data).getResult()).contains(KEY_FIELD, "version", IS_NULL);
 
         // null name, invalid version - should get two messages
         data.key = new StandardCoder().decode("{'name':'NULL', 'version':'xyzzy'}".replace('\'', '"'),
             PfConceptKey.class);
-        assertThat(BeanValidator.validate("", data).getResult())
+        assertThat(BeanValidator.validate(data).getResult())
             .contains(KEY_FIELD, "name", IS_NULL, "version", "xyzzy", "must match");
     }
 
@@ -84,14 +84,14 @@ class VerifyKeyValidatorTest {
         data.key = new PfConceptKey(); // totally invalid key
 
         // should be ok, since no validations are performed
-        assertThat(BeanValidator.validate("", data).getResult()).isNull();
+        assertThat(BeanValidator.validate(data).getResult()).isNull();
     }
 
     @Test
     void testVerifyKeyOnGetters() {
         GetterKeyAnnot data = new GetterKeyAnnot();
 
-        var result = BeanValidator.validate("", data);
+        var result = BeanValidator.validate(data);
         assertThat(result.getResult())
                 .contains("nullKey", IS_A_NULL_KEY)
                 .contains("nullVersionKey", "version", IS_NULL)

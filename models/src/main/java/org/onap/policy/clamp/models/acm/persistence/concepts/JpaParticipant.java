@@ -33,8 +33,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,7 +43,6 @@ import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.Validated;
 
 /**
  * Class to represent a participant in the database.
@@ -56,12 +53,8 @@ import org.onap.policy.models.base.Validated;
 @Table(name = "Participant")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class JpaParticipant extends Validated
-        implements PfAuthorative<Participant>, Comparable<JpaParticipant>, Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -4697758484642403483L;
+@EqualsAndHashCode
+public class JpaParticipant implements PfAuthorative<Participant>, Comparable<JpaParticipant> {
 
     @Id
     @NotNull

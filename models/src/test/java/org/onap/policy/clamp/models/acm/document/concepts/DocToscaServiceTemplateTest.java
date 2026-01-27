@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,6 @@ class DocToscaServiceTemplateTest {
         doc2.setPolicyTypes(doc.getPolicyTypes());
         assertThat(doc).isEqualByComparingTo(doc2);
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
-        assertThat(doc.validate("serviceTemplate")).isNotNull();
 
         serviceTemplate.setName(NAME);
         serviceTemplate.setVersion("1.1.1");
@@ -231,9 +230,6 @@ class DocToscaServiceTemplateTest {
 
     @Test
     void testNullPointer() {
-        var docCapabilityType = new DocToscaCapabilityType();
-        assertThatThrownBy(() -> docCapabilityType.validate(null)).   isInstanceOf(NullPointerException.class);
-
         var docConceptKey = new DocConceptKey();
         assertThatThrownBy(() -> docConceptKey.setName(null)).   isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> docConceptKey.setVersion(null)).   isInstanceOf(NullPointerException.class);

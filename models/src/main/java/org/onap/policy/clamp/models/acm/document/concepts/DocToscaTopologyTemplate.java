@@ -33,13 +33,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class DocToscaTopologyTemplate extends Validated
+@EqualsAndHashCode
+public class DocToscaTopologyTemplate
         implements PfAuthorative<ToscaTopologyTemplate>, Serializable, Comparable<DocToscaTopologyTemplate> {
 
     @Serial
