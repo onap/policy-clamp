@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb8cc589_904753eb",
+        "filename": "runtime-acm/src/main/resources/application.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-01-28T10:57:44Z",
+      "side": 1,
+      "message": "Wrong indentation. Setting is \"management.health.db.enabled\"",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 20
+      },
+      "revId": "a24da7ff1e98ad29411ecd43bc115434f18fd4ae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
