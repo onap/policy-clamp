@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f04bd53_05bd0788",
+        "filename": "packages/policy-clamp-docker/src/main/docker/acm-runtime.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-01-28T15:47:23Z",
+      "side": 1,
+      "message": "I think this whole script could be removed since we are moving duplicated logback files as well. This docker-compose is already updated to not use this script, e.g.\n\n    entrypoint: java -jar /app/app.jar",
+      "revId": "4cac9ea564b1ad9250e25041965f6188712613fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
