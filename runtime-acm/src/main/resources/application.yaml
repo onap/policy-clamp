@@ -66,6 +66,7 @@ runtime:
           - ${KAFKA_SERVER:kafka:9092}
         topicCommInfrastructure: ${TOPIC_COMM_INFRASTRUCTURE:NOOP}
         useHttps: ${KAFKA_USE_HTTPS:false}
+        allowTracing: ${ALLOW_TRACING:false}
         additionalProps:
           allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
           security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
@@ -77,6 +78,7 @@ runtime:
           - ${KAFKA_SERVER:kafka:9092}
         topicCommInfrastructure: ${TOPIC_COMM_INFRASTRUCTURE:NOOP}
         useHttps: ${KAFKA_USE_HTTPS:false}
+        allowTracing: ${ALLOW_TRACING:false}
         additionalProps:
           allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
           security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
