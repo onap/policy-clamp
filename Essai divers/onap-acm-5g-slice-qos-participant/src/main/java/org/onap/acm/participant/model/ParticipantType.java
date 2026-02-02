@@ -1,3 +1,5 @@
-public class ParticipantType {
-    
+public enum ParticipantType {
+    IOT,
+    AUTOMOTIVE,
+    KUBERNETES
 }
