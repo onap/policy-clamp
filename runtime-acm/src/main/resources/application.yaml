@@ -92,6 +92,7 @@ runtime:
 management:
   server:
     port: ${PROMETHEUS_PORT:6970}
+    base-path: ${PROMETHEUS_PATH:/onap/policy/clamp/acm}
   tracing:
     propagation:
       produce: ${JAEGER_PRODUCER_TYPE:B3}
