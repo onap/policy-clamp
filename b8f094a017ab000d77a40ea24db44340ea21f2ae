@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f09535c1_1ec38d4e",
+        "filename": "runtime-acm/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-02-06T15:21:04Z",
+      "side": 1,
+      "message": "We need to configure this in the docker compose and helm chart separately?",
+      "range": {
+        "startLine": 24,
+        "startChar": 52,
+        "endLine": 24,
+        "endChar": 66
+      },
+      "revId": "b8f094a017ab000d77a40ea24db44340ea21f2ae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
