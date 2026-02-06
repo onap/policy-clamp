@@ -30,10 +30,18 @@ import liquibase.exception.DatabaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
+@Testcontainers
 public abstract class AbstractLiquibaseTestBase {
+
+    private static final DockerImageName POSTGRES_IMAGE = DockerImageName
+            .parse("registry.nordix.org/onaptest/postgres:14.1")
+            .asCompatibleSubstituteFor("postgres");
+
     @Container
-    protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres");
+    protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(POSTGRES_IMAGE);
 
     protected static Liquibase initLiquibase(Connection connection) throws DatabaseException {
         var database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
