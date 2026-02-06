@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d36d49ef_276059ec",
+        "filename": "runtime-acm/src/main/resources/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-02-06T13:19:37Z",
+      "side": 1,
+      "message": "Is it possible to give a default value for RUNTIME_NAME by adding this above the appender:\n\n    \u003cproperty name\u003d\"RUNTIME_NAME\" value\u003d\"${RUNTIME_NAME:-acm-runtime}\" /\u003e\n\nAlternatively, we could make the entire staticParameters optional \u0026 configurable if we want more flexibility:\n\n    \u003cproperty name\u003d\"LOGBACK_STATIC_PARAMS\" value\u003d\"${LOGBACK_STATIC_PARAMS:-}\" /\u003e\n    \u003cappender name\u003d\"STDOUT\" class\u003d\"ch.qos.logback.core.ConsoleAppender\"\u003e\n        \u003cencoder class\u003d\"ch.qos.logback.core.encoder.LayoutWrappingEncoder\"\u003e\n            \u003clayout class\u003d\"org.onap.policy.clamp.acm.runtime.config.LoggingConsoleLayout\"\u003e\n                \u003ctimestampFormat\u003eyyyy-MM-dd\u0027T\u0027HH:mm:ss.SSS+00:00\u003c/timestampFormat\u003e\n                \u003ctimestampFormatTimezoneId\u003e${TIMEZONE}\u003c/timestampFormatTimezoneId\u003e\n                \u003cstaticParameters\u003e${LOGBACK_STATIC_PARAMS}\u003c/staticParameters\u003e",
+      "range": {
+        "startLine": 29,
+        "startChar": 61,
+        "endLine": 29,
+        "endChar": 73
+      },
+      "revId": "c3044bd1f8f9975a02cf7a186da818b45c53e6a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
