@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8ef9950_e2d6565b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-02-09T11:24:35Z",
+      "side": 1,
+      "message": "please remove all \"POLICY_LOGS_IS_UNDEFINED\" folders",
+      "revId": "e5672bd9265c41b1295406262990cafdc30d3ac1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
