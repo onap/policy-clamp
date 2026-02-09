@@ -1114,7 +1114,8 @@
             "acelement.elementId.name": "onap.policy.clamp.ac.starter",
             "service.nodeport": 30800
           }
-        }
+        },
+        "deployTimeoutMs": "100000"
       }
     },
     "709c62b3-8918-41b9-a747-d21eb79c6c22": {
@@ -1141,7 +1142,8 @@
             "acelement.elementId.name": "onap.policy.clamp.ac.bridge",
             "service.nodeport": 30801
           }
-        }
+        },
+        "deployTimeoutMs": "100000"
       }
     },
     "709c62b3-8918-41b9-a747-d21eb79c6c23": {
@@ -1168,7 +1170,8 @@
             "acelement.elementId.name": "onap.policy.clamp.ac.sink",
             "service.nodeport": 30802
           }
-        }
+        },
+        "deployTimeoutMs": "100000"
       }
     },
     "709c62b3-8918-41b9-a747-d21eb79c6c24": {

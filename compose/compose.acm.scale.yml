@@ -43,6 +43,7 @@ services:
     environment:
       RUNTIME_USER: runtimeUser
       RUNTIME_PASSWORD: zb!XztG34
+      TIMEZONE: UTC
       SQL_HOST: postgres
       SQL_PORT: 5432
       SQL_USER: policy_user
@@ -56,7 +57,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
       JAVA_TOOL_OPTIONS: >-
-        -Dlogging.config="/opt/app/policy/clamp/etc/logback.xml"
         -Dcom.sun.management.jmxremote.rmi.port=9090
         -Dcom.sun.management.jmxremote=true
         -Dcom.sun.management.jmxremote.port=9090
@@ -64,15 +64,12 @@ services:
         -Dcom.sun.management.jmxremote.authenticate=false
         -Dcom.sun.management.jmxremote.local.only=false
         -Dotel.java.global-autoconfigure.enabled=true
-    volumes:
-      - ./config/clamp/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
     healthcheck:
       test: "curl --fail --silent http://localhost:6969/onap/policy/clamp/acm/actuator/health/readiness | grep UP || exit 1"
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
-    entrypoint: java -jar /app/app.jar
 
   policy-clamp-ac-http-ppnt-replica:
     image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-http-ppnt:${POLICY_CLAMP_PPNT_VERSION}
