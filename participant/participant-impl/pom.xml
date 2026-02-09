@@ -38,7 +38,6 @@
         <module>participant-impl-simulator</module>
         <module>participant-impl-acelement</module>
         <module>participant-impl-policy</module>
-        <module>participant-impl-cds</module>
         <module>participant-impl-kubernetes</module>
         <module>participant-impl-http</module>
         <module>participant-impl-a1pms</module>
