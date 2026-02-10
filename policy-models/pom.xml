@@ -41,8 +41,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.re2j</groupId>
-            <artifactId>re2j</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
