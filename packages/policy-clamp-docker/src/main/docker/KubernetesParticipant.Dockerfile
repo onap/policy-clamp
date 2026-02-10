@@ -61,7 +61,7 @@ RUN chmod 755 bin/*.sh && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/kubectl
 
-EXPOSE 8083
+EXPOSE 6969
 
 USER policy
 WORKDIR $POLICY_HOME
