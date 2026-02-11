@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.onap.policy.clamp</groupId>
     <artifactId>policy-clamp</artifactId>
-    <version>9.0.1-SNAPSHOT</version>
+    <version>9.0.1</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
