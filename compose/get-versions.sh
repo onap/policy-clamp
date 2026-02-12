@@ -26,7 +26,7 @@ if [ -z "${WORKSPACE}" ]; then
 fi
 
 #default values
-export POLICY_POSTGRES_VER=16.4
+export POLICY_POSTGRES_VER=17.7
 echo POLICY_POSTGRES_VER=${POLICY_POSTGRES_VER}
 
 if [ -n "${USE_LOCAL_IMAGES}" ] && [ "${USE_LOCAL_IMAGES}" = "true" ]; then

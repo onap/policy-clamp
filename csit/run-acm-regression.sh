@@ -126,10 +126,7 @@ source export-ports.sh > /dev/null 2>&1
 
 export CONTAINER_LOCATION="nexus3.onap.org:10001/"
 
-docker compose up -d "policy-clamp-runtime-acm"
-
-# wait for the app to start up
-"${SCRIPTS}"/wait_for_rest.sh localhost "${ACM_PORT}"
+docker compose up policy-clamp-runtime-acm -d --wait
 
 cd ${REGRESSION_FOLDER}
 

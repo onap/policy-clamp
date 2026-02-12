@@ -23,7 +23,6 @@ echo "Invoking the robot tests from: ${ROBOT_FILE}"
 
 DEFAULT_PORT=6969
 DATA=/opt/robotworkspace/models/models-examples/src/main/resources/policies
-NODETEMPLATES=/opt/robotworkspace/models/models-examples/src/main/resources/nodetemplates
 
 POLICY_API_IP=policy-api:${DEFAULT_PORT}
 
@@ -31,15 +30,6 @@ POLICY_PAP_IP=policy-pap:${DEFAULT_PORT}
 
 APEX_IP=policy-apex-pdp:${DEFAULT_PORT}
 APEX_EVENTS_IP=policy-apex-pdp:23324
-
-POLICY_PDPX_IP=policy-xacml-pdp:${DEFAULT_PORT}
-POLICY_OPA_IP=policy-opa-pdp:8282
-
-POLICY_DROOLS_IP=policy-drools-pdp:9696
-DROOLS_IP_1=policy-drools-apps:${DEFAULT_PORT}
-DROOLS_IP_2=policy-drools-apps:9696
-
-DISTRIBUTION_IP=policy-distribution:${DEFAULT_PORT}
 
 POLICY_RUNTIME_ACM_IP=policy-clamp-runtime-acm:${DEFAULT_PORT}
 HTTP_PARTICIPANT_SIM1_IP=policy-clamp-ac-sim-ppnt-1:${DEFAULT_PORT}
@@ -50,10 +40,7 @@ JAEGER_IP=jaeger:16686
 KAFKA_IP=kafka:9092
 PROMETHEUS_IP=prometheus:9090
 
-DIST_TEMP_FOLDER=/tmp/distribution
-
 ROBOT_VARIABLES="-v DATA:${DATA}
--v NODETEMPLATES:${NODETEMPLATES}
 -v POLICY_API_IP:${POLICY_API_IP}
 -v POLICY_RUNTIME_ACM_IP:${POLICY_RUNTIME_ACM_IP}
 -v HTTP_PARTICIPANT_SIM1_IP:$HTTP_PARTICIPANT_SIM1_IP
@@ -64,13 +51,6 @@ ROBOT_VARIABLES="-v DATA:${DATA}
 -v APEX_EVENTS_IP:${APEX_EVENTS_IP}
 -v KAFKA_IP:${KAFKA_IP}
 -v PROMETHEUS_IP:${PROMETHEUS_IP}
--v POLICY_PDPX_IP:${POLICY_PDPX_IP}
--v POLICY_OPA_IP:${POLICY_OPA_IP}
--v POLICY_DROOLS_IP:${POLICY_DROOLS_IP}
--v DROOLS_IP:${DROOLS_IP_1}
--v DROOLS_IP_2:${DROOLS_IP_2}
--v TEMP_FOLDER:${DIST_TEMP_FOLDER}
--v DISTRIBUTION_IP:${DISTRIBUTION_IP}
 -v TEST_ENV:${TEST_ENV}
 -v JAEGER_IP:${JAEGER_IP}"
 

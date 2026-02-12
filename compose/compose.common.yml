@@ -19,10 +19,10 @@
 
 services:
 
-  simulator:
+  policy-models-simulator:
     image: ${CONTAINER_LOCATION}onap/policy-models-simulator:${POLICY_MODELS_VERSION}
-    container_name: simulator
-    hostname: simulator
+    container_name: policy-models-simulator
+    hostname: policy-models-simulator
     networks:
       default:
         aliases:
@@ -40,79 +40,73 @@ services:
       - 6680
     ports:
       - ${SIMULATOR_PORT}:6666
+    healthcheck:
+      test: "nc -z localhost 6666 || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 6
 
-  policy-clamp-ac-sim-ppnt-1:
+  x-policy-clamp-ac-sim-ppnt-template: &policy-clamp-ac-sim-ppnt-template
     image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
-    container_name: policy-clamp-ac-sim-ppnt-1
-    hostname: policy-clamp-ac-sim-ppnt-1
     depends_on:
       - kafka
       - jaeger
-    environment:
+    environment: &policy-clamp-ac-sim-ppnt-env
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
       allowTracing: true
-      OTEL_SERVICE_NAME: sim-ppnt-1
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+    healthcheck:
+      test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/simparticipant/health/readiness | grep -q UP || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+  policy-clamp-ac-sim-ppnt-1:
+    <<: *policy-clamp-ac-sim-ppnt-template
+    container_name: policy-clamp-ac-sim-ppnt-1
+    hostname: policy-clamp-ac-sim-ppnt-1
+    environment:
+      <<: *policy-clamp-ac-sim-ppnt-env
+      OTEL_SERVICE_NAME: sim-ppnt-1
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c90
       applicationName: sim-ppnt-1
       groupId: policy-clamp-ac-sim-ppnt-1
       supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement
-      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
     ports:
       - ${SIM_PARTICIPANT1_PORT}:6969
 
   policy-clamp-ac-sim-ppnt-2:
-    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    <<: *policy-clamp-ac-sim-ppnt-template
     container_name: policy-clamp-ac-sim-ppnt-2
     hostname: policy-clamp-ac-sim-ppnt-2
-    depends_on:
-      - kafka
-      - jaeger
     environment:
-      HTTP_USER: participantUser
-      HTTP_PASSWORD: zb!XztG34
-      topicCommInfrastructure: kafka
-      allowTracing: true
+      <<: *policy-clamp-ac-sim-ppnt-env
       OTEL_SERVICE_NAME: sim-ppnt-2
-      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
-      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c91
       applicationName: sim-ppnt-2
       groupId: policy-clamp-ac-sim-ppnt-2
       supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement2
-      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
     ports:
       - ${SIM_PARTICIPANT2_PORT}:6969
 
   policy-clamp-ac-sim-ppnt-3:
-    image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
+    <<: *policy-clamp-ac-sim-ppnt-template
     container_name: policy-clamp-ac-sim-ppnt-3
     hostname: policy-clamp-ac-sim-ppnt-3
-    depends_on:
-      - kafka
-      - jaeger
     environment:
-      HTTP_USER: participantUser
-      HTTP_PASSWORD: zb!XztG34
-      topicCommInfrastructure: kafka
-      allowTracing: true
+      <<: *policy-clamp-ac-sim-ppnt-env
       OTEL_SERVICE_NAME: sim-ppnt-3
-      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
-      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c92
       applicationName: sim-ppnt-3
       groupId: policy-clamp-ac-sim-ppnt-3
       supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement3
-      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
     ports:
       - ${SIM_PARTICIPANT3_PORT}:6969
 
@@ -125,6 +119,11 @@ services:
       - ${PROMETHEUS_PORT}:9090
     volumes:
       - ./metrics/prometheus.yml:/etc/prometheus/prometheus.yml
+    healthcheck:
+      test: "wget -q -O - http://localhost:9090/-/healthy || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 6
 
   grafana:
     image: nexus3.onap.org:10001/grafana/grafana:latest
@@ -138,45 +137,54 @@ services:
       - ./metrics/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
       - ./metrics/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
       - ./metrics/dashboards:/var/lib/grafana/dashboards
+    healthcheck:
+      test: "wget -q -O - http://localhost:3000/api/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 6
 
 # messaging services:
-  zookeeper:
-    image: nexus3.onap.org:10001/confluentinc/cp-zookeeper:latest
-    container_name: zookeeper
-    hostname: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-
   kafka:
-    image: nexus3.onap.org:10001/confluentinc/cp-kafka:7.4.9
+    image: nexus3.onap.org:10001/confluentinc/cp-kafka:7.7.7
     container_name: kafka
     hostname: kafka
-    depends_on:
-      - zookeeper
     ports:
-      - "9092:9092"
-      - "29092:29092"
+      - 9092:9092
+      - 29092:29092
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093,PLAINTEXT_HOST://0.0.0.0:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_HOST_NAME: kafka
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    healthcheck:
+      test: "kafka-topics --bootstrap-server kafka:29092 --list || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
   jaeger:
-    image: nexus3.onap.org:10001/jaegertracing/all-in-one:1.58
+    image: nexus3.onap.org:10001/jaegertracing/all-in-one:1.76.0
     container_name: jaeger
+    hostname: jaeger
     ports:
-      - "4318:4318"
-      - "4317:4317"
-      - "14250:14250"
-      - "16686:16686"
+      - 4318:4318
+      - 4317:4317
+      - 14250:14250
+      - 16686:16686
     environment:
       - COLLECTOR_OTLP_ENABLED=true
+    healthcheck:
+      test: "wget -q -O - http://localhost:14269/ || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 6
 
 # integration tests:
   csit-tests:
@@ -189,4 +197,4 @@ services:
     environment:
       ROBOT_FILE: ${ROBOT_FILES:-none}
       TEST_ENV: ${TEST_ENV:-docker}
-      PROJECT: ${PROJECT:-policy}
+      PROJECT: ${PROJECT:-clamp}
