@@ -1,6 +1,6 @@
 #
 # ===========LICENSE_START====================================================
-#  Copyright (C) 2024 Nordix Foundation.
+#  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
 # ============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,34 +23,32 @@ services:
     image: nexus3.onap.org:10001/library/postgres:${POLICY_POSTGRES_VER}
     container_name: postgres
     hostname: postgres
-    command: [ '--idle_in_transaction_session_timeout=28800' ]
     env_file: config/db-pg/db-pg.conf
     volumes:
       - ./config/db-pg:/docker-entrypoint-initdb.d:ro
     expose:
       - 5432
     ports:
-      - "5432:5432"
+      - 5432:5432
+    healthcheck:
+      test: pg_isready -U policy_user -d policyadmin || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   policy-db-migrator:
     image: ${CONTAINER_LOCATION}onap/policy-db-migrator:${POLICY_DOCKER_VERSION}
     container_name: policy-db-migrator
     hostname: policy-db-migrator
     depends_on:
-      - postgres
-    expose:
-      - 6824
+      postgres:
+        condition: service_healthy
     env_file: config/db-pg/db-pg.conf
     environment:
       POSTGRES_PASSWORD: policy_user
-      SQL_DB: ${SCHEMAS_TO_BE_CREATED}
+      SQL_DB: policyadmin
       SQL_HOST: postgres
     volumes:
       - ./config/db-migrator/init_pg.sh:/opt/app/policy/bin/db_migrator_policy_init_pg.sh:ro
-      - ./wait_for_port.sh:/opt/app/policy/bin/wait_for_port.sh:ro
-    entrypoint: /opt/app/policy/bin/wait_for_port.sh
-    command: [
-      '-c',
-      '/opt/app/policy/bin/db_migrator_policy_init_pg.sh',
-      'postgres', '5432'
-    ]
+    entrypoint: /opt/app/policy/bin/db_migrator_policy_init_pg.sh

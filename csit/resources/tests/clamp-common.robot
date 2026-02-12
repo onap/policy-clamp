@@ -375,7 +375,7 @@ VerifyKafkaInTraces
     [Arguments]  ${domain}    ${service}
     Log  Creating session http://${domain}
     ${session}=  Create Session  jaeger  http://${domain}
-    ${tags}=    Create Dictionary    otel.library.name=io.opentelemetry.kafka-clients-2.6    messaging.system=kafka
+    ${tags}=    Create Dictionary    otel.scope.name=io.opentelemetry.kafka-clients-2.6    messaging.system=kafka
     ${tags_json}=    evaluate    json.dumps(${tags})    json
     ${params}=    Create Dictionary    service=${service}    tags=${tags_json}    operation=policy-acruntime-participant publish    lookback=1h    limit=10
     ${resp}=  GET On Session  jaeger  /api/traces  params=${params}    expected_status=200

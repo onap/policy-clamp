@@ -56,52 +56,12 @@ scrape_configs:
     username: "policyadmin"
     password: "zb!XztG34"
 
-- job_name: "drools-apps-metrics"
-  static_configs:
-  - targets:
-    - "policy-drools-apps:9696"
-  basic_auth:
-    username: "demo@people.osaaf.org"
-    password: "demo123456!"
-
-- job_name: "drools-pdp-metrics"
-  static_configs:
-  - targets:
-    - "policy-drools:9696"
-  basic_auth:
-    username: "demo@people.osaaf.org"
-    password: "demo123456!"
-
-- job_name: "distribution-metrics"
-  static_configs:
-  - targets:
-    - "policy-distribution:6969"
-  basic_auth:
-    username: "policyadmin"
-    password: "zb!XztG34"
-
-- job_name: "opa-pdp-metrics"
-  static_configs:
-  - targets:
-    - "policy-opa-pdp:8282"
-  basic_auth:
-    username: "policyadmin"
-    password: "zb!XztG34"
-
-- job_name: "xacml-pdp-metrics"
-  static_configs:
-  - targets:
-    - "policy-xacml-pdp:6969"
-  basic_auth:
-    username: "policyadmin"
-    password: "zb!XztG34"
-
 - job_name: "acm-metrics"
   metrics_path: "/onap/policy/clamp/acm/actuator/prometheus"
   static_configs:
   - targets:
-    - "compose-policy-clamp-runtime-acm-replica-1:6969"
-    - "compose-policy-clamp-runtime-acm-replica-2:6969"
+    - "compose-policy-clamp-runtime-acm-1:6969"
+    - "compose-policy-clamp-runtime-acm-2:6969"
   basic_auth:
     username: "runtimeUser"
     password: "zb!XztG34"
