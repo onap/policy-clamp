@@ -69,17 +69,6 @@
         <version.sonar>5.0.0.4389</version.sonar>
         <version.swagger.codegen.v3>3.0.68</version.swagger.codegen.v3>
         <version.swagger.core.v3>2.2.29</version.swagger.core.v3>
-        <surefireArgLine>
-            --add-opens java.base/java.time=ALL-UNNAMED
-            --add-opens java.base/java.util=ALL-UNNAMED
-            --add-opens java.base/java.lang=ALL-UNNAMED
-            --add-opens java.sql/java.sql=ALL-UNNAMED
-            -XX:+EnableDynamicAgentLoading
-            -XX:TieredStopAtLevel=3
-            -XX:ReservedCodeCacheSize=256m
-            -XX:ProfiledCodeHeapSize=128m
-            -XX:NonProfiledCodeHeapSize=96m
-        </surefireArgLine>
     </properties>
 
     <distributionManagement>
@@ -616,6 +605,42 @@
     </scm>
 
     <profiles>
+        <!-- This is a workaround for a build issue on ONAP pipeline affecting openjdk-21.0.7 -->
+        <profile>
+            <id>openjdk-21.0.7</id>
+            <activation>
+                <jdk>21.0.7</jdk>
+            </activation>
+            <properties>
+                <surefireArgLine>
+                    --add-opens java.base/java.time=ALL-UNNAMED
+                    --add-opens java.base/java.util=ALL-UNNAMED
+                    --add-opens java.base/java.lang=ALL-UNNAMED
+                    --add-opens java.sql/java.sql=ALL-UNNAMED
+                    -XX:+EnableDynamicAgentLoading
+                    -XX:TieredStopAtLevel=3
+                    -XX:ReservedCodeCacheSize=256m
+                    -XX:ProfiledCodeHeapSize=128m
+                    -XX:NonProfiledCodeHeapSize=96m
+                </surefireArgLine>
+            </properties>
+        </profile>
+        <profile>
+            <id>other-java-versions</id>
+            <activation>
+                <jdk>!21.0.7</jdk>
+            </activation>
+            <properties>
+                <surefireArgLine>
+                    --add-opens java.base/java.time=ALL-UNNAMED
+                    --add-opens java.base/java.util=ALL-UNNAMED
+                    --add-opens java.base/java.lang=ALL-UNNAMED
+                    --add-opens java.sql/java.sql=ALL-UNNAMED
+                    -XX:+EnableDynamicAgentLoading
+                </surefireArgLine>
+            </properties>
+        </profile>
+
         <profile>
             <id>m2e</id>
             <!-- This profile is only active when the property "m2e.version" is set,
