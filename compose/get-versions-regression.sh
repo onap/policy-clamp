@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # ============LICENSE_START====================================================
-#  Copyright (C) 2024 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -114,9 +114,6 @@ echo POLICY_MARIADB_VER=${POLICY_MARIADB_VER}
 
 export POLICY_POSTGRES_VER=11.1
 echo POLICY_POSTGRES_VER=${POLICY_POSTGRES_VER}
-
-getDockerVersion models $ACM_RELEASE "'policy-models-simulator'" 3.0.1
-export POLICY_MODELS_VERSION="$docker_image_version"
 
 getDockerVersion docker $ACM_RELEASE
 export POLICY_DOCKER_VERSION="$docker_image_version"

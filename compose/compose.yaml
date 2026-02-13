@@ -80,7 +80,6 @@ services:
     container_name: policy-apex-pdp
     hostname: policy-apex-pdp
     depends_on:
-      - policy-models-simulator
       - policy-pap
     ports:
       - ${APEX_PORT}:6969

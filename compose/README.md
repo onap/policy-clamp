@@ -34,7 +34,7 @@ policy-clamp-runtime-acm)
 ```sh
 ./start-compose.sh component
 
-# that will start apex-pdp and its dependencies (pap, api, db, simulator)
+# that will start apex-pdp and its dependencies (pap, api, db)
 ./start-compose.sh apex-pdp
 ```
 
@@ -46,7 +46,7 @@ policy-clamp-runtime-acm)
 ```sh
 ./start-compose.sh component --grafana
 
-# that will start apex-pdp and its dependencies (pap, api, db, simulator) + grafana and prometheus server
+# that will start apex-pdp and its dependencies (pap, api, db) + grafana and prometheus server
 ./start-compose.sh apex-pdp --grafana
 ```
 
@@ -102,7 +102,6 @@ been removed.
 To make it easier and clear how the docker compose system works, there are three files describing
 the services:
 - compose.common.yml
-  - Simulator service
   - ACM-R Participants that don't connect directly to database
   - Messaging services (kafka, zookeeper)
   - Metrics services (prometheus, grafana, jaeger)
