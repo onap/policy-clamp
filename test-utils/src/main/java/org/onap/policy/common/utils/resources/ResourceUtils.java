@@ -194,25 +194,6 @@ public final class ResourceUtils {
     }
 
     /**
-     * Gets the file path for a resource on the local file system or on the class path.
-     *
-     * @param resource the resource to the get the file path for
-     * @return the resource file path
-     */
-    public static String getFilePath4Resource(final String resource) {
-        if (resource == null) {
-            return null;
-        }
-
-        var modelFileUrl = getUrl4Resource(resource);
-        if (modelFileUrl != null) {
-            return modelFileUrl.getPath();
-        } else {
-            return resource;
-        }
-    }
-
-    /**
      * Read the list of entries in a resource directory.
      *
      * @param resourceDirectoryName the name of the resource directory
@@ -246,7 +227,7 @@ public final class ResourceUtils {
      * @param resourceDirectoryName the name of the resource directory
      * @return a set of the directory contents
      */
-    public static Set<String> getDirectoryContentsLocal(final URL localResourceDirectoryUrl,
+    private static Set<String> getDirectoryContentsLocal(final URL localResourceDirectoryUrl,
             final String resourceDirectoryName) {
         var localDirectory = new File(localResourceDirectoryUrl.getFile());
 
@@ -275,7 +256,7 @@ public final class ResourceUtils {
      * @param resourceDirectoryName the name of the resource directory
      * @return a set of the directory contents
      */
-    public static Set<String> getDirectoryContentsJar(final URL jarResourceDirectoryUrl,
+    private static Set<String> getDirectoryContentsJar(final URL jarResourceDirectoryUrl,
             final String resourceDirectoryName) {
         String dirNameWithSlash = resourceDirectoryName + "/";
         int minLength = dirNameWithSlash.length() + 1;

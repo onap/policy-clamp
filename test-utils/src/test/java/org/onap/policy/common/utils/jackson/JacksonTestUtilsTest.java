@@ -53,6 +53,9 @@ class JacksonTestUtilsTest {
         var data = new Data();
         data.setId(500);
         data.setText(HELLO);
+        // file is found
+        assertThatCode(() -> utils.compareJson(data, JacksonTestUtilsTest.class))
+                .doesNotThrowAnyException();
         // file not found
         var file = new File(JacksonTestUtilsTest.class.getSimpleName() + "-NotFound.json");
         assertThatThrownBy(() -> utils.compareJson(data, file))
