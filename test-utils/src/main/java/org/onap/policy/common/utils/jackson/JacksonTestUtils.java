@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.re2j.Pattern;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,11 +42,6 @@ import lombok.Getter;
  */
 @Getter
 public class JacksonTestUtils {
-
-    /**
-     * Matches script items, of the form ${xxx}, within text.
-     */
-    private static final Pattern SCRIPT_PAT = Pattern.compile("\\$\\{([^}]+)\\}");
 
     /**
      * Engine used to interpolate strings before they're compared.

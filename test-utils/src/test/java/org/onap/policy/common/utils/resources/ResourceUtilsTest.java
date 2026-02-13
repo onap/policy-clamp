@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Ericsson. All rights reserved.
  *  Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2020-2021, 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Modifications Copyright (C) 2020-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -245,7 +245,7 @@ class ResourceUtilsTest {
 
         theString = ResourceUtils.getResourceAsString("");
 
-        assertEquals("keystore-test\nlogback-test.xml\nMETA-INF\norg\ntestdir\nversion.txt\nwebapps\n", theString);
+        assertEquals("org\ntestdir\n", theString);
 
     }
 
@@ -305,16 +305,16 @@ class ResourceUtilsTest {
 
         Set<String> resultD1 = ResourceUtils.getDirectoryContents("org/onap/policy/common/utils");
         assertFalse(resultD1.isEmpty());
-        assertEquals("org/onap/policy/common/utils/coder/", normalizePath(resultD1.iterator().next()));
+        assertEquals("org/onap/policy/common/utils/jackson/", normalizePath(resultD1.iterator().next()));
 
-        Set<String> resultD2 = ResourceUtils.getDirectoryContents("org/onap/policy/common/utils/coder");
-        assertTrue(resultD2.size() >= 15);
-        assertEquals("org/onap/policy/common/utils/coder/CoderExceptionTest.class",
+        Set<String> resultD2 = ResourceUtils.getDirectoryContents("org/onap/policy/common/utils/jackson");
+        assertTrue(resultD2.size() == 4);
+        assertEquals("org/onap/policy/common/utils/jackson/JacksonTestUtilsTest$1.class",
                 normalizePath(resultD2.iterator().next()));
 
         Set<String> resultJ0 = ResourceUtils.getDirectoryContents("com");
-        assertTrue(resultJ0.contains("com/fasterxml/"));
-        assertEquals("com/fasterxml/", normalizePath(resultJ0.iterator().next()));
+        assertTrue(resultJ0.contains("com/openpojo/"));
+        assertEquals("com/openpojo/", normalizePath(resultJ0.iterator().next()));
 
         Set<String> resultJ1 = ResourceUtils.getDirectoryContents("com/fasterxml/jackson/core");
         assertTrue(resultJ1.size() > 1);

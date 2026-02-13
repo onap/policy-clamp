@@ -50,6 +50,7 @@
 
     <modules>
         <module>clamp-parent</module>
+        <module>test-utils</module>
         <module>policy-common</module>
         <module>policy-models</module>
         <module>common</module>
