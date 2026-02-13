@@ -75,10 +75,7 @@
             --add-opens java.base/java.lang=ALL-UNNAMED
             --add-opens java.sql/java.sql=ALL-UNNAMED
             -XX:+EnableDynamicAgentLoading
-            -XX:TieredStopAtLevel=3
-            -XX:ReservedCodeCacheSize=256m
-            -XX:ProfiledCodeHeapSize=128m
-            -XX:NonProfiledCodeHeapSize=96m
+            -XX:CompileCommand=exclude,com/fasterxml/jackson/databind/introspect/*.*
         </surefireArgLine>
     </properties>
 
