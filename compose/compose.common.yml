@@ -19,33 +19,6 @@
 
 services:
 
-  policy-models-simulator:
-    image: ${CONTAINER_LOCATION}onap/policy-models-simulator:${POLICY_MODELS_VERSION}
-    container_name: policy-models-simulator
-    hostname: policy-models-simulator
-    networks:
-      default:
-        aliases:
-          - aai-sim
-          - grpc-sim
-          - sdnc-sim
-          - so-sim
-    volumes:
-      - ./config/sim-all:/opt/app/policy/simulators/etc/mounted:ro
-      - ./config/sim-all/logback.xml:/opt/app/policy/simulators/etc/mounted/logback.xml:ro
-    expose:
-      - 6666
-      - 6668
-      - 6669
-      - 6680
-    ports:
-      - ${SIMULATOR_PORT}:6666
-    healthcheck:
-      test: "nc -z localhost 6666 || exit 1"
-      interval: 5s
-      timeout: 5s
-      retries: 6
-
   x-policy-clamp-ac-sim-ppnt-template: &policy-clamp-ac-sim-ppnt-template
     image: ${CONTAINER_LOCATION}onap/policy-clamp-ac-sim-ppnt:${POLICY_CLAMP_PPNT_VERSION}
     depends_on:
