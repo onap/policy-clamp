@@ -85,6 +85,12 @@
             <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
