@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ ============LICENSE_START=======================================================
+  ~ Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved
+  ~ ================================================================================
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  ~ SPDX-License-Identifier: Apache-2.0
+  ~ ============LICENSE_END=========================================================
+-->
+<ruleset xmlns="https://www.mojohaus.org/VERSIONS/RULE/3.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://www.mojohaus.org/VERSIONS/RULE/3.0.0 https://www.mojohaus.org/versions/versions-model/xsd/rule-3.0.0.xsd">
+
+    <!-- Globally ignore pre-release versions -->
+    <ignoreVersions>
+        <ignoreVersion type="regex">(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</ignoreVersion>
+    </ignoreVersions>
+
+    <!-- Artifact-specific rules -->
+    <rules>
+        <!-- Kubernetes client - ignore legacy versions -->
+        <rule groupId="io.kubernetes" artifactId="client-java">
+            <ignoreVersions>
+                <ignoreVersion type="regex">.*-legacy</ignoreVersion>
+            </ignoreVersions>
+        </rule>
+
+        <!-- OpenTelemetry Kafka clients - exclude versions higher than 2.23.0-alpha -->
+        <!-- NOTE: Versions beyond 2.23.0-alpha break Spring Boot 3.5 participants -->
+        <rule groupId="io.opentelemetry.instrumentation" artifactId="opentelemetry-kafka-clients-2.6">
+            <ignoreVersions>
+                <ignoreVersion type="range">(2.23.0-alpha,)</ignoreVersion>
+            </ignoreVersions>
+        </rule>
+    </rules>
+
+</ruleset>

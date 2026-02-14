@@ -42,7 +42,7 @@
         <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
         <!-- Dependency Versions -->
         <version.springboot>4.0.6</version.springboot>
-        <version.swagger.core.v3>2.2.45</version.swagger.core.v3>
+        <version.swagger.core.v3>2.2.49</version.swagger.core.v3>
         <surefireArgLine>
             --add-opens java.base/java.time=ALL-UNNAMED
             --add-opens java.base/java.util=ALL-UNNAMED
@@ -124,18 +124,18 @@
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>jackson-databind-nullable</artifactId>
-                <version>0.2.9</version>
+                <version>0.2.10</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>3.0.2</version>
+                <version>3.0.3</version>
             </dependency>
             <!-- Kubernetes client is used by kserve participant -->
             <dependency>
                 <groupId>io.kubernetes</groupId>
                 <artifactId>client-java</artifactId>
-                <version>25.0.0</version>
+                <version>26.0.0</version>
             </dependency>
             <!-- Utilities -->
             <dependency>

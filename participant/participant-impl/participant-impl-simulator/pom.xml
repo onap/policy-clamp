@@ -34,9 +34,7 @@
 
     <!-- This overrides parent pom to use Spring Boot 3.5 to test compatibility with intermediary on Spring Boot 4 -->
     <properties>
-        <version.springboot>3.5.12</version.springboot>
-        <!-- Override embedded Tomcat to fix CVE-2026-29145 (minimum safe version for Spring Boot 3.5) -->
-        <version.tomcat>10.1.53</version.tomcat>
+        <version.springboot>3.5.14</version.springboot>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -53,40 +51,18 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>2.8.14</version>
+                <version>2.8.17</version>
             </dependency>
 
             <!-- =================================================
                  Spring Boot Version Overrides for CVE fixes
                  Please review after every Spring Boot upgrade
                  ================================================= -->
-            <!-- GHSA-72hv-8253-57qq -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.21.1</version>
-            </dependency>
             <!-- CVE-2025-48924 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.18.0</version>
-            </dependency>
-            <!-- Override embedded Tomcat to fix CVE-2026-29145 (minimum safe version for Spring Boot 3.5) -->
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-core</artifactId>
-                <version>${version.tomcat}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-el</artifactId>
-                <version>${version.tomcat}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-websocket</artifactId>
-                <version>${version.tomcat}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
