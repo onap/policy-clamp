@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024 Nordix Foundation.
+ *  Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.core.Response;
 import java.io.Serial;
 import java.util.LinkedHashMap;
@@ -40,14 +42,16 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaWithTypeAndObjectP
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties({"typeDocConceptKey"})
 public class DocToscaWithTypeAndStringProperties<T extends ToscaWithTypeAndObjectProperties> extends DocToscaEntity<T> {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @JsonProperty("type")
     private String type;
 
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     private String typeVersion;
 
     @SuppressWarnings("squid:S1948")
@@ -97,7 +101,9 @@ public class DocToscaWithTypeAndStringProperties<T extends ToscaWithTypeAndObjec
         properties = PfUtils.mapMap(authorativeConcept.getProperties(), x -> x);
     }
 
+    @JsonIgnore
     public DocConceptKey getTypeDocConceptKey() {
         return new DocConceptKey(type, typeVersion);
     }
+
 }

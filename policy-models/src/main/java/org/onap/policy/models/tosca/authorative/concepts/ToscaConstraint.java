@@ -3,7 +3,7 @@
  * ONAP Policy Model
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
 
@@ -34,23 +34,23 @@ import lombok.Data;
  */
 @Data
 public class ToscaConstraint {
-    @SerializedName("valid_values")
+    @JsonProperty("valid_values")
     private List<String> validValues;
 
     private String equal;
 
-    @SerializedName("greater_than")
+    @JsonProperty("greater_than")
     private String greaterThan;
 
-    @SerializedName("greater_or_equal")
+    @JsonProperty("greater_or_equal")
     private String greaterOrEqual;
 
-    @SerializedName("less_than")
+    @JsonProperty("less_than")
     private String lessThan;
 
-    @SerializedName("less_or_equal")
+    @JsonProperty("less_or_equal")
     private String lessOrEqual;
 
-    @SerializedName("in_range")
+    @JsonProperty("in_range")
     private List<String> rangeValues;
 }

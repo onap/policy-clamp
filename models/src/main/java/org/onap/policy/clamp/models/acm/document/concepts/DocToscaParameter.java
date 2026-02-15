@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024 Nordix Foundation.
+ *  Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
@@ -45,7 +45,7 @@ public class DocToscaParameter implements PfAuthorative<ToscaParameter>, Seriali
     private String type;
 
     @NotNull
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     private String typeVersion;
 
     @SuppressWarnings("squid:S1948")

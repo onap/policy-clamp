@@ -49,7 +49,7 @@ COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 WORKDIR $POLICY_HOME
 COPY --chown=policy:policy /maven/policy-clamp-participant-impl-a1pms.jar /app/app.jar
 
-EXPOSE 8086
+EXPOSE 6969
 
 USER policy
 WORKDIR $POLICY_HOME

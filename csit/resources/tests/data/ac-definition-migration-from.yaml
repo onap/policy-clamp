@@ -1,0 +1,209 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+tosca_definitions_version: tosca_simple_yaml_1_3
+name: Migration-From
+metadata:
+  primeTimeoutMs: 200000
+  deprimeTimeoutMs: 100000
+data_types:
+  onap.datatypes.ToscaConceptIdentifier:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+
+node_types:
+  org.onap.policy.clamp.acm.Participant:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+  org.onap.policy.clamp.acm.AutomationCompositionElement:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+        metadata:
+          common: true
+        description: Specifies the organization that provides the automation composition element
+      startPhase:
+        type: integer
+        required: false
+        constraints:
+          - greater_or_equal: 0
+        metadata:
+          common: true
+        description: A value indicating the start phase in which this automation composition element will be started, the
+          first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
+          in reverse start phase order. Automation Composition Elements with the same start phase are started and
+          stopped simultaneously
+      stage:
+        type: map
+        description: A map of list indicating for each operation the stages in which this automation composition element will be started, the
+          first stage is zero. Automation Composition Elements are started in their stage order.
+          Automation Composition Elements with the same stage are started simultaneously.
+
+  org.onap.policy.clamp.acm.AutomationComposition:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+        metadata:
+          common: true
+        description: Specifies the organization that provides the automation composition element
+      elements:
+        type: list
+        required: true
+        metadata:
+          common: true
+        entry_schema:
+          type: onap.datatypes.ToscaConceptIdentifier
+        description: Specifies a list of automation composition element definitions that make up this automation composition definition
+
+  org.onap.policy.clamp.acm.SimAutomationCompositionElement:
+    version: 1.0.0
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      baseUrl:
+        type: string
+        required: true
+        description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
+        metadata:
+          sensitive: true
+      httpHeaders:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+        description: HTTP headers to send on REST requests
+      configurationEntities:
+        type: map
+        required: true
+        entry_schema:
+          type: map
+        description: The configuration entities the Automation Composition Element is managing and their associated REST requests
+
+  org.onap.policy.clamp.acm.SimAutomationCompositionElement2:
+    version: 1.0.0
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      baseUrl:
+        type: string
+        required: true
+        description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
+        metadata:
+          sensitive: true
+      httpHeaders:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+        description: HTTP headers to send on REST requests
+      configurationEntities:
+        type: map
+        required: true
+        entry_schema:
+          type: map
+        description: The configuration entities the Automation Composition Element is managing and their associated REST requests
+
+topology_template:
+
+  node_templates:
+
+    org.onap.policy.clamp.acm.SimParticipant:
+      version: 2.3.4
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant Simulator
+      properties:
+        provider: ONAP
+
+    onap.policy.clamp.ac.element.Sim_StarterAutomationCompositionElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.SimAutomationCompositionElement
+      type_version: 1.0.0
+      description: Automation composition element for the http requests of AC Element Starter microservice
+      properties:
+        provider: ONAP
+        startPhase: 0
+        stage:
+          prepare: [1,2]
+          migrate: [1,2]
+
+    onap.policy.clamp.ac.element.Sim_BridgeAutomationCompositionElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.SimAutomationCompositionElement
+      type_version: 1.0.0
+      description: Automation composition element for the http requests of AC Element Bridge microservice
+      properties:
+        provider: ONAP
+        startPhase: 0
+        stage:
+          prepare: [0,1]
+          migrate: [0,1]
+
+    onap.policy.clamp.ac.element.Sim_SinkAutomationCompositionElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.SimAutomationCompositionElement
+      type_version: 1.0.0
+      description: Automation composition element for the http requests of AC Element Sink microservice
+      properties:
+        provider: ONAP
+        startPhase: 0
+        stage:
+          prepare: [0,2]
+          migrate: [0,2]
+
+    onap.policy.clamp.ac.element.Sim_Sink2AutomationCompositionElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.SimAutomationCompositionElement2
+      type_version: 1.0.0
+      description: Automation composition element for the http requests of AC Element Sink microservice
+      properties:
+        provider: ONAP
+        startPhase: 0
+        stage:
+          prepare: [ 0,3 ]
+          migrate: [ 0,3 ]
+
+    onap.policy.clamp.ac.element.AutomationCompositionDefinition:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.AutomationComposition
+      type_version: 1.0.1
+      description: Automation composition for Demo
+      properties:
+        provider: ONAP
+        elements:
+          - name: onap.policy.clamp.ac.element.Sim_StarterAutomationCompositionElement
+            version: 1.2.3
+          - name: onap.policy.clamp.ac.element.Sim_BridgeAutomationCompositionElement
+            version: 1.2.3
+          - name: onap.policy.clamp.ac.element.Sim_SinkAutomationCompositionElement
+            version: 1.2.3
+          - name: onap.policy.clamp.ac.element.Sim_Sink2AutomationCompositionElement
+            version: 1.2.3

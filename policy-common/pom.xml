@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
         <artifactId>dependencies</artifactId>
-        <version>9.0.1-SNAPSHOT</version>
+        <version>9.0.2-SNAPSHOT</version>
         <relativePath>../clamp-parent/dependencies/pom.xml</relativePath>
     </parent>
 
@@ -35,10 +35,6 @@
     <name>${project.artifactId}</name>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -68,12 +64,16 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -87,10 +87,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-jexl3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -109,13 +105,16 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.re2j</groupId>
             <artifactId>re2j</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.openpojo</groupId>

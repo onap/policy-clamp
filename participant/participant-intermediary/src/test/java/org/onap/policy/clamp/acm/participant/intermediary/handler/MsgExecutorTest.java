@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
@@ -80,7 +82,7 @@ class MsgExecutorTest {
         cacheProvider.addElementDefinition(compositionId, definitions, revisionIdComposition);
         msgExecutor.check();
         verify(automationCompositionHandler, timeout(200)).handleAutomationCompositionDeploy(updateMsg);
-        assertThat(cacheProvider.getMessagesOnHold()).isEmpty();
+        await().atMost(200, TimeUnit.MILLISECONDS).until(() -> cacheProvider.getMessagesOnHold().isEmpty());
     }
 
     @Test
@@ -105,6 +107,7 @@ class MsgExecutorTest {
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
         var parameters = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameters);
+        assertThat(cacheProvider.getMessagesOnHold()).isEmpty();
         cacheProvider.addElementDefinition(compositionId, definitions, revisionIdComposition);
 
         var publisher = mock(ParticipantMessagePublisher.class);
@@ -119,7 +122,7 @@ class MsgExecutorTest {
         cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
                 participantDeploy, acMsg.getRevisionIdInstance());
         msgExecutor.check();
-        verify(automationCompositionHandler, timeout(100)).handleAutomationCompositionStateChange(stateChangeMsg);
-        assertThat(cacheProvider.getMessagesOnHold()).isEmpty();
+        verify(automationCompositionHandler, timeout(200)).handleAutomationCompositionStateChange(stateChangeMsg);
+        await().atMost(200, TimeUnit.MILLISECONDS).until(() -> cacheProvider.getMessagesOnHold().isEmpty());
     }
 }

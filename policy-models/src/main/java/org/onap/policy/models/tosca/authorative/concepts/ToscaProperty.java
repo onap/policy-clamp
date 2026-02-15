@@ -3,7 +3,7 @@
  * ONAP Policy Model
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
@@ -42,22 +42,22 @@ public class ToscaProperty {
     private String name;
     private String type;
 
-    @SerializedName("type_version")
+    @JsonProperty("type_version")
     private String typeVersion;
 
     private String description;
 
-    @SerializedName("default")
+    @JsonProperty("default")
     private Object defaultValue;
 
     private boolean required = false;
     private Status status;
     private List<ToscaConstraint> constraints;
 
-    @SerializedName("key_schema")
+    @JsonProperty("key_schema")
     private ToscaSchemaDefinition keySchema;
 
-    @SerializedName("entry_schema")
+    @JsonProperty("entry_schema")
     private ToscaSchemaDefinition entrySchema;
 
     private Map<String, String> metadata;

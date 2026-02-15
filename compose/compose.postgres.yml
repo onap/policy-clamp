@@ -1,0 +1,54 @@
+#
+# ===========LICENSE_START====================================================
+#  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
+# ============================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ============LICENSE_END=====================================================
+#
+
+# Services running against postgres database
+
+services:
+  postgres:
+    image: nexus3.onap.org:10001/library/postgres:${POLICY_POSTGRES_VER}
+    container_name: postgres
+    hostname: postgres
+    env_file: config/db-pg/db-pg.conf
+    volumes:
+      - ./config/db-pg:/docker-entrypoint-initdb.d:ro
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: pg_isready -U policy_user -d policyadmin || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  policy-db-migrator:
+    image: ${CONTAINER_LOCATION}onap/policy-db-migrator:${POLICY_DOCKER_VERSION}
+    container_name: policy-db-migrator
+    hostname: policy-db-migrator
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: config/db-pg/db-pg.conf
+    environment:
+      POSTGRES_PASSWORD: policy_user
+      SQL_DB: policyadmin
+      SQL_HOST: postgres
+    volumes:
+      - ./config/db-migrator/init_pg.sh:/opt/app/policy/bin/db_migrator_policy_init_pg.sh:ro
+    entrypoint: /opt/app/policy/bin/db_migrator_policy_init_pg.sh

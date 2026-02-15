@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      name: runtimeUser
+      password:
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver

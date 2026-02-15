@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
         <artifactId>dependencies</artifactId>
-        <version>9.0.1-SNAPSHOT</version>
+        <version>9.0.2-SNAPSHOT</version>
         <relativePath>../clamp-parent/dependencies/pom.xml</relativePath>
     </parent>
 
@@ -43,10 +43,6 @@
             <groupId>org.onap.policy.clamp</groupId>
             <artifactId>policy-clamp-models</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -100,10 +96,6 @@
             <artifactId>jakarta.ws.rs-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
             <scope>runtime</scope>
@@ -129,6 +121,11 @@
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -242,6 +239,7 @@
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -252,6 +250,10 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -359,15 +361,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${version.springboot}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

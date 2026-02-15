@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 // This test class verifies that rollbacks for each Liquibase release tag works correctly.
-@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LiquibaseRollbackTest extends AbstractLiquibaseTestBase {
 

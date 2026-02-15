@@ -3,16 +3,13 @@ spring:
     active: default
   security:
     user:
-      name: runtimeUser
-      password: zb!XztG34
-  http:
-    converters:
-      preferred-json-mapper: gson
+      name: ${RUNTIME_USER}
+      password:  ${RUNTIME_PASSWORD}
   datasource:
-    url: jdbc:postgresql://${postgresql.host:localhost}:${postgresql.port:5432}/clampacm
+    url: jdbc:postgresql://${SQL_HOST:localhost}:${SQL_PORT:5432}/clampacm
     driverClassName: org.postgresql.Driver
-    username: policy
-    password: P01icY
+    username: ${SQL_USER}
+    password: ${SQL_PASSWORD}
     hikari:
       connectionTimeout: 30000
       idleTimeout: 600000
@@ -36,38 +33,71 @@ server:
 
 runtime:
   topics:
-    operationTopic: policy-acruntime-participant
-    syncTopic: acm-ppnt-sync
+    operationTopic: ${RUNTIME_OPERATION_TOPIC:policy-acruntime-participant}
+    syncTopic: ${RUNTIME_SYNC_TOPIC:acm-ppnt-sync}
   participantParameters:
-    heartBeatMs: 20000
-    maxStatusWaitMs: 150000
-    maxOperationWaitMs: 200000
+    heartBeatMs: ${HEART_BEAT:120000}
+    maxStatusWaitMs: ${MAX_STATUS_WAIT:150000}
+    maxOperationWaitMs: ${MAX_OPERATION_WAIT:36000}
   topicParameterGroup:
     topicSources:
       - topic: ${runtime.topics.operationTopic}
         servers:
-          - ${topicServer:kafka:9092}
-        topicCommInfrastructure: NOOP
+          - ${KAFKA_SERVER:kafka:9092}
+        topicCommInfrastructure: ${TOPIC_COMM_INFRASTRUCTURE:NOOP}
         fetchTimeout: 15000
+        useHttps: ${KAFKA_USE_HTTPS:false}
+        additionalProps:
+          group.id : ${KAFKA_GROUP_ID:acm-runtime}
+          max.poll.records: ${KAFKA_MAX_POLL_RECORDS:100}
+          max.partition.fetch.bytes: ${KAFKA_MAX_PARTITION_FETCH_BYTES:524288}
+          fetch.max.bytes: ${KAFKA_FETCH_MAX_BYTES:10485760}
+          enable.auto.commit: ${KAFKA_ENABLE_AUTO_COMMIT:true}
+          allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+          security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+          sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+          sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     topicSinks:
       - topic: ${runtime.topics.operationTopic}
         servers:
-          - ${topicServer:kafka:9092}
-        topicCommInfrastructure: NOOP
+          - ${KAFKA_SERVER:kafka:9092}
+        topicCommInfrastructure: ${TOPIC_COMM_INFRASTRUCTURE:NOOP}
+        useHttps: ${KAFKA_USE_HTTPS:false}
+        allowTracing: ${ALLOW_TRACING:false}
+        additionalProps:
+          allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+          security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+          sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+          sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
 
       - topic: ${runtime.topics.syncTopic}
         servers:
-          - ${topicServer:kafka:9092}
-        topicCommInfrastructure: NOOP
+          - ${KAFKA_SERVER:kafka:9092}
+        topicCommInfrastructure: ${TOPIC_COMM_INFRASTRUCTURE:NOOP}
+        useHttps: ${KAFKA_USE_HTTPS:false}
+        allowTracing: ${ALLOW_TRACING:false}
+        additionalProps:
+          allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+          security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+          sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+          sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
   acmParameters:
-    toscaElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
-    toscaCompositionName: org.onap.policy.clamp.acm.AutomationComposition
-    enableEncryption: true
+    toscaElementName: ${TOSCA_ELEMENT_NAME:org.onap.policy.clamp.acm.AutomationCompositionElement}
+    toscaCompositionName: ${TOSCA_COMPOSITION_NAME:org.onap.policy.clamp.acm.AutomationComposition}
+    enableEncryption: ${MSG_ENABLE_ENCRYPTION:false}
 
 management:
+  server:
+    port: ${PROMETHEUS_PORT:6970}
+    base-path: ${PROMETHEUS_PATH:/onap/policy/clamp/acm}
+  tracing:
+    propagation:
+      produce: ${JAEGER_PRODUCER_TYPE:B3}
+    sampling:
+      probability: ${JAEGER_SAMPLING_PROBABILITY:1.0}
   endpoints:
     web:
-      base-path: /
+      base-path: /actuator
       exposure:
         include: health, metrics, prometheus
   endpoint:
@@ -76,3 +106,17 @@ management:
       probes:
         enabled: true
       show-components: always
+  health:
+    db:
+      enabled: false
+
+tracing:
+  enabled: ${ALLOW_TRACING:false}
+  exporter:
+    endpoint: ${TRACING_EXPORTER_ENDPOINT:http://jaeger:4318/v1/traces}
+    protocol: ${TRACING_EXPORTER_PROTOCOL:http}
+  sampler:
+    jaeger-remote:
+      endpoint: ${TRACING_SAMPLER_ENDPOINT:http://jaeger:14250}
+
+basicAuth: ${BASIC_AUTH:true}

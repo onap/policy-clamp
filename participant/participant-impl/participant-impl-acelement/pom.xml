@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.onap.policy.clamp.participant</groupId>
         <artifactId>policy-clamp-participant-impl</artifactId>
-        <version>9.0.1-SNAPSHOT</version>
+        <version>9.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>policy-clamp-acm-element-impl</artifactId>
@@ -83,15 +83,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${version.springboot}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,6 @@ RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
 COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY --chown=policy:policy acm-runtime.sh bin/
 COPY --chown=policy:policy /maven/policy-clamp-runtime-acm.jar /app/app.jar
 
 RUN pip uninstall -y setuptools || true
@@ -61,4 +60,4 @@ EXPOSE 6969
 
 USER policy
 WORKDIR $POLICY_HOME/bin
-ENTRYPOINT [ "./acm-runtime.sh" ]
+ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]

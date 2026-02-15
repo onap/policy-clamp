@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,8 +44,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.Validated;
 

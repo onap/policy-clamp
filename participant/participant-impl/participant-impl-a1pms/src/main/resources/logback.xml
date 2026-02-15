@@ -19,72 +19,7 @@
   SPDX-License-Identifier: Apache-2.0
   ============LICENSE_END=========================================================
 -->
-
 <configuration scan="true" scanPeriod="30 seconds" debug="false">
-
-    <property name="logDir" value="${POLICY_LOGS}" />
-
-    <property name="errorLog" value="error" />
-    <property name="debugLog" value="debug" />
-    <property name="networkLog" value="network" />
-
-    <appender name="ErrorOut" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logDir}/${errorLog}.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${logDir}/${errorLog}.%d{yyyy-MM-dd}.%i.log.zip
-            </fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>10GB</totalSizeCap>
-        </rollingPolicy>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
-        </filter>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSS+00:00, UTC}|%level|%logger{0}|%thread] %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="AsyncErrorOut" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="ErrorOut" />
-    </appender>
-
-    <appender name="DebugOut" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logDir}/${debugLog}.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${logDir}/${debugLog}.%d{yyyy-MM-dd}.%i.log.zip
-            </fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>10GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSS+00:00, UTC}|%level|%logger{0}|%thread] %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="AsyncDebugOut" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="DebugOut" />
-    </appender>
-
-    <appender name="NetworkOut" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logDir}/${networkLog}.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${logDir}/${networkLog}.%d{yyyy-MM-dd}.%i.log.zip
-            </fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>10GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSS+00:00, UTC}|%t]%m%n</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="AsyncNetworkOut" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="NetworkOut" />
-    </appender>
-
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <Pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSS+00:00, UTC}|%level|%logger{0}|%thread] %msg%n</Pattern>
@@ -96,18 +31,14 @@
     </appender>
 
     <logger name="acm-network" level="INFO" additivity="false">
-        <appender-ref ref="AsyncNetworkOut" />
         <appender-ref ref="AsyncStdOut" />
     </logger>
 
     <logger name="network" level="OFF" additivity="false">
-        <appender-ref ref="AsyncNetworkOut" />
         <appender-ref ref="AsyncStdOut" />
     </logger>
 
     <root level="INFO">
-        <appender-ref ref="AsyncDebugOut" />
-        <appender-ref ref="AsyncErrorOut" />
         <appender-ref ref="AsyncStdOut" />
     </root>
 

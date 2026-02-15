@@ -24,8 +24,8 @@ import java.io.Serial;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 
 @Data
@@ -61,11 +61,8 @@ public class DocToscaCapabilityType extends DocToscaWithToscaProperties<ToscaCap
     }
 
     @Override
-    public BeanValidationResult validate(@NonNull String fieldName) {
-        var result = super.validate(fieldName);
-
-        validateKeyVersionNotNull(result, "key", getConceptKey());
-
-        return result;
+    @VerifyKey(keyNotNull = false, nameNotNull = false, versionNotNull = true)
+    public PfConceptKey getConceptKey() {
+        return super.getConceptKey();
     }
 }

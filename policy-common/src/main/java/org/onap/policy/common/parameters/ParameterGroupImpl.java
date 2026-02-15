@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +21,15 @@
 
 package org.onap.policy.common.parameters;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
 
 /**
  * Implementation of a parameter group.
  */
-@NotNull
-@NotBlank
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,10 +38,11 @@ public class ParameterGroupImpl implements ParameterGroup {
     /**
      * Group name.
      */
+    @NotBlank
     private String name;
 
     @Override
     public BeanValidationResult validate() {
-        return new BeanValidator().validateTop(getClass().getSimpleName(), this);
+        return BeanValidator.validate(getClass().getSimpleName(), this);
     }
 }
