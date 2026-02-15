@@ -1,66 +1,66 @@
-massive-mimo-clamp/
-│
-├── README.md
-│
-├── docs/
-│   ├── architecture.md
-│   ├── control-loop-flow.md
-│   ├── kpi-definition.md
-│   └── deployment-guide.md
-│
-├── clamp/
-│   ├── tosca/
-│   │   ├── beam-optimization-ac.yaml
-│   │   ├── automation-composition.yaml
-│   │   └── parameters.yaml
-│   │
-│   ├── policies/
-│   │   ├── trigger-policy.json
-│   │   ├── guard-policy.json
-│   │   └── action-policy.json
-│   │
-│   └── scripts/
-│       ├── create-composition.sh
-│       ├── prime-composition.sh
-│       └── deploy-composition.sh
-│
-├── analytics/
-│   ├── beam-optimizer/
-│   │   ├── app.py
-│   │   ├── requirements.txt
-│   │   ├── Dockerfile
-│   │   └── config.yaml
-│   │
-│   └── ml/
-│       ├── train.py
-│       ├── model.pkl
-│       └── inference.py
-│
-├── dcae/
-│   ├── ves-config/
-│   │   └── ves-collector.yaml
-│   │
-│   └── kpi-simulator/
-│       ├── producer.py
-│       └── sample-events.json
-│
-├── ran-control/
-│   ├── a1-policy/
-│   │   └── beam-update-policy.json
-│   │
-│   ├── ric-xapp/
-│   │   ├── xapp.py
-│   │   └── config.yaml
-│   │
-│   └── vendor-adapter/
-│       └── ran-api-mapping.yaml
-│
-├── k8s/
-│   ├── analytics-deployment.yaml
-│   ├── clamp-values.yaml
-│   └── kafka.yaml
-│
-└── tools/
-    ├── send-kpi.sh
-    ├── check-loop-status.sh
-    └── logs.sh
+/*massive-mimo-clamp/
+*│
+*├── README.md
+*│
+*├── docs/
+*│   ├── architecture.md
+*│   ├── control-loop-flow.md
+*│   ├── kpi-definition.md
+*│   └── deployment-guide.md
+*│
+*├── clamp/
+*│   ├── tosca/
+*│   │   ├── beam-optimization-ac.yaml
+*│   │   ├── automation-composition.yaml
+*│   │   └── parameters.yaml
+*│   │
+*│   ├── policies/
+*│   │   ├── trigger-policy.json
+*│   │   ├── guard-policy.json
+*│   │   └── action-policy.json
+*│   │
+*│   └── scripts/
+*│       ├── create-composition.sh
+*│       ├── prime-composition.sh
+*│       └── deploy-composition.sh
+*│
+*├── analytics/
+*│   ├── beam-optimizer/
+*│   │   ├── app.py
+*│   │   ├── requirements.txt
+*│   │   ├── Dockerfile
+*│   │   └── config.yaml
+*│   │
+*│   └── ml/
+*│       ├── train.py
+*│       ├── model.pkl
+*│       └── inference.py
+*│
+*├── dcae/
+*│   ├── ves-config/
+*│   │   └── ves-collector.yaml
+*│   │
+*│   └── kpi-simulator/
+*│       ├── producer.py
+*│       └── sample-events.json
+*│
+*├── ran-control/
+*│   ├── a1-policy/
+*│   │   └── beam-update-policy.json
+*│   │
+*│   ├── ric-xapp/
+*│   │   ├── xapp.py
+*│   │   └── config.yaml
+*│   │
+*│   └── vendor-adapter/
+*│       └── ran-api-mapping.yaml
+*│
+*├── k8s/
+*│   ├── analytics-deployment.yaml
+*│   ├── clamp-values.yaml
+*│   └── kafka.yaml
+*│
+*└── tools/
+*    ├── send-kpi.sh
+*    ├── check-loop-status.sh
+*/   └── logs.sh
