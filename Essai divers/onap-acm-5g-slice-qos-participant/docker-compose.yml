@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+    depends_on: [zookeeper]
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: acm
+      MYSQL_USER: acm
+      MYSQL_PASSWORD: acm
+      MYSQL_ROOT_PASSWORD: root
