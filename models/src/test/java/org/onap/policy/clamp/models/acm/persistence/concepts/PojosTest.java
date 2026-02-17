@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
-import com.openpojo.reflection.PojoClass;
+import com.openpojo.reflection.filters.FilterNonConcrete;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -30,7 +30,6 @@ import com.openpojo.validation.rule.impl.NoPublicFieldsExceptStaticFinalRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.test.ToStringTester;
 
@@ -41,10 +40,12 @@ class PojosTest {
 
     @Test
     void testPojos() {
-        List<PojoClass> pojoClasses =
-                PojoClassFactory.getPojoClasses(PojosTest.class.getPackageName());
+        var pojoClasses = PojoClassFactory.getPojoClassesRecursively(getClass().getPackageName(),
+                new FilterNonConcrete());
+        pojoClasses.removeIf(clazz -> clazz.getName()
+                .matches(".*(Test|Utils|Converter|Comparator|Repository|Provider)$"));
+        pojoClasses.forEach(clazz -> System.out.println("Testing class: " + clazz.getName()));
 
-        // @formatter:off
         final Validator validator = ValidatorBuilder
                 .create()
                 .with(new SetterMustExistRule())
@@ -57,6 +58,6 @@ class PojosTest {
                 .build();
 
         validator.validate(pojoClasses);
-        // @formatter:on
     }
+
 }

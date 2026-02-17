@@ -3,7 +3,7 @@
  * ONAP Policy Model
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Modifications Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,13 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.openpojo.reflection.filters.FilterClassName;
-import com.openpojo.reflection.filters.FilterPackageInfo;
+import com.openpojo.reflection.filters.FilterNonConcrete;
+import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.rule.impl.EqualsAndHashCodeMatchRule;
 import com.openpojo.validation.rule.impl.GetterMustExistRule;
+import com.openpojo.validation.rule.impl.NoPublicFieldsExceptStaticFinalRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
@@ -36,30 +38,28 @@ import org.onap.policy.common.utils.test.ToStringTester;
 
 /**
  * Class to perform unit tests of all pojos.
- *
- * @author Chenfei Gao (cgao@research.att.com)
- *
  */
 class PojosTest {
 
-    private static final String POJO_PACKAGE = "org.onap.policy.models.tosca.authorative.concepts";
-
     @Test
     void testPojos() {
-        // @formatter:off
+        var pojoClasses = PojoClassFactory.getPojoClassesRecursively(getClass().getPackageName(),
+                new FilterNonConcrete());
+        pojoClasses.removeIf(clazz -> clazz.getName().matches(".*(Test|Utils|Converter|Comparator)$"));
+        pojoClasses.forEach(clazz -> System.out.println("Testing class: " + clazz.getName()));
+
         final Validator validator = ValidatorBuilder
                 .create()
-                .with(new ToStringTester())
                 .with(new SetterMustExistRule())
                 .with(new GetterMustExistRule())
+                .with(new EqualsAndHashCodeMatchRule())
+                .with(new NoPublicFieldsExceptStaticFinalRule())
                 .with(new SetterTester())
                 .with(new GetterTester())
+                .with(new ToStringTester())
                 .build();
-        validator.validate(POJO_PACKAGE,
-                new FilterPackageInfo(),
-                new FilterClassName(ToscaIdentifierTestBase.class.getName()),
-                new FilterClassName(".*Test$")
-        );
-        // @formatter:on
+
+        validator.validate(pojoClasses);
     }
+
 }

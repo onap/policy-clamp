@@ -306,7 +306,7 @@ class ParticipantHandlerTest {
         var participantAckMsg = new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertTrue(participantHandler.appliesTo(participantAckMsg));
 
-        var participantMsg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATUS);
+        var participantMsg = new ParticipantStatus();
         assertTrue(participantHandler.appliesTo(participantMsg));
 
         participantMsg.setParticipantId(UUID.randomUUID());

@@ -25,7 +25,7 @@ import jakarta.persistence.Converter;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 
 @Converter(autoApply = true)
-public class StringToDocMessage extends AbstractConverter implements AttributeConverter<DocMessage, String> {
+public class StringToDocMessageConverter extends AbstractConverter implements AttributeConverter<DocMessage, String> {
 
     @Override
     public String convertToDatabaseColumn(DocMessage docMessage) {

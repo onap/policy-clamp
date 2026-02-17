@@ -1,6 +1,9 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * ONAP Policy Decision Models
+ * ================================================================================
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,50 +16,45 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.kafka.participant;
+package org.onap.policy.models.errors.concepts;
 
+import com.openpojo.reflection.filters.FilterNonConcrete;
 import com.openpojo.reflection.impl.PojoClassFactory;
+import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.rule.impl.EqualsAndHashCodeMatchRule;
 import com.openpojo.validation.rule.impl.GetterMustExistRule;
+import com.openpojo.validation.rule.impl.NoPublicFieldsExceptStaticFinalRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.test.ToStringTester;
 
-/**
- * Class to perform unit tests of all pojos.
- */
-class ParticipantPojosTest {
+class PojosTest {
 
     @Test
     void testPojos() {
-        var pojoClasses =
-                PojoClassFactory.getPojoClasses(ParticipantPojosTest.class.getPackageName());
+        var pojoClasses = PojoClassFactory.getPojoClassesRecursively(getClass().getPackageName(),
+                new FilterNonConcrete());
+        pojoClasses.removeIf(clazz -> clazz.getName().matches(".*(Test|Utils|Converter|Comparator)$"));
+        pojoClasses.forEach(clazz -> System.out.println("Testing class: " + clazz.getName()));
 
-        pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantMessage.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantMessageTest.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantAckMessage.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantAckMessageTest.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(AutomationCompositionDeployAck.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(AutomationCompositionDeployAckTest.class));
-
-        // @formatter:off
-        final var validator = ValidatorBuilder
+        final Validator validator = ValidatorBuilder
                 .create()
-                .with(new ToStringTester())
                 .with(new SetterMustExistRule())
                 .with(new GetterMustExistRule())
+                .with(new EqualsAndHashCodeMatchRule())
+                .with(new NoPublicFieldsExceptStaticFinalRule())
                 .with(new SetterTester())
                 .with(new GetterTester())
+                .with(new ToStringTester())
                 .build();
 
         validator.validate(pojoClasses);
-        // @formatter:on
     }
+
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Ericsson. All rights reserved.
  *  Modifications Copyright (C) 2018-2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2019 Nordix Foundation.
+ *  Modifications Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ import com.openpojo.reflection.PojoClass;
 import com.openpojo.validation.affirm.Affirm;
 import com.openpojo.validation.test.Tester;
 import com.openpojo.validation.utils.ValidationHelper;
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import org.hamcrest.Matcher;
-
 
 /**
  * Class to provide toString testing utility for testing pojo classes.
@@ -47,15 +47,15 @@ public class ToStringTester implements Tester {
         matcher = anything();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void run(final PojoClass pojoClass) {
         final Class<?> clazz = pojoClass.getClazz();
         if (anyOf(matcher).matches(clazz)) {
             final Object classInstance = ValidationHelper.getBasicInstance(pojoClass);
 
-            Affirm.affirmFalse("Found default toString output",
-                    classInstance.toString().matches(Object.class.getName() + "@" + "\\w+"));
+            Affirm.affirmFalse("Class [" + clazz.getName() 
+                + "] uses default Object.toString() - please implement a proper toString() method",
+                classInstance.toString().matches(Pattern.quote(clazz.getName()) + "@[0-9a-fA-F]+"));
         }
 
     }
