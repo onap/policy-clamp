@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,24 +37,24 @@ class ParticipantMessageTest {
 
     @Test
     void testCopyConstructor() throws CoderException {
-        assertThatThrownBy(() -> new ParticipantMessage((ParticipantMessage) null))
+        assertThatThrownBy(() -> new TestParticipantMessage(null))
                 .isInstanceOf(NullPointerException.class);
 
         // verify with null values
-        var message = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
-        var newmsg = new ParticipantMessage(message);
+        var message = new TestParticipantMessage();
+        var newmsg = new TestParticipantMessage(message);
         newmsg.setMessageId(message.getMessageId());
         newmsg.setTimestamp(message.getTimestamp());
         assertEquals(message.toString(), newmsg.toString());
 
         // verify with all values
         message = makeMessage();
-        newmsg = new ParticipantMessage(message);
+        newmsg = new TestParticipantMessage(message);
         newmsg.setMessageId(message.getMessageId());
         newmsg.setTimestamp(message.getTimestamp());
         assertEquals(message.toString(), newmsg.toString());
 
-        assertSerializable(message, ParticipantMessage.class);
+        assertSerializable(message, TestParticipantMessage.class);
     }
 
     @Test
@@ -100,13 +100,23 @@ class ParticipantMessageTest {
         assertFalse(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
     }
 
-    private ParticipantMessage makeMessage() {
-        var msg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
+    private TestParticipantMessage makeMessage() {
+        var msg = new TestParticipantMessage();
 
         msg.setParticipantId(CommonTestData.getParticipantId());
         msg.setMessageId(UUID.randomUUID());
         msg.setTimestamp(Instant.ofEpochMilli(3000));
 
         return msg;
+    }
+
+    private static class TestParticipantMessage extends ParticipantMessage {
+        public TestParticipantMessage() {
+            super(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
+        }
+
+        public TestParticipantMessage(ParticipantMessage source) {
+            super(source);
+        }
     }
 }

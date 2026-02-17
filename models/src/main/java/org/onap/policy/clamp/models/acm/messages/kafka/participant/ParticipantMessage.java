@@ -40,7 +40,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ParticipantMessage {
+public abstract class ParticipantMessage {
     @Setter(AccessLevel.NONE)
     private ParticipantMessageType messageType;
 
@@ -79,7 +79,7 @@ public class ParticipantMessage {
      *
      * @param messageType the message type
      */
-    public ParticipantMessage(final ParticipantMessageType messageType) {
+    protected ParticipantMessage(final ParticipantMessageType messageType) {
         this.messageType = messageType;
     }
 
@@ -88,7 +88,7 @@ public class ParticipantMessage {
      *
      * @param source source from which to copy
      */
-    public ParticipantMessage(final ParticipantMessage source) {
+    protected ParticipantMessage(final ParticipantMessage source) {
         this.messageId = source.messageId;
         this.timestamp = source.timestamp;
         this.messageType = source.messageType;
