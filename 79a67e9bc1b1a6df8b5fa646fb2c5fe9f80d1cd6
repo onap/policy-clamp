@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b15000b_3a94635e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-02-17T16:05:46Z",
+      "side": 1,
+      "message": "ToStringTester does not work",
+      "revId": "79a67e9bc1b1a6df8b5fa646fb2c5fe9f80d1cd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fda5ab06_f5b273c9",
+        "filename": "test-utils/src/test/java/org/onap/policy/common/utils/test/ToStringTesterTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-02-17T16:05:46Z",
+      "side": 1,
+      "message": "This fails when negative case is added, i.e. tester still passes without a ToString",
+      "revId": "79a67e9bc1b1a6df8b5fa646fb2c5fe9f80d1cd6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
