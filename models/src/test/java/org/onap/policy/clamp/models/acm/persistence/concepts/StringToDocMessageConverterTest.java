@@ -30,11 +30,11 @@ import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.models.base.PfModelRuntimeException;
 
-class StringToDocMessageTest {
+class StringToDocMessageConverterTest {
 
     @Test
     void testConvert() {
-        var stringToDocMessage = new StringToDocMessage();
+        var stringToDocMessage = new StringToDocMessageConverter();
         var docMessage =  new DocMessage();
         docMessage.setMessageId(UUID.randomUUID().toString());
         docMessage.setInstanceId(UUID.randomUUID());
@@ -48,7 +48,7 @@ class StringToDocMessageTest {
 
     @Test
     void testNull() {
-        var stringToDocMessage = new StringToDocMessage();
+        var stringToDocMessage = new StringToDocMessageConverter();
         var dbData = stringToDocMessage.convertToDatabaseColumn(null);
         assertThat(dbData).isNull();
         var map = stringToDocMessage.convertToEntityAttribute(null);
