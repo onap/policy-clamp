@@ -28,9 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.Test;
 
-/**
- * Tests methods not tested by {@link PojosTest}.
- */
 class ToscaPolicyTest {
 
     @Test

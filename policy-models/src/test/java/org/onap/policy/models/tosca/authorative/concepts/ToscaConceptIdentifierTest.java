@@ -32,9 +32,6 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.models.base.PfConceptKey;
 
-/**
- * Test methods not tested by {@link PojosTest}.
- */
 class ToscaConceptIdentifierTest extends ToscaIdentifierTestBase<ToscaConceptIdentifier> {
 
     public ToscaConceptIdentifierTest() {
