@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.concepts;
+package org.onap.policy.common.utils.test;
 
-import com.openpojo.reflection.PojoClass;
+import com.openpojo.reflection.filters.FilterNonConcrete;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -30,21 +30,40 @@ import com.openpojo.validation.rule.impl.NoPublicFieldsExceptStaticFinalRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import org.onap.policy.common.utils.test.ToStringTester;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Class to perform unit tests of all pojos.
+ * Utility class for testing POJO classes using OpenPojo validation framework.
+ * Validates getter/setter methods, equals/hashCode contracts, and other POJO conventions.
  */
-class AutomationCompositionConceptPojosTest {
+@Slf4j
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public class PojoTester {
 
-    @Test
-    void testPojos() {
-        List<PojoClass> pojoClasses =
-                PojoClassFactory.getPojoClasses(AutomationCompositionConceptPojosTest.class.getPackageName());
+    /**
+     * Tests all POJOs in the specified package using default exclusion pattern.
+     *
+     * @param packageName the package to scan for POJO classes
+     */
+    public static void testPojos(String packageName) {
+        testPojos(packageName, ".*(Test|Utils|Converter|Comparator)$");
+    }
 
-        // @formatter:off
+    /**
+     * Tests all POJOs in the specified package, excluding classes matching the pattern.
+     *
+     * @param packageName the package to scan for POJO classes
+     * @param excludePattern regex pattern for class names to exclude
+     */
+    public static void testPojos(String packageName, String excludePattern) {
+        var pojoClasses = PojoClassFactory.getPojoClassesRecursively(packageName, new FilterNonConcrete());
+        pojoClasses.removeIf(clazz -> clazz.getName().matches(excludePattern));
+        if (pojoClasses.isEmpty()) {
+            throw new IllegalArgumentException("No POJO classes found in package: " + packageName);
+        }
+        pojoClasses.forEach(clazz -> log.info("Testing class: {}", clazz.getName()));
+
         final Validator validator = ValidatorBuilder
                 .create()
                 .with(new SetterMustExistRule())
@@ -55,8 +74,6 @@ class AutomationCompositionConceptPojosTest {
                 .with(new GetterTester())
                 .with(new ToStringTester())
                 .build();
-
         validator.validate(pojoClasses);
-        // @formatter:on
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +18,8 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.persistence.concepts;
+package org.onap.policy.common.utils.test.pojo.empty;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
-
-@Converter(autoApply = true)
-public class StringToDocMessage extends AbstractConverter implements AttributeConverter<DocMessage, String> {
-
-    @Override
-    public String convertToDatabaseColumn(DocMessage docMessage) {
-        return encode(docMessage);
-    }
-
-    @Override
-    public DocMessage convertToEntityAttribute(String message) {
-        if (message == null) {
-            return new DocMessage();
-        }
-        return decode(message, DocMessage.class);
-    }
+public enum NotAPojo {
+    DUMMY
 }

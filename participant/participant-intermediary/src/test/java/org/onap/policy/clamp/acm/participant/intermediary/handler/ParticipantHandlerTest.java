@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
@@ -306,7 +305,7 @@ class ParticipantHandlerTest {
         var participantAckMsg = new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertTrue(participantHandler.appliesTo(participantAckMsg));
 
-        var participantMsg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATUS);
+        var participantMsg = new ParticipantStatus();
         assertTrue(participantHandler.appliesTo(participantMsg));
 
         participantMsg.setParticipantId(UUID.randomUUID());
