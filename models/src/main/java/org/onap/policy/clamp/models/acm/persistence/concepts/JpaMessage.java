@@ -57,7 +57,7 @@ public class JpaMessage implements PfAuthorative<DocMessage> {
     private Timestamp lastMsg = TimestampHelper.nowTimestamp();
 
     @Column(length = 100000)
-    @Convert(converter = StringToDocMessage.class)
+    @Convert(converter = StringToDocMessageConverter.class)
     @NotNull
     private DocMessage docMessage;
 
