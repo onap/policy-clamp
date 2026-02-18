@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.onap.policy.clamp.acm.element.handler.MessageHandler;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.parameters.ElementTopicParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class ConfigService {
         parameters.setTopicSinks(List.of(publisherTopicParameters));
         parameters.setTopicSources(List.of(listenerTopicParameters));
 
-        if (!parameters.isValid()) {
+        if (!BeanValidator.validate(parameters).isValid()) {
             throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST,
                     "Validation failed for topic parameter group. Kafka config not activated");
         }

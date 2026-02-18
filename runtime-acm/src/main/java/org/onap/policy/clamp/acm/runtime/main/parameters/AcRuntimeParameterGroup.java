@@ -25,7 +25,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.common.parameters.topic.TopicParameterGroup;
-import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -43,8 +42,8 @@ public class AcRuntimeParameterGroup {
     @NotNull
     private ParticipantParameters participantParameters;
 
+    @Valid
     @NotNull
-    @ParameterGroupConstraint
     private TopicParameterGroup topicParameterGroup;
 
     @Valid
