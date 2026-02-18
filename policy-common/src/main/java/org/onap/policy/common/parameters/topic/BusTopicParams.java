@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2018-2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019, 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Modifications Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 package org.onap.policy.common.parameters.topic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -57,8 +59,10 @@ import org.apache.commons.lang3.StringUtils;
 public class BusTopicParams {
 
     private int port;
+    @NotEmpty
     private List<String> servers;
     private Map<String, String> additionalProps;
+    @NotBlank
     private String topic;
     private String effectiveTopic;
     private String apiKey;

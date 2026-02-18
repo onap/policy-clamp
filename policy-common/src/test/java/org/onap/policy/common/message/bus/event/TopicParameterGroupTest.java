@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2024 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@ package org.onap.policy.common.message.bus.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.beans.PropertyDescriptor;
@@ -32,6 +31,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.parameters.BeanValidator;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.topic.BusTopicParams;
 import org.onap.policy.common.parameters.topic.TopicParameterGroup;
@@ -53,9 +53,8 @@ class TopicParameterGroupTest {
     @Test
     void test() throws CoderException {
         final TopicParameterGroup topicParameterGroup =
-                testData.toObject(testData.getTopicParameterGroupMap(false), TopicParameterGroup.class);
-        final ValidationResult validationResult = topicParameterGroup.validate();
-        assertTrue(validationResult.isValid());
+                testData.toObject(testData.getTopicParameterGroupMap(false));
+        assertTrue(BeanValidator.isValid(topicParameterGroup));
         assertEquals(CommonTestData.TOPIC_PARAMS, topicParameterGroup.getTopicSinks());
         assertEquals(CommonTestData.TOPIC_PARAMS, topicParameterGroup.getTopicSources());
 
@@ -70,10 +69,8 @@ class TopicParameterGroupTest {
     @Test
     void testValidate() {
         final TopicParameterGroup topicParameterGroup =
-            testData.toObject(testData.getTopicParameterGroupMap(false), TopicParameterGroup.class);
-        final ValidationResult result = topicParameterGroup.validate();
-        assertNull(result.getResult());
-        assertTrue(result.isValid());
+            testData.toObject(testData.getTopicParameterGroupMap(false));
+        assertTrue(BeanValidator.isValid(topicParameterGroup));
     }
 
     @Test
@@ -81,9 +78,7 @@ class TopicParameterGroupTest {
         String json = testData.getParameterGroupAsString(
             packageDir + "TopicParameters_valid.json");
         TopicParameterGroup topicParameterGroup = coder.decode(json, TopicParameterGroup.class);
-        final ValidationResult result = topicParameterGroup.validate();
-        assertNull(result.getResult());
-        assertTrue(result.isValid());
+        assertTrue(BeanValidator.isValid(topicParameterGroup));
     }
 
     @Test
@@ -91,9 +86,7 @@ class TopicParameterGroupTest {
         String json = testData.getParameterGroupAsString(
             packageDir + "TopicParameters_invalid.json");
         TopicParameterGroup topicParameterGroup = coder.decode(json, TopicParameterGroup.class);
-        final ValidationResult result = topicParameterGroup.validate();
-        assertFalse(result.isValid());
-        assertTrue(result.getResult().contains("INVALID"));
+        assertFalse(BeanValidator.isValid(topicParameterGroup));
     }
 
     @Test
@@ -101,8 +94,8 @@ class TopicParameterGroupTest {
         String json = testData.getParameterGroupAsString(
             packageDir + "TopicParameters_missing_mandatory.json");
         TopicParameterGroup topicParameterGroup = coder.decode(json, TopicParameterGroup.class);
-        final ValidationResult result = topicParameterGroup.validate();
-        assertTrue(result.getResult().contains("Mandatory parameters are missing"));
+        final ValidationResult result = BeanValidator.validate("", topicParameterGroup);
+        assertTrue(result.getResult().contains("\"topicSources[0].servers\" value \"[]\" INVALID, must not be empty"));
         assertFalse(result.isValid());
     }
 
@@ -111,9 +104,7 @@ class TopicParameterGroupTest {
         String json = testData.getParameterGroupAsString(
             packageDir + "TopicParameters_all_params.json");
         TopicParameterGroup topicParameterGroup = coder.decode(json, TopicParameterGroup.class);
-        final ValidationResult result = topicParameterGroup.validate();
-        assertNull(result.getResult());
-        assertTrue(result.isValid());
+        assertTrue(BeanValidator.isValid(topicParameterGroup));
         assertTrue(checkIfAllParamsNotEmpty(topicParameterGroup.getTopicSinks()));
         assertTrue(checkIfAllParamsNotEmpty(topicParameterGroup.getTopicSources()));
     }

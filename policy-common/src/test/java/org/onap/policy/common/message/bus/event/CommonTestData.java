@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019, 2024 Nordix Foundation.
+ *  Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.onap.policy.common.parameters.ParameterGroup;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -69,15 +69,14 @@ public class CommonTestData {
      * Converts the contents of a map to a parameter class.
      *
      * @param source property map
-     * @param clazz  class of object to be created from the map
      * @return a new object represented by the map
      */
-    public <T extends ParameterGroup> T toObject(final Map<String, Object> source, final Class<T> clazz) {
+    public TopicParameterGroup toObject(final Map<String, Object> source) {
         try {
-            return coder.decode(coder.encode(source), clazz);
+            return coder.decode(coder.encode(source), TopicParameterGroup.class);
 
         } catch (final CoderException e) {
-            throw new RuntimeException("cannot create " + clazz.getName() + " from map", e);
+            throw new RuntimeException("cannot create TopicParameterGroup from map", e);
         }
     }
 
