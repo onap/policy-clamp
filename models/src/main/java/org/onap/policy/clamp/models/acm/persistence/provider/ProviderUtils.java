@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.onap.policy.common.parameters.BeanValidationResult;
-import org.onap.policy.common.parameters.BeanValidator;
-import org.onap.policy.models.base.PfAuthorative;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.models.base.PfModelRuntimeException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

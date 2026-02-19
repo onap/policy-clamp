@@ -1,43 +1,44 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Ericsson. All rights reserved.
- *  Modifications Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.parameters;
+package org.onap.policy.clamp.models.acm.base;
 
-public enum ValidationStatus {
-    CLEAN,
-    INVALID;
+/**
+ * Interface that provides conversion to and from authorative concepts for other concepts.
+ *
+ * @author Liam Fallon (liam.fallon@est.tech)
+ *
+ * @param T the type of the authorative concept
+ */
+public interface PfAuthorative<T> {
+    /**
+     * Create an instance of the authorative concept from the other concept.
+     *
+     * @return the authorative concept
+     */
+    public T toAuthorative();
 
     /**
-     * The result of a validation is valid unless the status is INVALID.
-     * @return true if the validation has passed
+     * Set an instance of the persist concept to the equivalent values as the other concept.
+     *
+     * @param authorativeConcept the authorative concept
      */
-    public boolean isValid() {
-        return !this.equals(INVALID);
-    }
-
-    /**
-     * Check if the validation was clean.
-     * @return true if the validation is clean
-     */
-    public boolean isClean() {
-        return this.equals(CLEAN);
-    }
+    public void fromAuthorative(final T authorativeConcept);
 }

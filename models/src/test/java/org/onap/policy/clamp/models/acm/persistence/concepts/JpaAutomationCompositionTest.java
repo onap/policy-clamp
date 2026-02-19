@@ -32,13 +32,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.BeanValidator;
 
 /**
  * Test the{@link JpaAutomationCompositionTest} class.

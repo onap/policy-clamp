@@ -35,12 +35,12 @@ import java.util.UUID;
 import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
+import org.onap.policy.clamp.models.acm.base.annotations.VerifyKey;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
-import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Entity

@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.models.base.validation.annotations;
+package org.onap.policy.clamp.models.acm.base.annotations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.parameters.BeanValidator;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 

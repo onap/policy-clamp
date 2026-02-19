@@ -29,6 +29,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
@@ -37,7 +38,6 @@ import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompos
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.data.domain.Example;

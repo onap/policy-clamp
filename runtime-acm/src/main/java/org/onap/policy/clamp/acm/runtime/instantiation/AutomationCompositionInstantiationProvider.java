@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -54,7 +55,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

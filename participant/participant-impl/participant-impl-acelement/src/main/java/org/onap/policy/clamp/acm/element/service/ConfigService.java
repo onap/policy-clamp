@@ -30,7 +30,7 @@ import org.onap.policy.clamp.acm.element.handler.MessageHandler;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.parameters.ElementTopicParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.common.parameters.BeanValidator;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

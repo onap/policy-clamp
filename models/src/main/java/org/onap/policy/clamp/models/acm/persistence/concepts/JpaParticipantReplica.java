@@ -32,10 +32,10 @@ import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.models.base.PfAuthorative;
 
 @Entity
 @Table(name = "ParticipantReplica")

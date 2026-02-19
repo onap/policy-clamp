@@ -27,8 +27,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.base.annotations.VerifyKey;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 
 @Data

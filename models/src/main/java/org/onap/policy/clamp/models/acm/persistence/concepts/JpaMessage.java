@@ -33,9 +33,9 @@ import java.sql.Timestamp;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NonNull;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.models.base.PfAuthorative;
 
 @Entity
 @Table(name = "Message", indexes = {@Index(name = "m_identificationId", columnList = "identificationId")})

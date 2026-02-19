@@ -19,7 +19,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.parameters;
+package org.onap.policy.clamp.models.acm.base.validation;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.parameters.BeanValidator;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 
 class JpaMessageJobTest {
 

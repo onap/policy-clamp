@@ -44,13 +44,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfUtils;
 
 /**

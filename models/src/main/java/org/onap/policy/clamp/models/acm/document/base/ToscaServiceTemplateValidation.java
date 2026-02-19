@@ -27,11 +27,11 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
+import org.onap.policy.clamp.models.acm.base.validation.ValidationStatus;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaEntity;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaTopologyTemplate;
-import org.onap.policy.common.parameters.BeanValidationResult;
-import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.parameters;
+package org.onap.policy.clamp.models.acm.base.validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -28,7 +28,6 @@ import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.models.base.PfUtils;
 
-
 /**
  * Class to represent the PROPERTIES_UPDATE message that the ACM runtime sends to a participant.
  * The ACM Runtime sends updated automation composition element property values to Participants.

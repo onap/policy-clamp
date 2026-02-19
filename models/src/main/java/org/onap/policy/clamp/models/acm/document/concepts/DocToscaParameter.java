@@ -26,7 +26,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.onap.policy.models.base.PfAuthorative;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaParameter;
