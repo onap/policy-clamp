@@ -41,8 +41,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.models.base.PfAuthorative;
 
 /**
  * Class to represent a participant in the database.

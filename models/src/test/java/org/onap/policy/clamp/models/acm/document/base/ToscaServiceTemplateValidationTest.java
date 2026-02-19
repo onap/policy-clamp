@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaDataType;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaNodeTemplate;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaPolicy;
@@ -33,7 +34,6 @@ import org.onap.policy.clamp.models.acm.document.concepts.DocToscaProperty;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaRequirement;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaTopologyTemplate;
-import org.onap.policy.common.parameters.BeanValidationResult;
 
 class ToscaServiceTemplateValidationTest {
 

@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.common.parameters.BeanValidator;
 
 /**
  * Test the {@link JpaParticipant} class.

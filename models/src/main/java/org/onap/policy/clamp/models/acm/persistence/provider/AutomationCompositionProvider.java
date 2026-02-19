@@ -31,6 +31,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
+import org.onap.policy.clamp.models.acm.base.validation.ValidationStatus;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
@@ -44,8 +46,6 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRollbackRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
-import org.onap.policy.common.parameters.BeanValidationResult;
-import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;

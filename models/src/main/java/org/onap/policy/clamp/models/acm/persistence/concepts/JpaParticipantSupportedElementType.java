@@ -32,8 +32,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
+import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.models.base.PfAuthorative;
 
 @Entity
 @Table(name = "ParticipantSupportedAcElements")

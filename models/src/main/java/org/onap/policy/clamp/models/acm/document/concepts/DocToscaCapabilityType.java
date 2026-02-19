@@ -24,8 +24,8 @@ import java.io.Serial;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.models.acm.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 
 @Data
