@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializable;
+import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializeBehaviour;
 import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
@@ -63,7 +64,10 @@ class AutomationCompositionDeployTest {
         property.setType("testType");
         var standardCoder = new StandardCoder();
         var json = standardCoder.encode(property);
-        var propertiesMap = Map.of("Prop1", (Object) json);
+        var propertiesMap = new HashMap<String, Object>();
+        propertiesMap.put("Prop1", json);
+        propertiesMap.put("testProperty", "dummy");
+        propertiesMap.put("nullProperty", null);
         acElement.setProperties(propertiesMap);
 
         var participantDeploy = new ParticipantDeploy();
@@ -75,5 +79,6 @@ class AutomationCompositionDeployTest {
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
         assertSerializable(orig, AutomationCompositionDeploy.class);
+        assertSerializeBehaviour(orig);
     }
 }

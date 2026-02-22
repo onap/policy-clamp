@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,10 @@ package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializable;
+import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializeBehaviour;
 import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.removeVariableFields;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -37,13 +39,17 @@ class PropertiesUpdateTest {
 
     @Test
     void testCopyConstructor() throws CoderException {
-        var acElement = new AcElementDeploy();
-        acElement.setId(UUID.randomUUID());
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setId(UUID.randomUUID());
         var id = new ToscaConceptIdentifier("id", "1.2.3");
-        acElement.setDefinition(id);
+        acElementDeploy.setDefinition(id);
+        var properties = new HashMap<String, Object>();
+        properties.put("testProperty", "dummy");
+        properties.put("nullProperty", null);
+        acElementDeploy.setProperties(properties);
         var participantDeploy = new ParticipantDeploy();
         participantDeploy.setParticipantId(CommonTestData.getParticipantId());
-        participantDeploy.setAcElementList(List.of(acElement));
+        participantDeploy.setAcElementList(List.of(acElementDeploy));
         var orig = new PropertiesUpdate();
         orig.setParticipantUpdatesList(List.of(participantDeploy));
         orig.setCompositionId(UUID.randomUUID());
@@ -54,5 +60,6 @@ class PropertiesUpdateTest {
         var other = new PropertiesUpdate(orig);
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
         assertSerializable(orig, PropertiesUpdate.class);
+        assertSerializeBehaviour(orig);
     }
 }
