@@ -22,6 +22,7 @@
 package org.onap.policy.common.utils.coder;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +60,8 @@ public class StandardCoder implements Coder {
         mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
         // Don't write self references as null, just ignore them
         mapper.configure(SerializationFeature.WRITE_SELF_REFERENCES_AS_NULL, false);
-        
+        // Ignore null fields during serialization
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         // Register modules for Java 8 time support (JSR310)
         mapper.findAndRegisterModules();
 

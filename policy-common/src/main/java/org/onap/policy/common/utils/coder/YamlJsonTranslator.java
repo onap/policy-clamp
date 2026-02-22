@@ -21,6 +21,7 @@
 
 package org.onap.policy.common.utils.coder;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,6 +73,8 @@ public class YamlJsonTranslator {
         this.mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
         // Configure to handle circular references
         this.mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
+        // Ignore null fields during serialization
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     /**

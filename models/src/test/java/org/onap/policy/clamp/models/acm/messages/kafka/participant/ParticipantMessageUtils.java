@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2023-2024 Nordix Foundation.
+ * Copyright (C) 2021,2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -51,5 +53,17 @@ public class ParticipantMessageUtils {
         var other = standardCoder.decode(json, clazz);
 
         assertEquals(removeVariableFields(object.toString()), removeVariableFields(other.toString()));
+    }
+
+    /**
+     * Check if the null fields in properties are omitted in serialization.
+     * @param object the Object
+     * @throws CoderException if object is not serializable
+     */
+    public static <T> void assertSerializeBehaviour(Object object) throws CoderException {
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(object);
+        assertFalse(json.contains("nullProperty"));
+        assertTrue(json.contains("testProperty"));
     }
 }
