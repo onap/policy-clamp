@@ -99,6 +99,7 @@ public class JpaAutomationComposition
     private SubState subState;
 
     @Column
+    @NotNull
     private StateChangeResult stateChangeResult;
 
     @Column

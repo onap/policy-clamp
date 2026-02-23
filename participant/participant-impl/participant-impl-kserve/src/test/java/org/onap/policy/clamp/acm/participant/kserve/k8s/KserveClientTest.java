@@ -78,23 +78,22 @@ class KserveClientTest {
 
     @Test
     void test_deployInferenceServiceValidResponse() throws IOException, ApiException {
-        String jsonContent =
+        final String jsonContent =
                 "{\"apiVersion\": \"serving.kserve.io/v1beta1\",\"kind\": \"InferenceService\",\"metadata\": "
                         + "{\"name\": \"" + inferenceServiceName
                         + "\"},\"spec\": {\"predictor\": {\"model\":{\"modelFormat\": "
                         + "{\"name\": \"sklearn\"},\"storageUri\": "
                         + "\"gs://kfserving-examples/models/sklearn/1.0/model\"}}}}";
 
-        var response = getResponse(HttpStatus.SC_OK);
-        when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.createNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any(), any(), any(),
-                any())).thenReturn(remoteCall);
+        var mockRequest = mock(CustomObjectsApi.APIcreateNamespacedCustomObjectRequest.class);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.createNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertTrue(kserveClient.deployInferenceService(namespace, jsonContent));
     }
 
     @Test
     void test_deployInferenceServiceInvalidResponse() throws IOException, ApiException {
-        String jsonContent =
+        final String jsonContent =
                 "{\"apiVersion\": \"serving.kserve.io/v1beta1\",\"kind\": \"InferenceService\",\"metadata\": "
                         + "{\"name\": \"" + inferenceServiceName
                         + "\"},\"spec\": {\"predictor\": {\"model\":{\"modelFormat\": "
@@ -103,8 +102,10 @@ class KserveClientTest {
 
         var response = getResponse(HttpStatus.SC_BAD_REQUEST);
         when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.createNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any(), any(), any(),
-                any())).thenReturn(remoteCall);
+
+        var mockRequest = mock(CustomObjectsApi.APIcreateNamespacedCustomObjectRequest.class);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.createNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertFalse(kserveClient.deployInferenceService(namespace, jsonContent));
     }
 
@@ -120,8 +121,12 @@ class KserveClientTest {
 
         var response = getResponse(HttpStatus.SC_OK);
         when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.deleteNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any())).thenReturn(remoteCall);
+
+        var mockRequest = mock(CustomObjectsApi.APIdeleteNamespacedCustomObjectRequest.class);
+        when(mockRequest.gracePeriodSeconds(any())).thenReturn(mockRequest);
+        when(mockRequest.orphanDependents(any())).thenReturn(mockRequest);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.deleteNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertTrue(kserveClient.undeployInferenceService(namespace, inferenceServiceName));
     }
 
@@ -130,8 +135,12 @@ class KserveClientTest {
 
         var response = getResponse(HttpStatus.SC_BAD_REQUEST);
         when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.deleteNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any())).thenReturn(remoteCall);
+
+        var mockRequest = mock(CustomObjectsApi.APIdeleteNamespacedCustomObjectRequest.class);
+        when(mockRequest.gracePeriodSeconds(any())).thenReturn(mockRequest);
+        when(mockRequest.orphanDependents(any())).thenReturn(mockRequest);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.deleteNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertFalse(kserveClient.undeployInferenceService(namespace, inferenceServiceName));
     }
 
@@ -140,8 +149,10 @@ class KserveClientTest {
 
         var response = getResponse(HttpStatus.SC_OK, getInferenceServiceResponseBody("True"));
         when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.getNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any())).thenReturn(
-                remoteCall);
+
+        var mockRequest = mock(CustomObjectsApi.APIgetNamespacedCustomObjectRequest.class);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.getNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertEquals("True", kserveClient.getInferenceServiceStatus(namespace, inferenceServiceName));
     }
 
@@ -150,8 +161,10 @@ class KserveClientTest {
 
         var response = getResponse(HttpStatus.SC_OK, getInferenceServiceResponseBody("False"));
         when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.getNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any())).thenReturn(
-                remoteCall);
+
+        var mockRequest = mock(CustomObjectsApi.APIgetNamespacedCustomObjectRequest.class);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.getNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertEquals("False", kserveClient.getInferenceServiceStatus(namespace, inferenceServiceName));
     }
 
@@ -160,8 +173,10 @@ class KserveClientTest {
 
         var response = getResponse(HttpStatus.SC_BAD_REQUEST, "");
         when(remoteCall.execute()).thenReturn(response);
-        when(customObjectsApi.getNamespacedCustomObjectCall(any(), any(), any(), any(), any(), any())).thenReturn(
-                remoteCall);
+
+        var mockRequest = mock(CustomObjectsApi.APIgetNamespacedCustomObjectRequest.class);
+        when(mockRequest.buildCall(any())).thenReturn(remoteCall);
+        when(customObjectsApi.getNamespacedCustomObject(any(), any(), any(), any(), any())).thenReturn(mockRequest);
         assertEquals("false", kserveClient.getInferenceServiceStatus(namespace, inferenceServiceName));
     }
 
