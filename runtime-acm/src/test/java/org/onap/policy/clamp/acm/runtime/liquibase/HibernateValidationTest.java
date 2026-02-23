@@ -39,8 +39,7 @@ import org.springframework.test.context.DynamicPropertySource;
  * It will detect the following issues:
  * - missing tables or columns
  * - incorrect column types
- * It will NOT detect issues related to constraints (e.g. missing NOT NULL constraint),
- * nor will it detect extra tables or columns in the database.
+ * - inconsistent NOT NULL constraints and @NotNull annotations
  */
 @SpringBootTest
 @ActiveProfiles("hibernate-validation")
