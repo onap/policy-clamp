@@ -56,15 +56,15 @@
         <version.lombok>1.18.42</version.lombok>
         <version.maven-checkstyle-plugin>3.3.1</version.maven-checkstyle-plugin>
         <version.maven-remote-resources-plugin>3.1.0</version.maven-remote-resources-plugin>
-        <version.micrometer>1.14.5</version.micrometer>
+        <version.micrometer>1.16.0</version.micrometer>
         <version.mockito>5.20.0</version.mockito>
         <version.mockserver>5.15.0</version.mockserver>
         <version.opentel>1.43.0</version.opentel>
         <version.slf4j>2.0.17</version.slf4j>
-        <version.spring>6.2.12</version.spring>
-        <version.springboot>3.5.3</version.springboot>
-        <version.spring-data>3.5.1</version.spring-data>
-        <version.spring-security>6.5.5</version.spring-security>
+        <version.spring>7.0.4</version.spring>
+        <version.springboot>4.0.2</version.springboot>
+        <version.spring-data>4.0.2</version.spring-data>
+        <version.spring-security>7.0.2</version.spring-security>
         <version.sonar>5.0.0.4389</version.sonar>
         <version.swagger.codegen.v3>3.0.68</version.swagger.codegen.v3>
         <version.swagger.core.v3>2.2.29</version.swagger.core.v3>
@@ -223,7 +223,7 @@
             <dependency>
                 <groupId>jakarta.persistence</groupId>
                 <artifactId>jakarta.persistence-api</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.servlet</groupId>
@@ -309,7 +309,7 @@
             <dependency>
                 <groupId>org.hibernate.orm</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>6.6.16.Final</version>
+                <version>7.2.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.json</groupId>
@@ -409,12 +409,17 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-persistence</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${version.springboot}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-aop</artifactId>
+                <artifactId>spring-boot-starter-aspectj</artifactId>
                 <version>${version.springboot}</version>
             </dependency>
             <dependency>
@@ -429,17 +434,77 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security-test</artifactId>
+                <version>${version.springboot}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${version.springboot}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
+                <artifactId>spring-boot-starter-webmvc</artifactId>
                 <version>${version.springboot}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webmvc-test</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-classic</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test-classic</artifactId>
+                <version>${version.springboot}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-webtestclient</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-micrometer-metrics-test</artifactId>
+                <version>${version.springboot}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-micrometer-tracing-test</artifactId>
+                <version>${version.springboot}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure-classic</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test-classic</artifactId>
+                <version>${version.springboot}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-health</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-health</artifactId>
                 <version>${version.springboot}</version>
             </dependency>
             <dependency>
@@ -613,7 +678,7 @@
             <dependency>
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-bom</artifactId>
-                <version>2024.0.8</version>
+                <version>2025.0.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

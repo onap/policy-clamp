@@ -78,6 +78,7 @@ public class JpaAutomationCompositionDefinition implements PfAuthorative<Automat
     private AcTypeState state;
 
     @Column
+    @NotNull
     private StateChangeResult stateChangeResult;
 
     @Column
