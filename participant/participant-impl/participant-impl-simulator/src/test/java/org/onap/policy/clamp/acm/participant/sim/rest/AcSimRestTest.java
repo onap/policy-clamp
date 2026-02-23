@@ -42,12 +42,13 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.micrometer.metrics.autoconfigure.CompositeMeterRegistryAutoConfiguration;
+import org.springframework.boot.micrometer.metrics.autoconfigure.MetricsAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -61,6 +62,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Import({MetricsAutoConfiguration.class, CompositeMeterRegistryAutoConfiguration.class})
 @EnableConfigurationProperties(value = ParticipantSimParameters.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@EnableWebSecurity
 class AcSimRestTest {
 
     private static final Coder CODER = new StandardCoder();

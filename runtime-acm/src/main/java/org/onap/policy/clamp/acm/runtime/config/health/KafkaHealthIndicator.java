@@ -28,8 +28,8 @@ import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 import org.onap.policy.common.message.bus.healthcheck.TopicHealthCheckFactory;
 import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,11 +43,6 @@ public class KafkaHealthIndicator implements HealthIndicator {
     @Autowired
     public KafkaHealthIndicator(AcRuntimeParameterGroup parameterGroup) {
         this.parameterGroup = parameterGroup;
-    }
-
-    @Override
-    public Health getHealth(boolean includeDetails) {
-        return withDetails(includeDetails);
     }
 
     @Override
