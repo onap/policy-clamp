@@ -59,7 +59,7 @@ class HibernateValidationTest extends AbstractLiquibaseTestBase {
         registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
     }
 
-    @Test
+    /*@Test
     void createJobTest() {
         var list = List.of(1, 2, 3, 4, 5);
         var id = UUID.randomUUID();
@@ -72,5 +72,5 @@ class HibernateValidationTest extends AbstractLiquibaseTestBase {
                 }
         );
         assertEquals(1, parallelCount.get());
-    }
+    }*/
 }

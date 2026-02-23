@@ -37,11 +37,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.policy.clamp.acm.participant.a1pms.parameters.A1PmsParameters;
 import org.onap.policy.clamp.acm.participant.a1pms.utils.CommonTestData;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
 class AcA1PmsClientTest {
 
     private static int mockServerPort;
