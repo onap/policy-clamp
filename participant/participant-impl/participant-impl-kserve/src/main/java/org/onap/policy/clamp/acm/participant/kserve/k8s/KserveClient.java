@@ -60,8 +60,8 @@ public class KserveClient {
      * @throws ApiException exception
      */
     public boolean deployInferenceService(String namespace, String jsonContent) throws ApiException, IOException {
-        var httpCall = customObjectsApi.createNamespacedCustomObjectCall(crdParams.getGroup(), crdParams.getVersion(),
-                namespace, crdParams.getPlural(), jsonContent.getBytes(), null, null, null, null);
+        var httpCall = customObjectsApi.createNamespacedCustomObject(crdParams.getGroup(), crdParams.getVersion(),
+                namespace, crdParams.getPlural(), jsonContent).buildCall(null);
         try (Response httpResponse = httpCall.execute()) {
             logger.debug("Response of inference service deploy in namespace {} is {}", namespace, httpResponse);
             return httpResponse.isSuccessful();
@@ -77,9 +77,9 @@ public class KserveClient {
      */
     public boolean undeployInferenceService(String namespace, String inferenceServiceName)
             throws ApiException, IOException {
-        var httpCall = customObjectsApi.deleteNamespacedCustomObjectCall(crdParams.getGroup(), crdParams.getVersion(),
-                namespace, crdParams.getPlural(), inferenceServiceName, crdParams.getGracePeriod(), false, null, null,
-                null, null);
+        var httpCall = customObjectsApi.deleteNamespacedCustomObject(crdParams.getGroup(), crdParams.getVersion(),
+                namespace, crdParams.getPlural(), inferenceServiceName).gracePeriodSeconds(crdParams.getGracePeriod())
+                .orphanDependents(false).buildCall(null);
         try (Response httpResponse = httpCall.execute()) {
             logger.debug("Response of inference service undeploy in namespace {} is {}", namespace, httpResponse);
             return httpResponse.isSuccessful();
@@ -97,9 +97,8 @@ public class KserveClient {
      */
     public String getInferenceServiceStatus(String namespace, String inferenceServiceName)
             throws ApiException, IOException {
-        var httpCall =
-                customObjectsApi.getNamespacedCustomObjectCall(crdParams.getGroup(), crdParams.getVersion(), namespace,
-                        crdParams.getPlural(), inferenceServiceName, null);
+        var httpCall = customObjectsApi.getNamespacedCustomObject(crdParams.getGroup(), crdParams.getVersion(),
+                namespace, crdParams.getPlural(), inferenceServiceName).buildCall(null);
         try (Response httpResponse = httpCall.execute()) {
             logger.debug("Response of getting inference service in {} is {}", namespace, httpResponse);
             if (httpResponse.isSuccessful() && httpResponse.body() != null) {
