@@ -28,9 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_VERSIONING;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +53,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -123,7 +121,7 @@ class InstantiationControllerTest extends CommonRestController {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Unauthorized");
 
-        assertUnauthorizedPost(getInstanceEndPoint(UUID.randomUUID()), Entity.json(automationComposition));
+        assertUnauthorizedPost(getInstanceEndPoint(UUID.randomUUID()), automationComposition);
     }
 
     @Test
@@ -136,7 +134,7 @@ class InstantiationControllerTest extends CommonRestController {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Unauthorized");
 
-        assertUnauthorizedPut(getInstanceEndPoint(UUID.randomUUID()), Entity.json(automationComposition));
+        assertUnauthorizedPut(getInstanceEndPoint(UUID.randomUUID()), automationComposition);
     }
 
     @Test
@@ -153,7 +151,7 @@ class InstantiationControllerTest extends CommonRestController {
         automationCompositionFromRsc.setCompositionId(compositionId);
 
         var instResponse = createAutomationComposition(compositionId, automationCompositionFromRsc,
-            Response.Status.CREATED);
+            HttpStatus.CREATED);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
         automationCompositionFromRsc.setInstanceId(instResponse.getInstanceId());
         automationCompositionFromRsc.getElements().values()
@@ -168,12 +166,11 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     private InstantiationResponse createAutomationComposition(UUID compositionId,
-        AutomationComposition automationComposition, Response.Status statusExpected) {
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
-        try (var resp = invocationBuilder.post(Entity.json(automationComposition))) {
-            assertEquals(statusExpected.getStatusCode(), resp.getStatus());
-            return resp.readEntity(InstantiationResponse.class);
-        }
+        AutomationComposition automationComposition, HttpStatus statusExpected) {
+        var resp = super.sendPost(getInstanceEndPoint(compositionId))
+                .body(automationComposition).retrieve().toEntity(InstantiationResponse.class);
+        assertEquals(statusExpected.value(), resp.getStatusCode().value());
+        return resp.getBody();
     }
 
     @Test
@@ -184,11 +181,11 @@ class InstantiationControllerTest extends CommonRestController {
         assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
 
-        createAutomationComposition(compositionId, automationCompositionFromRsc, Response.Status.CREATED);
+        createAutomationComposition(compositionId, automationCompositionFromRsc, HttpStatus.CREATED);
 
         // testing Bad Request: AC already defined
         var instResponse = createAutomationComposition(compositionId, automationCompositionFromRsc,
-            Response.Status.BAD_REQUEST);
+            HttpStatus.BAD_REQUEST);
         assertNotNull(instResponse.getErrorDetails());
         assertNull(instResponse.getAffectedAutomationComposition());
     }
@@ -202,19 +199,18 @@ class InstantiationControllerTest extends CommonRestController {
         assertNotNull(automationCompositionFromRsc);
         automationCompositionFromRsc.setCompositionId(compositionId);
         var instResponse =
-            createAutomationComposition(compositionId, automationCompositionFromRsc, Response.Status.CREATED);
+            createAutomationComposition(compositionId, automationCompositionFromRsc, HttpStatus.CREATED);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
     }
 
     @Test
     void testQuery_NoResultWithThisName() {
-        var invocationBuilder =
-                super.sendRequest(getInstanceEndPoint(UUID.randomUUID()) + "?name=noResultWithThisName");
-        try (var rawresp = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-            var resp = rawresp.readEntity(AutomationCompositions.class);
-            assertThat(resp.getAutomationCompositionList()).isEmpty();
-        }
+        var rawresp = super.sendGet(getInstanceEndPoint(UUID.randomUUID())
+                + "?name=noResultWithThisName").retrieve().toEntity(AutomationCompositions.class);
+        assertEquals(HttpStatus.OK.value(), rawresp.getStatusCode().value());
+        var resp = rawresp.getBody();
+        assertNotNull(resp);
+        assertThat(resp.getAutomationCompositionList()).isEmpty();
     }
 
     @Test
@@ -227,17 +223,16 @@ class InstantiationControllerTest extends CommonRestController {
 
         instantiationProvider.createAutomationComposition(compositionId, automationComposition);
 
-        var invocationBuilder = super.sendRequest(
-                getInstanceEndPoint(compositionId) + "?name=" + automationComposition.getKey().getName());
-        try (var rawresp = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-            var automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
-            assertNotNull(automationCompositionsQuery);
-            assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
-            var automationCompositionRc = automationCompositionsQuery.getAutomationCompositionList().get(0);
-            automationComposition.setLastMsg(automationCompositionRc.getLastMsg());
-            assertEquals(automationComposition, automationCompositionRc);
-        }
+        var rawresp = super.sendGet(
+                getInstanceEndPoint(compositionId) + "?name=" + automationComposition.getKey().getName())
+                .retrieve().toEntity(AutomationCompositions.class);
+        assertEquals(HttpStatus.OK.value(), rawresp.getStatusCode().value());
+        var automationCompositionsQuery = rawresp.getBody();
+        assertNotNull(automationCompositionsQuery);
+        assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
+        var automationCompositionRc = automationCompositionsQuery.getAutomationCompositionList().get(0);
+        automationComposition.setLastMsg(automationCompositionRc.getLastMsg());
+        assertEquals(automationComposition, automationCompositionRc);
     }
 
     @Test
@@ -262,23 +257,19 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     private void validateQueryNotPageable(String link) {
-        var invocationBuilder = super.sendRequest(link);
-        try (var response = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-            var resultList = response.readEntity(AutomationCompositions.class);
-            assertNotNull(resultList);
-            assertThat(resultList.getAutomationCompositionList()).hasSizeGreaterThanOrEqualTo(NUMBER_INSTANCES);
-        }
+        var response = super.sendGet(link).retrieve().toEntity(AutomationCompositions.class);
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        var resultList = response.getBody();
+        assertNotNull(resultList);
+        assertThat(resultList.getAutomationCompositionList()).hasSizeGreaterThanOrEqualTo(NUMBER_INSTANCES);
     }
 
     private void validateQueryPageable(String link, int size) {
-        var invocationBuilder = super.sendRequest(link);
-        try (var response = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-            var resultList = response.readEntity(AutomationCompositions.class);
-            assertNotNull(resultList);
-            assertThat(resultList.getAutomationCompositionList()).hasSize(size);
-        }
+        var response = super.sendGet(link).retrieve().toEntity(AutomationCompositions.class);
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        var resultList = response.getBody();
+        assertNotNull(resultList);
+        assertThat(resultList.getAutomationCompositionList()).hasSize(size);
     }
 
     @Test
@@ -291,12 +282,11 @@ class InstantiationControllerTest extends CommonRestController {
 
         instantiationProvider.createAutomationComposition(compositionId, automationComposition);
 
-        var invocationBuilder = super.sendRequest(
-                getInstanceEndPoint(compositionId, automationComposition.getInstanceId()));
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        var automationCompositionGet = rawresp.readEntity(AutomationComposition.class);
-        rawresp.close();
+        var rawresp = super.sendGet(
+                getInstanceEndPoint(compositionId, automationComposition.getInstanceId()))
+                .retrieve().toEntity(AutomationComposition.class);
+        assertEquals(HttpStatus.OK.value(), rawresp.getStatusCode().value());
+        var automationCompositionGet = rawresp.getBody();
         assertNotNull(automationCompositionGet);
         automationComposition.setLastMsg(automationCompositionGet.getLastMsg());
         assertEquals(automationComposition, automationCompositionGet);
@@ -320,16 +310,15 @@ class InstantiationControllerTest extends CommonRestController {
         automationComposition.getElements().values()
                 .forEach(element -> element.setParticipantId(CommonTestData.getParticipantId()));
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
-        try (var resp = invocationBuilder.post(Entity.json(automationComposition))) {
-            assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-
-            var instResponse = resp.readEntity(InstantiationResponse.class);
-            InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
-        }
-        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
-                compositionId, automationComposition.getKey().getName(),
-                automationComposition.getKey().getVersion(), Pageable.unpaged());
+        var resp = super.sendPost(getInstanceEndPoint(compositionId))
+                .body(automationComposition).retrieve().toEntity(InstantiationResponse.class);
+        assertEquals(HttpStatus.OK.value(), resp.getStatusCode().value());
+        var instResponse = resp.getBody();
+        assertNotNull(instResponse);
+        InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
+                automationComposition.getKey().getName(), automationComposition.getKey().getVersion(),
+                Pageable.unpaged());
 
         assertNotNull(automationCompositionsFromDb);
         assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
@@ -350,11 +339,11 @@ class InstantiationControllerTest extends CommonRestController {
         var instResponse =
                 instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
-        try (var resp = invocationBuilder.delete()) {
-            assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
-            instResponse = resp.readEntity(InstantiationResponse.class);
-        }
+        var resp = super.sendDelete(getInstanceEndPoint(compositionId, instResponse.getInstanceId()))
+                .retrieve().toEntity(InstantiationResponse.class);
+        assertEquals(HttpStatus.ACCEPTED.value(), resp.getStatusCode().value());
+        instResponse = resp.getBody();
+        assertNotNull(instResponse);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
@@ -374,10 +363,9 @@ class InstantiationControllerTest extends CommonRestController {
 
         instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, UUID.randomUUID()));
-        try (var resp = invocationBuilder.delete()) {
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
-        }
+        var resp = super.sendDelete(getInstanceEndPoint(compositionId, UUID.randomUUID()))
+                .retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.NOT_FOUND.value(), resp.getStatusCode().value());
     }
 
     @Test
@@ -386,10 +374,8 @@ class InstantiationControllerTest extends CommonRestController {
 
         // instance not found
         var url = getInstanceEndPoint(compositionId, UUID.randomUUID()) + "/rollback";
-        var invocationBuilder = super.sendRequest(url);
-        try (var resp = invocationBuilder.post(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
-        }
+        var resp = super.sendPost(url).body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.NOT_FOUND.value(), resp.getStatusCode().value());
 
         // instance not valid state
         var automationCompositionFromRsc =
@@ -399,19 +385,16 @@ class InstantiationControllerTest extends CommonRestController {
         var instanceResponse =
                 instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
         url = getInstanceEndPoint(compositionId, instanceResponse.getInstanceId()) + "/rollback";
-        invocationBuilder = super.sendRequest(url);
-        try (var resp = invocationBuilder.post(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        }
+        resp = super.sendPost(url).body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), resp.getStatusCode().value());
     }
 
     @Test
     void testDeploy_NotFound() {
         var compositionId = createAcDefinitionInDB("Deploy_NotFound");
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, UUID.randomUUID()));
-        try (var resp = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()))) {
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
-        }
+        var resp = super.sendPut(getInstanceEndPoint(compositionId, UUID.randomUUID()))
+                .body(new AcInstanceStateUpdate()).retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.NOT_FOUND.value(), resp.getStatusCode().value());
     }
 
     @Test
@@ -428,10 +411,9 @@ class InstantiationControllerTest extends CommonRestController {
         command.setDeployOrder(null);
         command.setLockOrder(null);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
-        try (var resp = invocationBuilder.put(Entity.json(command))) {
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        }
+        var resp = super.sendPut(getInstanceEndPoint(compositionId, instResponse.getInstanceId()))
+                .body(command).retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), resp.getStatusCode().value());
     }
 
     @Test
@@ -447,10 +429,9 @@ class InstantiationControllerTest extends CommonRestController {
         instantiationUpdate.setDeployOrder(DeployOrder.DEPLOY);
         instantiationUpdate.setLockOrder(null);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
-        try (var resp = invocationBuilder.put(Entity.json(instantiationUpdate))) {
-            assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
-        }
+        var resp = super.sendPut(getInstanceEndPoint(compositionId, instResponse.getInstanceId()))
+                .body(instantiationUpdate).retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), resp.getStatusCode().value());
     }
 
     @Test

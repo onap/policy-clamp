@@ -25,10 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -56,6 +52,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -154,39 +152,36 @@ class ParticipantControllerTest extends CommonRestController {
     }
 
     private ParticipantInformation getParticipantInformation(String url) {
-        var invocationBuilder = super.sendRequest(
-                PARTICIPANTS_ENDPOINT + "/" + CommonTestData.getParticipantId() + url);
-        try (var response = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-            var participantInfo = response.readEntity(ParticipantInformation.class);
-            assertNotNull(participantInfo);
-            return participantInfo;
-        }
+        var response = super.sendGet(
+                PARTICIPANTS_ENDPOINT + "/" + CommonTestData.getParticipantId() + url)
+                .retrieve().toEntity(ParticipantInformation.class);
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        var participantInfo = response.getBody();
+        assertNotNull(participantInfo);
+        return participantInfo;
     }
 
     @Test
     void testBadQueryParticipant() {
         participantProvider.saveParticipant(inputParticipants.get(0));
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/" + UUID.randomUUID());
-        try (var response = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        }
+        var response = super.sendGet(PARTICIPANTS_ENDPOINT + "/" + UUID.randomUUID())
+                .retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode().value());
     }
 
     @Test
     void getAllParticipants() {
         inputParticipants.forEach(participantProvider::saveParticipant);
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT);
-        try (var response = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-            List<ParticipantInformation> entityList = response.readEntity(new GenericType<>() {
-            });
-            assertThat(entityList).isNotEmpty();
-            var participantIds =
-                    entityList.stream().map(ParticipantInformation::getParticipant).map(Participant::getParticipantId)
-                            .collect(Collectors.toSet());
-            inputParticipants.forEach(p -> assertThat(participantIds).contains(p.getParticipantId()));
-        }
+        var response = super.sendGet(PARTICIPANTS_ENDPOINT).retrieve()
+                .toEntity(new ParameterizedTypeReference<List<ParticipantInformation>>() {});
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        List<ParticipantInformation> entityList = response.getBody();
+        assertNotNull(entityList);
+        assertThat(entityList).isNotEmpty();
+        var participantIds =
+                entityList.stream().map(ParticipantInformation::getParticipant).map(Participant::getParticipantId)
+                        .collect(Collectors.toSet());
+        inputParticipants.forEach(p -> assertThat(participantIds).contains(p.getParticipantId()));
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         var replica = CommonTestData.createParticipantReplica(CommonTestData.getParticipantId());
         participant.getReplicas().put(replica.getReplicaId(), replica);
@@ -216,16 +211,16 @@ class ParticipantControllerTest extends CommonRestController {
     }
 
     private ParticipantInformation getFirstParticipantInformation(String url) {
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + url);
-        try (var response = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-            List<ParticipantInformation> entityList = response.readEntity(new GenericType<>() {});
-            var participantInfoOpt = entityList.stream()
-                    .filter(p -> CommonTestData.getParticipantId().equals(p.getParticipant().getParticipantId()))
-                    .findFirst();
-            assertThat(participantInfoOpt).isPresent();
-            return participantInfoOpt.get();
-        }
+        var response = super.sendGet(PARTICIPANTS_ENDPOINT + url).retrieve()
+                .toEntity(new ParameterizedTypeReference<List<ParticipantInformation>>() {});
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        List<ParticipantInformation> entityList = response.getBody();
+        assertNotNull(entityList);
+        var participantInfoOpt = entityList.stream()
+                .filter(p -> CommonTestData.getParticipantId().equals(p.getParticipant().getParticipantId()))
+                .findFirst();
+        assertThat(participantInfoOpt).isPresent();
+        return participantInfoOpt.get();
     }
 
     private void createAcDefinitionInDB(String name) {
@@ -250,65 +245,47 @@ class ParticipantControllerTest extends CommonRestController {
     void testOrderParticipantReport() {
         participantProvider.saveParticipant(inputParticipants.get(0));
         var participantId = participantProvider.getParticipants().get(0).getParticipantId();
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT
+        var response = super.sendPut(PARTICIPANTS_ENDPOINT
             + "/"
-            + participantId);
-        try (var response = invocationBuilder.header("Content-Length", 0)
-            .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-        }
+            + participantId).body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), response.getStatusCode().value());
     }
 
     @Test
     void testBadOrderParticipantReport() {
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT
+        var response = super.sendPut(PARTICIPANTS_ENDPOINT
             + "/"
-            + UUID.randomUUID());
-        try (var response = invocationBuilder.header("Content-Length", 0)
-            .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        }
+            + UUID.randomUUID()).body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode().value());
     }
 
     @Test
     void testOrderAllParticipantReport() {
         inputParticipants.forEach(participantProvider::saveParticipant);
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT);
-        try (var response = invocationBuilder.header("Content-Length", 0)
-            .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-        }
+        var response = super.sendPut(PARTICIPANTS_ENDPOINT).body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), response.getStatusCode().value());
     }
 
     @Test
     void testRestartParticipants() {
         inputParticipants.forEach(participantProvider::saveParticipant);
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/sync");
-        try (var response = invocationBuilder.header("Content-Length", 0)
-                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-        }
+        var response = super.sendPut(PARTICIPANTS_ENDPOINT + "/sync").body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), response.getStatusCode().value());
     }
 
     @Test
     void testRestartParticipantById() {
         inputParticipants.forEach(participantProvider::saveParticipant);
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/sync/"
-            + "82fd8ef9-1d1e-4343-9b28-7f9564ee3de6");
-        try (var response = invocationBuilder.header("Content-Length", 0)
-                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
-        }
+        var response = super.sendPut(PARTICIPANTS_ENDPOINT + "/sync/"
+            + "82fd8ef9-1d1e-4343-9b28-7f9564ee3de6").body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), response.getStatusCode().value());
     }
 
     @Test
     void testRestartParticipantFailure() {
         inputParticipants.forEach(participantProvider::saveParticipant);
-        var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/sync/"
-                + UUID.randomUUID());
-        try (var response = invocationBuilder.header("Content-Length", 0)
-                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        }
+        var response = super.sendPut(PARTICIPANTS_ENDPOINT + "/sync/"
+                + UUID.randomUUID()).body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode().value());
     }
 }
