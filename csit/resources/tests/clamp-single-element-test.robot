@@ -38,13 +38,13 @@ FailDeployAutomationCompositionSimple
 
 UnDeployAutomationCompositionSimple
     [Documentation]  UnDeploy simple automation composition.
-    SetParticipantSimDelay
+    SetParticipantSimDelay  ${HTTP_PARTICIPANT_SIM1_IP}
     ${postjson}=  Get file  ${CURDIR}/data/UndeployAC.json
     ChangeStatusAutomationComposition  ${simpleCompositionId}   ${simpleInstanceId}  ${postjson}
     Wait Until Keyword Succeeds    1 min    5 sec    VerifyDeployStatus  ${simpleCompositionId}  ${simpleInstanceId}  UNDEPLOYING
-    Wait Until Keyword Succeeds    1 min    5 sec    VerifyInternalStateElementsRuntime  ${simpleCompositionId}   ${simpleInstanceId}  UNDEPLOYING
+    Wait Until Keyword Succeeds    1 min    5 sec    VerifyInternalStateElementsRuntime  ${simpleCompositionId}   ${simpleInstanceId}  UNDEPLOYING  709c62b3-8918-41b9-a747-d21eb80c6c34
     Wait Until Keyword Succeeds    3 min    5 sec    VerifyDeployStatus  ${simpleCompositionId}  ${simpleInstanceId}  UNDEPLOYED
-    VerifyInternalStateElementsRuntime  ${simpleCompositionId}   ${simpleInstanceId}  UNDEPLOYED
+    VerifyInternalStateElementsRuntime  ${simpleCompositionId}   ${simpleInstanceId}  UNDEPLOYED  709c62b3-8918-41b9-a747-d21eb80c6c34
 
 UnInstantiateAutomationCompositionSimple
     [Documentation]  Delete simple automation composition instance.
