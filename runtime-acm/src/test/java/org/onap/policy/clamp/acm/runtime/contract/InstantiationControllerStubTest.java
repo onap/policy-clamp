@@ -22,8 +22,6 @@ package org.onap.policy.clamp.acm.runtime.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +32,10 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceSt
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestClient;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -58,73 +58,69 @@ class InstantiationControllerStubTest extends CommonRestController {
 
     @Test
     void testQuery() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT);
-        var response = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
+        var response = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(response.getStatusCode().value());
     }
 
     @Test
     void testGet() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var response = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
+        var response = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(response.getStatusCode().value());
     }
 
     @Test
     void testPut() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var put = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(put.getStatus());
-        put.close();
+        var put = restClient.put().body(new AcInstanceStateUpdate()).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(put.getStatusCode().value());
     }
 
     @Test
     void testPost() {
         var ac = new AutomationComposition();
         ac.setCompositionId(UUID.randomUUID());
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT);
-        var respPost = invocationBuilder.post(Entity.json(ac));
-        assertThat(respPost.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-        respPost.close();
+        var respPost = restClient.post().body(ac).retrieve().toBodilessEntity();
+        assertThat(respPost.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
     void testDelete() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var delete = invocationBuilder.delete();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(delete.getStatus());
-        delete.close();
+        var delete = restClient.delete().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(delete.getStatusCode().value());
     }
 
     @Test
     void testRollback() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT
             + "/" + COMPOSITION_ID
             + "/" + INSTANTIATION_ENDPOINT
             + "/" + INSTANCE_ID
             + "/" + ROLLBACK);
-        var respPost = invocationBuilder.post(Entity.json(new AcInstanceStateUpdate()));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+        var respPost = restClient.post().body(new AcInstanceStateUpdate()).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testGetInstances() {
-        var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
-        var response = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
+        RestClient restClient = super.sendRequest(INSTANTIATION_ENDPOINT);
+        var response = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(response.getStatusCode().value());
     }
 }
