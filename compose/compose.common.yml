@@ -79,7 +79,10 @@ services:
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c92
       applicationName: sim-ppnt-3
       groupId: policy-clamp-ac-sim-ppnt-3
-      supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement3
+      PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_0_TYPENAME: org.onap.policy.clamp.acm.SimAutomationCompositionElement3
+      PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_0_TYPEVERSION: 1.0.0
+      PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_1_TYPENAME: org.onap.policy.clamp.acm.SimAutomationCompositionElement4
+      PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_1_TYPEVERSION: 1.0.0
     ports:
       - ${SIM_PARTICIPANT3_PORT}:6969
 
