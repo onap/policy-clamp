@@ -22,25 +22,24 @@ package org.onap.policy.clamp.acm.runtime.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
+import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestClient;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "stub" })
-class InstantiationControllerStubTest extends CommonRestController {
+class InstantiationControllerStubTest extends CommonRestClient {
 
     private static final String COMMISSIONING_ENDPOINT = "compositions";
     private static final String INSTANTIATION_ENDPOINT = "instances";
@@ -53,78 +52,67 @@ class InstantiationControllerStubTest extends CommonRestController {
 
     @BeforeEach
     void setUpPort() {
-        super.setHttpPrefix(randomServerPort);
+        super.initializeRestClient(randomServerPort);
     }
 
     @Test
     void testQuery() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        var response = super.sendGet(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
-                + "/" + INSTANTIATION_ENDPOINT);
-        var response = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
+                + "/" + INSTANTIATION_ENDPOINT).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(response.getStatusCode().value());
     }
 
     @Test
     void testGet() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        var response = super.sendGet(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
-                + "/" + INSTANCE_ID);
-        var response = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
+                + "/" + INSTANCE_ID).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(response.getStatusCode().value());
     }
 
     @Test
     void testPut() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        var put = super.sendPut(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
-                + "/" + INSTANCE_ID);
-        var put = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(put.getStatus());
-        put.close();
+                + "/" + INSTANCE_ID).body(new AcInstanceStateUpdate()).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(put.getStatusCode().value());
     }
 
     @Test
     void testPost() {
         var ac = new AutomationComposition();
         ac.setCompositionId(UUID.randomUUID());
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        var respPost = super.sendPost(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
-                + "/" + INSTANTIATION_ENDPOINT);
-        var respPost = invocationBuilder.post(Entity.json(ac));
-        assertThat(respPost.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-        respPost.close();
+                + "/" + INSTANTIATION_ENDPOINT).body(ac).retrieve().toBodilessEntity();
+        assertThat(respPost.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
     void testDelete() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        var delete = super.sendDelete(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
-                + "/" + INSTANCE_ID);
-        var delete = invocationBuilder.delete();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(delete.getStatus());
-        delete.close();
+                + "/" + INSTANCE_ID).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(delete.getStatusCode().value());
     }
 
     @Test
     void testRollback() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+        var respPost = super.sendPost(COMMISSIONING_ENDPOINT
             + "/" + COMPOSITION_ID
             + "/" + INSTANTIATION_ENDPOINT
             + "/" + INSTANCE_ID
-            + "/" + ROLLBACK);
-        var respPost = invocationBuilder.post(Entity.json(new AcInstanceStateUpdate()));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+            + "/" + ROLLBACK).body(new AcInstanceStateUpdate()).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testGetInstances() {
-        var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
-        var response = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(response.getStatus());
+        var response = super.sendGet(INSTANTIATION_ENDPOINT).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(response.getStatusCode().value());
     }
 }
