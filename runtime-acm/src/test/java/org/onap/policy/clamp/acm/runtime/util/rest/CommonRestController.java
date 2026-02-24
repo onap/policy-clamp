@@ -23,16 +23,15 @@ package org.onap.policy.clamp.acm.runtime.util.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.Invocation;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.jackson.JacksonFeature;
+import java.net.URI;
+import java.util.Base64;
 import org.onap.policy.common.utils.network.NetworkUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Class to perform Rest unit tests.
@@ -46,7 +45,6 @@ public class CommonRestController {
     public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/";
 
     private static String httpPrefix;
-    protected Client client;
 
     /**
      * Verifies that an endpoint appears within the swagger response.
@@ -54,8 +52,10 @@ public class CommonRestController {
      * @param endpoint the endpoint of interest
      */
     protected void testSwagger(final String endpoint) {
-        final var invocationBuilder = sendActRequest();
-        final var resp = invocationBuilder.get(String.class);
+        var resp = createRestClient(httpPrefix + ACTUATOR_ENDPOINT + "v3/api-docs", true, false)
+                .get()
+                .retrieve()
+                .body(String.class);
 
         assertThat(resp).contains(endpoint);
     }
@@ -64,75 +64,70 @@ public class CommonRestController {
      * Sends a request to an endpoint.
      *
      * @param endpoint the target endpoint
-     * @return a request builder
+     * @return a RestClient
      */
-    protected Invocation.Builder sendRequest(final String endpoint) {
-        return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, true);
-    }
-
-    /**
-     * Sends a request to an actuator endpoint.
-     *
-     * @return a request builder
-     */
-    protected Invocation.Builder sendActRequest() {
-        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + "v3/api-docs", true);
+    protected RestClient sendRequest(final String endpoint) {
+        return createRestClient(httpPrefix + ENDPOINT_PREFIX + endpoint, true, true);
     }
 
     /**
      * Sends a request to a Rest Api endpoint, without any authorization header.
      *
      * @param endpoint the target endpoint
-     * @return a request builder
+     * @return a RestClient
      */
-    protected Invocation.Builder sendNoAuthRequest(final String endpoint) {
-        return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, false);
+    protected RestClient sendNoAuthRequest(final String endpoint) {
+        return createRestClient(httpPrefix + ENDPOINT_PREFIX + endpoint, false, false);
     }
 
-    /**
-     * Sends a request to a fully qualified endpoint.
-     *
-     * @param fullyQualifiedEndpoint the fully qualified target endpoint
-     * @param includeAuth if authorization header should be included
-     * @return a request builder
-     */
-    protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth) {
-        client = ClientBuilder.newBuilder().build();
-
-        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
-        client.register(JacksonFeature.class);
-
+    private RestClient createRestClient(String baseUrl, boolean includeAuth, boolean suppressErrorExceptions) {
+        var builder = RestClient.builder()
+                .baseUrl(UriComponentsBuilder.fromUriString(baseUrl).build().toUriString())
+                .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
+        
         if (includeAuth) {
-            client.register(HttpAuthenticationFeature.basic("runtimeUser", "zb!XztG34"));
+            builder.defaultHeader("Authorization", "Basic "
+                    + Base64.getEncoder().encodeToString("runtimeUser:zb!XztG34".getBytes()));
         }
-
-        final var webTarget = client.target(fullyQualifiedEndpoint);
-
-        return webTarget.request(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
+        
+        if (suppressErrorExceptions) {
+            builder.defaultStatusHandler(HttpStatusCode::isError, (request, response) -> {
+                // Allow tests to handle error responses without throwing exceptions
+            });
+        }
+        
+        return builder.build();
     }
 
     /**
      * Assert that POST call is Unauthorized.
      *
      * @param endPoint the endpoint
-     * @param entity the entity of the body
+     * @param body the body
      */
-    protected void assertUnauthorizedPost(final String endPoint, final Entity<?> entity) {
-        var rawresp = sendNoAuthRequest(endPoint).post(entity);
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-        rawresp.close();
+    protected void assertUnauthorizedPost(final String endPoint, final Object body) {
+        try {
+            sendNoAuthRequest(endPoint).post().body(body).retrieve().toBodilessEntity();
+            throw new AssertionError("Expected HttpClientErrorException was not thrown");
+        } catch (HttpClientErrorException ex) {
+            assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        }
     }
 
     /**
      * Assert that PUT call is Unauthorized.
      *
      * @param endPoint the endpoint
-     * @param entity the entity ofthe body
+     * @param body the body
      */
-    protected void assertUnauthorizedPut(final String endPoint, final Entity<?> entity) {
-        var rawresp = sendNoAuthRequest(endPoint).put(entity);
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-        rawresp.close();
+    protected void assertUnauthorizedPut(final String endPoint, final Object body) {
+        try {
+            sendNoAuthRequest(endPoint).put().body(body).retrieve().toBodilessEntity();
+            throw new AssertionError("Expected HttpClientErrorException was not thrown");
+        } catch (HttpClientErrorException ex) {
+            assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        }
     }
 
     /**
@@ -141,9 +136,12 @@ public class CommonRestController {
      * @param endPoint the endpoint
      */
     protected void assertUnauthorizedGet(final String endPoint) {
-        var rawresp = sendNoAuthRequest(endPoint).buildGet().invoke();
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-        rawresp.close();
+        try {
+            sendNoAuthRequest(endPoint).get().retrieve().toBodilessEntity();
+            throw new AssertionError("Expected HttpClientErrorException was not thrown");
+        } catch (HttpClientErrorException ex) {
+            assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        }
     }
 
     /**
@@ -152,9 +150,12 @@ public class CommonRestController {
      * @param endPoint the endpoint
      */
     protected void assertUnauthorizedDelete(final String endPoint) {
-        var rawresp = sendNoAuthRequest(endPoint).delete();
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-        rawresp.close();
+        try {
+            sendNoAuthRequest(endPoint).delete().retrieve().toBodilessEntity();
+            throw new AssertionError("Expected HttpClientErrorException was not thrown");
+        } catch (HttpClientErrorException ex) {
+            assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        }
     }
 
     /**
