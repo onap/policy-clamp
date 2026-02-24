@@ -23,9 +23,6 @@ package org.onap.policy.clamp.acm.runtime.contract;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +30,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestClient;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,54 +52,44 @@ class ParticipantControllerStubTest extends CommonRestController {
 
     @Test
     void testGet() {
-        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/" + PARTICIPANT_ID);
-        var respPost = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        RestClient restClient = super.sendRequest(PARTICIPANT_ENDPOINT + "/" + PARTICIPANT_ID);
+        var respPost = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testQuery() {
-        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT);
-        var respPost = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        RestClient restClient = super.sendRequest(PARTICIPANT_ENDPOINT);
+        var respPost = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testOrderReport() {
-        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/" + PARTICIPANT_ID);
-
-        var respPost = invocationBuilder.header("Content-Length", 0)
-            .put(Entity.entity("", MediaType.APPLICATION_JSON));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+        RestClient restClient = super.sendRequest(PARTICIPANT_ENDPOINT + "/" + PARTICIPANT_ID);
+        var respPost = restClient.put().body("").retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testOrderAllReport() {
-        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT);
-
-        var respPost = invocationBuilder.header("Content-Length", 0)
-            .put(Entity.entity("", MediaType.APPLICATION_JSON));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+        RestClient restClient = super.sendRequest(PARTICIPANT_ENDPOINT);
+        var respPost = restClient.put().body("").retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testRestartParticipants() {
-        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/sync");
-
-        var response = invocationBuilder.header("Content-Length", 0)
-                .put(Entity.entity("", MediaType.APPLICATION_JSON));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        RestClient restClient = super.sendRequest(PARTICIPANT_ENDPOINT + "/sync");
+        var response = restClient.put().body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), response.getStatusCode().value());
     }
 
     @Test
     void testRestartParticipantById() {
-        var invocationBuilder = super.sendRequest(PARTICIPANT_ENDPOINT + "/sync/"
+        RestClient restClient = super.sendRequest(PARTICIPANT_ENDPOINT + "/sync/"
             + UUID.randomUUID());
-
-        var response = invocationBuilder.header("Content-Length", 0)
-                .put(Entity.entity("", MediaType.APPLICATION_JSON));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        var response = restClient.put().body("").retrieve().toBodilessEntity();
+        assertEquals(HttpStatus.ACCEPTED.value(), response.getStatusCode().value());
     }
 }
