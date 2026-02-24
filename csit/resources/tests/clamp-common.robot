@@ -83,13 +83,13 @@ VerifyPropertiesUpdated
     Run Keyword If  ${resp.status_code}==200  Should Match Regexp  ${respstring}  ${textToFind}
 
 VerifyInternalStateElementsRuntime
-    [Arguments]  ${theCompositionId}  ${theInstanceId}  ${deploystate}
+    [Arguments]  ${theCompositionId}  ${theInstanceId}  ${deploystate}  ${elementId}
     [Documentation]  Verify the Instance elements during operation
     ${auth}=    ClampAuth
     ${resp}=    MakeGetRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  /onap/policy/clamp/acm/v2/compositions/${theCompositionId}/instances/${theInstanceId}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
     Should Be Equal As Strings  ${resp.json()['deployState']}   ${deploystate}
-    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb80c6c34']['outProperties']['InternalState']}
+    ${respstring}   Convert To String   ${resp.json()['elements']['${elementId}']['outProperties']['InternalState']}
     Should Be Equal As Strings  ${respstring}  ${deploystate}
 
 VerifyMigratedElementsRuntime
@@ -229,10 +229,11 @@ SetParticipantSimTimeout
     Should Be Equal As Strings    ${resp.status_code}     200
 
 SetParticipantSimDelay
+    [Arguments]  ${domain}
     [Documentation]  Set Participant Simulator Delay.
     ${auth}=    ParticipantAuth
     ${postjson}=  Get file  ${CURDIR}/data/SettingSimPropertiesDelay.json
-    ${resp}=   MakeJsonPutRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/v2/parameters  ${postjson}  ${auth}
+    ${resp}=   MakeJsonPutRequest  participant  ${domain}  /onap/policy/simparticipant/v2/parameters  ${postjson}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
 
 

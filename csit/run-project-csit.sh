@@ -58,7 +58,7 @@ function docker_stats(){
 }
 
 function setup_clamp() {
-    export ROBOT_FILES="clamp-health-check.robot clamp-db-restore.robot clamp-single-element-test.robot clamp-timeout-test.robot
+    export ROBOT_FILES="clamp-health-check.robot clamp-db-restore.robot clamp-single-element-test.robot clamp-multiple-element-type-test.robot clamp-timeout-test.robot
     clamp-migrate-rollback.robot clamp-trace-test.robot clamp-slas.robot"
     export TEST_ENV="docker"
     export PROJECT="clamp"
