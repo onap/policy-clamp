@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecb80478_e21601f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-02-24T16:57:55Z",
+      "side": 1,
+      "message": "Needs rebase",
+      "revId": "5c2326225e773be298245bd8bcafcbd048d57818",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a86dd0a9_c28bde77",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-02-24T16:57:55Z",
+      "side": 1,
+      "message": "Can you also remove the Jersey dependencies from runtime-acm/pom.xml if possible?",
+      "revId": "5c2326225e773be298245bd8bcafcbd048d57818",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
