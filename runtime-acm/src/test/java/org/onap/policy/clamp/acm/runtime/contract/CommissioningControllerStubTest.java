@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022-2023, 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2022-2023, 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ package org.onap.policy.clamp.acm.runtime.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +30,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestClient;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -54,39 +54,36 @@ class CommissioningControllerStubTest extends CommonRestController {
 
     @Test
     void testQuery() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        var respPost = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var respPost = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testGet() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
-        var respPost = invocationBuilder.get();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
+        var respPost = restClient.get().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testPut() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
-        var respPost = invocationBuilder.put(Entity.json(serviceTemplate));
-        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
+        var respPost = restClient.put().body(serviceTemplate).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.ACCEPTED.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testPost() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        var respPost = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var respPost = restClient.post().body(serviceTemplate).retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(respPost.getStatusCode().value());
     }
 
     @Test
     void testDelete() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
-        var respPost = invocationBuilder.delete();
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
-        respPost.close();
+        RestClient restClient = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
+        var respPost = restClient.delete().retrieve().toBodilessEntity();
+        assertThat(HttpStatus.OK.value()).isEqualTo(respPost.getStatusCode().value());
     }
 }
