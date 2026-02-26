@@ -155,7 +155,7 @@ class DocToscaServiceTemplateTest {
         doc2.setMetadata(doc.getMetadata());
         assertThat(doc).isEqualByComparingTo(doc2);
 
-        var d = new DocToscaEntity<ToscaServiceTemplate>();
+        var d = new DocToscaEntity<ToscaServiceTemplate>() {};
         var result = doc.compareTo(d);
         assertThat(result).isNotZero();
     }

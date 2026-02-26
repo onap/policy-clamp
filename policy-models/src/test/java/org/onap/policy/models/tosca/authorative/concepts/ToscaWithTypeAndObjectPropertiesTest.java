@@ -24,7 +24,6 @@ package org.onap.policy.models.tosca.authorative.concepts;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,6 @@ class ToscaWithTypeAndObjectPropertiesTest {
     @Test
     void testCopyConstructor() {
         ToscaWithTypeAndObjectProperties tosca = new ToscaWithTypeAndObjectProperties();
-        assertNull(tosca.getTypeIdentifier());
         assertEquals(tosca, new ToscaWithTypeAndObjectProperties(tosca));
 
         tosca.setProperties(Map.of("abc", 10, "def", "world"));
@@ -48,7 +46,5 @@ class ToscaWithTypeAndObjectPropertiesTest {
 
         assertThatThrownBy(() -> new ToscaWithTypeAndObjectProperties(null)).hasMessageContaining("copyObject")
                         .hasMessageContaining("is null");
-
-        assertEquals(typeVersion, tosca.getTypeIdentifier().getVersion());
     }
 }

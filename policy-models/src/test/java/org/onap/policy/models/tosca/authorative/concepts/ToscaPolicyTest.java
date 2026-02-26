@@ -46,20 +46,12 @@ class ToscaPolicyTest {
         policy.setType("my_type");
         policy.setTypeVersion("3.2.1");
 
-        ToscaEntity te = new ToscaEntity();
+        ToscaEntity te = new ToscaEntity() {};
         assertNull(te.getType());
         assertNull(te.getTypeVersion());
 
         assertEquals("ToscaEntityKey(name=my_name, version=1.2.3)", policy.getKey().toString());
         assertEquals(new ToscaConceptIdentifier("my_name", "1.2.3"), policy.getKey().asIdentifier());
-
-        ToscaConceptIdentifier ident = policy.getIdentifier();
-        assertEquals("my_name", ident.getName());
-        assertEquals("1.2.3", ident.getVersion());
-
-        ToscaConceptIdentifier type = policy.getTypeIdentifier();
-        assertEquals("my_type", type.getName());
-        assertEquals("3.2.1", type.getVersion());
 
         ToscaPolicy clonedPolicy0 = new ToscaPolicy(policy);
         assertEquals(0, new ToscaEntityComparator<ToscaPolicy>().compare(policy, clonedPolicy0));
