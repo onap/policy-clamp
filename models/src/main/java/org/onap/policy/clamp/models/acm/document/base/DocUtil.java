@@ -302,8 +302,8 @@ public final class DocUtil {
     private static <A extends DocToscaEntity<?>> Set<String> toSetToscaReferences(Map<String, A> map) {
         Set<String> result = new HashSet<>();
         for (var entity : map.values()) {
-            result.add(PfUtils.getId(entity.getDocConceptKey())); // ref for type
-            result.add(entity.getDocConceptKey().getName()); // ref for derived from
+            result.add(PfUtils.getId(getDocConceptKey(entity))); // ref for type
+            result.add(entity.getName()); // ref for derived from
         }
         return result;
     }
@@ -371,4 +371,9 @@ public final class DocUtil {
         }
         return 0;
     }
+
+    public static DocConceptKey getDocConceptKey(DocToscaEntity docToscaEntity) {
+        return new DocConceptKey(docToscaEntity.getName(), docToscaEntity.getVersion());
+    }
+
 }

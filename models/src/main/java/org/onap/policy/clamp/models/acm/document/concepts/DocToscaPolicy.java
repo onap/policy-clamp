@@ -27,8 +27,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.base.validation.annotations.VerifyKey;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 
 @Data
@@ -83,11 +81,5 @@ public class DocToscaPolicy extends DocToscaWithTypeAndStringProperties<ToscaPol
         // Add the policy name and version fields to the metadata
         getMetadata().put(METADATA_POLICY_ID_TAG, getKey().getName());
         getMetadata().put(METADATA_POLICY_VERSION_TAG, getKey().getVersion());
-    }
-
-    @Override
-    @VerifyKey(keyNotNull = false, nameNotNull = false, versionNotNull = true)
-    public PfConceptKey getConceptKey() {
-        return super.getConceptKey();
     }
 }

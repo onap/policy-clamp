@@ -23,7 +23,6 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
@@ -63,16 +62,6 @@ public class ToscaServiceTemplate extends ToscaEntity {
 
     @JsonProperty("topology_template")
     private ToscaTopologyTemplate toscaTopologyTemplate;
-
-    @JsonIgnore
-    public Map<ToscaEntityKey, ToscaDataType> getDataTypesAsMap() {
-        return ToscaEntity.getEntityMapAsMap(dataTypes);
-    }
-
-    @JsonIgnore
-    public Map<ToscaEntityKey, ToscaPolicyType> getPolicyTypesAsMap() {
-        return ToscaEntity.getEntityMapAsMap(policyTypes);
-    }
 
     /**
      * Copy constructor.

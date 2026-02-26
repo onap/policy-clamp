@@ -25,16 +25,13 @@ package org.onap.policy.models.tosca.authorative.concepts;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.ws.rs.core.Response;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.PfNameVersion;
 
 /**
@@ -45,7 +42,7 @@ import org.onap.policy.models.base.PfNameVersion;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ToscaEntity implements PfNameVersion {
+public abstract class ToscaEntity implements PfNameVersion {
     private String name = PfKey.NULL_KEY_NAME;
     private String version = PfKey.NULL_KEY_VERSION;
 
@@ -92,62 +89,6 @@ public class ToscaEntity implements PfNameVersion {
     @Override
     public String getDefinedVersion() {
         return (PfKey.NULL_KEY_VERSION.equals(version) ? null : version);
-    }
-
-    /**
-     * Convert a list of maps of TOSCA entities into a regular map.
-     *
-     * @param listOfMapsOfEntities the incoming list of maps of entities
-     * @return The entities on a regular map
-     * @throws PfModelRuntimeException on duplicate entity entries
-     */
-    public static <T extends ToscaEntity> Map<ToscaEntityKey, T> getEntityListMapAsMap(
-            List<Map<String, T>> listOfMapsOfEntities) {
-        // Declare the return map
-        Map<ToscaEntityKey, T> entityMap = new LinkedHashMap<>();
-
-        if (listOfMapsOfEntities == null) {
-            return entityMap;
-        }
-
-        for (Map<String, T> mapOfEntities : listOfMapsOfEntities) {
-            for (T entityEntry : mapOfEntities.values()) {
-                if (entityMap.containsKey(entityEntry.getKey())) {
-                    throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,
-                        "list of map of entities contains more than one entity with key " + entityEntry.getKey());
-                }
-                entityMap.put(entityEntry.getKey(), entityEntry);
-            }
-        }
-
-        return entityMap;
-    }
-
-    /**
-     * Convert a map of TOSCA entities into a regular map.
-     *
-     * @param mapOfEntities the incoming list of maps of entities
-     * @return The entities on a regular map
-     * @throws PfModelRuntimeException on duplicate entity entries
-     */
-    public static <T extends ToscaEntity> Map<ToscaEntityKey, T> getEntityMapAsMap(Map<String, T> mapOfEntities) {
-        // Declare the return map
-        Map<ToscaEntityKey, T> entityMap = new LinkedHashMap<>();
-
-        if (mapOfEntities == null) {
-            return entityMap;
-        }
-
-        for (T entityEntry : mapOfEntities.values()) {
-            if (entityMap.containsKey(entityEntry.getKey())) {
-                throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,
-                    "list of map of entities contains more than one entity with key " + entityEntry.getKey());
-            }
-
-            entityMap.put(entityEntry.getKey(), entityEntry);
-        }
-
-        return entityMap;
     }
 
     /**

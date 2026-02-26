@@ -49,8 +49,5 @@ class ToscaServiceTemplateTest {
         origSt.setRelationshipTypes(new HashMap<>());
         origSt.setToscaTopologyTemplate(new ToscaTopologyTemplate());
         assertEquals(origSt, new ToscaServiceTemplate(origSt));
-
-        assertEquals(origSt.getDataTypesAsMap(), new ToscaServiceTemplate(origSt).getDataTypesAsMap());
-        assertEquals(origSt.getPolicyTypesAsMap(), new ToscaServiceTemplate(origSt).getPolicyTypesAsMap());
     }
 }

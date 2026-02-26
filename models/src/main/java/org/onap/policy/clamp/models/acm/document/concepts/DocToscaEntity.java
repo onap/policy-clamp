@@ -33,8 +33,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
-import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfNameVersion;
 import org.onap.policy.models.base.PfUtils;
@@ -44,7 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityKey;
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
-public class DocToscaEntity<T extends ToscaEntity>
+public abstract class DocToscaEntity<T extends ToscaEntity>
         implements PfNameVersion, PfAuthorative<T>, Serializable, Comparable<DocToscaEntity<T>> {
 
     @Serial
@@ -74,21 +72,6 @@ public class DocToscaEntity<T extends ToscaEntity>
     @JsonIgnore
     public ToscaEntityKey getKey() {
         return new ToscaEntityKey(name, version);
-    }
-
-    /**
-     * Get a key for this entity.
-     *
-     * @return a PfConceptKey for this entry
-     */
-    @JsonIgnore
-    public PfConceptKey getConceptKey() {
-        return new PfConceptKey(name, version);
-    }
-
-    @JsonIgnore
-    public DocConceptKey getDocConceptKey() {
-        return new DocConceptKey(name, version);
     }
 
     @Override
@@ -128,7 +111,8 @@ public class DocToscaEntity<T extends ToscaEntity>
      *
      * @param copyConcept the concept to copy from
      */
-    public DocToscaEntity(final DocToscaEntity<T> copyConcept) {
+    protected DocToscaEntity(final DocToscaEntity<T> copyConcept) {
+        this.toscaEntity = copyConcept.getToscaEntity();
         this.name = copyConcept.name;
         this.version = copyConcept.version;
         this.derivedFrom = copyConcept.derivedFrom;
