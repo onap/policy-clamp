@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14c39e9f_98844bb2",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-02-26T12:54:36Z",
+      "side": 1,
+      "message": "Based on what this class does, it should be named `CommonRestClient` instead of `Controller`. Controllers are for the server part of http communication",
+      "revId": "5baa8a3ea3ba6db4b25129b7d7cebcb00b3caa42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01391826_47615b26",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-02-26T12:54:36Z",
+      "side": 1,
+      "message": "The more idiomatic way to do this would be to use constructor injection and register the `RestClient` as a `private final RestClient` on the class level.\n\nConstructor injection would also make sure that the trace context is maintained.\nThe way you are doing this here leads to disconnected traces for what should be one trace",
+      "revId": "5baa8a3ea3ba6db4b25129b7d7cebcb00b3caa42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
