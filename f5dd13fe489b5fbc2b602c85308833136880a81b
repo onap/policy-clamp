@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1a0572e_2bb5d4a0",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-02-27T11:36:00Z",
+      "side": 1,
+      "message": "could remove these too and \u003cversion.jersey\u003e",
+      "range": {
+        "startLine": 304,
+        "startChar": 25,
+        "endLine": 314,
+        "endChar": 25
+      },
+      "revId": "f5dd13fe489b5fbc2b602c85308833136880a81b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
