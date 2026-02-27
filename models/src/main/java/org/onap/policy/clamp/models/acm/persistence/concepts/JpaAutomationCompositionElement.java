@@ -22,7 +22,6 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -32,6 +31,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -40,13 +40,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
-import org.onap.policy.clamp.models.acm.base.validation.annotations.VerifyKey;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -71,12 +70,15 @@ public class JpaAutomationCompositionElement
     @NotNull
     private String instanceId;
 
-    @Valid
-    @VerifyKey
+    @Column(name = "definition_name")
     @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-    private PfConceptKey definition;
+    @Pattern(regexp = PfKey.NAME_REGEXP)
+    private String definitionName;
+
+    @Column(name = "definition_version")
+    @NotNull
+    @Pattern(regexp = PfKey.VERSION_REGEXP)
+    private String definitionVersion;
 
     @Column
     @NotNull
@@ -141,7 +143,8 @@ public class JpaAutomationCompositionElement
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
         this.elementId = elementId;
         this.instanceId = instanceId;
-        this.definition = new PfConceptKey();
+        this.definitionName = PfKey.NULL_KEY_NAME;
+        this.definitionVersion = PfKey.NULL_KEY_VERSION;
         this.deployState = DeployState.UNDEPLOYED;
         this.lockState = LockState.NONE;
         this.subState = SubState.NONE;
@@ -156,7 +159,8 @@ public class JpaAutomationCompositionElement
     public JpaAutomationCompositionElement(@NonNull final JpaAutomationCompositionElement copyConcept) {
         this.elementId = copyConcept.elementId;
         this.instanceId = copyConcept.instanceId;
-        this.definition = new PfConceptKey(copyConcept.definition);
+        this.definitionName = copyConcept.definitionName;
+        this.definitionVersion = copyConcept.definitionVersion;
         this.participantId = copyConcept.participantId;
         this.description = copyConcept.description;
         this.properties = PfUtils.mapMap(copyConcept.properties, UnaryOperator.identity());
@@ -185,7 +189,7 @@ public class JpaAutomationCompositionElement
         var element = new AutomationCompositionElement();
 
         element.setId(UUID.fromString(elementId));
-        element.setDefinition(new ToscaConceptIdentifier(definition));
+        element.setDefinition(new ToscaConceptIdentifier(definitionName, definitionVersion));
         element.setParticipantId(UUID.fromString(participantId));
         element.setDescription(description);
         element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
@@ -204,7 +208,8 @@ public class JpaAutomationCompositionElement
 
     @Override
     public void fromAuthorative(@NonNull final AutomationCompositionElement element) {
-        this.definition = element.getDefinition().asConceptKey();
+        this.definitionName = element.getDefinition().getName();
+        this.definitionVersion = element.getDefinition().getVersion();
         this.participantId = element.getParticipantId().toString();
         this.description = element.getDescription();
         this.properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
@@ -238,7 +243,12 @@ public class JpaAutomationCompositionElement
             return result;
         }
 
-        result = definition.compareTo(other.definition);
+        result = ObjectUtils.compare(definitionName, other.definitionName);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(definitionVersion, other.definitionVersion);
         if (result != 0) {
             return result;
         }

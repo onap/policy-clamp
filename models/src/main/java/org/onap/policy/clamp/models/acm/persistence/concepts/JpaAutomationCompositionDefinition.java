@@ -108,7 +108,7 @@ public class JpaAutomationCompositionDefinition implements PfAuthorative<Automat
         acmDefinition.setRevisionId(UUID.fromString(this.revisionId));
         acmDefinition.setServiceTemplate(this.serviceTemplate.toAuthorative());
         for (var element : this.elements) {
-            var key = element.getNodeTemplateId().getName();
+            var key = element.getNodeTemplateName();
             acmDefinition.getElementStateMap().put(key, element.toAuthorative());
         }
         return acmDefinition;

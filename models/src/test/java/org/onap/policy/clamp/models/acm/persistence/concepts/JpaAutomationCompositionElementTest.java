@@ -37,7 +37,6 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -146,9 +145,11 @@ class JpaAutomationCompositionElementTest {
         testJpaAcElement.setInstanceId(INSTANCE_ID);
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAcElement.setDefinition(new PfConceptKey(BAD_VALUE, "0.0.1"));
+        testJpaAcElement.setDefinitionName(BAD_VALUE);
+        testJpaAcElement.setDefinitionVersion("0.0.1");
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setDefinition(new PfConceptKey("aceDef", "0.0.1"));
+        testJpaAcElement.setDefinitionName("aceDef");
+        testJpaAcElement.setDefinitionVersion("0.0.1");
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
         testJpaAcElement.setDescription("Description");
@@ -211,7 +212,8 @@ class JpaAutomationCompositionElementTest {
 
         var ace1 = new JpaAutomationCompositionElement(ace0.getElementId(), ace0.getInstanceId());
 
-        ace1.setDefinition(new PfConceptKey("defName", "0.0.1"));
+        ace1.setDefinitionName("defName");
+        ace1.setDefinitionVersion("0.0.1");
         ace1.setDescription("Description");
         ace1.setParticipantId(CommonTestData.getJpaParticipantId());
 
