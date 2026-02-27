@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -30,16 +29,16 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
-import org.onap.policy.clamp.models.acm.base.validation.annotations.VerifyKey;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
-import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -61,12 +60,15 @@ public class JpaNodeTemplateState implements PfAuthorative<NodeTemplateState> {
     @Column
     private String participantId;
 
-    @Valid
-    @VerifyKey
+    @Column(name = "nodeTemplate_name")
     @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "nodeTemplate_version"))
-    private PfConceptKey nodeTemplateId;
+    @Pattern(regexp = PfKey.NAME_REGEXP)
+    private String nodeTemplateName;
+
+    @Column(name = "nodeTemplate_version")
+    @NotNull
+    @Pattern(regexp = PfKey.VERSION_REGEXP)
+    private String nodeTemplateVersion;
 
     @Column
     @NotNull
@@ -105,7 +107,8 @@ public class JpaNodeTemplateState implements PfAuthorative<NodeTemplateState> {
         if (copyConcept.getParticipantId() != null) {
             this.participantId = copyConcept.getParticipantId().toString();
         }
-        this.nodeTemplateId = copyConcept.getNodeTemplateId().asConceptKey();
+        this.nodeTemplateName = copyConcept.getNodeTemplateId().getName();
+        this.nodeTemplateVersion = copyConcept.getNodeTemplateId().getVersion();
         this.state = copyConcept.getState();
         this.message = copyConcept.getMessage();
         this.outProperties = PfUtils.mapMap(copyConcept.getOutProperties(), UnaryOperator.identity());
@@ -118,7 +121,8 @@ public class JpaNodeTemplateState implements PfAuthorative<NodeTemplateState> {
         if (this.participantId != null) {
             nodeTemplateState.setParticipantId(UUID.fromString(this.participantId));
         }
-        nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier(this.nodeTemplateId));
+        nodeTemplateState.setNodeTemplateId(
+                new ToscaConceptIdentifier(this.nodeTemplateName, this.nodeTemplateVersion));
         nodeTemplateState.setState(this.state);
         nodeTemplateState.setMessage(this.message);
         nodeTemplateState.setOutProperties(PfUtils.mapMap(outProperties, UnaryOperator.identity()));

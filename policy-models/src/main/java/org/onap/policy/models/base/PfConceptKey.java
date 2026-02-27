@@ -21,8 +21,6 @@
 
 package org.onap.policy.models.base;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serial;
 import lombok.EqualsAndHashCode;
@@ -38,7 +36,6 @@ import org.onap.policy.common.utils.validation.Assertions;
  * <p>Key validation checks that the name and version fields match the NAME_REGEXP and VERSION_REGEXP
  * regular expressions respectively.
  */
-@Embeddable
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @ToString
@@ -46,11 +43,9 @@ public class PfConceptKey extends PfKeyImpl {
     @Serial
     private static final long serialVersionUID = 8932717618579392561L;
 
-    @Column(name = NAME_TOKEN, length = 120)
     @Pattern(regexp = NAME_REGEXP)
     private String name;
 
-    @Column(name = VERSION_TOKEN, length = 20)
     @Pattern(regexp = VERSION_REGEXP)
     private String version;
 
