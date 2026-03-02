@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63531f9f_d6aaf6c9",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/configurations/SecurityConfig.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-02T17:15:15Z",
+      "side": 1,
+      "message": "I wonder if this really belongs here - none of the other SecurityConfig classes have this annotation, but I see a few test classes that it. I guess we could move it to the ChartControllerTest to fix the test failure.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 2
+      },
+      "revId": "ad2d5f50cb21fd69262afe1fefe7d604b5067bf8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
