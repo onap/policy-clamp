@@ -74,7 +74,6 @@
             --add-opens java.base/java.lang=ALL-UNNAMED
             --add-opens java.sql/java.sql=ALL-UNNAMED
             -XX:+EnableDynamicAgentLoading
-            -XX:CompileCommand=exclude,com/fasterxml/jackson/databind/introspect/*.*
         </surefireArgLine>
     </properties>
 
