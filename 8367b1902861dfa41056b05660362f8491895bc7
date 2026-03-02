@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2be28ab7_eb7184ee",
+        "filename": "participant/participant-impl/participant-impl-kserve/src/main/java/org/onap/policy/clamp/acm/participant/kserve/k8s/KserveClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-02T14:30:02Z",
+      "side": 1,
+      "message": "extra ;",
+      "range": {
+        "startLine": 82,
+        "startChar": 57,
+        "endLine": 82,
+        "endChar": 58
+      },
+      "revId": "8367b1902861dfa41056b05660362f8491895bc7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01f66e38_cf1a1b0f",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/HibernateValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-02T14:30:02Z",
+      "side": 1,
+      "message": "Some the validation issues will go away once this patch is merged: 143427: Remove JPA annotations from PfConceptKey | https://gerrit.onap.org/r/c/policy/clamp/+/143427",
+      "revId": "8367b1902861dfa41056b05660362f8491895bc7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
