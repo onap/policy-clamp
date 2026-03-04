@@ -20,25 +20,25 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.onap.policy.models.base.PfUtils;
 
 @NoArgsConstructor
 @Data
 public class AutomationCompositionRollback {
 
-    @NonNull
+    @NotNull
     private UUID instanceId;
 
-    @NonNull
+    @NotNull
     private UUID compositionId;
 
-    @NonNull
+    @NotNull
     private Map<UUID, AutomationCompositionElement> elements = new LinkedHashMap<>();
 
     /**

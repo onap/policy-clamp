@@ -20,12 +20,12 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
@@ -38,22 +38,19 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Data
 @ToString
 public class AutomationCompositionElement {
-    @NonNull
+
     private UUID id = UUID.randomUUID();
 
-    @NonNull
+    @NotNull
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfUtils.getNullKey());
 
-    @NonNull
+    @NotNull
     private UUID participantId = UUID.randomUUID();
 
-    @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
 
-    @NonNull
     private LockState lockState = LockState.LOCKED;
 
-    @NonNull
     private SubState subState = SubState.NONE;
 
     private MigrationState migrationState = MigrationState.DEFAULT;

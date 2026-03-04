@@ -20,13 +20,13 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 /**
  * Class to represent details of a running participant instance.
@@ -35,7 +35,7 @@ import lombok.NonNull;
 @Data
 @EqualsAndHashCode
 public class ParticipantInformation {
-    @NonNull
+    @NotNull
     private Participant participant;
 
     private Map<UUID, NodeTemplateState> acNodeTemplateStateDefinitionMap = new HashMap<>();

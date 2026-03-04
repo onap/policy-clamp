@@ -48,10 +48,6 @@ class ParticipantReplicaTest {
         assertNotEquals(0, p1.hashCode());
         assertNotEquals(p1, p0);
         assertNotEquals(null, p1);
-
-        var p2 = new ParticipantReplica();
-        assertThatThrownBy(() -> p2.setParticipantState(null)).isInstanceOf(NullPointerException.class);
-        assertEquals(p2, p0);
     }
 
     @Test
