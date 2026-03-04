@@ -20,25 +20,25 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
 public class ParticipantReplica {
 
-    @NonNull
+    @NotNull
     private UUID replicaId;
 
-    @NonNull
+    @NotNull
     private ParticipantState participantState = ParticipantState.ON_LINE;
 
     // last time ACM-R has received a status message from participant replica
-    @NonNull
+    @NotNull
     private String lastMsg;
 
     /**

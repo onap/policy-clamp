@@ -20,13 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -35,21 +36,19 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 @EqualsAndHashCode
 public class AutomationCompositionDefinition {
 
-    @NonNull
+    @NotNull
     private UUID compositionId;
 
-    @NonNull
+    @NotNull
     private ToscaServiceTemplate serviceTemplate;
 
-    @NonNull
     private AcTypeState state;
 
     private StateChangeResult stateChangeResult = StateChangeResult.NO_ERROR;
 
-    @NonNull
     private String lastMsg;
 
-    @NonNull
+    @NotNull
     // Map used to store prime state with key as NodeTemplate Name and value as NodeTemplateState
     private Map<String, NodeTemplateState> elementStateMap = new HashMap<>();
 

@@ -20,12 +20,13 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
@@ -39,27 +40,26 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
 
     private UUID instanceId;
 
-    @NonNull
+    @NotNull
     private UUID compositionId;
 
     private UUID compositionTargetId;
 
     private Boolean precheck;
 
-    @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
 
-    @NonNull
     private LockState lockState = LockState.NONE;
 
     private String lastMsg;
 
     private Integer phase;
 
-    @NonNull
     private SubState subState = SubState.NONE;
 
-    private Map<UUID, AutomationCompositionElement> elements;
+    @NotNull
+    @Valid
+    private Map<@NotNull UUID, @NotNull AutomationCompositionElement> elements;
 
     private StateChangeResult stateChangeResult = StateChangeResult.NO_ERROR;
 
