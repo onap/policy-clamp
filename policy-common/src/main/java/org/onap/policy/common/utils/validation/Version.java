@@ -21,7 +21,7 @@
 
 package org.onap.policy.common.utils.validation;
 
-import com.google.re2j.Pattern;
+import java.util.regex.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

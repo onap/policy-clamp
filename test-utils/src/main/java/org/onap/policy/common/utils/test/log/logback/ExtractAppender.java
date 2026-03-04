@@ -22,13 +22,13 @@ package org.onap.policy.common.utils.test.log.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import com.google.re2j.Matcher;
-import com.google.re2j.Pattern;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is an appender that is intended for use by JUnit tests that wish to

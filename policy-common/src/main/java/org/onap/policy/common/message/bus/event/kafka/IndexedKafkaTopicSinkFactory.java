@@ -22,11 +22,11 @@ import static org.onap.policy.common.message.bus.properties.MessageBusProperties
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_TOPIC_SERVERS_SUFFIX;
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_TOPIC_SINK_PARTITION_KEY_SUFFIX;
 
-import com.google.re2j.Pattern;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.message.bus.utils.KafkaPropertyUtils;
 import org.onap.policy.common.parameters.topic.BusTopicParams;
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * Factory of KAFKA Reader Topics indexed by topic name.
  */
 class IndexedKafkaTopicSinkFactory implements KafkaTopicSinkFactory {
-    private static final Pattern COMMA_SPACE_PAT = Pattern.compile("\\s*,\\s*");
+    private static final Pattern COMMA_SPACE_PAT = Pattern.compile("\\s*+,\\s*+");
     private static final String MISSING_TOPIC = "A topic must be provided";
 
     /**

@@ -29,12 +29,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
+import java.nio.file.Files;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = AcElementController.class)
@@ -157,10 +156,10 @@ class AcElementControllerTest {
     }
 
     private String getInvalidJson() {
-        return new JSONObject().toString();
+        return new ObjectMapper().createObjectNode().toString();
     }
 
     private String getElementConfigJson() throws IOException {
-        return FileUtils.readFileToString(new File(ELEMENT_CONFIG_YAML), StandardCharsets.UTF_8);
+        return Files.readString(new File(ELEMENT_CONFIG_YAML).toPath(), StandardCharsets.UTF_8);
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import io.kubernetes.client.openapi.ApiException;
 import jakarta.validation.ValidationException;
@@ -42,6 +43,8 @@ import org.onap.policy.clamp.acm.participant.kserve.exception.KserveException;
 import org.onap.policy.clamp.acm.participant.kserve.k8s.KserveClient;
 import org.onap.policy.clamp.acm.participant.kserve.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kserve.utils.ToscaUtils;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class AcElementHandlerTest {
@@ -156,5 +159,24 @@ class AcElementHandlerTest {
 
         assertDoesNotThrow(() -> automationCompositionElementHandler.checkInferenceServiceStatus("sklearn-iris",
                 "kserve-test", 1, 1));
+    }
+
+    @Test
+    void test_undeployException() throws IOException, ApiException {
+        var kserveClient = mock(KserveClient.class);
+        doThrow(new IOException("Undeploy failed")).when(kserveClient).undeployInferenceService(any(), any());
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient);
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var compositionElement = commonTestData.getCompositionElement(
+                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
+
+        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(compositionElement, element));
+
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(
+                element.instanceId(), element.elementId(), DeployState.DEPLOYED, null,
+                StateChangeResult.FAILED, "Undeploy Failed");
     }
 }
