@@ -27,7 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -153,13 +152,13 @@ public class HelmClient {
             int exitValue = process.exitValue();
 
             if (exitValue != 0) {
-                var error = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
+                var error = new String(process.getErrorStream().readAllBytes(), StandardCharsets.UTF_8);
                 if (!error.isEmpty()) {
                     throw new ServiceException("Command execution failed: " + commandStr + " " + error);
                 }
             }
 
-            var output = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
+            var output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
             logger.debug("Command <{}> execution, output: {}", commandStr, output);
             return output;
 

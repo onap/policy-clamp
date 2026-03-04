@@ -25,7 +25,6 @@ import jakarta.validation.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.hc.core5.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.a1pms.exception.A1PolicyServiceException;
 import org.onap.policy.clamp.acm.participant.a1pms.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
@@ -40,6 +39,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
@@ -80,7 +80,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
                     StateChangeResult.NO_ERROR, "Undeployed");
         } else {
             LOGGER.warn("Failed to connect with A1PMS. Service configuration is: {}", configurationEntity);
-            throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE, "Unable to connect with A1PMS");
+            throw new A1PolicyServiceException(HttpStatus.SERVICE_UNAVAILABLE.value(), "Unable to connect with A1PMS");
         }
     }
 
@@ -106,10 +106,11 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
                         StateChangeResult.NO_ERROR, "Deployed");
             } else {
                 LOGGER.error("Failed to connect with A1PMS");
-                throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE, "Unable to connect with A1PMS");
+                throw new A1PolicyServiceException(HttpStatus.SERVICE_UNAVAILABLE.value(),
+                        "Unable to connect with A1PMS");
             }
         } catch (ValidationException | A1PolicyServiceException e) {
-            throw new A1PolicyServiceException(HttpStatus.SC_BAD_REQUEST, "Invalid Configuration", e);
+            throw new A1PolicyServiceException(HttpStatus.BAD_REQUEST.value(), "Invalid Configuration", e);
         }
     }
 
@@ -125,7 +126,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
             }
             return  configurationEntity;
         } catch (CoderException e) {
-            throw new A1PolicyServiceException(HttpStatus.SC_BAD_REQUEST, "Invalid Configuration", e);
+            throw new A1PolicyServiceException(HttpStatus.BAD_REQUEST.value(), "Invalid Configuration", e);
         }
     }
 }

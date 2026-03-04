@@ -33,9 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -258,14 +257,11 @@ class ChartControllerTest {
     }
 
     private String getInstallationJson(String name, String version) {
-        JSONObject jsonObj = new JSONObject();
-        jsonObj.put("name", name);
-        jsonObj.put("version", version);
-        return jsonObj.toString();
+        return String.format("{\"name\":\"%s\",\"version\":\"%s\"}", name, version);
     }
 
     private String getChartInfoJson() throws IOException {
-        return FileUtils.readFileToString(new File(CHART_INFO_YAML), StandardCharsets.UTF_8);
+        return Files.readString(new File(CHART_INFO_YAML).toPath(), StandardCharsets.UTF_8);
     }
 
 }

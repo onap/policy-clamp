@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2025-2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -143,5 +143,17 @@ class HelmClientTest {
         doReturn("").when(helmClient).executeCommand(any());
         String configuredRepo = helmClient.verifyConfiguredRepo(charts.get(1));
         assertNull(configuredRepo);
+    }
+
+    @Test
+    void test_executeCommand() {
+        var chartStore = mock(ChartStore.class);
+        var helmClient = new HelmClient(chartStore);
+
+        assertDoesNotThrow(() -> helmClient.executeCommand(new ProcessBuilder("java", "-version")));
+
+        var failingProcessBuilder = new ProcessBuilder("java", "-invalidflag");
+        assertThatThrownBy(() -> helmClient.executeCommand(failingProcessBuilder))
+            .isInstanceOf(ServiceException.class);
     }
 }

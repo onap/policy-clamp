@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.apache.hc.core5.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
@@ -49,6 +48,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
@@ -159,7 +159,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
             }
             return  configurationEntity;
         } catch (CoderException e) {
-            throw new KserveException(HttpStatus.SC_BAD_REQUEST, "Invalid inference service configuration", e);
+            throw new KserveException(HttpStatus.BAD_REQUEST.value(), "Invalid inference service configuration", e);
         }
     }
 
@@ -167,7 +167,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         try {
             return CODER.convert(properties, ThreadConfig.class);
         } catch (CoderException e) {
-            throw new KserveException(HttpStatus.SC_BAD_REQUEST, "Invalid inference service configuration", e);
+            throw new KserveException(HttpStatus.BAD_REQUEST.value(), "Invalid inference service configuration", e);
         }
     }
 

@@ -129,4 +129,17 @@ class AcElementHandlerTest {
         assertThrows(A1PolicyServiceException.class,
                 () -> automationCompositionElementHandler.deploy(compositionElement, element));
     }
+
+    @Test
+    void test_AutomationCompositionElementUpdateWithCoderException() {
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
+        Map<String, Object> invalidProperties = Map.of("policyServiceEntities", 1);
+        var compositionElement = commonTestData.getCompositionElement(invalidProperties);
+        var element = commonTestData.getAutomationCompositionElement();
+        assertThrows(A1PolicyServiceException.class,
+                () -> automationCompositionElementHandler.deploy(compositionElement, element));
+    }
 }

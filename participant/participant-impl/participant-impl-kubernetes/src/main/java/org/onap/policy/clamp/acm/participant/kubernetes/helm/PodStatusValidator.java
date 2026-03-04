@@ -20,6 +20,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.helm;
 
 import jakarta.ws.rs.core.Response;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
@@ -27,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -99,8 +99,8 @@ public class PodStatusValidator {
     private Map<String, String> mapPodStatus(ChartInfo chart, String output) throws IOException {
         Map<String, String> podStatusMap = new HashMap<>();
         var podName = getPodName(chart);
-        try (var reader = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(output,
-            StandardCharsets.UTF_8)))) {
+        try (var reader = new BufferedReader(new InputStreamReader(
+                new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8))))) {
             var line = reader.readLine();
             while (line != null) {
                 if (line.contains(podName)) {
