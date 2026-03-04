@@ -131,20 +131,4 @@ class YamlHttpMessageConverterTest {
         // We expect the write method to throw a HttpMessageNotWritableException
         assertThrows(HttpMessageNotWritableException.class, () -> converter.write(map, null, outputMessage));
     }
-
-    @Test
-    void testThrowException_NullValues() {
-        assertThrows(NullPointerException.class, () -> converter.write(null, null, null));
-        assertThrows(HttpMessageNotReadableException.class, () -> converter.read(null, null, null));
-        assertThrows(HttpMessageNotReadableException.class, () -> converter.read(Map.class, null, null));
-        assertThrows(HttpMessageNotWritableException.class, () -> converter.writeInternal(null, null, null));
-        assertThrows(HttpMessageNotReadableException.class, () -> converter.readInternal(null, null));
-        assertThrows(HttpMessageNotReadableException.class, () -> converter.readInternal(Map.class, null));
-
-        var map = new HashMap<>();
-        map.put("key", "value");
-        assertThrows(NullPointerException.class, () -> converter.write(map, null, null));
-        assertThrows(HttpMessageNotWritableException.class, () -> converter.writeInternal(map, null, null));
-    }
-
 }

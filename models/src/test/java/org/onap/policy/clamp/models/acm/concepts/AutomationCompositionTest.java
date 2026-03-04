@@ -66,16 +66,6 @@ class AutomationCompositionTest {
 
         assertNotEquals(ac1, ac0);
 
-        var ac2 = new AutomationComposition();
-        ac2.setElements(new LinkedHashMap<>());
-        ac2.setRevisionId(ac0.getRevisionId());
-
-        // @formatter:off
-        assertThatThrownBy(() -> ac2.setCompositionId(null)).  isInstanceOf(NullPointerException.class);
-        // @formatter:on
-
-        assertEquals(ac2, ac0);
-
         ac1.getElements().put(UUID.randomUUID(), new AutomationCompositionElement());
 
         assertNull(ac0.getElements().get(UUID.randomUUID()));

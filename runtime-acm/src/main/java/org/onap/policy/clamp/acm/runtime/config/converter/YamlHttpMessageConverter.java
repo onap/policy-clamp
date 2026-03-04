@@ -27,6 +27,8 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import lombok.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.http.HttpHeaders;
@@ -36,8 +38,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractGenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 /**
  * Custom converter to marshal/unmarshall data structured with YAML media type.
