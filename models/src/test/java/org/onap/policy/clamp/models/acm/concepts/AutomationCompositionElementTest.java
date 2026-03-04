@@ -67,15 +67,5 @@ class AutomationCompositionElementTest {
         assertNotEquals(null, ace1);
 
         assertNotEquals(ace1, ace0);
-
-        var ace2 = new AutomationCompositionElement();
-
-        // @formatter:off
-        assertThatThrownBy(() -> ace2.setDefinition(null)).   isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ace2.setId(null)).           isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ace2.setParticipantId(null)).isInstanceOf(NullPointerException.class);
-        // @formatter:on
-
-        assertNotEquals(ace2, ace0);
     }
 }

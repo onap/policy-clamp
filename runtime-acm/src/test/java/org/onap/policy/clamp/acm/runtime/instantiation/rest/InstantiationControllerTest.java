@@ -483,6 +483,21 @@ class InstantiationControllerTest extends CommonRestClient {
         validateQueryPageable("instances?sort=name&sortOrder=DESC&instanceIds=" + instanceIds, 10);
     }
 
+    @Test
+    void testCreateBadRequestNoElements() {
+        var compositionId = createAcDefinitionInDB("CreateBadRequestNoEl");
+        var automationCompositionFromRsc = InstantiationUtils
+                .getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
+        assertNotNull(automationCompositionFromRsc);
+        automationCompositionFromRsc.setCompositionId(compositionId);
+        automationCompositionFromRsc.setElements(null);
+
+        var instResponse = createAutomationComposition(compositionId, automationCompositionFromRsc,
+                HttpStatus.BAD_REQUEST);
+        assertNotNull(instResponse.getErrorDetails());
+        assertNull(instResponse.getAffectedAutomationComposition());
+    }
+
     private UUID createAcDefinitionInDB(String name) {
         var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateCreate.setName(name);

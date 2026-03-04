@@ -20,13 +20,13 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.onap.policy.models.base.PfUtils;
 
 /**
@@ -37,13 +37,13 @@ import org.onap.policy.models.base.PfUtils;
 @EqualsAndHashCode
 public class Participant {
 
-    @NonNull
+    @NotNull
     private UUID participantId;
 
-    @NonNull
+    @NotNull
     private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes = new HashMap<>();
 
-    @NonNull
+    @NotNull
     private Map<UUID, ParticipantReplica> replicas = new HashMap<>();
 
     /**

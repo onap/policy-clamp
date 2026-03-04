@@ -22,12 +22,15 @@ package org.onap.policy.clamp.acm.runtime.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestClient;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -85,6 +88,9 @@ class InstantiationControllerStubTest extends CommonRestClient {
     void testPost() {
         var ac = new AutomationComposition();
         ac.setCompositionId(UUID.randomUUID());
+        Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
+        elements.put(UUID.randomUUID(), new AutomationCompositionElement());
+        ac.setElements(elements);
         var respPost = super.sendPost(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT).body(ac).retrieve().toBodilessEntity();
