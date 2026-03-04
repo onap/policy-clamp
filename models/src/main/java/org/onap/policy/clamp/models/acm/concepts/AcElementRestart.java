@@ -20,13 +20,13 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -35,10 +35,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 @Data
 public class AcElementRestart {
 
-    @NonNull
+    @NotNull
     private UUID id = UUID.randomUUID();
 
-    @NonNull
+    @NotNull
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfUtils.getNullKey());
 
     private UUID participantId;

@@ -18,27 +18,27 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.models;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 public class ChartInfo {
 
-    @NonNull
+    @NotNull
     private String releaseName;
 
-    @NonNull
+    @NotNull
     private ToscaConceptIdentifier chartId;
 
     private String podName;
 
-    @NonNull
+    @NotNull
     private String namespace;
 
     private HelmRepository repository;
