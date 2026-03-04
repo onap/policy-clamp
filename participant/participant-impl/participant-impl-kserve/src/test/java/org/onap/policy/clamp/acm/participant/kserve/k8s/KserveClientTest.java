@@ -39,12 +39,12 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -100,7 +100,7 @@ class KserveClientTest {
                         + "{\"name\": \"sklearn\"},\"storageUri\": "
                         + "\"gs://kfserving-examples/models/sklearn/1.0/model\"}}}}";
 
-        var response = getResponse(HttpStatus.SC_BAD_REQUEST);
+        var response = getResponse(HttpStatus.BAD_REQUEST.value());
         when(remoteCall.execute()).thenReturn(response);
 
         var mockRequest = mock(CustomObjectsApi.APIcreateNamespacedCustomObjectRequest.class);
@@ -119,7 +119,7 @@ class KserveClientTest {
     @Test
     void test_undeployInferenceServiceValidResponse() throws IOException, ApiException {
 
-        var response = getResponse(HttpStatus.SC_OK);
+        var response = getResponse(HttpStatus.OK.value());
         when(remoteCall.execute()).thenReturn(response);
 
         var mockRequest = mock(CustomObjectsApi.APIdeleteNamespacedCustomObjectRequest.class);
@@ -133,7 +133,7 @@ class KserveClientTest {
     @Test
     void test_undeployInferenceServiceInvalidResponse() throws IOException, ApiException {
 
-        var response = getResponse(HttpStatus.SC_BAD_REQUEST);
+        var response = getResponse(HttpStatus.BAD_REQUEST.value());
         when(remoteCall.execute()).thenReturn(response);
 
         var mockRequest = mock(CustomObjectsApi.APIdeleteNamespacedCustomObjectRequest.class);
@@ -147,7 +147,7 @@ class KserveClientTest {
     @Test
     void test_getInferenceServiceStatusValidResponse() throws IOException, ApiException {
 
-        var response = getResponse(HttpStatus.SC_OK, getInferenceServiceResponseBody("True"));
+        var response = getResponse(HttpStatus.OK.value(), getInferenceServiceResponseBody("True"));
         when(remoteCall.execute()).thenReturn(response);
 
         var mockRequest = mock(CustomObjectsApi.APIgetNamespacedCustomObjectRequest.class);
@@ -159,7 +159,7 @@ class KserveClientTest {
     @Test
     void test_getInferenceServiceStatusFalseResponse() throws IOException, ApiException {
 
-        var response = getResponse(HttpStatus.SC_OK, getInferenceServiceResponseBody("False"));
+        var response = getResponse(HttpStatus.OK.value(), getInferenceServiceResponseBody("False"));
         when(remoteCall.execute()).thenReturn(response);
 
         var mockRequest = mock(CustomObjectsApi.APIgetNamespacedCustomObjectRequest.class);
@@ -171,7 +171,7 @@ class KserveClientTest {
     @Test
     void test_getInferenceServiceStatusInvalidResponse() throws IOException, ApiException {
 
-        var response = getResponse(HttpStatus.SC_BAD_REQUEST, "");
+        var response = getResponse(HttpStatus.BAD_REQUEST.value(), "");
         when(remoteCall.execute()).thenReturn(response);
 
         var mockRequest = mock(CustomObjectsApi.APIgetNamespacedCustomObjectRequest.class);
