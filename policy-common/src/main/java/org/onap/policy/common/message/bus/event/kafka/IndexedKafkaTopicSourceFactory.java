@@ -27,11 +27,11 @@ import static org.onap.policy.common.message.bus.properties.MessageBusProperties
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_TOPIC_SOURCE_FETCH_LIMIT_SUFFIX;
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_TOPIC_SOURCE_FETCH_TIMEOUT_SUFFIX;
 
-import com.google.re2j.Pattern;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.message.bus.utils.KafkaPropertyUtils;
 import org.onap.policy.common.parameters.topic.BusTopicParams;

@@ -24,12 +24,12 @@ package org.onap.policy.common.message.bus.event.noop;
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_MANAGED_SUFFIX;
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_TOPIC_SERVERS_SUFFIX;
 
-import com.google.re2j.Pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
 import org.onap.policy.common.message.bus.event.base.TopicBaseHashedFactory;
 

@@ -156,32 +156,6 @@
                 <artifactId>commons-collections4</artifactId>
                 <version>4.5.0</version>
             </dependency>
-            <!-- Legacy Dependencies - To be removed in next commit -->
-            <dependency>
-                <groupId>com.google.re2j</groupId>
-                <artifactId>re2j</artifactId>
-                <version>1.7</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.18.0</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-net</groupId>
-                <artifactId>commons-net</artifactId>
-                <version>3.11.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20240303</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.core5</groupId>
-                <artifactId>httpcore5</artifactId>
-                <version>5.3.4</version>
-            </dependency>
 
             <!-- =================================================
                  Test Dependencies

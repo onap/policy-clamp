@@ -25,13 +25,13 @@ import static org.onap.policy.common.message.bus.properties.MessageBusProperties
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.PROPERTY_TOPIC_EFFECTIVE_TOPIC_SUFFIX;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.re2j.Pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.common.parameters.topic.BusTopicParams;
