@@ -37,7 +37,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +88,7 @@ public final class ResourceUtils {
             if (resourceStream == null) {
                 return null;
             }
-            return IOUtils.toString(resourceStream, StandardCharsets.UTF_8);
+            return new String(resourceStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (final IOException e) {
             LOGGER.debug("error reading resource stream {}", resourceName, e);
             return null;
