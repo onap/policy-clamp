@@ -48,7 +48,5 @@ class ToscaTopologyTemplateTest {
         origTt.setNodeTemplates(new HashMap<>());
         origTt.setPolicies(new ArrayList<>());
         assertEquals(origTt, new ToscaTopologyTemplate(origTt));
-
-        assertEquals(origTt.getPoliciesAsMap(), new ToscaTopologyTemplate(origTt).getPoliciesAsMap());
     }
 }

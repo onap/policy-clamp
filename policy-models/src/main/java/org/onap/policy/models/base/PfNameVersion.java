@@ -29,20 +29,20 @@ import org.onap.policy.common.utils.validation.Version;
  * @author Liam Fallon (liam.fallon@est.tech)
  */
 public interface PfNameVersion {
-    public String getName();
+    String getName();
 
-    public void setName(final String name);
+    void setName(final String name);
 
-    public String getVersion();
+    String getVersion();
 
-    public void setVersion(final String version);
+    void setVersion(final String version);
 
     /**
      * Get the defined name for a concept, return null if no name is defined.
      *
      * @return the defined name
      */
-    public default String getDefinedName() {
+    default String getDefinedName() {
         return getName();
     }
 
@@ -51,7 +51,7 @@ public interface PfNameVersion {
      *
      * @return the defined version
      */
-    public default String getDefinedVersion() {
+    default String getDefinedVersion() {
         return getVersion();
     }
 
@@ -60,9 +60,9 @@ public interface PfNameVersion {
      *
      * @param left the left name/version implementation
      * @param right the right name/version implementation
-     * @return the comparison resilt
+     * @return the comparison result
      */
-    public default int compareNameVersion(final PfNameVersion left, final PfNameVersion right) {
+    default int compareNameVersion(final PfNameVersion left, final PfNameVersion right) {
         if (left == null && right == null) {
             return 0;
         }
