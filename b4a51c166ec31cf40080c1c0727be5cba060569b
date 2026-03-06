@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad1228a3_a248f029",
+        "filename": "runtime-acm/src/main/resources/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-06T14:35:47Z",
+      "side": 1,
+      "message": "${KAFKA_SERVER:kafka:9092}",
+      "range": {
+        "startLine": 27,
+        "startChar": 23,
+        "endLine": 27,
+        "endChar": 48
+      },
+      "revId": "b4a51c166ec31cf40080c1c0727be5cba060569b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca1aa5d8_236ee57b",
+        "filename": "runtime-acm/src/main/resources/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-06T14:35:47Z",
+      "side": 1,
+      "message": "${KAFKA_GROUP_ID:acm-runtime}",
+      "range": {
+        "startLine": 31,
+        "startChar": 16,
+        "endLine": 31,
+        "endChar": 40
+      },
+      "revId": "b4a51c166ec31cf40080c1c0727be5cba060569b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12c2529c_359df34a",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/HibernateValidationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-06T14:35:47Z",
+      "side": 1,
+      "message": "Verify if this profile is needed",
+      "range": {
+        "startLine": 45,
+        "startChar": 39,
+        "endLine": 45,
+        "endChar": 48
+      },
+      "revId": "b4a51c166ec31cf40080c1c0727be5cba060569b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
