@@ -213,8 +213,8 @@ public final class ToscaServiceTemplateValidation {
             return null;
         }
         if (entityType.getName().equals(parentEntityTypeKey)) {
-            result.addResult("entity type", PfUtils.getId(entityType.getDocConceptKey()), ValidationStatus.INVALID,
-                    "ancestor of itself");
+            result.addResult("entity type", PfUtils.getId(
+                    DocUtil.getDocConceptKey(entityType)), ValidationStatus.INVALID, "ancestor of itself");
             return null;
         }
         return parentEntityTypeKey;
