@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "863736de_71aed075",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/KafkaConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-06T15:58:24Z",
+      "side": 1,
+      "message": "This is now deprecated",
+      "range": {
+        "startLine": 66,
+        "startChar": 70,
+        "endLine": 66,
+        "endChar": 96
+      },
+      "revId": "b4a51c166ec31cf40080c1c0727be5cba060569b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3509cc4e_f5db8884",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/KafkaConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-06T15:58:24Z",
+      "side": 1,
+      "message": "This is now deprecated",
+      "range": {
+        "startLine": 83,
+        "startChar": 70,
+        "endLine": 83,
+        "endChar": 96
+      },
+      "revId": "b4a51c166ec31cf40080c1c0727be5cba060569b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ca2c4162_bd9c5d75",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/ParticipantAckPublisher.java",
         "patchSetId": 1
