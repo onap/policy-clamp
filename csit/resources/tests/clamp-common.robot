@@ -30,6 +30,13 @@ VerifyHealthcheckPap
     ${resp}=    MakeGetRequest  policy  ${POLICY_PAP_IP}  /policy/pap/v1/health  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
 
+VerifyParticipantsRegistered
+    [Documentation]    Verify that all participants are registered
+    ${auth}=    ClampAuth
+    ${resp}=    MakeGetRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  /onap/policy/clamp/acm/v2/participants  ${auth}
+    Should Be Equal As Strings    ${resp.status_code}     200
+    Length Should Be    ${resp.json()}    4
+
 VerifyPriming
     [Arguments]  ${theCompositionId}  ${primestate}
     [Documentation]    Verify the AC definitions are primed to the participants

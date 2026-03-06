@@ -39,3 +39,4 @@ RegisterParticipants
     ${resp}=   PUT On Session     policy  /onap/policy/clamp/acm/v2/participants
     Log    Received response from runtime acm ${resp.text}
     Should Be Equal As Strings    ${resp.status_code}     202
+    Wait Until Keyword Succeeds    10 sec    2 sec    VerifyParticipantsRegistered
