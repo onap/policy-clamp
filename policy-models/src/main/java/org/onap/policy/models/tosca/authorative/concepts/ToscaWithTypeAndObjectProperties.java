@@ -21,7 +21,6 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -61,28 +60,5 @@ public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
         if (copyObject.properties != null) {
             properties = new LinkedHashMap<>(copyObject.properties);
         }
-    }
-
-    /**
-     * Gets the identifier for this policy.
-     *
-     * @return this policy's identifier
-     */
-    @JsonIgnore
-    public ToscaConceptIdentifier getIdentifier() {
-        return new ToscaConceptIdentifier(getName(), getVersion());
-    }
-
-    /**
-     * Gets the type identifier for this policy.
-     *
-     * @return this policy's type identifier, or null if type is null
-     */
-    @JsonIgnore
-    public ToscaConceptIdentifier getTypeIdentifier() {
-        if (getType() == null) {
-            return null;
-        }
-        return new ToscaConceptIdentifier(getType(), getTypeVersion());
     }
 }
