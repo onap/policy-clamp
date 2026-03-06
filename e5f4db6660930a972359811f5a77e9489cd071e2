@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20d00208_b7c77ca2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-03-06T10:07:02Z",
+      "side": 1,
+      "message": "There are 3 new issues introduced in sonar.https://sonarcloud.io/project/issues?issueStatuses\u003dOPEN%2CCONFIRMED\u0026sinceLeakPeriod\u003dtrue\u0026branch\u003d143520-1\u0026id\u003donap_policy-clamp",
+      "revId": "e5f4db6660930a972359811f5a77e9489cd071e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89154b5e_7cb38672",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantReplica.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-03-06T10:07:02Z",
+      "side": 1,
+      "message": "Did we check the csits are running okay with this change? Old participants doesn\u0027t send replicaId in registration, but we may not need to maintain backward compatibility I guess.",
+      "range": {
+        "startLine": 35,
+        "startChar": 17,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "e5f4db6660930a972359811f5a77e9489cd071e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
