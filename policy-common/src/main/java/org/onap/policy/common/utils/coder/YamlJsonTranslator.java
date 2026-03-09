@@ -74,7 +74,8 @@ public class YamlJsonTranslator {
         // Configure to handle circular references
         this.mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
         // Ignore null fields during serialization
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setDefaultPropertyInclusion(
+                JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL));
     }
 
     /**
@@ -178,7 +179,7 @@ public class YamlJsonTranslator {
      */
     protected Node makeYamlMap(ObjectNode obj) {
         var tuples = new ArrayList<NodeTuple>();
-        Iterator<Map.Entry<String, JsonNode>> it = obj.fields();
+        Iterator<Map.Entry<String, JsonNode>> it = obj.properties().iterator();
 
         while (it.hasNext()) {
             var entry = it.next();

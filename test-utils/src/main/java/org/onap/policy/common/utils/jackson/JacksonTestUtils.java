@@ -154,7 +154,7 @@ public class JacksonTestUtils {
 
         // Collect and sort fields by key
         List<Map.Entry<String, JsonNode>> fields = new ArrayList<>();
-        jsonObj.fields().forEachRemaining(fields::add);
+        jsonObj.properties().iterator().forEachRemaining(fields::add);
         fields.sort(Map.Entry.comparingByKey());
 
         for (var entry : fields) {

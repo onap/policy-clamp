@@ -48,7 +48,12 @@ public class StandardCoder implements Coder {
     private static final ObjectMapper MAPPER = createMapper();
     private static final ObjectMapper MAPPER_PRETTY = createMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
-    private static ObjectMapper createMapper() {
+    /**
+     *  Create new Mapper.
+     *
+     * @return a new Mapper
+     */
+    public static ObjectMapper createMapper() {
         ObjectMapper mapper = new ObjectMapper();
         // Configure to handle empty beans (like test classes with no getters/setters)
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -61,7 +66,8 @@ public class StandardCoder implements Coder {
         // Don't write self references as null, just ignore them
         mapper.configure(SerializationFeature.WRITE_SELF_REFERENCES_AS_NULL, false);
         // Ignore null fields during serialization
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setDefaultPropertyInclusion(
+                JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL));
         // Register modules for Java 8 time support (JSR310)
         mapper.findAndRegisterModules();
 
