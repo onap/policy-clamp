@@ -106,6 +106,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d1683e31_131c2eb6",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/ParticipantRegisterAckPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-10T12:24:07Z",
+      "side": 1,
+      "message": "Note this sends to sync topic while deregister ack goes to operation topic",
+      "revId": "b4a51c166ec31cf40080c1c0727be5cba060569b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b247435_cfdd1e3f",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/serialization/ParticipantMessageDeserializer.java",
         "patchSetId": 1
