@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.document.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serial;
 import lombok.Data;
@@ -79,11 +78,5 @@ public class DocConceptKey extends PfKeyImpl {
     @Override
     public void setVersion(@NonNull final String version) {
         this.version = Assertions.validateStringParameter(VERSION_TOKEN, version, getVersionRegEx());
-    }
-
-    @Override
-    @JsonIgnore
-    public PfKeyImpl getKey() {
-        return this;
     }
 }

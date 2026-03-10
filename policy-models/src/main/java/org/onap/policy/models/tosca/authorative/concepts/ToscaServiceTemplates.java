@@ -22,7 +22,6 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
@@ -33,7 +32,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ToscaServiceTemplates {
     @JsonProperty("service_templates")
     private List<ToscaServiceTemplate> serviceTemplates;

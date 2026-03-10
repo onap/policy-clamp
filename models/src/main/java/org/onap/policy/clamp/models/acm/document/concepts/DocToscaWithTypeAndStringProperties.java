@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.core.Response;
 import java.io.Serial;
@@ -40,7 +39,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaWithTypeAndObjectP
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @ToString
-@JsonIgnoreProperties({"typeDocConceptKey"})
 public class DocToscaWithTypeAndStringProperties<T extends ToscaWithTypeAndObjectProperties> extends DocToscaEntity<T> {
 
     @Serial

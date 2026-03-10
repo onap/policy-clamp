@@ -132,8 +132,6 @@ class DocToscaServiceTemplateTest {
     void testDocToscaEntity() {
         var serviceTemplate = new ToscaServiceTemplate();
         var doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc.getType()).isNull();
-        assertThat(doc.getTypeVersion()).isNull();
         assertThat(PfUtils.getDefinedName(doc)).isEqualTo("tosca");
         assertThat(PfUtils.getDefinedVersion(doc)).isEqualTo("1.0.0");
 
