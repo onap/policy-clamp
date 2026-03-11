@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ public class AcInstanceStateResolver {
     private static final String DELETING = DeployState.DELETING.name();
     private static final String MIGRATING = DeployState.MIGRATING.name();
     private static final String MIGRATION_REVERTING = DeployState.MIGRATION_REVERTING.name();
+    private static final String UPDATE_REVERTING = DeployState.UPDATE_REVERTING.name();
 
     // SubState
     private static final String MIGRATION_PRECHECKING = SubState.MIGRATION_PRECHECKING.name();
@@ -69,6 +70,7 @@ public class AcInstanceStateResolver {
     public static final String MIGRATE = DeployOrder.MIGRATE.name();
     public static final String MIGRATION_REVERT = DeployOrder.MIGRATION_REVERT.name();
     public static final String UPDATE = DeployOrder.UPDATE.name();
+    public static final String UPDATE_REVERT = DeployOrder.UPDATE_REVERT.name();
 
     // LockOrder
     public static final String LOCK = LockOrder.LOCK.name();
@@ -143,6 +145,8 @@ public class AcInstanceStateResolver {
         // rollback
         addDeployOrderWithFail(MIGRATION_REVERT, MIGRATING, LOCKED, SUB_STATE_NONE);
         addDeployOrderWithFail(UNDEPLOY, MIGRATION_REVERTING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(UPDATE_REVERT, UPDATING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(UNDEPLOY, UPDATE_REVERTING, LOCKED, SUB_STATE_NONE);
     }
 
     private void addDeployOrder(String deployOrder, String deployState, String lockState) {

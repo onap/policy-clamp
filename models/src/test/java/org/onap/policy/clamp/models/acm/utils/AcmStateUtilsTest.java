@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ class AcmStateUtilsTest {
         assertTrue(AcmStateUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING, SubState.NONE));
         assertTrue(AcmStateUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE, SubState.NONE));
         assertTrue(AcmStateUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED, SubState.NONE));
+        assertTrue(AcmStateUtils.isInTransitionalState(DeployState.UPDATE_REVERTING, LockState.LOCKED, SubState.NONE));
         assertTrue(AcmStateUtils.isInTransitionalState(DeployState.MIGRATING, LockState.LOCKED, SubState.NONE));
         assertTrue(AcmStateUtils.isInTransitionalState(DeployState.MIGRATION_REVERTING, LockState.LOCKED,
                 SubState.NONE));
