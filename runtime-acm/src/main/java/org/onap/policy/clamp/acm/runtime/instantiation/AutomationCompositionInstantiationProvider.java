@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,6 +56,7 @@ import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.base.PfUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -95,7 +96,7 @@ public class AutomationCompositionInstantiationProvider {
                                                              AutomationComposition automationComposition) {
         LOGGER.info("Create instance request received for compositionId {}", compositionId);
         AutomationCompositionProvider.validateInstanceEndpoint(compositionId, automationComposition);
-        automationCompositionProvider.validateNameVersion(automationComposition.getKey().asIdentifier());
+        automationCompositionProvider.validateNameVersion(PfUtils.getKey(automationComposition).asIdentifier());
 
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         AcDefinitionProvider.checkPrimedComposition(acDefinition);
@@ -114,7 +115,7 @@ public class AutomationCompositionInstantiationProvider {
     private InstantiationResponse createInstantiationResponse(AutomationComposition automationComposition) {
         var response = new InstantiationResponse();
         response.setInstanceId(automationComposition.getInstanceId());
-        response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
+        response.setAffectedAutomationComposition(PfUtils.getKey(automationComposition).asIdentifier());
         return response;
     }
 

@@ -22,7 +22,6 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
@@ -69,26 +68,6 @@ public abstract class ToscaEntity implements PfNameVersion {
                 metadata.put(metadataEntry.getKey(), metadataEntry.getValue());
             }
         }
-    }
-
-    /**
-     * Get a key for this entity.
-     *
-     * @return a ToscaEntityKey for this entry
-     */
-    @JsonIgnore
-    public ToscaEntityKey getKey() {
-        return new ToscaEntityKey(name, version);
-    }
-
-    @Override
-    public String getDefinedName() {
-        return (PfKey.NULL_KEY_NAME.equals(name) ? null : name);
-    }
-
-    @Override
-    public String getDefinedVersion() {
-        return (PfKey.NULL_KEY_VERSION.equals(version) ? null : version);
     }
 
     /**

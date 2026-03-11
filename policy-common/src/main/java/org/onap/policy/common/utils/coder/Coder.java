@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modification Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,17 +71,6 @@ public interface Coder {
      * @throws CoderException if an error occurs
      */
     String encode(Object object) throws CoderException;
-
-    /**
-     * Encodes an object into json, optionally making it "pretty".
-     *
-     * @param object object to be encoded
-     * @param pretty {@code true} if it should be encoded as "pretty" json, {@code false}
-     *        otherwise
-     * @return a json string representing the object
-     * @throws CoderException if an error occurs
-     */
-    String encode(Object object, boolean pretty) throws CoderException;
 
     /**
      * Encodes an object into json, writing to the given target.

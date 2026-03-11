@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -40,6 +40,7 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -215,7 +216,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         List<ToscaConceptIdentifier> policyTypeList = new ArrayList<>();
         if (serviceTemplate.getPolicyTypes() != null) {
             for (var policyType : serviceTemplate.getPolicyTypes().values()) {
-                policyTypeList.add(policyType.getKey().asIdentifier());
+                policyTypeList.add(PfUtils.getKey(policyType).asIdentifier());
             }
         }
 
@@ -227,7 +228,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         if (serviceTemplate.getToscaTopologyTemplate().getPolicies() != null) {
             for (var gotPolicyMap : serviceTemplate.getToscaTopologyTemplate().getPolicies()) {
                 for (var policy : gotPolicyMap.values()) {
-                    policyList.add(policy.getKey().asIdentifier());
+                    policyList.add(PfUtils.getKey(policy).asIdentifier());
                 }
             }
         }

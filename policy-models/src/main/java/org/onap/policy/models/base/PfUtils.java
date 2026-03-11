@@ -32,6 +32,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityKey;
 
 /**
  * Utility class for Policy Framework concept utilities.
@@ -207,5 +208,22 @@ public final class PfUtils {
      */
     public static <K, T, R> Map<K, R> mapMap(Map<K, T> source, Function<T, R> mapFunc) {
         return mapMap(source, mapFunc, null);
+    }
+
+    public static String getDefinedName(PfNameVersion nameVersion) {
+        return (PfKey.NULL_KEY_NAME.equals(nameVersion.getName()) ? null : nameVersion.getName());
+    }
+
+    public static String getDefinedVersion(PfNameVersion nameVersion) {
+        return (PfKey.NULL_KEY_VERSION.equals(nameVersion.getVersion()) ? null : nameVersion.getVersion());
+    }
+
+    /**
+     * Get a key for the entity.
+     *
+     * @return a ToscaEntityKey
+     */
+    public static ToscaEntityKey getKey(PfNameVersion entity) {
+        return new ToscaEntityKey(entity.getName(), entity.getVersion());
     }
 }

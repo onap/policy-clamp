@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,5 +121,22 @@ class AcLockHandlerTest {
         automationCompositionStateChange.setStartPhase(2);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(0)).unlock(any(), any(), any());
+    }
+
+    @Test
+    void handleAutomationCompositionStateChangeNullTest() {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.LOCKED);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+                automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.NONE);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcLockHandler(cacheProvider, listener);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(0)).unlock(any(), any(), any());
+        verify(listener, times(0)).lock(any(), any(), any());
     }
 }
