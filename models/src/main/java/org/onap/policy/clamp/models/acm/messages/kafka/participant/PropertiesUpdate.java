@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ public class PropertiesUpdate extends ParticipantMessage {
 
     // A list of updates to AC element properties
     private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
+
+    private boolean rollback = false;
 
     /**
      * Constructor for instantiating properties update class with message name.

@@ -118,9 +118,15 @@ public class AutomationCompositionHandler {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
                 var automationComposition =
                         cacheProvider.getAutomationComposition(updateMsg.getAutomationCompositionId());
-                automationComposition.setDeployState(DeployState.UPDATING);
+                if (updateMsg.isRollback()) {
+                    automationComposition.setDeployState(DeployState.UPDATE_REVERTING);
+                } else {
+                    automationComposition.setDeployState(DeployState.UPDATING);
+                }
+
                 var acCopy = new AutomationComposition(automationComposition);
-                updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy);
+                updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy,
+                        updateMsg.isRollback());
 
                 callParticipantUpdateProperty(updateMsg.getMessageId(), participantDeploy.getAcElementList(), acCopy);
             }
@@ -230,12 +236,17 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy) {
+    private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy,
+                                                         boolean rollback) {
         var acElementList = cacheProvider.getAutomationComposition(instanceId).getElements();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = acElementList.get(element.getId());
             AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
-            acElement.setDeployState(DeployState.UPDATING);
+            if (rollback) {
+                acElement.setDeployState(DeployState.UPDATE_REVERTING);
+            } else {
+                acElement.setDeployState(DeployState.UPDATING);
+            }
             acElement.setSubState(SubState.NONE);
             acElement.setDefinition(element.getDefinition());
         }

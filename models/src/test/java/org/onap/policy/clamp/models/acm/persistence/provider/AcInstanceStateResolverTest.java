@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,6 +83,14 @@ class AcInstanceStateResolverTest {
 
         result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, SubOrder.NONE,
             DeployState.MIGRATION_REVERTING, LockState.LOCKED, SubState.NONE, StateChangeResult.FAILED);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.UNDEPLOY);
+
+        result = acTypeStateResolver.resolve(DeployOrder.UPDATE_REVERT, LockOrder.NONE, SubOrder.NONE,
+                DeployState.UPDATING, LockState.LOCKED, SubState.NONE, StateChangeResult.FAILED);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.UPDATE_REVERT);
+
+        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, SubOrder.NONE,
+                DeployState.UPDATE_REVERTING, LockState.LOCKED, SubState.NONE, StateChangeResult.FAILED);
         assertThat(result).isEqualTo(AcInstanceStateResolver.UNDEPLOY);
 
     }
