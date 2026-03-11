@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -58,6 +59,8 @@ public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<P
         propertiesUpdate.setTimestamp(Instant.now());
         propertiesUpdate.setRevisionIdInstance(automationComposition.getRevisionId());
         propertiesUpdate.setRevisionIdComposition(revisionIdComposition);
+        var rollback = DeployState.UPDATE_REVERTING.equals(automationComposition.getDeployState());
+        propertiesUpdate.setRollback(rollback);
         var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE);
         propertiesUpdate.setParticipantUpdatesList(participantUpdatesList);
         propertiesUpdate.setParticipantIdList(participantUpdatesList.stream()

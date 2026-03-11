@@ -23,8 +23,12 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfUtils;
@@ -86,5 +90,27 @@ public class InstantiationUtils {
     public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
         return CommonTestData
                 .getObjectFromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
+    }
+
+    /**
+     * Get custom AutomationComposition.
+     * @param path path of the resource
+     * @param deployState deployState of the AutomationComposition
+     * @param compositionId compositionId of the AutomationComposition
+     * @return the AutomationComposition
+     */
+    public static AutomationComposition getCustomAutomationComposition(final String path, String suffix,
+                                                                       DeployState deployState, UUID compositionId) {
+        var automationComposition = getAutomationCompositionFromResource(path, suffix);
+        var instanceId = UUID.randomUUID();
+        var compositionTargetId = UUID.randomUUID();
+        automationComposition.setInstanceId(instanceId);
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setCompositionTargetId(compositionTargetId);
+        automationComposition.setDeployState(deployState);
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setSubState(SubState.NONE);
+
+        return automationComposition;
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -127,6 +127,7 @@ public class MonitoringScanner {
                 || SubState.PREPARING.equals(automationComposition.getSubState())) {
             stageScanner.scanStage(automationComposition, acDefinition, updateSync, revisionIdComposition);
         } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())
+                || DeployState.UPDATE_REVERTING.equals(automationComposition.getDeployState())
                 || SubState.REVIEWING.equals(automationComposition.getSubState())
                 || SubState.MIGRATION_PRECHECKING.equals(automationComposition.getSubState())) {
             simpleScanner.simpleScan(automationComposition, updateSync);

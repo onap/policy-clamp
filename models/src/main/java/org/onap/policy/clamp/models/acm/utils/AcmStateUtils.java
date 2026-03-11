@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public final class AcmStateUtils {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
                 || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
                 || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState)
+                || DeployState.UPDATE_REVERTING.equals(deployState)
                 || DeployState.MIGRATING.equals(deployState) || DeployState.MIGRATION_REVERTING.equals(deployState)
                 || !SubState.NONE.equals(subState);
     }
@@ -99,7 +100,7 @@ public final class AcmStateUtils {
      */
     public static DeployState deployCompleted(DeployState deployState) {
         return switch (deployState) {
-            case MIGRATING, MIGRATION_REVERTING, UPDATING, DEPLOYING -> DeployState.DEPLOYED;
+            case MIGRATING, MIGRATION_REVERTING, UPDATING, UPDATE_REVERTING, DEPLOYING -> DeployState.DEPLOYED;
             case UNDEPLOYING -> DeployState.UNDEPLOYED;
             case DELETING -> DeployState.DELETED;
             default -> deployState;

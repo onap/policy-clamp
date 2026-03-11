@@ -197,11 +197,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
         var automationCompositionUpdate =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        automationCompositionUpdate.setCompositionId(compositionId);
-        automationCompositionUpdate.setInstanceId(UUID.randomUUID());
-        automationCompositionUpdate.setDeployState(DeployState.DEPLOYED);
-        automationCompositionUpdate.setLockState(LockState.LOCKED);
+                InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON, "Crud",
+                        DeployState.DEPLOYED, compositionId);
+        automationCompositionUpdate.setCompositionTargetId(null);
         var acProvider = mock(AutomationCompositionProvider.class);
         var acmFromDb = new AutomationComposition(automationCompositionUpdate);
         when(acProvider.getAutomationComposition(automationCompositionUpdate.getInstanceId())).thenReturn(acmFromDb);
@@ -244,10 +242,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
         var automationCompositionUpdate =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        automationCompositionUpdate.setDeployState(DeployState.DEPLOYING);
-        automationCompositionUpdate.setLockState(LockState.NONE);
-        automationCompositionUpdate.setCompositionId(compositionId);
+                InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON, "Crud",
+                        DeployState.DEPLOYING, compositionId);
+        automationCompositionUpdate.setCompositionTargetId(null);
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = mock(EncryptionUtils.class);
         when(acProvider.getAutomationComposition(automationCompositionUpdate.getInstanceId()))
@@ -280,14 +277,10 @@ class AutomationCompositionInstantiationProviderTest {
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
-        var instanceId = UUID.randomUUID();
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setInstanceId(instanceId);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.LOCKED);
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_CREATE_JSON,
+                "Crud", DeployState.DEPLOYED, compositionId);
+        var instanceId = automationComposition.getInstanceId();
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -335,12 +328,8 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.LOCKED);
-        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON,
+                "Crud", DeployState.DEPLOYED, compositionId);
         when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId()))
                 .thenThrow(new PfModelRuntimeException(Status.NOT_FOUND,
                         String.format(AC_DEFINITION_NOT_FOUND, automationComposition.getCompositionTargetId())));
@@ -382,12 +371,8 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.LOCKED);
-        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON,
+                "Crud", DeployState.DEPLOYED, compositionId);
         automationComposition.setPrecheck(true);
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
@@ -429,11 +414,8 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.LOCKED);
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON,
+                "Crud", DeployState.DEPLOYED, compositionId);
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -466,11 +448,8 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.LOCKED);
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON,
+                "Crud", DeployState.DEPLOYED, compositionId);
         automationComposition.setPrecheck(true);
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
@@ -548,12 +527,8 @@ class AutomationCompositionInstantiationProviderTest {
     void testRollbackFailure() {
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var compositionId = acDefinition.getCompositionId();
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Rollback");
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setInstanceId(UUID.randomUUID());
-        automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
-        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_CREATE_JSON,
+                "Rollback", DeployState.MIGRATION_REVERTING, compositionId);
 
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
@@ -604,17 +579,12 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
 
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_MIGRATE_JSON, "Crud");
-        var instanceId = UUID.randomUUID();
-        var compositionTargetId = UUID.randomUUID();
-        automationComposition.setInstanceId(instanceId);
-        automationComposition.setCompositionId(compositionId);
-        automationComposition.setCompositionTargetId(compositionTargetId);
-        automationComposition.setDeployState(DeployState.MIGRATING);
-        automationComposition.setLockState(LockState.LOCKED);
+        var automationComposition = InstantiationUtils.getCustomAutomationComposition(AC_MIGRATE_JSON, "Crud",
+                DeployState.MIGRATING, compositionId);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-        automationComposition.setSubState(SubState.NONE);
+        var instanceId = automationComposition.getInstanceId();
+        var compositionTargetId = automationComposition.getCompositionTargetId();
+
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.getAutomationComposition(instanceId)).thenReturn(automationComposition);
         when(acProvider.updateAutomationComposition(automationComposition)).thenReturn(automationComposition);
@@ -645,6 +615,44 @@ class AutomationCompositionInstantiationProviderTest {
                         String.format(AC_DEFINITION_NOT_FOUND, compositionTargetId)));
         assertThatThrownBy(() -> instantiationProvider.rollback(compositionId, instanceId))
                 .hasMessageMatching(String.format(AC_DEFINITION_NOT_FOUND, compositionTargetId));
+    }
+
+    @Test
+    void testUpdateRollback() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
+
+        var automationComposition =
+                InstantiationUtils.getCustomAutomationComposition(AC_INSTANTIATION_UPDATE_JSON, "Crud",
+                        DeployState.UPDATING, compositionId);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.setCompositionTargetId(null);
+        var instanceId = automationComposition.getInstanceId();
+
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(instanceId)).thenReturn(automationComposition);
+        when(acProvider.updateAutomationComposition(automationComposition)).thenReturn(automationComposition);
+
+        var acRollback =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+
+        var rollbackRecord = new AutomationCompositionRollback();
+        rollbackRecord.setInstanceId(instanceId);
+        rollbackRecord.setElements(acRollback.getElements());
+        when(acProvider.getAutomationCompositionRollback(instanceId)).thenReturn(rollbackRecord);
+
+        var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        var participantProvider = mock(ParticipantProvider.class);
+        var encryptionUtils = new EncryptionUtils(CommonTestData.getTestParamaterGroup());
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, new AcRuntimeParameterGroup(),
+                encryptionUtils);
+
+        instantiationProvider.rollback(compositionId, automationComposition.getInstanceId());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(supervisionAcHandler).update(any(), any());
     }
 
     private void assertThatDeleteThrownBy(AutomationComposition automationComposition, DeployState deployState,
