@@ -37,11 +37,6 @@ public class StandardYamlCoder extends StandardCoder {
     }
 
     @Override
-    protected String toPrettyJson(Object object) {
-        return toJson(object);
-    }
-
-    @Override
     protected String toJson(Object object) {
         return translator.toYaml(object);
     }

@@ -22,14 +22,17 @@ package org.onap.policy.clamp.models.acm.document.base;
 
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,13 +40,19 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaEntity;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaProperty;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaWithToscaProperties;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaWithTypeAndStringProperties;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.PfNameVersion;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaWithToscaProperties;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaWithTypeAndObjectProperties;
+import org.onap.policy.models.tosca.utils.ToscaUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DocUtil {
@@ -128,9 +137,9 @@ public final class DocUtil {
             }
 
             incomingConceptEntry.getValue().setName(findConceptField(conceptKey, conceptKey.getName(),
-                    incomingConceptEntry.getValue(), PfNameVersion::getDefinedName));
+                    incomingConceptEntry.getValue(), PfUtils::getDefinedName));
             incomingConceptEntry.getValue().setVersion(findConceptField(conceptKey, conceptKey.getVersion(),
-                    incomingConceptEntry.getValue(), PfNameVersion::getDefinedVersion));
+                    incomingConceptEntry.getValue(), PfUtils::getDefinedVersion));
 
             var authoritiveImpl = mapFunc.apply(incomingConceptEntry.getValue());
 
@@ -374,5 +383,40 @@ public final class DocUtil {
 
     public static DocConceptKey getDocConceptKey(PfNameVersion docToscaEntity) {
         return new DocConceptKey(docToscaEntity.getName(), docToscaEntity.getVersion());
+    }
+
+    /**
+     * Get the referenced data types.
+     *
+     * @return the referenced data types
+     */
+    public static <T extends ToscaWithToscaProperties> Collection<DocConceptKey> getReferencedDataTypes(
+            DocToscaWithToscaProperties<T> doc) {
+        if (doc.getProperties() == null) {
+            return CollectionUtils.emptyCollection();
+        }
+
+        Set<DocConceptKey> referencedDataTypes = new LinkedHashSet<>();
+
+        for (var property : doc.getProperties().values()) {
+            referencedDataTypes.add(getTypeDocConceptKey(property));
+
+            if (property.getEntrySchema() != null) {
+                referencedDataTypes.add(property.getEntrySchema().getTypeDocConceptKey());
+            }
+        }
+
+        var set = ToscaUtils.getPredefinedDataTypes().stream().map(DocConceptKey::new).collect(Collectors.toSet());
+        referencedDataTypes.removeAll(set);
+        return referencedDataTypes;
+    }
+
+    public static <T extends ToscaWithTypeAndObjectProperties> DocConceptKey getTypeDocConceptKey(
+            DocToscaWithTypeAndStringProperties<T> doc) {
+        return new DocConceptKey(doc.getType(), doc.getTypeVersion());
+    }
+
+    public static DocConceptKey getTypeDocConceptKey(DocToscaProperty doc) {
+        return new DocConceptKey(doc.getType(), doc.getTypeVersion());
     }
 }

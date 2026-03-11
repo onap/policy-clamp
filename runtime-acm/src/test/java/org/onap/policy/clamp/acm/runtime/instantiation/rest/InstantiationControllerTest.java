@@ -47,6 +47,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -224,7 +225,7 @@ class InstantiationControllerTest extends CommonRestClient {
         instantiationProvider.createAutomationComposition(compositionId, automationComposition);
 
         var rawresp = super.sendGet(
-                getInstanceEndPoint(compositionId) + "?name=" + automationComposition.getKey().getName())
+                getInstanceEndPoint(compositionId) + "?name=" + PfUtils.getKey(automationComposition).getName())
                 .retrieve().toEntity(AutomationCompositions.class);
         assertEquals(HttpStatus.OK.value(), rawresp.getStatusCode().value());
         var automationCompositionsQuery = rawresp.getBody();
@@ -316,9 +317,9 @@ class InstantiationControllerTest extends CommonRestClient {
         var instResponse = resp.getBody();
         assertNotNull(instResponse);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
+        var key = PfUtils.getKey(automationComposition);
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
-                automationComposition.getKey().getName(), automationComposition.getKey().getVersion(),
-                Pageable.unpaged());
+                key.getName(), key.getVersion(), Pageable.unpaged());
 
         assertNotNull(automationCompositionsFromDb);
         assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
@@ -346,9 +347,9 @@ class InstantiationControllerTest extends CommonRestClient {
         assertNotNull(instResponse);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
+        var key = PfUtils.getKey(automationCompositionFromRsc);
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
-                automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion(),
-                Pageable.unpaged());
+                key.getName(), key.getVersion(), Pageable.unpaged());
         assertEquals(DeployState.DELETING,
                 automationCompositionsFromDb.getAutomationCompositionList().get(0).getDeployState());
     }

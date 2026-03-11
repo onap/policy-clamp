@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +32,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
-import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
@@ -149,11 +147,6 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
         }
 
         metadata = PfUtils.mapMap(toscaProperty.getMetadata(), metadataItem -> metadataItem);
-    }
-
-    @JsonIgnore
-    public DocConceptKey getTypeDocConceptKey() {
-        return new DocConceptKey(type, typeVersion);
     }
 
     @Override

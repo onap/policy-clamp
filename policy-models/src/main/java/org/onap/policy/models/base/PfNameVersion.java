@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2020 Nordix Foundation.
+ *  Copyright (C) 2019-2020,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,24 +36,6 @@ public interface PfNameVersion {
     String getVersion();
 
     void setVersion(final String version);
-
-    /**
-     * Get the defined name for a concept, return null if no name is defined.
-     *
-     * @return the defined name
-     */
-    default String getDefinedName() {
-        return getName();
-    }
-
-    /**
-     * Get the defined version for a concept, return null if no version is defined.
-     *
-     * @return the defined version
-     */
-    default String getDefinedVersion() {
-        return getVersion();
-    }
 
     /**
      * Compare two name version implementation objects.

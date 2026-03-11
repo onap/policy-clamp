@@ -3,7 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,20 +51,17 @@ class StandardYamlCoderTest {
     @Test
     void testToPrettyJson() throws CoderException {
         String expected = coder.encode(cont);
-        assertEquals(expected, coder.encode(cont, false));
+        assertEquals(expected, coder.encode(cont));
 
-        String yaml = coder.encode(cont, true);
-        assertEquals(expected, yaml);
-
-        Container cont2 = coder.decode(yaml, Container.class);
+        Container cont2 = coder.decode(expected, Container.class);
         assertEquals(cont, cont2);
 
         // test exception cases
         IllegalArgumentException expex = new IllegalArgumentException("expected exception");
         coder = spy(new StandardYamlCoder());
         when(coder.toJson(cont)).thenThrow(expex);
-        assertThatThrownBy(() -> coder.encode(cont, false)).isInstanceOf(CoderException.class).hasCause(expex);
-        assertThatThrownBy(() -> coder.encode(cont, true)).isInstanceOf(CoderException.class).hasCause(expex);
+        assertThatThrownBy(() -> coder.encode(cont)).isInstanceOf(CoderException.class).hasCause(expex);
+        assertThatThrownBy(() -> coder.encode(cont)).isInstanceOf(CoderException.class).hasCause(expex);
     }
 
     @Test
