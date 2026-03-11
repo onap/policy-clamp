@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019-2020, 2024 Nordix Foundation.
+ *  Copyright (C) 2019-2020, 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityKey;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 
 /**
  * Test the PfUtils class.
@@ -83,5 +85,31 @@ class PfUtilsTest {
         // verify that we can modify the map without throwing an exception
         newMap.remove("abcX");
         newMap.put("something", 789);
+    }
+
+    @Test
+    void testGetDefinedName() {
+        var policyType = new ToscaPolicyType();
+        policyType.setName(PfKey.NULL_KEY_NAME);
+        assertNull(PfUtils.getDefinedName(policyType));
+        policyType.setName("policy");
+        assertEquals(policyType.getName(), PfUtils.getDefinedName(policyType));
+    }
+
+    @Test
+    void testGetDefinedVersion() {
+        var policyType = new ToscaPolicyType();
+        policyType.setVersion(PfKey.NULL_KEY_VERSION);
+        assertNull(PfUtils.getDefinedVersion(policyType));
+        policyType.setVersion("1.0.0");
+        assertEquals(policyType.getVersion(), PfUtils.getDefinedVersion(policyType));
+    }
+
+    @Test
+    void test() {
+        var policyType = new ToscaPolicyType();
+        policyType.setName("policy");
+        policyType.setVersion("1.0.0");
+        assertEquals(new ToscaEntityKey(policyType.getName(), policyType.getVersion()), PfUtils.getKey(policyType));
     }
 }

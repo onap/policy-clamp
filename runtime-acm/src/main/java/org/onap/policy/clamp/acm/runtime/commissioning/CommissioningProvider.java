@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,6 +43,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositi
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.slf4j.Logger;
@@ -81,7 +82,7 @@ public class CommissioningProvider {
             serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                 .values()
                 .stream()
-                .map(template -> template.getKey().asIdentifier())
+                .map(template -> PfUtils.getKey(template).asIdentifier())
                 .toList());
         // @formatter:on
 

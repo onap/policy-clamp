@@ -29,6 +29,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
 import org.onap.policy.models.base.PfKey;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConstraint;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
@@ -133,8 +134,8 @@ class DocToscaServiceTemplateTest {
         var doc = new DocToscaServiceTemplate(serviceTemplate);
         assertThat(doc.getType()).isNull();
         assertThat(doc.getTypeVersion()).isNull();
-        assertThat(doc.getDefinedName()).isEqualTo("tosca");
-        assertThat(doc.getDefinedVersion()).isEqualTo("1.0.0");
+        assertThat(PfUtils.getDefinedName(doc)).isEqualTo("tosca");
+        assertThat(PfUtils.getDefinedVersion(doc)).isEqualTo("1.0.0");
 
         serviceTemplate.setDerivedFrom(NAME);
         var doc2 = new DocToscaServiceTemplate(doc);

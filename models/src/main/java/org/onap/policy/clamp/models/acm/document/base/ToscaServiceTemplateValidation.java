@@ -128,18 +128,18 @@ public final class ToscaServiceTemplateValidation {
             DocToscaServiceTemplate serviceTemplate, Map<String, Set<String>> references) {
         if (serviceTemplate.getDataTypes() != null) {
             for (var dataType : serviceTemplate.getDataTypes().values()) {
-                validateReferencedDataTypesExists(result, dataType.getReferencedDataTypes(), references);
+                validateReferencedDataTypesExists(result, DocUtil.getReferencedDataTypes(dataType), references);
             }
         }
 
         if (serviceTemplate.getPolicyTypes() != null) {
             for (var policyType : serviceTemplate.getPolicyTypes().values()) {
-                validateReferencedDataTypesExists(result, policyType.getReferencedDataTypes(), references);
+                validateReferencedDataTypesExists(result, DocUtil.getReferencedDataTypes(policyType), references);
             }
         }
         if (serviceTemplate.getNodeTypes() != null) {
             for (var nodeType : serviceTemplate.getNodeTypes().values()) {
-                validateReferencedDataTypesExists(result, nodeType.getReferencedDataTypes(), references);
+                validateReferencedDataTypesExists(result, DocUtil.getReferencedDataTypes(nodeType), references);
             }
         }
     }
@@ -173,7 +173,7 @@ public final class ToscaServiceTemplateValidation {
 
         if (serviceTemplate.getToscaTopologyTemplate().getPolicies() != null) {
             for (var policy : serviceTemplate.getToscaTopologyTemplate().getPolicies().values()) {
-                var key = policy.getTypeDocConceptKey();
+                var key = DocUtil.getTypeDocConceptKey(policy);
                 if (!isTypePresent(key, references.get(DocUtil.REF_POLICY_TYPES))) {
                     result.addResult("policy type", key, ValidationStatus.INVALID, NOT_FOUND);
                 }
@@ -181,7 +181,7 @@ public final class ToscaServiceTemplateValidation {
         }
         if (serviceTemplate.getToscaTopologyTemplate().getNodeTemplates() != null) {
             for (var nodeTemplate : serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().values()) {
-                var key = nodeTemplate.getTypeDocConceptKey();
+                var key = DocUtil.getTypeDocConceptKey(nodeTemplate);
                 if (!isTypePresent(key, references.get(DocUtil.REF_NODE_TYPES))) {
                     result.addResult("node Template", key, ValidationStatus.INVALID, NOT_FOUND);
                 }

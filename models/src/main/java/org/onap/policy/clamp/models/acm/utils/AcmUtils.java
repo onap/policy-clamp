@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -217,7 +217,7 @@ public final class AcmUtils {
             // @formatter:off
             var definitions = acElementDefinitions
                     .stream()
-                    .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
+                    .map(nodeTemplate -> PfUtils.getKey(nodeTemplate).asIdentifier())
                     .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
             // @formatter:on
 

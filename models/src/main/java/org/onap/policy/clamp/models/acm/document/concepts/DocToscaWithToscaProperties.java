@@ -24,21 +24,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaWithToscaProperties;
-import org.onap.policy.models.tosca.utils.ToscaUtils;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -81,31 +74,6 @@ public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> ext
                 properties.put(toscaPropertyEntry.getKey(), jpaProperty);
             }
         }
-    }
-
-    /**
-     * Get the referenced data types.
-     *
-     * @return the referenced data types
-     */
-    public Collection<DocConceptKey> getReferencedDataTypes() {
-        if (properties == null) {
-            return CollectionUtils.emptyCollection();
-        }
-
-        Set<DocConceptKey> referencedDataTypes = new LinkedHashSet<>();
-
-        for (var property : properties.values()) {
-            referencedDataTypes.add(property.getTypeDocConceptKey());
-
-            if (property.getEntrySchema() != null) {
-                referencedDataTypes.add(property.getEntrySchema().getTypeDocConceptKey());
-            }
-        }
-
-        var set = ToscaUtils.getPredefinedDataTypes().stream().map(DocConceptKey::new).collect(Collectors.toSet());
-        referencedDataTypes.removeAll(set);
-        return referencedDataTypes;
     }
 
     @Override

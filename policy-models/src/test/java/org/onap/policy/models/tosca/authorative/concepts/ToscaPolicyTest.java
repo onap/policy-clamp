@@ -3,7 +3,7 @@
  * ONAP Policy Models
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.models.base.PfUtils;
 
 /**
  * Tests methods not tested by {@link PojosTest}.
@@ -50,8 +51,9 @@ class ToscaPolicyTest {
         assertNull(te.getType());
         assertNull(te.getTypeVersion());
 
-        assertEquals("ToscaEntityKey(name=my_name, version=1.2.3)", policy.getKey().toString());
-        assertEquals(new ToscaConceptIdentifier("my_name", "1.2.3"), policy.getKey().asIdentifier());
+        var key = PfUtils.getKey(policy);
+        assertEquals("ToscaEntityKey(name=my_name, version=1.2.3)", key.toString());
+        assertEquals(new ToscaConceptIdentifier("my_name", "1.2.3"), key.asIdentifier());
 
         ToscaPolicy clonedPolicy0 = new ToscaPolicy(policy);
         assertEquals(0, new ToscaEntityComparator<ToscaPolicy>().compare(policy, clonedPolicy0));

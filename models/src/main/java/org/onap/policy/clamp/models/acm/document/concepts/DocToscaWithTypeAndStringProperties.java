@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.core.Response;
@@ -31,7 +30,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
@@ -100,10 +98,4 @@ public class DocToscaWithTypeAndStringProperties<T extends ToscaWithTypeAndObjec
 
         properties = PfUtils.mapMap(authorativeConcept.getProperties(), x -> x);
     }
-
-    @JsonIgnore
-    public DocConceptKey getTypeDocConceptKey() {
-        return new DocConceptKey(type, typeVersion);
-    }
-
 }
