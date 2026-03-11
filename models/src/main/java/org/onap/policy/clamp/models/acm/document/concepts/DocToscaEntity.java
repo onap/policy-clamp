@@ -37,7 +37,6 @@ import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfNameVersion;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityKey;
 
 @Data
 @EqualsAndHashCode
@@ -63,28 +62,6 @@ public abstract class DocToscaEntity<T extends ToscaEntity>
     private String description;
 
     private transient T toscaEntity;
-
-    /**
-     * Get a key for this entity.
-     *
-     * @return a ToscaEntityKey for this entry
-     */
-    @JsonIgnore
-    public ToscaEntityKey getKey() {
-        return new ToscaEntityKey(name, version);
-    }
-
-    @Override
-    @JsonIgnore
-    public String getDefinedName() {
-        return (PfKey.NULL_KEY_NAME.equals(name) ? null : name);
-    }
-
-    @Override
-    @JsonIgnore
-    public String getDefinedVersion() {
-        return (PfKey.NULL_KEY_VERSION.equals(version) ? null : version);
-    }
 
     /**
      * Method that should be specialised to return the type of the entity if the entity has a type.
@@ -169,7 +146,7 @@ public abstract class DocToscaEntity<T extends ToscaEntity>
             return getClass().getName().compareTo(otherConcept.getClass().getName());
         }
 
-        int result = getKey().asIdentifier().compareTo(otherConcept.getKey().asIdentifier());
+        int result = PfUtils.getKey(this).asIdentifier().compareTo(PfUtils.getKey(otherConcept).asIdentifier());
         if (result != 0) {
             return result;
         }

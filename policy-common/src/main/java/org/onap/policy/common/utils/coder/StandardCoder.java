@@ -21,7 +21,6 @@
 
 package org.onap.policy.common.utils.coder;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,7 +45,6 @@ import java.nio.charset.StandardCharsets;
 public class StandardCoder implements Coder {
 
     private static final ObjectMapper MAPPER = createMapper();
-    private static final ObjectMapper MAPPER_PRETTY = createMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     /**
      *  Create new Mapper.
@@ -75,15 +73,13 @@ public class StandardCoder implements Coder {
     }
 
     protected final ObjectMapper objectMapper;
-    protected final ObjectMapper mapperPretty;
 
     public StandardCoder() {
-        this(MAPPER, MAPPER_PRETTY);
+        this(MAPPER);
     }
 
-    protected StandardCoder(ObjectMapper mapper, ObjectMapper mapperPretty) {
+    protected StandardCoder(ObjectMapper mapper) {
         this.objectMapper = mapper;
-        this.mapperPretty = mapperPretty;
     }
 
     @Override
@@ -110,13 +106,8 @@ public class StandardCoder implements Coder {
 
     @Override
     public String encode(Object object) throws CoderException {
-        return encode(object, false);
-    }
-
-    @Override
-    public String encode(Object object, boolean pretty) throws CoderException {
         try {
-            return pretty ? toPrettyJson(object) : toJson(object);
+            return toJson(object);
         } catch (Exception e) {
             throw new CoderException(e);
         }
@@ -308,9 +299,4 @@ public class StandardCoder implements Coder {
     protected <T> T fromJson(Reader source, Class<T> clazz) throws IOException {
         return objectMapper.readValue(source, clazz);
     }
-
-    protected String toPrettyJson(Object object) throws JsonProcessingException {
-        return mapperPretty.writeValueAsString(object);
-    }
-
 }

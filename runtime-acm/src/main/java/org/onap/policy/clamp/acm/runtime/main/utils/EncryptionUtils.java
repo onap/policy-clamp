@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeEx
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
@@ -250,11 +251,10 @@ public class EncryptionUtils {
     }
 
     private boolean isDataTypeRef(ToscaProperty property, ToscaDataType dataType) {
-        var dataTypeName = dataType.getDefinedName();
+        var dataTypeName = PfUtils.getDefinedName(dataType);
         var propertyEntity = Optional.ofNullable(property.getEntrySchema()).map(ToscaSchemaDefinition::getType);
         return dataTypeName.equals(property.getType()) || dataTypeName.equals(propertyEntity.orElse(null));
     }
-
 
     private SecretKey getSecretKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
         var factory = SecretKeyFactory.getInstance(PBK_ALGORITHM);

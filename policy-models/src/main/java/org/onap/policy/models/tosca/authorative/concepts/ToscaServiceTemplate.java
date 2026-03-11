@@ -66,7 +66,7 @@ public class ToscaServiceTemplate extends ToscaEntity {
     /**
      * Copy constructor.
      *
-     * @param copyObject the obejct to copy from.
+     * @param copyObject the object to copy from.
      */
     public ToscaServiceTemplate(@NonNull ToscaServiceTemplate copyObject) {
         super(copyObject);

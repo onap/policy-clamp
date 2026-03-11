@@ -79,7 +79,7 @@ public class DocToscaPolicy extends DocToscaWithTypeAndStringProperties<ToscaPol
         }
 
         // Add the policy name and version fields to the metadata
-        getMetadata().put(METADATA_POLICY_ID_TAG, getKey().getName());
-        getMetadata().put(METADATA_POLICY_VERSION_TAG, getKey().getVersion());
+        getMetadata().put(METADATA_POLICY_ID_TAG, getName());
+        getMetadata().put(METADATA_POLICY_VERSION_TAG, getVersion());
     }
 }

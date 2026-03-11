@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -92,7 +93,7 @@ public class InstantiationUtils {
             AutomationComposition automationComposition) {
         assertThat(response).isNotNull();
         assertThat(response.getErrorDetails()).isNull();
-        assertEquals(response.getAffectedAutomationComposition(), automationComposition.getKey().asIdentifier());
+        assertEquals(response.getAffectedAutomationComposition(), PfUtils.getKey(automationComposition).asIdentifier());
     }
 
     /**

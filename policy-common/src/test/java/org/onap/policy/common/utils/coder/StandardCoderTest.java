@@ -119,23 +119,13 @@ class StandardCoderTest {
     void testEncodeObjectBoolean() throws Exception {
         final List<Integer> arr = Arrays.asList(1100, 1110);
 
-        assertEquals("[1100,1110]", coder.encode(arr, false));
+        assertEquals("[1100,1110]", coder.encode(arr));
 
         // test exception case
         coder = spy(new StandardCoder());
         when(coder.toJson(arr)).thenThrow(jpe);
 
-        assertThatThrownBy(() -> coder.encode(arr, false))
-                .isInstanceOf(CoderException.class)
-                .hasCause(jpe);
-
-        assertEquals("[ 1100, 1110 ]", coder.encode(arr, true));
-
-        // test exception case
-        coder = spy(new StandardCoder());
-        when(coder.toPrettyJson(arr)).thenThrow(jpe);
-
-        assertThatThrownBy(() -> coder.encode(arr, true))
+        assertThatThrownBy(() -> coder.encode(arr))
                 .isInstanceOf(CoderException.class)
                 .hasCause(jpe);
     }
