@@ -57,4 +57,16 @@ public class NetLoggerUtil {
         networkLogger.info("[{}|{}|{}]{}{}", type, protocol, topic, SYSTEM_LS, message);
     }
 
+    /**
+     * Sanitizes a string by removing any carriage returns or line feeds.
+     *
+     * @param input the string to sanitize
+     * @return the sanitized string
+     */
+    public static String sanitize(Object input) {
+        if (input == null) {
+            return "";
+        }
+        return input.toString().replaceAll("[\r\n]", " ");
+    }
 }

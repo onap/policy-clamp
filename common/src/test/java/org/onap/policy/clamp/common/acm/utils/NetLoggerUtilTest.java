@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.onap.policy.clamp.common.acm.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.common.message.bus.event.Topic;
 
@@ -34,5 +35,13 @@ class NetLoggerUtilTest {
         NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, Topic.CommInfrastructure.REST, null, "message2");
 
         assertEquals("acm-network", NetLoggerUtil.getNetworkLogger().getName());
+    }
+
+    @Test
+    void testSanitize() {
+        assertEquals("test test", NetLoggerUtil.sanitize("test\ntest"));
+        assertEquals("", NetLoggerUtil.sanitize(null));
+        var id = UUID.randomUUID();
+        assertEquals(id.toString(), NetLoggerUtil.sanitize(id.toString()));
     }
 }
