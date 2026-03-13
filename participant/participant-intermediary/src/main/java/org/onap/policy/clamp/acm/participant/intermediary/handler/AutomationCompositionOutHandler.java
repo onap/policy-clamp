@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -234,13 +234,15 @@ public class AutomationCompositionOutHandler {
 
         var automationComposition = cacheProvider.getAutomationComposition(automationCompositionId);
         if (automationComposition == null) {
-            LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC, automationCompositionId);
+            // automationCompositionId is a UUID, safe to log
+            LOGGER.error(MSG_NOT_PRESENT, "outProperties", MSG_AC, automationCompositionId); // NOSONAR
             return;
         }
 
         var element = automationComposition.getElements().get(elementId);
         if (element == null) {
-            LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC_ELEMENT, elementId);
+            // elementId is a UUID, safe to log
+            LOGGER.error(MSG_NOT_PRESENT, "outProperties", MSG_AC_ELEMENT, elementId); // NOSONAR
             return;
         }
         element.setOperationalState(operationalState);
