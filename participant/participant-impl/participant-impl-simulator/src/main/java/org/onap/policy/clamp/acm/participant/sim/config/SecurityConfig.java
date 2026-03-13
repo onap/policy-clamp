@@ -39,7 +39,7 @@ public class SecurityConfig {
      * @return the HTTP security settings
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
