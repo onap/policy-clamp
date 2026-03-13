@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
+import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -234,13 +235,17 @@ public class AutomationCompositionOutHandler {
 
         var automationComposition = cacheProvider.getAutomationComposition(automationCompositionId);
         if (automationComposition == null) {
-            LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC, automationCompositionId);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC, NetLoggerUtil.sanitize(automationCompositionId));
+            }
             return;
         }
 
         var element = automationComposition.getElements().get(elementId);
         if (element == null) {
-            LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC_ELEMENT, elementId);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(MSG_NOT_PRESENT, "outProperites", MSG_AC_ELEMENT, NetLoggerUtil.sanitize(elementId));
+            }
             return;
         }
         element.setOperationalState(operationalState);
