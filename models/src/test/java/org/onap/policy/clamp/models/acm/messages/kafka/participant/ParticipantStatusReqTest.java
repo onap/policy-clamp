@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,14 +29,13 @@ import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.coder.CoderException;
 
 /**
  * Test the copy constructor.
  */
 class ParticipantStatusReqTest {
     @Test
-    void testCopyConstructor() throws CoderException {
+    void testCopyConstructor() {
         assertThatThrownBy(() -> new ParticipantStatusReq(null)).isInstanceOf(NullPointerException.class);
 
         var orig = new ParticipantStatusReq();

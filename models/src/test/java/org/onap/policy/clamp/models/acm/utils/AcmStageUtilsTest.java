@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class AcmStageUtilsTest {
 
     @Test
     void testGetFirstStartPhase() {
-        var automationCompositions = CommonTestData.getJson(
+        var automationCompositions = CommonTestData.getObjectFromJson(
                 ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
@@ -75,7 +75,7 @@ class AcmStageUtilsTest {
 
     @Test
     void testGetFirstStartPhaseWithNull() {
-        var automationCompositions = CommonTestData.getJson(
+        var automationCompositions = CommonTestData.getObjectFromJson(
                 ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
@@ -117,7 +117,7 @@ class AcmStageUtilsTest {
     @Test
     void testGetFirstStage() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
-        var automationCompositions = CommonTestData.getJson(
+        var automationCompositions = CommonTestData.getObjectFromJson(
                 ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
@@ -139,7 +139,7 @@ class AcmStageUtilsTest {
     @Test
     void testGetLastStage() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
-        var automationCompositions = CommonTestData.getJson(
+        var automationCompositions = CommonTestData.getObjectFromJson(
                 ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
@@ -160,7 +160,7 @@ class AcmStageUtilsTest {
         result = AcmStageUtils.findStageSetPrepare(Map.of("stage", 1));
         assertThat(result).hasSize(1).contains(0);
 
-        Map<String, Object> map = CommonTestData.getObject(PROPERTIES, Map.class);
+        Map<String, Object> map = CommonTestData.getObjectFromYaml(PROPERTIES, Map.class);
         result = AcmStageUtils.findStageSetPrepare(map);
         assertThat(result).hasSize(2).contains(1).contains(2);
     }
@@ -172,9 +172,8 @@ class AcmStageUtilsTest {
         result = AcmStageUtils.findStageSetMigrate(Map.of("stage", 1));
         assertThat(result).hasSize(1).contains(0);
 
-        Map<String, Object> map = CommonTestData.getObject(PROPERTIES, Map.class);
+        Map<String, Object> map = CommonTestData.getObjectFromYaml(PROPERTIES, Map.class);
         result = AcmStageUtils.findStageSetMigrate(map);
         assertThat(result).hasSize(2).contains(2).contains(3);
     }
-
 }

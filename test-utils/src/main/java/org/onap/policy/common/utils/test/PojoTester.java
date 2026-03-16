@@ -47,7 +47,7 @@ public class PojoTester {
      * @param packageName the package to scan for POJO classes
      */
     public static void testPojos(String packageName) {
-        testPojos(packageName, ".*(Test|Utils|Converter|Comparator)$");
+        testPojos(packageName, ".*(Test|Utils|Converter|Comparator).*$");
     }
 
     /**
