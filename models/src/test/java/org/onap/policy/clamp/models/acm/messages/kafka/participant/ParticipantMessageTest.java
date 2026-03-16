@@ -31,12 +31,11 @@ import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantMessageTest {
 
     @Test
-    void testCopyConstructor() throws CoderException {
+    void testCopyConstructor() {
         assertThatThrownBy(() -> new TestParticipantMessage(null))
                 .isInstanceOf(NullPointerException.class);
 

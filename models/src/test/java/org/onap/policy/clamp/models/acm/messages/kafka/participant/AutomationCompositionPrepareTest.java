@@ -28,12 +28,11 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.common.utils.coder.CoderException;
 
 class AutomationCompositionPrepareTest {
 
     @Test
-    void testCopyConstructor() throws CoderException {
+    void testCopyConstructor() {
         var orig = new AutomationCompositionPrepare();
         orig.setCompositionId(UUID.randomUUID());
         orig.setAutomationCompositionId(UUID.randomUUID());

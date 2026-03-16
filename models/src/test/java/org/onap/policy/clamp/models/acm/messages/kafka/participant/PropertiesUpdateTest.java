@@ -32,13 +32,12 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class PropertiesUpdateTest {
 
     @Test
-    void testCopyConstructor() throws CoderException {
+    void testCopyConstructor() {
         var acElementDeploy = new AcElementDeploy();
         acElementDeploy.setId(UUID.randomUUID());
         var id = new ToscaConceptIdentifier("id", "1.2.3");

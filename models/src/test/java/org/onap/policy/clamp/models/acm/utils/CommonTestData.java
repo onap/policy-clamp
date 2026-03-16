@@ -22,13 +22,13 @@ package org.onap.policy.clamp.models.acm.utils;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -42,8 +42,8 @@ public class CommonTestData {
 
     public static final UUID PARTICIPANT_ID = UUID.randomUUID();
     public static final UUID REPLICA_ID = UUID.randomUUID();
-    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
-    private static final Coder CODER = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
+    private static final YAMLMapper YAML_MAPPER = MapperFactory.createYamlMapper();
 
     /**
      * Returns participantId for test cases.
@@ -88,8 +88,8 @@ public class CommonTestData {
      */
     public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
         try {
-            return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
-        } catch (CoderException e) {
+            return YAML_MAPPER.readValue(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
+        } catch (IOException e) {
             fail("Cannot read or decode " + e.getMessage());
             return null;
         }
@@ -102,10 +102,10 @@ public class CommonTestData {
      * @param clazz the Class of the Object
      * @return the Object
      */
-    public static <T> T getObject(String yaml, Class<T> clazz) {
+    public static <T> T getObjectFromYaml(String yaml, Class<T> clazz) {
         try {
-            return YAML_TRANSLATOR.decode(yaml, clazz);
-        } catch (CoderException e) {
+            return YAML_MAPPER.readValue(yaml, clazz);
+        } catch (IOException e) {
             fail("Cannot decode " + yaml);
             return null;
         }
@@ -118,10 +118,10 @@ public class CommonTestData {
      * @param clazz the Class of the Object
      * @return the Object
      */
-    public static <T> T getJsonObject(final String path, Class<T> clazz) {
+    public static <T> T getObjectFromJsonFile(final String path, Class<T> clazz) {
         try {
-            return CODER.decode(new File(path), clazz);
-        } catch (CoderException e) {
+            return MAPPER.readValue(new File(path), clazz);
+        } catch (IOException e) {
             fail("Cannot decode " + path);
             return null;
         }
@@ -134,11 +134,26 @@ public class CommonTestData {
      * @param clazz the Class of the Object
      * @return the Object
      */
-    public static <T> T getJson(final String json, Class<T> clazz) {
+    public static <T> T getObjectFromJson(final String json, Class<T> clazz) {
         try {
-            return CODER.decode(json, clazz);
-        } catch (CoderException e) {
+            return MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
             fail("Cannot decode " + json);
+            return null;
+        }
+    }
+
+    /**
+     * Get Json string from Object.
+     *
+     * @param object the Object
+     * @return the Json
+     */
+    public static String getJsonFromObject(final Object object) {
+        try {
+            return MAPPER.writeValueAsString(object);
+        } catch (IOException e) {
+            fail("Cannot encode " + object);
             return null;
         }
     }
