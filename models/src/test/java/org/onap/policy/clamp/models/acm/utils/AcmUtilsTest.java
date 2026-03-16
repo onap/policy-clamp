@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,8 @@ class AcmUtilsTest {
     @Test
     void testValidateAutomationComposition() {
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
-        var automationComposition = CommonTestData.getJsonObject(AC_INSTANTIATION_JSON, AutomationComposition.class);
+        var automationComposition = CommonTestData
+                .getObjectFromJsonFile(AC_INSTANTIATION_JSON, AutomationComposition.class);
         var result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
                 AUTOMATION_COMPOSITION_NODE_TYPE, 0);
         assertTrue(result.isValid());
@@ -210,7 +211,7 @@ class AcmUtilsTest {
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(UUID.randomUUID());
         Map<UUID, AutomationCompositionElement> map = new LinkedHashMap<>();
-        var element = CommonTestData.getJsonObject(
+        var element = CommonTestData.getObjectFromJsonFile(
                 "src/test/resources/json/AutomationCompositionElementNoOrderedState.json",
                 AutomationCompositionElement.class);
         map.put(UUID.randomUUID(), element);
@@ -314,8 +315,8 @@ class AcmUtilsTest {
               podName: null
             """;
 
-        Map<String, Object> map = CommonTestData.getObject(oldProperties, Map.class);
-        Map<String, Object> mapMigrate = CommonTestData.getObject(newProperties, Map.class);
+        Map<String, Object> map = CommonTestData.getObjectFromYaml(oldProperties, Map.class);
+        Map<String, Object> mapMigrate = CommonTestData.getObjectFromYaml(newProperties, Map.class);
 
         AcmUtils.recursiveMerge(map, mapMigrate);
         assertEquals("default", ((Map<String, Object>) map.get("chart")).get("namespace"));
@@ -350,8 +351,8 @@ class AcmUtilsTest {
                 myParameter: "I am new"
             """;
 
-        Map<String, Object> map = CommonTestData.getObject(oldProperties, Map.class);
-        Map<String, Object> mapMigrate = CommonTestData.getObject(newProperties, Map.class);
+        Map<String, Object> map = CommonTestData.getObjectFromYaml(oldProperties, Map.class);
+        Map<String, Object> mapMigrate = CommonTestData.getObjectFromYaml(newProperties, Map.class);
 
         AcmUtils.recursiveMerge(map, mapMigrate);
         assertEquals("http://{{address}}:30800", map.get("baseUrl"));

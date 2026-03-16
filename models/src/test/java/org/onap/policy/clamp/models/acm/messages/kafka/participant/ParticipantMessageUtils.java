@@ -24,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 
 /**
  * Utility class for tests of ParticipantMessage subclasses.
@@ -45,12 +44,10 @@ public class ParticipantMessageUtils {
      *
      * @param object the Object
      * @param clazz the class of the Object
-     * @throws CoderException if object is not Serializable
      */
-    public static <T> void assertSerializable(Object object, Class<T> clazz) throws CoderException {
-        var standardCoder = new StandardCoder();
-        var json = standardCoder.encode(object);
-        var other = standardCoder.decode(json, clazz);
+    public static <T> void assertSerializable(Object object, Class<T> clazz) {
+        var json = CommonTestData.getJsonFromObject(object);
+        var other = CommonTestData.getObjectFromJson(json, clazz);
 
         assertEquals(removeVariableFields(object.toString()), removeVariableFields(other.toString()));
     }
@@ -58,11 +55,9 @@ public class ParticipantMessageUtils {
     /**
      * Check if the null fields in properties are omitted in serialization.
      * @param object the Object
-     * @throws CoderException if object is not serializable
      */
-    public static <T> void assertSerializeBehaviour(Object object) throws CoderException {
-        var standardCoder = new StandardCoder();
-        var json = standardCoder.encode(object);
+    public static <T> void assertSerializeBehaviour(Object object) {
+        var json = CommonTestData.getJsonFromObject(object);
         assertFalse(json.contains("nullProperty"));
         assertTrue(json.contains("testProperty"));
     }

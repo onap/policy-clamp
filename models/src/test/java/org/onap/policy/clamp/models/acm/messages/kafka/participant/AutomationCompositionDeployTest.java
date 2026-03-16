@@ -35,7 +35,6 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
@@ -62,8 +61,7 @@ class AutomationCompositionDeployTest {
         var property = new ToscaProperty();
         property.setName("test");
         property.setType("testType");
-        var standardCoder = new StandardCoder();
-        var json = standardCoder.encode(property);
+        var json = CommonTestData.getJsonFromObject(property);
         var propertiesMap = new HashMap<String, Object>();
         propertiesMap.put("Prop1", json);
         propertiesMap.put("testProperty", "dummy");

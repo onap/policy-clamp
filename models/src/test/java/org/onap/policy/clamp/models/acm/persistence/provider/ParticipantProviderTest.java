@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,8 +52,6 @@ import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateState
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplicaRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -62,8 +60,8 @@ import org.springframework.data.domain.Pageable;
 
 class ParticipantProviderTest {
 
-    private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
+    private static final String ORIGINAL_JSON = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
 
     private static final String AUTOMATION_COMPOSITION_JSON =
         "src/test/resources/providers/TestAutomationCompositions.json";
@@ -80,19 +78,18 @@ class ParticipantProviderTest {
     private List<JpaNodeTemplateState> jpaNodeTemplateStateList;
 
     @BeforeEach
-    void beforeSetup() throws Exception {
-        var originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
-        inputParticipants.add(CODER.decode(originalJson, Participant.class));
+    void beforeSetup() {
+        inputParticipants.add(CommonTestData.getObjectFromJson(ORIGINAL_JSON, Participant.class));
         jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
 
         var originalAcJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
-        var inputAutomationCompositions = CODER.decode(originalAcJson, AutomationCompositions.class);
+        var acList = CommonTestData.getObjectFromJson(originalAcJson, AutomationCompositions.class);
         inputAutomationCompositionsJpa =
-            ProviderUtils.getJpaAndValidateList(inputAutomationCompositions.getAutomationCompositionList(),
+            ProviderUtils.getJpaAndValidateList(acList.getAutomationCompositionList(),
                 JpaAutomationComposition::new, "automation compositions");
 
         var nodeTemplateStatesJson = ResourceUtils.getResourceAsString(NODE_TEMPLATE_STATE_JSON);
-        nodeTemplateStateList.add(CODER.decode(nodeTemplateStatesJson, NodeTemplateState.class));
+        nodeTemplateStateList.add(CommonTestData.getObjectFromJson(nodeTemplateStatesJson, NodeTemplateState.class));
         nodeTemplateStateList.get(0).setState(AcTypeState.COMMISSIONED);
         jpaNodeTemplateStateList = ProviderUtils.getJpaAndValidateList(nodeTemplateStateList,
             JpaNodeTemplateState::new, "node template state");
