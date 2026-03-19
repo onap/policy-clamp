@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -325,8 +325,8 @@ class SupervisionParticipantHandlerTest {
                         mock(MessageProvider.class), mock(EncryptionUtils.class));
         var participantReqSync = createParticipantReqSync(compositionId);
         handler.handleParticipantReqSync(participantReqSync);
-        verify(participantSyncPublisher).sendRestartMsg(CommonTestData.getParticipantId(),
-                CommonTestData.getReplicaId(), acDefinition, List.of());
+        verify(participantSyncPublisher).sendRestartMsg(CommonTestData.getParticipantId(), null,
+                acDefinition, List.of());
 
         clearInvocations(participantSyncPublisher);
         var automationComposition =
@@ -339,8 +339,8 @@ class SupervisionParticipantHandlerTest {
 
         participantReqSync.setAutomationCompositionId(automationComposition.getInstanceId());
         handler.handleParticipantReqSync(participantReqSync);
-        verify(participantSyncPublisher).sendRestartMsg(CommonTestData.getParticipantId(),
-                CommonTestData.getReplicaId(), acDefinition, List.of(automationComposition));
+        verify(participantSyncPublisher).sendRestartMsg(CommonTestData.getParticipantId(), null,
+                acDefinition, List.of(automationComposition));
     }
 
     @Test
@@ -359,10 +359,9 @@ class SupervisionParticipantHandlerTest {
         var participantReqSync = createParticipantReqSync(null);
         participantReqSync.setCompositionTargetId(compositionId);
         handler.handleParticipantReqSync(participantReqSync);
-        verify(participantSyncPublisher).sendRestartMsg(CommonTestData.getParticipantId(),
-                CommonTestData.getReplicaId(), acDefinition, List.of());
+        verify(participantSyncPublisher).sendRestartMsg(CommonTestData.getParticipantId(), null,
+                acDefinition, List.of());
     }
-
 
     @Test
     void testHandleParticipantReqSyncAutomationComposition() {
