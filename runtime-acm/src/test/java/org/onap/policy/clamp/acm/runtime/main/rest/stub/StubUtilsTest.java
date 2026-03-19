@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,27 +23,15 @@ package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.springframework.http.HttpStatus;
 
 class StubUtilsTest {
 
-    HttpServletRequest mockRequest;
-
-    StubUtils stubUtil;
-
-    @BeforeEach
-    void setUp() {
-        mockRequest = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(mockRequest.getHeader("Accept")).thenReturn("application/yaml");
-        stubUtil = new StubUtils(mockRequest);
-    }
-
     @Test
     void getResponse() {
+        var stubUtil = new StubUtils(MapperFactory.createJsonMapper());
         assertDoesNotThrow(() -> stubUtil.getResponse("does/not/exist/path", Object.class));
         var response = stubUtil.getResponse("does/not/exist/path", Object.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
@@ -51,6 +39,7 @@ class StubUtilsTest {
 
     @Test
     void getResponseList() {
+        var stubUtil = new StubUtils(MapperFactory.createJsonMapper());
         assertDoesNotThrow(() -> stubUtil.getResponseList("does/not/exist/path"));
         var response = stubUtil.getResponseList("does/not/exist/path");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

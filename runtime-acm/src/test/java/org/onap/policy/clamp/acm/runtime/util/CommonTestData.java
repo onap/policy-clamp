@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,13 @@
 
 package org.onap.policy.clamp.acm.runtime.util;
 
-import jakarta.ws.rs.core.Response.Status;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcmParameters;
@@ -36,9 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -47,7 +51,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  */
 public class CommonTestData {
-    private static final Coder CODER = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
+    private static final YAMLMapper YAML_MAPPER = MapperFactory.createYamlMapper();
     public static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     public static final String TOSCA_VERSIONING = "clamp/acm/test/tosca-versioning.yaml";
@@ -63,13 +68,7 @@ public class CommonTestData {
      * @throws AutomationCompositionRuntimeException on errors reading the automation composition parameters
      */
     public static AcRuntimeParameterGroup geParameterGroup(final String dbName) {
-        try {
-            return CODER.convert(getParameterGroupAsString(dbName), AcRuntimeParameterGroup.class);
-
-        } catch (CoderException e) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE,
-                    "cannot read automation composition parameters", e);
-        }
+        return getObjectFromJson(getParameterGroupAsString(dbName), AcRuntimeParameterGroup.class);
     }
 
     /**
@@ -197,4 +196,83 @@ public class CommonTestData {
         }
     }
 
+    /**
+     * Get Object from json.
+     *
+     * @param json the json
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromJson(final String json, Class<T> clazz) {
+        try {
+            return MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
+            fail("Cannot decode " + json);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from json file.
+     *
+     * @param path path of the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromJsonFile(final String path, Class<T> clazz) {
+        try {
+            return MAPPER.readValue(new File(path), clazz);
+        } catch (IOException e) {
+            fail("Cannot decode " + path);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from yaml file.
+     *
+     * @param path path of the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromYamlFile(final String path, Class<T> clazz) {
+        try {
+            return YAML_MAPPER.readValue(new File(path), clazz);
+        } catch (IOException e) {
+            fail("Cannot decode " + path);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from yaml file.
+     *
+     * @param is the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromYaml(InputStream is, Class<T> clazz) {
+        try {
+            return YAML_MAPPER.readValue(is, clazz);
+        } catch (IOException e) {
+            fail("Cannot decode Input Stream");
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from yaml.
+     *
+     * @param yaml the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromYaml(String yaml, Class<T> clazz) {
+        try {
+            return YAML_MAPPER.readValue(yaml, clazz);
+        } catch (IOException e) {
+            fail("Cannot decode Input Stream");
+            return null;
+        }
+    }
 }
