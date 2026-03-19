@@ -20,15 +20,11 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -43,39 +39,25 @@ import org.springframework.stereotype.Service;
 public class StubUtils {
 
     private static final Logger log = LoggerFactory.getLogger(StubUtils.class);
-    private final HttpServletRequest request;
-
-    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
-    private static final StandardCoder JSON_TRANSLATOR = new StandardCoder();
-    private static final String YAML = "application/yaml";
-    private static final String ACCEPT = "Accept";
+    private final ObjectMapper objectMapper;
 
     <T> ResponseEntity<T> getResponse(String path, Class<T> clazz) {
-        var accept = request.getHeader(ACCEPT);
         final var resource = new ClassPathResource(path);
         try (var inputStream = resource.getInputStream()) {
-            if (accept.contains(YAML)) {
-                var targetObject = YAML_TRANSLATOR.decode(inputStream, clazz);
-                return new ResponseEntity<>(targetObject, HttpStatus.OK);
-            } else {
-                final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                var targetObject = JSON_TRANSLATOR.decode(string, clazz);
-                return new ResponseEntity<>(targetObject, HttpStatus.OK);
-            }
-        } catch (IOException | CoderException exception) {
+            var targetObject = objectMapper.readValue(inputStream, clazz);
+            return new ResponseEntity<>(targetObject, HttpStatus.OK);
+        } catch (IOException exception) {
             log.error("Error reading the file.", exception);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     <T> ResponseEntity<List<T>> getResponseList(String path) {
         final var resource = new ClassPathResource(path);
         try (var inputStream = resource.getInputStream()) {
-            final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            var targetObject = JSON_TRANSLATOR.decode(string, ArrayList.class);
+            var targetObject = objectMapper.readValue(inputStream, new TypeReference<List<T>>() {});
             return new ResponseEntity<>(targetObject, HttpStatus.OK);
-        } catch (IOException | CoderException exception) {
+        } catch (IOException exception) {
             log.error("Error reading the file.", exception);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

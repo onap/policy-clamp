@@ -22,15 +22,10 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -40,9 +35,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  */
 public class InstantiationUtils {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
-
     /**
      * Gets the AutomationComposition from Resource.
      *
@@ -51,16 +43,11 @@ public class InstantiationUtils {
      * @return the AutomationComposition from Resource
      */
     public static AutomationComposition getAutomationCompositionFromResource(final String path, final String suffix) {
-        try {
-            var automationComposition = CODER.decode(new File(path), AutomationComposition.class);
+        var automationComposition = CommonTestData.getObjectFromJsonFile(path, AutomationComposition.class);
 
-            // add suffix to name
-            automationComposition.setName(automationComposition.getName() + suffix);
-            return automationComposition;
-        } catch (CoderException e) {
-            fail("Cannot read or decode " + path);
-            return null;
-        }
+        // add suffix to name
+        automationComposition.setName(automationComposition.getName() + suffix);
+        return automationComposition;
     }
 
     /**
@@ -71,16 +58,11 @@ public class InstantiationUtils {
      * @return the AutomationComposition from Resource
      */
     public static AutomationComposition getAutomationCompositionFromYaml(final String path, final String suffix) {
-        try {
-            var automationComposition = YAML_TRANSLATOR.decode(new File(path), AutomationComposition.class);
+        var automationComposition = CommonTestData.getObjectFromYamlFile(path, AutomationComposition.class);
 
-            // add suffix to name
-            automationComposition.setName(automationComposition.getName() + suffix);
-            return automationComposition;
-        } catch (CoderException e) {
-            fail("Cannot read or decode " + path);
-            return null;
-        }
+        // add suffix to name
+        automationComposition.setName(automationComposition.getName() + suffix);
+        return automationComposition;
     }
 
     /**
@@ -102,11 +84,7 @@ public class InstantiationUtils {
      * @param path path of the resource
      */
     public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
-        try {
-            return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
-        } catch (CoderException e) {
-            fail("Cannot read or decode " + path);
-            return null;
-        }
+        return CommonTestData
+                .getObjectFromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
     }
 }

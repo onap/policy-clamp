@@ -44,9 +44,6 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +77,6 @@ class ParticipantControllerTest extends CommonRestClient {
     @LocalServerPort
     private int randomServerPort;
 
-    private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
     private static final String PARTICIPANT_JSON2 = "src/test/resources/providers/TestParticipant2.json";
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
@@ -98,9 +94,9 @@ class ParticipantControllerTest extends CommonRestClient {
      * Adds participants to the db from json file.
      */
     @BeforeAll
-    static void setUpBeforeClass() throws CoderException {
-        inputParticipants.add(CODER.decode(ORIGINAL_JSON, Participant.class));
-        inputParticipants.add(CODER.decode(ORIGINAL_JSON2, Participant.class));
+    static void setUpBeforeClass() {
+        inputParticipants.add(CommonTestData.getObjectFromJson(ORIGINAL_JSON, Participant.class));
+        inputParticipants.add(CommonTestData.getObjectFromJson(ORIGINAL_JSON2, Participant.class));
         serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         automationComposition =
             InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
