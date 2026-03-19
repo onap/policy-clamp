@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,15 +29,16 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.slf4j.Marker;
 import org.slf4j.event.KeyValuePair;
 
@@ -45,7 +46,7 @@ class LoggingConsoleLayoutTest {
 
     private static  final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSX";
 
-    private static final Coder CODER = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @Data
     private static class DummyEvent implements ILoggingEvent {
@@ -87,7 +88,7 @@ class LoggingConsoleLayoutTest {
     }
 
     @Test
-    void testLog() throws CoderException {
+    void testLog() throws JsonProcessingException {
         var layout = new LoggingConsoleLayout();
         var event = new DummyEvent();
 
@@ -150,10 +151,10 @@ class LoggingConsoleLayoutTest {
         testingResult(layout, event);
     }
 
-    private void testingResult(LoggingConsoleLayout layout, DummyEvent event) throws CoderException {
+    private void testingResult(LoggingConsoleLayout layout, DummyEvent event) throws JsonProcessingException {
         var result = layout.doLayout(event);
         assertThat(result).isNotNull();
-        var map = CODER.decode(result, Map.class);
+        var map = MAPPER.readValue(result, new TypeReference<Map<String, Object>>() { });
         assertEquals(event.level.toString(), map.get("severity"));
         assertEquals(event.message, map.get("message"));
         @SuppressWarnings("unchecked")

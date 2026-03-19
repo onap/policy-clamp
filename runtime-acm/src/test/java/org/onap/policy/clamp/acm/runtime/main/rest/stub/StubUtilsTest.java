@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,19 +27,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.springframework.http.HttpStatus;
 
 class StubUtilsTest {
 
-    HttpServletRequest mockRequest;
-
-    StubUtils stubUtil;
+    private StubUtils stubUtil;
 
     @BeforeEach
     void setUp() {
-        mockRequest = Mockito.mock(HttpServletRequest.class);
+        var mockRequest = Mockito.mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getHeader("Accept")).thenReturn("application/yaml");
-        stubUtil = new StubUtils(mockRequest);
+        stubUtil = new StubUtils(mockRequest, MapperFactory.createJsonMapper());
     }
 
     @Test

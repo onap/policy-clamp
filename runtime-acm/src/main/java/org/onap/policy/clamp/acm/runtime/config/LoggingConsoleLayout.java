@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,15 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.LayoutBase;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Setter;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 
 public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
 
@@ -49,7 +49,7 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
 
     private final Map<String, String> staticParameterMap = new HashMap<>();
 
-    private final Coder coder = new StandardCoder();
+    private final ObjectMapper objectMapper = MapperFactory.createJsonMapper();
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_FORMAT);
 
@@ -109,8 +109,8 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
 
     private String getJson(Map<String, Object> map) {
         try {
-            return coder.encode(map) + CoreConstants.LINE_SEPARATOR;
-        } catch (CoderException e) {
+            return objectMapper.writeValueAsString(map) + CoreConstants.LINE_SEPARATOR;
+        } catch (JsonProcessingException e) {
             return map.get("message").toString();
         }
     }
