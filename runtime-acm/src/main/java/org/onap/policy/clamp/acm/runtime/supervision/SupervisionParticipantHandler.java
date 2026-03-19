@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -244,8 +244,8 @@ public class SupervisionParticipantHandler {
         if (participantReqSync.getCompositionTargetId() != null) {
             // outdated Composition Target
             var acDefinition = acDefinitionProvider.getAcDefinition(participantReqSync.getCompositionTargetId());
-            participantSyncPublisher.sendRestartMsg(participantReqSync.getParticipantId(),
-                    participantReqSync.getReplicaId(), acDefinition, List.of());
+            participantSyncPublisher.sendRestartMsg(participantReqSync.getParticipantId(), null,
+                    acDefinition, List.of());
         }
         if (participantReqSync.getCompositionId() == null
                 && participantReqSync.getAutomationCompositionId() != null) {
@@ -260,8 +260,8 @@ public class SupervisionParticipantHandler {
             var automationCompositions = participantReqSync.getAutomationCompositionId() != null
                     ? List.of(getAutomationCompositionForSync(participantReqSync.getAutomationCompositionId())) :
                     List.<AutomationComposition>of();
-            participantSyncPublisher.sendRestartMsg(participantReqSync.getParticipantId(),
-                    participantReqSync.getReplicaId(), acDefinition, automationCompositions);
+            participantSyncPublisher.sendRestartMsg(participantReqSync.getParticipantId(), null,
+                    acDefinition, automationCompositions);
         }
     }
 
