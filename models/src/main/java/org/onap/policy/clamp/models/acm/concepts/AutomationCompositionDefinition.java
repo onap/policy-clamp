@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +33,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AutomationCompositionDefinition {
 
     @NonNull

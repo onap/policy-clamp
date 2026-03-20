@@ -23,7 +23,6 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,7 +39,6 @@ import lombok.NonNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ToscaServiceTemplate extends ToscaEntity {
     @JsonProperty("tosca_definitions_version")
     private String toscaDefinitionsVersion;

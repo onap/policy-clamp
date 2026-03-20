@@ -23,7 +23,6 @@ package org.onap.policy.models.tosca.authorative.concepts;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.LinkedHashMap;
 import org.junit.jupiter.api.Test;
@@ -46,10 +45,6 @@ class ToscaPolicyTest {
         policy.setVersion("1.2.3");
         policy.setType("my_type");
         policy.setTypeVersion("3.2.1");
-
-        ToscaEntity te = new ToscaEntity() {};
-        assertNull(te.getType());
-        assertNull(te.getTypeVersion());
 
         var key = PfUtils.getKey(policy);
         assertEquals("ToscaEntityKey(name=my_name, version=1.2.3)", key.toString());

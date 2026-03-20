@@ -41,6 +41,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaEntity;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaProperty;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaSchemaDefinition;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaWithToscaProperties;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaWithTypeAndStringProperties;
@@ -381,10 +382,6 @@ public final class DocUtil {
         return 0;
     }
 
-    public static DocConceptKey getDocConceptKey(PfNameVersion docToscaEntity) {
-        return new DocConceptKey(docToscaEntity.getName(), docToscaEntity.getVersion());
-    }
-
     /**
      * Get the referenced data types.
      *
@@ -402,7 +399,7 @@ public final class DocUtil {
             referencedDataTypes.add(getTypeDocConceptKey(property));
 
             if (property.getEntrySchema() != null) {
-                referencedDataTypes.add(property.getEntrySchema().getTypeDocConceptKey());
+                referencedDataTypes.add(getTypeDocConceptKey(property.getEntrySchema()));
             }
         }
 
@@ -411,12 +408,20 @@ public final class DocUtil {
         return referencedDataTypes;
     }
 
+    public static DocConceptKey getDocConceptKey(PfNameVersion docToscaEntity) {
+        return new DocConceptKey(docToscaEntity.getName(), docToscaEntity.getVersion());
+    }
+
     public static <T extends ToscaWithTypeAndObjectProperties> DocConceptKey getTypeDocConceptKey(
             DocToscaWithTypeAndStringProperties<T> doc) {
         return new DocConceptKey(doc.getType(), doc.getTypeVersion());
     }
 
     public static DocConceptKey getTypeDocConceptKey(DocToscaProperty doc) {
+        return new DocConceptKey(doc.getType(), doc.getTypeVersion());
+    }
+
+    public static DocConceptKey getTypeDocConceptKey(DocToscaSchemaDefinition doc) {
         return new DocConceptKey(doc.getType(), doc.getTypeVersion());
     }
 }
