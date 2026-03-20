@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -62,26 +61,6 @@ public abstract class DocToscaEntity<T extends ToscaEntity>
     private String description;
 
     private transient T toscaEntity;
-
-    /**
-     * Method that should be specialised to return the type of the entity if the entity has a type.
-     *
-     * @return the type of the entity or null if it has no type
-     */
-    @JsonIgnore
-    public String getType() {
-        return null;
-    }
-
-    /**
-     * Method that should be specialised to return the type version of the entity if the entity has a type.
-     *
-     * @return the type of the entity or null if it has no type
-     */
-    @JsonIgnore
-    public String getTypeVersion() {
-        return null;
-    }
 
     /**
      * Copy constructor.

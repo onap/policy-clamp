@@ -22,7 +22,6 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,7 +39,6 @@ import org.onap.policy.models.base.PfNameVersion;
  */
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ToscaEntity implements PfNameVersion {
     private String name = PfKey.NULL_KEY_NAME;
     private String version = PfKey.NULL_KEY_VERSION;
@@ -68,23 +66,5 @@ public abstract class ToscaEntity implements PfNameVersion {
                 metadata.put(metadataEntry.getKey(), metadataEntry.getValue());
             }
         }
-    }
-
-    /**
-     * Method that should be specialised to return the type of the entity if the entity has a type.
-     *
-     * @return the type of the entity or null if it has no type
-     */
-    public String getType() {
-        return null;
-    }
-
-    /**
-     * Method that should be specialised to return the type version of the entity if the entity has a type.
-     *
-     * @return the type of the entity or null if it has no type
-     */
-    public String getTypeVersion() {
-        return null;
     }
 }
