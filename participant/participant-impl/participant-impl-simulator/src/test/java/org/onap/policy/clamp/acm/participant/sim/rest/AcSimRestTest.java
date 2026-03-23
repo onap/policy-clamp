@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,6 @@ import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.micrometer.metrics.autoconfigure.CompositeMeterRegistryAutoConfiguration;
@@ -65,7 +63,6 @@ import org.springframework.web.context.WebApplicationContext;
 @EnableWebSecurity
 class AcSimRestTest {
 
-    private static final Coder CODER = new StandardCoder();
     private static final String CONFIG_URL = "/v2/parameters";
     private static final String INSTANCE_URL = "/v2/instances";
     private static final String DATAS_URL = "/v2/datas";
@@ -99,7 +96,8 @@ class AcSimRestTest {
     @Test
     void testSetConfig() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(CONFIG_URL).accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(CODER.encode(new SimConfig())).contentType(MediaType.APPLICATION_JSON_VALUE);
+                .content(CommonTestData.getJsonFromObject(new SimConfig()))
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
     }
@@ -116,7 +114,7 @@ class AcSimRestTest {
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
         var body = result.getResponse().getContentAsString();
-        var acsResult = CODER.decode(body, AutomationCompositions.class);
+        var acsResult = CommonTestData.getObjectFromJson(body, AutomationCompositions.class);
         assertEquals(automationCompositions.getAutomationCompositionList().get(0).getInstanceId(),
                 acsResult.getAutomationCompositionList().get(0).getInstanceId());
     }
@@ -135,7 +133,7 @@ class AcSimRestTest {
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
         var body = result.getResponse().getContentAsString();
-        var acsResult = CODER.decode(body, AutomationComposition.class);
+        var acsResult = CommonTestData.getObjectFromJson(body, AutomationComposition.class);
         assertEquals(automationComposition, acsResult);
     }
 
@@ -152,7 +150,7 @@ class AcSimRestTest {
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
         var body = result.getResponse().getContentAsString();
-        var acsResult = CODER.decode(body, InternalDatas.class);
+        var acsResult = CommonTestData.getObjectFromJson(body, InternalDatas.class);
         assertEquals(internalData.getAutomationCompositionId(),
                 acsResult.getList().get(0).getAutomationCompositionId());
     }
@@ -160,7 +158,8 @@ class AcSimRestTest {
     @Test
     void testSetDatas() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(CODER.encode(new InternalData())).contentType(MediaType.APPLICATION_JSON_VALUE);
+                .content(CommonTestData.getJsonFromObject(new InternalData()))
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
     }
@@ -178,14 +177,15 @@ class AcSimRestTest {
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
         var body = result.getResponse().getContentAsString();
-        var acsResult = CODER.decode(body, InternalDatas.class);
+        var acsResult = CommonTestData.getObjectFromJson(body, InternalDatas.class);
         assertEquals(internalData.getCompositionId(), acsResult.getList().get(0).getCompositionId());
     }
 
     @Test
     void testSetCompositionDatas() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(COMPOSITION_DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(CODER.encode(new InternalData())).contentType(MediaType.APPLICATION_JSON_VALUE);
+                .content(CommonTestData.getJsonFromObject(new InternalData()))
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
     }

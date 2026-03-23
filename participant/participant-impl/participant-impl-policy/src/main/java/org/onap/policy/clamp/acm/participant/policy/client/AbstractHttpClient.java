@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021, 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021, 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,12 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.RestClientParameters;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -42,8 +41,8 @@ import reactor.core.publisher.Mono;
 public abstract class AbstractHttpClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpClient.class);
-    private static final Coder CODER = new StandardCoder();
     private final RestClientParameters parameters;
+    private final ObjectMapper objectMapper;
 
     protected String executePost(String path, final Object entity) {
         var webClient = WebClient.builder().baseUrl(this.getBaseUrl())
@@ -56,8 +55,8 @@ public abstract class AbstractHttpClient {
 
     private String encode(Object entity) {
         try {
-            return CODER.encode(entity);
-        } catch (CoderException e) {
+            return objectMapper.writeValueAsString(entity);
+        } catch (JsonProcessingException e) {
             throw new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null, null, null);
         }
     }

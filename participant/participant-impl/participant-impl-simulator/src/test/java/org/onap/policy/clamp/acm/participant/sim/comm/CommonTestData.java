@@ -20,6 +20,10 @@
 
 package org.onap.policy.clamp.acm.participant.sim.comm;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,16 +35,14 @@ import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParame
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.common.parameters.topic.TopicParameters;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 
 public class CommonTestData {
-    public static final Coder CODER = new StandardCoder();
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> SINK_TOPIC_PARAMS = List.of(getSinkTopicParams());
     public static final List<TopicParameters> SOURCE_TOPIC_PARAMS = List.of(getSinkTopicParams(), getSyncTopicParams());
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     /**
      * Get ParticipantSimParameters.
@@ -48,11 +50,8 @@ public class CommonTestData {
      * @return ParticipantSimParameters
      */
     public static ParticipantSimParameters getParticipantSimParameters() {
-        try {
-            return CODER.convert(getParticipantSimParametersMap(), ParticipantSimParameters.class);
-        } catch (final CoderException e) {
-            throw new RuntimeException("cannot create ParticipantSimParameters from map", e);
-        }
+        var json = getJsonFromObject(getParticipantSimParametersMap());
+        return getObjectFromJson(json, ParticipantSimParameters.class);
     }
 
     /**
@@ -177,5 +176,36 @@ public class CommonTestData {
         config.setMigrateTimerMs(1);
         config.setMigratePrecheckTimerMs(1);
         return config;
+    }
+
+    /**
+     * Get Object from json.
+     *
+     * @param json the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromJson(final String json, Class<T> clazz) {
+        try {
+            return MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
+            fail("Cannot decode " + json);
+            return null;
+        }
+    }
+
+    /**
+     * Get Json string from Object.
+     *
+     * @param object the Object
+     * @return the Json
+     */
+    public static String getJsonFromObject(final Object object) {
+        try {
+            return MAPPER.writeValueAsString(object);
+        } catch (IOException e) {
+            fail("Cannot encode " + object);
+            return null;
+        }
     }
 }
