@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
-import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -39,7 +38,6 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestListenerUtils {
 
-    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
 
     /**
@@ -90,10 +88,7 @@ public final class TestListenerUtils {
         var policyTypeDirectoryContents = ResourceUtils.getDirectoryContents("policytypes");
 
         for (String policyTypeFilePath : policyTypeDirectoryContents) {
-            String policyTypeString = ResourceUtils.getResourceAsString(policyTypeFilePath);
-
-            var foundPolicyTypeSt =
-                    yamlTranslator.fromYaml(policyTypeString, ToscaServiceTemplate.class);
+            var foundPolicyTypeSt = CommonTestData.getToscaServiceTemplateFromYamlFile(policyTypeFilePath);
 
             toscaServiceTemplate.setDerivedFrom(foundPolicyTypeSt.getDerivedFrom());
             toscaServiceTemplate.setDescription(foundPolicyTypeSt.getDescription());
@@ -132,9 +127,7 @@ public final class TestListenerUtils {
                 continue;
             }
 
-            var policiesString = ResourceUtils.getResourceAsString(policiesFilePath);
-
-            var foundPoliciesSt = yamlTranslator.fromYaml(policiesString, ToscaServiceTemplate.class);
+            var foundPoliciesSt = CommonTestData.getToscaServiceTemplateFromYamlFile(policiesFilePath);
             if (foundPoliciesSt.getToscaTopologyTemplate() != null
                     && foundPoliciesSt.getToscaTopologyTemplate().getPolicies() != null) {
                 toscaServiceTemplate.getToscaTopologyTemplate().getPolicies()
@@ -151,7 +144,7 @@ public final class TestListenerUtils {
                 throw new FileNotFoundException(automationCompositionFilePath);
             }
 
-            return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
+            return CommonTestData.getToscaServiceTemplateFromYaml(automationCompositionString);
         } catch (FileNotFoundException e) {
             LOGGER.error("cannot find YAML file {}", automationCompositionFilePath);
             throw new IllegalArgumentException(e);

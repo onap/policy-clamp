@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021,2023,2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
@@ -33,9 +34,10 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      * Constructor.
      *
      * @param parameters the policy participant parameters
+     * @param objectMapper the ObjectMapper
      */
-    public PolicyApiHttpClient(ParticipantPolicyParameters parameters) {
-        super(parameters.getPolicyApiParameters());
+    public PolicyApiHttpClient(ParticipantPolicyParameters parameters, ObjectMapper objectMapper) {
+        super(parameters.getPolicyApiParameters(), objectMapper);
     }
 
     /**

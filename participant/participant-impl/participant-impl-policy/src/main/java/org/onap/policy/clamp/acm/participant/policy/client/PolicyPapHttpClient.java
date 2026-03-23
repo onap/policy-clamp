@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentGroup;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentGroups;
@@ -39,9 +40,10 @@ public class PolicyPapHttpClient extends AbstractHttpClient {
      * Constructor.
      *
      * @param parameters the policy participant parameters
+     * @param objectMapper the ObjectMapper
      */
-    public PolicyPapHttpClient(ParticipantPolicyParameters parameters) {
-        super(parameters.getPolicyPapParameters());
+    public PolicyPapHttpClient(ParticipantPolicyParameters parameters, ObjectMapper objectMapper) {
+        super(parameters.getPolicyPapParameters(), objectMapper);
         this.pdpGroup = parameters.getPdpGroup();
         this.pdpType = parameters.getPdpType();
     }
