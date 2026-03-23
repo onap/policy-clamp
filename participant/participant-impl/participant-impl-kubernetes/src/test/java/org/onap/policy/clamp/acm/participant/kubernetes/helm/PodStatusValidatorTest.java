@@ -27,29 +27,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import java.io.File;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.models.base.PfModelException;
 
 class PodStatusValidatorTest {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "src/test/resources/ChartList.json";
     private static final int TIMEOUT = 2;
     private static final int STATUS_CHECK_INTERVAL = 1;
     private static ChartInfo chart0;
     private static ChartInfo chart2;
 
     @BeforeAll
-    static void init() throws CoderException {
-        var charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
+    static void init() {
+        var charts = CommonTestData.getObjectFromJsonFile(CHART_INFO, ChartList.class).getCharts();
         chart0 = charts.get(0);
         chart2 = charts.get(2);
     }

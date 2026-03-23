@@ -44,22 +44,19 @@ import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceExcepti
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
+import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartStore;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.util.FileSystemUtils;
 
 
 class HelmClientTest {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
 
     @BeforeAll
-    static void init() throws CoderException {
-        charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
+    static void init() {
+        charts = CommonTestData.getObjectFromJsonFile(CHART_INFO, ChartList.class).getCharts();
     }
 
     @AfterAll
@@ -103,14 +100,14 @@ class HelmClientTest {
     void test_findChartRepository() throws IOException, ServiceException {
         var chartStore = mock(ChartStore.class);
         var helmClient = spy(new HelmClient(chartStore));
-        String tmpPath = "target/tmp/dummyChart/1.0/";
+        var tmpPath = "target/tmp/dummyChart/1.0/";
         doReturn("nginx-stable/nginx-ingress\t0.9.3\t1.11.3"
                 + " \tNGINX Ingress Controller").when(helmClient).executeCommand(any());
 
-        String configuredRepo = helmClient.findChartRepository(charts.get(1));
+        var configuredRepo = helmClient.findChartRepository(charts.get(1));
         assertThat(configuredRepo).isEqualTo("nginx-stable");
 
-        File tmpFile = new File(tmpPath + charts.get(1).getChartId().getName());
+        var tmpFile = new File(tmpPath + charts.get(1).getChartId().getName());
         if (!tmpFile.mkdirs()) {
             fail("Couldn't create dirs");
         }
@@ -119,7 +116,7 @@ class HelmClientTest {
 
         doReturn(null).when(helmClient).verifyConfiguredRepo(charts.get(1));
 
-        String localRepoName = helmClient.findChartRepository(charts.get(1));
+        var localRepoName = helmClient.findChartRepository(charts.get(1));
         assertNotNull(localRepoName);
         assertThat(localRepoName).endsWith(charts.get(0).getChartId().getVersion());
     }

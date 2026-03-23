@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2023,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,8 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.doReturn;
 
-import java.io.File;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -36,17 +37,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
+import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.ParticipantK8sParameters;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.FileSystemUtils;
@@ -56,8 +54,7 @@ import org.springframework.util.FileSystemUtils;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ChartStoreTest {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
 
     @Mock
@@ -67,16 +64,16 @@ class ChartStoreTest {
 
 
     @BeforeAll
-    static void init() throws CoderException {
-        charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
+    static void init() {
+        charts = CommonTestData.getObjectFromJsonFile(CHART_INFO, ChartList.class).getCharts();
     }
 
     //Overriding the local chart dir parameter to a temp folder under target for testing java FILE IO operations.
     @BeforeEach
     void setup() {
-        Mockito.doReturn("target/tmp/").when(parameters).getLocalChartDirectory();
-        Mockito.doReturn("info.json").when(parameters).getInfoFileName();
-        chartStore = new ChartStore(parameters);
+        doReturn("target/tmp/").when(parameters).getLocalChartDirectory();
+        doReturn("info.json").when(parameters).getInfoFileName();
+        chartStore = new ChartStore(parameters, new ObjectMapper());
     }
 
     //Clean up the 'tmp' dir after each test case.
@@ -168,7 +165,7 @@ class ChartStoreTest {
         chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
 
         //Instantiating a new chartStore object with pre available chart in local.
-        var chartStore2 = new ChartStore(parameters);
+        var chartStore2 = new ChartStore(parameters, new ObjectMapper());
         assertThat(chartStore2.getLocalChartMap()).hasSize(1).containsKey("dummyChart_" + charts.get(0).getChartId()
             .getVersion());
     }

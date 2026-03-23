@@ -43,9 +43,7 @@ import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ConfigService;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -62,7 +60,7 @@ import org.springframework.web.context.WebApplicationContext;
 @EnableConfigurationProperties(value = AcElement.class)
 class AcElementControllerTest {
 
-    private static final Coder CODER = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
     private static final String ELEMENT_CONFIG_YAML = "src/test/resources/config.json";
     private static final String RETRIEVE_CONFIG = "/config";
     private static final String ACTIVATE_CONFIG = "/activate";
@@ -81,11 +79,11 @@ class AcElementControllerTest {
 
     /**
      * Read input element config json.
-     * @throws CoderException in case of error.
+     * @throws IOException in case of error.
      */
     @BeforeAll
-    static void setupParams() throws CoderException {
-        config = CODER.decode(new File(ELEMENT_CONFIG_YAML), ElementConfig.class);
+    static void setupParams() throws IOException {
+        config = MAPPER.readValue(new File(ELEMENT_CONFIG_YAML), ElementConfig.class);
     }
 
     /**

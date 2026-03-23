@@ -18,6 +18,8 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -29,9 +31,6 @@ import org.onap.policy.clamp.acm.participant.kubernetes.helm.HelmClient;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.HelmRepositoryConfig;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,12 +42,10 @@ public class ChartService {
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final ChartStore chartStore;
-
     private final HelmClient helmClient;
-
     private final HelmRepositoryConfig helmRepositoryConfig;
+    private final ObjectMapper objectMapper;
 
-    private static final Coder coder = new StandardCoder();
 
     /**
      * Get all the installed charts.
@@ -116,8 +113,8 @@ public class ChartService {
             // and check whether the repo is permitted
             Repositories repos = null;
             try {
-                repos = coder.decode(helmRepositoryConfig.getRepos(), Repositories.class);
-            } catch (CoderException e) {
+                repos = objectMapper.readValue(helmRepositoryConfig.getRepos(), Repositories.class);
+            } catch (JsonProcessingException e) {
                 throw new ServiceException(e.getMessage());
             }
             for (var repo : repos) {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2023,2025-2006 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 class AcHttpClientTest {
 
-    private static CommonTestData commonTestData;
-
     private static int mockServerPort;
 
     private static final String MOCK_URL = "http://localhost";
@@ -76,7 +74,6 @@ class AcHttpClientTest {
                 return new MockResponse().setResponseCode(404);
             }
         });
-        commonTestData = new CommonTestData();
     }
 
     @AfterAll
@@ -87,49 +84,49 @@ class AcHttpClientTest {
     @Test
     void test_validRequest() {
         // Add valid rest requests POST, GET
-        var configurationEntity = commonTestData.getConfigurationEntity();
+        var configurationEntity = CommonTestData.getConfigurationEntity();
 
-        var headers = commonTestData.getHeaders();
+        var headers = CommonTestData.getHeaders();
         var configRequest =
                 new ConfigRequest(MOCK_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
         var responseMap = client.run(configRequest);
-        assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
+        assertThat(responseMap).hasSize(2).containsKey(CommonTestData.restParamsWithGet().getRestRequestId());
 
-        var restResponseMap = responseMap.get(commonTestData.restParamsWithGet().getRestRequestId());
+        var restResponseMap = responseMap.get(CommonTestData.restParamsWithGet().getRestRequestId());
         assertThat(restResponseMap.getKey()).isEqualTo(200);
     }
 
     @Test
     void test_invalidRequest() {
         // Add rest requests Invalid POST, Valid GET
-        var configurationEntity = commonTestData.getInvalidConfigurationEntity();
+        var configurationEntity = CommonTestData.getInvalidConfigurationEntity();
 
-        var headers = commonTestData.getHeaders();
+        var headers = CommonTestData.getHeaders();
         var configRequest =
                 new ConfigRequest(MOCK_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
         var responseMap = client.run(configRequest);
-        assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
-        var response = responseMap.get(commonTestData.restParamsWithInvalidPost().getRestRequestId());
+        assertThat(responseMap).hasSize(2).containsKey(CommonTestData.restParamsWithGet().getRestRequestId());
+        var response = responseMap.get(CommonTestData.restParamsWithInvalidPost().getRestRequestId());
         assertThat(response.getKey()).isEqualTo(404);
     }
 
     @Test
     void test_WrongUrl() {
         // Add rest requests Invalid URL
-        var configurationEntity = commonTestData.getInvalidConfigurationEntity();
+        var configurationEntity = CommonTestData.getInvalidConfigurationEntity();
 
-        var headers = commonTestData.getHeaders();
+        var headers = CommonTestData.getHeaders();
         var configRequest =
                 new ConfigRequest(WRONG_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
         var responseMap = client.run(configRequest);
-        assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
-        var response = responseMap.get(commonTestData.restParamsWithInvalidPost().getRestRequestId());
+        assertThat(responseMap).hasSize(2).containsKey(CommonTestData.restParamsWithGet().getRestRequestId());
+        var response = responseMap.get(CommonTestData.restParamsWithInvalidPost().getRestRequestId());
         assertThat(response.getKey()).isEqualTo(404);
     }
 }

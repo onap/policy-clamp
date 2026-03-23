@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,25 +21,34 @@
 
 package org.onap.policy.clamp.acm.participant.kserve.utils;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
+import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public class CommonTestData {
 
-    private static final String TEST_KEY_NAME = "org.onap.domain.database.KserveAutomationCompositionElement";
+    public static final String TOSCA_TEMPLATE_YAML = "clamp/acm/test/participant-kserve.yaml";
 
+    private static final String TEST_KEY_NAME = "org.onap.domain.database.KserveAutomationCompositionElement";
     private static final List<UUID> AC_ID_LIST = List.of(UUID.randomUUID(), UUID.randomUUID());
+    private static final ObjectMapper yamlMapper = MapperFactory.createYamlMapper();
 
     /**
      * Get a new InstanceElement.
      *
      * @return InstanceElementDto object
      */
-    public InstanceElementDto getAutomationCompositionElement() {
+    public static InstanceElementDto getAutomationCompositionElement() {
         return new InstanceElementDto(
                 getAutomationCompositionId(), UUID.randomUUID(), null, Map.of(), Map.of());
     }
@@ -50,7 +59,7 @@ public class CommonTestData {
      * @param properties common properties from service template
      * @return CompositionElementDto object
      */
-    public CompositionElementDto getCompositionElement(Map<String, Object> properties) {
+    public static CompositionElementDto getCompositionElement(Map<String, Object> properties) {
         return new CompositionElementDto(UUID.randomUUID(),
                 new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"),
                 properties, Map.of());
@@ -61,8 +70,30 @@ public class CommonTestData {
      *
      * @return ToscaConceptIdentifier automationCompositionId
      */
-    public UUID getAutomationCompositionId() {
+    public static UUID getAutomationCompositionId() {
         return AC_ID_LIST.get(0);
     }
 
+    /**
+     * Get ToscaServiceTemplate from resource.
+     *
+     * @param path path of the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYamlFile(String path) {
+        return getToscaServiceTemplateFromYaml(ResourceUtils.getResourceAsString(path));
+    }
+
+    /**
+     * Get ToscaServiceTemplate from yaml.
+     *
+     * @param yaml the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYaml(String yaml) {
+        try {
+            return yamlMapper.readValue(yaml, ToscaServiceTemplate.class);
+        } catch (JsonProcessingException e) {
+            fail("Cannot read or decode " + yaml);
+            return null;
+        }
+    }
 }
