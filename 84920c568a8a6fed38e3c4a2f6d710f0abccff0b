@@ -1,6 +1,69 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "81663114_e65d1bc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-23T13:34:52Z",
+      "side": 1,
+      "message": "Needs rebased",
+      "revId": "84920c568a8a6fed38e3c4a2f6d710f0abccff0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e91a88d_6088510a",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-23T13:34:52Z",
+      "side": 1,
+      "message": "This should be extracted into a separate commit. It is only needed to fix an issue where intelli-j sometimes can\u0027t find swagger-generated files.",
+      "range": {
+        "startLine": 484,
+        "startChar": 21,
+        "endLine": 502,
+        "endChar": 21
+      },
+      "revId": "84920c568a8a6fed38e3c4a2f6d710f0abccff0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "408737a5_53bbee43",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/ParticipantMessageListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-23T13:34:52Z",
+      "side": 1,
+      "message": "This logic is only needed because AUTOMATION_COMPOSITION_DEPLOY_ACK and AUTOMATION_COMPOSITION_STATECHANGE_ACK share the same class AutomationCompositionDeployAck. Ideally, each message type should have its own class.",
+      "range": {
+        "startLine": 116,
+        "startChar": 66,
+        "endLine": 122,
+        "endChar": 22
+      },
+      "revId": "84920c568a8a6fed38e3c4a2f6d710f0abccff0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6502c914_a4061342",
