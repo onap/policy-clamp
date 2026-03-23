@@ -22,6 +22,8 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,6 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentSubGroup;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -55,10 +54,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
-    private static final Coder CODER = new StandardCoder();
 
     private final PolicyApiHttpClient apiHttpClient;
     private final PolicyPapHttpClient papHttpClient;
+    private final ObjectMapper objectMapper;
 
     /**
      * Constructor.
@@ -66,12 +65,14 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
      * @param apiHttpClient the PolicyApi Http Client
      * @param papHttpClient the Policy Pap Http Client
      * @param intermediaryApi the Participant Intermediary Api
+     * @param objectMapper the ObjectMapper
      */
     public AutomationCompositionElementHandler(PolicyApiHttpClient apiHttpClient, PolicyPapHttpClient papHttpClient,
-        ParticipantIntermediaryApi intermediaryApi) {
+        ParticipantIntermediaryApi intermediaryApi, ObjectMapper objectMapper) {
         super(intermediaryApi);
         this.apiHttpClient = apiHttpClient;
         this.papHttpClient = papHttpClient;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -238,8 +239,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private ToscaServiceTemplate getToscaServiceTemplate(Map<String, Object> properties) throws PfModelException {
         try {
-            return  CODER.convert(properties, ToscaServiceTemplate.class);
-        } catch (CoderException e) {
+            var json = objectMapper.writeValueAsString(properties);
+            return  objectMapper.readValue(json, ToscaServiceTemplate.class);
+        } catch (JsonProcessingException e) {
             throw new PfModelException(Status.BAD_REQUEST, e.getMessage());
         }
     }

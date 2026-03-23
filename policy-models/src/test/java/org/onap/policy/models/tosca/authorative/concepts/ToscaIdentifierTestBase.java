@@ -3,7 +3,7 @@
  * ONAP Policy Models
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ package org.onap.policy.models.tosca.authorative.concepts;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.onap.policy.common.utils.coder.MapperFactory;
 
 /**
  * Super class to test identity keys.
@@ -36,13 +36,11 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 abstract class ToscaIdentifierTestBase<T extends Comparable<T>> {
     public static final String NAME = "my-name";
     public static final String VERSION = "1.2.3";
-
-    private static final Coder coder = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     private final Class<T> clazz;
     private final String nameField;
     private final String versionField;
-
 
     /**
      * Constructs the object.
@@ -84,9 +82,9 @@ abstract class ToscaIdentifierTestBase<T extends Comparable<T>> {
      * @param name name to put into the identifier
      * @param version version to put into the identifier
      * @return a new identifier
-     * @throws CoderException if the JSON cannot be decoded
+     * @throws JsonProcessingException if the JSON cannot be decoded
      */
-    public T makeIdent(String name, String version) throws CoderException {
+    public T makeIdent(String name, String version) throws JsonProcessingException {
         StringBuilder bldr = new StringBuilder();
         bldr.append("{");
 
@@ -114,6 +112,6 @@ abstract class ToscaIdentifierTestBase<T extends Comparable<T>> {
 
         String json = bldr.toString().replace('\'', '"');
 
-        return coder.decode(json, clazz);
+        return MAPPER.readValue(json, clazz);
     }
 }
