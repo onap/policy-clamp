@@ -43,11 +43,9 @@ import org.onap.policy.clamp.acm.participant.kubernetes.configurations.SecurityC
 import org.onap.policy.clamp.acm.participant.kubernetes.controller.ChartController;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
+import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.ParticipantK8sParameters;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.micrometer.metrics.autoconfigure.CompositeMeterRegistryAutoConfiguration;
@@ -61,7 +59,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -73,8 +70,7 @@ import org.springframework.web.context.WebApplicationContext;
 @EnableWebSecurity
 class ChartControllerTest {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
     private static final String RETRIEVE_CHART_URL = "/helm/charts";
     private static final String INSTALL_CHART_URL = "/helm/install";
@@ -94,11 +90,10 @@ class ChartControllerTest {
 
     /**
      * Read input chart info json.
-     * @throws CoderException in case of error.
      */
     @BeforeAll
-    static void setupParams() throws CoderException {
-        charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
+    static void setupParams() {
+        charts = CommonTestData.getObjectFromJsonFile(CHART_INFO, ChartList.class).getCharts();
     }
 
     /**
@@ -119,8 +114,7 @@ class ChartControllerTest {
      */
     @Test
     void retrieveAllCharts() throws Exception {
-        RequestBuilder requestBuilder;
-        requestBuilder = MockMvcRequestBuilders.get(RETRIEVE_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE);
+        var requestBuilder = MockMvcRequestBuilders.get(RETRIEVE_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -133,12 +127,10 @@ class ChartControllerTest {
      */
     @Test
     void installChart() throws Exception {
-        RequestBuilder requestBuilder;
-
         //Mocking successful installation for void install method
         doReturn(true).when(chartService).installChart(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.post(INSTALL_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE)
+        var requestBuilder = MockMvcRequestBuilders.post(INSTALL_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE)
             .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
             .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -158,12 +150,10 @@ class ChartControllerTest {
      */
     @Test
     void uninstallChart() throws Exception {
-        RequestBuilder requestBuilder;
-
         //Mocking successful scenario for void uninstall method
         doNothing().when(chartService).uninstallChart(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.delete(UNINSTALL_CHART_URL + charts.get(0)
+        var requestBuilder = MockMvcRequestBuilders.delete(UNINSTALL_CHART_URL + charts.get(0)
             .getChartId().getName() + "/" + charts.get(0).getChartId().getVersion())
             .accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -183,17 +173,16 @@ class ChartControllerTest {
      */
     @Test
     void onboardChart() throws Exception {
-        RequestBuilder requestBuilder;
-        MockMultipartFile chartFile = new MockMultipartFile("file", "hello.tgz",
+        var chartFile = new MockMultipartFile("file", "hello.tgz",
             MediaType.TEXT_PLAIN_VALUE, "Dummy data".getBytes());
 
-        MockMultipartFile overrideFile = new MockMultipartFile("file", "values.yaml",
+        var overrideFile = new MockMultipartFile("file", "values.yaml",
             MediaType.TEXT_PLAIN_VALUE, "Dummy data".getBytes());
 
         // Mocking successful scenario for void uninstall method
         when(chartService.saveChart(charts.get(0), chartFile, null)).thenReturn(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.multipart(ONBOARD_CHART_URL)
+        var requestBuilder = MockMvcRequestBuilders.multipart(ONBOARD_CHART_URL)
             .file("chartFile", chartFile.getBytes()).file("overrideFile", overrideFile.getBytes())
                 .part(new MockPart("info", getChartInfoJson().getBytes()));
 
@@ -206,12 +195,10 @@ class ChartControllerTest {
      */
     @Test
     void deleteChart() throws Exception {
-        RequestBuilder requestBuilder;
-
         //Mocking successful scenario for void uninstall method
         doNothing().when(chartService).deleteChart(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.delete(DELETE_CHART_URL + "/" + charts.get(0)
+        var requestBuilder = MockMvcRequestBuilders.delete(DELETE_CHART_URL + "/" + charts.get(0)
             .getChartId().getName() + "/" + charts.get(0).getChartId().getVersion())
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -232,10 +219,9 @@ class ChartControllerTest {
      */
     @Test
     void testConfigureRepo() throws Exception {
-        RequestBuilder requestBuilder;
         when(chartService.configureRepository(any())).thenReturn(true);
 
-        requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
+        var requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
             .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
             .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -245,10 +231,9 @@ class ChartControllerTest {
 
     @Test
     void testConfigureRepoAlreadyExist() throws Exception {
-        RequestBuilder requestBuilder;
         when(chartService.configureRepository(any())).thenReturn(false);
 
-        requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
+        var requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
             .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
             .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -261,7 +246,6 @@ class ChartControllerTest {
     }
 
     private String getChartInfoJson() throws IOException {
-        return Files.readString(new File(CHART_INFO_YAML).toPath(), StandardCharsets.UTF_8);
+        return Files.readString(new File(CHART_INFO).toPath(), StandardCharsets.UTF_8);
     }
-
 }

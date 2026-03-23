@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
@@ -36,9 +38,6 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +50,9 @@ import org.springframework.stereotype.Component;
 public class AutomationCompositionElementHandler extends AcElementListenerV3 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final Coder CODER = new StandardCoder();
-
     private final ChartService chartService;
     private final PodStatusValidator podStatusValidator;
+    private final ObjectMapper objectMapper;
 
     /**
      * Constructor.
@@ -62,12 +60,14 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
      * @param intermediaryApi the ParticipantIntermediaryApi
      * @param chartService the ChartService
      * @param podStatusValidator the PodStatusValidator
+     * @param objectMapper the ObjectMapper
      */
     public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, ChartService chartService,
-            PodStatusValidator podStatusValidator) {
+            PodStatusValidator podStatusValidator, ObjectMapper objectMapper) {
         super(intermediaryApi);
         this.chartService = chartService;
         this.podStatusValidator = podStatusValidator;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -134,8 +134,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private ThreadConfig getThreadConfig(Map<String, Object> properties) throws PfModelException {
         try {
-            return CODER.convert(properties, ThreadConfig.class);
-        } catch (CoderException e) {
+            var json = objectMapper.writeValueAsString(properties);
+            return objectMapper.readValue(json, ThreadConfig.class);
+        } catch (JsonProcessingException e) {
             throw new PfModelException(Status.BAD_REQUEST, "Error extracting ThreadConfig ", e);
         }
     }
@@ -145,8 +146,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
         var chartData = (Map<String, Object>) properties.get("chart");
         LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
         try {
-            return CODER.convert(chartData, ChartInfo.class);
-        } catch (CoderException e) {
+            var json = objectMapper.writeValueAsString(chartData);
+            return objectMapper.readValue(json, ChartInfo.class);
+        } catch (JsonProcessingException e) {
             throw new PfModelException(Status.BAD_REQUEST, "Error extracting ChartInfo", e);
         }
 

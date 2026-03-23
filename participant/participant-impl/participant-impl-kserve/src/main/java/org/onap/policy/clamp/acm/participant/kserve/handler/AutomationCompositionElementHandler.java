@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.kserve.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kubernetes.client.openapi.ApiException;
 import io.opentelemetry.context.Context;
 import jakarta.validation.Validation;
@@ -42,9 +44,6 @@ import org.onap.policy.clamp.acm.participant.kserve.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.kserve.models.KserveInferenceEntity;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,18 +56,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
-    private static final Coder CODER = new StandardCoder();
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final ExecutorService executor = Context.taskWrapping(
             Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
     private final KserveClient kserveClient;
+    private final ObjectMapper objectMapper;
 
-    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, KserveClient kserveClient) {
+    /**
+     * Constructor.
+     *
+     * @param intermediaryApi the ParticipantIntermediaryApi
+     * @param kserveClient the KserveClient
+     * @param objectMapper the ObjectMapper
+     */
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, KserveClient kserveClient,
+            ObjectMapper objectMapper) {
         super(intermediaryApi);
         this.kserveClient = kserveClient;
+        this.objectMapper = objectMapper;
     }
 
     private static class ThreadConfig {
@@ -149,7 +156,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private ConfigurationEntity getConfigurationEntity(Map<String, Object> properties) throws KserveException {
         try {
-            var configurationEntity = CODER.convert(properties, ConfigurationEntity.class);
+            var json = objectMapper.writeValueAsString(properties);
+            var configurationEntity = objectMapper.readValue(json, ConfigurationEntity.class);
             try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
                 var violations = validatorFactory.getValidator().validate(configurationEntity);
                 if (!violations.isEmpty()) {
@@ -158,15 +166,16 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
                 }
             }
             return  configurationEntity;
-        } catch (CoderException e) {
+        } catch (JsonProcessingException e) {
             throw new KserveException(HttpStatus.BAD_REQUEST.value(), "Invalid inference service configuration", e);
         }
     }
 
     private ThreadConfig getThreadConfig(Map<String, Object> properties) throws KserveException {
         try {
-            return CODER.convert(properties, ThreadConfig.class);
-        } catch (CoderException e) {
+            var json = objectMapper.writeValueAsString(properties);
+            return objectMapper.readValue(json, ThreadConfig.class);
+        } catch (JsonProcessingException e) {
             throw new KserveException(HttpStatus.BAD_REQUEST.value(), "Invalid inference service configuration", e);
         }
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2024 Nordix Foundation.
+ *  Copyright (C) 2022-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,24 +27,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.a1pms.exception.A1PolicyServiceException;
 import org.onap.policy.clamp.acm.participant.a1pms.utils.CommonTestData;
-import org.onap.policy.clamp.acm.participant.a1pms.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class AcElementHandlerTest {
 
     private final AcA1PmsClient acA1PmsClient = mock(AcA1PmsClient.class);
-
-    private final CommonTestData commonTestData = new CommonTestData();
 
     private static ToscaServiceTemplate serviceTemplate;
     private static final String A1_AUTOMATION_COMPOSITION_ELEMENT =
@@ -52,7 +51,7 @@ class AcElementHandlerTest {
 
     @BeforeAll
     static void init() {
-        serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
+        serviceTemplate = CommonTestData.getToscaServiceTemplateFromYamlFile(CommonTestData.TOSCA_TEMPLATE_YAML);
     }
 
     @BeforeEach
@@ -64,13 +63,13 @@ class AcElementHandlerTest {
     @Test
     void test_automationCompositionElementStateChange() throws A1PolicyServiceException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(participantIntermediaryApi,
+                acA1PmsClient, MapperFactory.createJsonMapper());
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        var compositionElement = commonTestData.getCompositionElement(
+        var compositionElement = CommonTestData.getCompositionElement(
                 nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
 
         automationCompositionElementHandler.deploy(compositionElement, element);
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(element.instanceId(),
@@ -88,13 +87,13 @@ class AcElementHandlerTest {
     @Test
     void test_AutomationCompositionElementUpdate() throws A1PolicyServiceException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, acA1PmsClient, MapperFactory.createJsonMapper());
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        var compositionElement = commonTestData.getCompositionElement(
+        var compositionElement = CommonTestData.getCompositionElement(
                 nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
 
         automationCompositionElementHandler.deploy(compositionElement, element);
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(
@@ -106,12 +105,12 @@ class AcElementHandlerTest {
     void test_AutomationCompositionElementUpdateWithUnhealthyA1pms() {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
         var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient, new ObjectMapper());
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        var compositionElement = commonTestData.getCompositionElement(
+        var compositionElement = CommonTestData.getCompositionElement(
                 nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         when(acA1PmsClient.isPmsHealthy()).thenReturn(Boolean.FALSE);
 
         assertThrows(A1PolicyServiceException.class,
@@ -122,10 +121,10 @@ class AcElementHandlerTest {
     void test_AutomationCompositionElementUpdateWithInvalidConfiguration() {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
         var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient, new ObjectMapper());
 
-        var compositionElement = commonTestData.getCompositionElement(Map.of());
-        var element = commonTestData.getAutomationCompositionElement();
+        var compositionElement = CommonTestData.getCompositionElement(Map.of());
+        var element = CommonTestData.getAutomationCompositionElement();
         assertThrows(A1PolicyServiceException.class,
                 () -> automationCompositionElementHandler.deploy(compositionElement, element));
     }
@@ -134,11 +133,11 @@ class AcElementHandlerTest {
     void test_AutomationCompositionElementUpdateWithCoderException() {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
         var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient, new ObjectMapper());
 
         Map<String, Object> invalidProperties = Map.of("policyServiceEntities", 1);
-        var compositionElement = commonTestData.getCompositionElement(invalidProperties);
-        var element = commonTestData.getAutomationCompositionElement();
+        var compositionElement = CommonTestData.getCompositionElement(invalidProperties);
+        var element = CommonTestData.getAutomationCompositionElement();
         assertThrows(A1PolicyServiceException.class,
                 () -> automationCompositionElementHandler.deploy(compositionElement, element));
     }

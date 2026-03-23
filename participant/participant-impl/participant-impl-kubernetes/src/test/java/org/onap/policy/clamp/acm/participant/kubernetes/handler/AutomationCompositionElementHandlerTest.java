@@ -30,7 +30,6 @@ import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -45,45 +44,40 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
-import org.onap.policy.clamp.acm.participant.kubernetes.utils.TestUtils;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class AutomationCompositionElementHandlerTest {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
     private static ToscaServiceTemplate toscaServiceTemplate;
     private static final String K8S_AUTOMATION_COMPOSITION_ELEMENT =
             "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement";
-    private final CommonTestData commonTestData = new CommonTestData();
 
     @BeforeAll
-    static void init() throws CoderException {
-        charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
-        toscaServiceTemplate = TestUtils.testAutomationCompositionRead();
+    static void init() {
+        charts = CommonTestData.getObjectFromJsonFile(CHART_INFO, ChartList.class).getCharts();
+        toscaServiceTemplate = CommonTestData.getToscaServiceTemplateFromYamlFile(CommonTestData.TOSCA_TEMPLATE_YAML);
     }
 
     @Test
     void test_AutomationCompositionElementStateChange() throws ServiceException, PfModelException {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
         var objectMapper = new ObjectMapper();
         Map<String, Object> inPropertiesMap = objectMapper.convertValue(charts.get(0), new TypeReference<>() {});
 
-        acElementHandler.undeploy(commonTestData.createCompositionElementDto(),
-                commonTestData.createInstanceElementDto(Map.of("chart", inPropertiesMap)));
+        acElementHandler.undeploy(CommonTestData.createCompositionElementDto(),
+                CommonTestData.createInstanceElementDto(Map.of("chart", inPropertiesMap)));
 
         doThrow(new ServiceException("Error uninstalling the chart")).when(chartService).uninstallChart(charts.get(0));
 
-        assertDoesNotThrow(() -> acElementHandler.undeploy(commonTestData.createCompositionElementDto(),
-                        commonTestData.createInstanceElementDto(inPropertiesMap)));
+        assertDoesNotThrow(() -> acElementHandler.undeploy(CommonTestData.createCompositionElementDto(),
+                        CommonTestData.createInstanceElementDto(inPropertiesMap)));
     }
 
     @Test
@@ -91,12 +85,12 @@ class AutomationCompositionElementHandlerTest {
             throws PfModelException, IOException, ServiceException {
         var chartService = mock(ChartService.class);
         var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
-                chartService, mock(PodStatusValidator.class));
+                chartService, mock(PodStatusValidator.class), MapperFactory.createJsonMapper());
 
         var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        var instanceElementDto = commonTestData.createInstanceElementDto(nodeTemplatesMap
+        var instanceElementDto = CommonTestData.createInstanceElementDto(nodeTemplatesMap
                 .get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
-        var compositionElementDto = commonTestData.createCompositionElementDto();
+        var compositionElementDto = CommonTestData.createCompositionElementDto();
 
         doReturn(false).when(chartService).installChart(any());
         assertThrows(PfModelException.class, () -> acElementHandler.deploy(compositionElementDto, instanceElementDto));
@@ -112,49 +106,49 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void testUpdate() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
         assertDoesNotThrow(
-                () -> acElementHandler.update(commonTestData.createCompositionElementDto(),
-                        commonTestData.createInstanceElementDto(Map.of()),
-                        commonTestData.createInstanceElementDto(Map.of())));
+                () -> acElementHandler.update(CommonTestData.createCompositionElementDto(),
+                        CommonTestData.createInstanceElementDto(Map.of()),
+                        CommonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testLock() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
-        assertDoesNotThrow(() -> acElementHandler.lock(commonTestData.createCompositionElementDto(),
-                commonTestData.createInstanceElementDto(Map.of())));
+        assertDoesNotThrow(() -> acElementHandler.lock(CommonTestData.createCompositionElementDto(),
+                CommonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testUnlock() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
-        assertDoesNotThrow(() -> acElementHandler.unlock(commonTestData.createCompositionElementDto(),
-                        commonTestData.createInstanceElementDto(Map.of())));
+        assertDoesNotThrow(() -> acElementHandler.unlock(CommonTestData.createCompositionElementDto(),
+                CommonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testDelete() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
-        assertDoesNotThrow(() -> acElementHandler.delete(commonTestData.createCompositionElementDto(),
-                commonTestData.createInstanceElementDto(Map.of())));
+        assertDoesNotThrow(() -> acElementHandler.delete(CommonTestData.createCompositionElementDto(),
+                CommonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testPrime() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
         assertDoesNotThrow(() -> acElementHandler.prime(new CompositionDto(UUID.randomUUID(), Map.of(), Map.of())));
     }
@@ -162,8 +156,8 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void testDeprime() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
         assertDoesNotThrow(() -> acElementHandler.deprime(new CompositionDto(UUID.randomUUID(), Map.of(), Map.of())));
     }
@@ -171,11 +165,11 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void testMigrate() {
         var chartService = mock(ChartService.class);
-        var acElementHandler = new AutomationCompositionElementHandler(
-                mock(ParticipantIntermediaryApi.class), chartService, mock(PodStatusValidator.class));
+        var acElementHandler = new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class),
+                chartService, mock(PodStatusValidator.class), new ObjectMapper());
 
-        assertDoesNotThrow(() -> acElementHandler.migrate(commonTestData.createCompositionElementDto(),
-                commonTestData.createCompositionElementDto(), commonTestData.createInstanceElementDto(Map.of()),
-                commonTestData.createInstanceElementDto(Map.of()), 0));
+        assertDoesNotThrow(() -> acElementHandler.migrate(CommonTestData.createCompositionElementDto(),
+                CommonTestData.createCompositionElementDto(), CommonTestData.createInstanceElementDto(Map.of()),
+                CommonTestData.createInstanceElementDto(Map.of()), 0));
     }
 }

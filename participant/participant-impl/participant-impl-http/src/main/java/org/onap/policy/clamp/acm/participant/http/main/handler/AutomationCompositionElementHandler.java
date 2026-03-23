@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.http.main.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Validation;
 import jakarta.ws.rs.core.Response.Status;
 import java.lang.invoke.MethodHandles;
@@ -34,9 +36,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementList
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -48,15 +47,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
-    private static final Coder CODER = new StandardCoder();
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final AcHttpClient acHttpClient;
+    private final ObjectMapper objectMapper;
 
-    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, AcHttpClient acHttpClient) {
+    /**
+     * Constructor.
+     *
+     * @param intermediaryApi the ParticipantIntermediaryApi
+     * @param acHttpClient the AcHttpClient
+     * @param objectMapper the ObjectMapper
+     */
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, AcHttpClient acHttpClient,
+            ObjectMapper objectMapper) {
         super(intermediaryApi);
         this.acHttpClient = acHttpClient;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -87,7 +94,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private ConfigRequest getConfigRequest(Map<String, Object> properties) throws AutomationCompositionException {
         try {
-            var configRequest = CODER.convert(properties, ConfigRequest.class);
+            var json = objectMapper.writeValueAsString(properties);
+            var configRequest = objectMapper.readValue(json, ConfigRequest.class);
             try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
                 var violations = validatorFactory.getValidator().validate(configRequest);
                 if (!violations.isEmpty()) {
@@ -97,7 +105,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
                 }
             }
             return configRequest;
-        } catch (CoderException e) {
+        } catch (JsonProcessingException e) {
             throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ConfigRequest ", e);
         }
     }

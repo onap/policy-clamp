@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +35,6 @@ import org.onap.policy.clamp.acm.participant.http.main.handler.AutomationComposi
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
-import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
@@ -44,18 +44,18 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.http.HttpStatus;
 
 class AcElementHandlerTest {
 
-    private final CommonTestData commonTestData = new CommonTestData();
     private static final String HTTP_AUTOMATION_COMPOSITION_ELEMENT =
             "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 
     private InstanceElementDto creteInstanceElementDto(AcElementDeploy element) {
-        return new InstanceElementDto(commonTestData.getAutomationCompositionId(), element.getId(),
+        return new InstanceElementDto(CommonTestData.getAutomationCompositionId(), element.getId(),
                 element.getProperties(), new HashMap<>());
     }
 
@@ -65,12 +65,12 @@ class AcElementHandlerTest {
 
     @Test
     void testUndeploy() {
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
         automationCompositionElementHandler.undeploy(compositionElement, instanceElement);
 
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -80,10 +80,10 @@ class AcElementHandlerTest {
     @Test
     void testDeployConstraintViolations() {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
         automationCompositionElementHandler.deploy(compositionElement, instanceElement);
@@ -95,11 +95,11 @@ class AcElementHandlerTest {
 
     @Test
     void testDeployError() {
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
         Map<String, Object> map = new HashMap<>();
         map.put("httpHeaders", 1);
@@ -114,7 +114,7 @@ class AcElementHandlerTest {
     }
 
     private CompositionElementDto createCompositionElementDtoFromSt(AcElementDeploy element) {
-        var serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
+        var serviceTemplate = CommonTestData.getToscaServiceTemplateFromYamlFile(CommonTestData.TOSCA_TEMPLATE_YAML);
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
         return new CompositionElementDto(UUID.randomUUID(), element.getDefinition(), map, new HashMap<>());
@@ -122,14 +122,14 @@ class AcElementHandlerTest {
 
     @Test
     void testDeployFailed() {
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var acHttpClient = mock(AcHttpClient.class);
         when(acHttpClient.run(any())).thenReturn(Map.of(new ToscaConceptIdentifier(),
                 Pair.of(HttpStatus.BAD_REQUEST.value(), "")));
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acHttpClient);
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, acHttpClient, MapperFactory.createJsonMapper());
 
         var compositionElement = createCompositionElementDtoFromSt(element);
         var instanceElement = creteInstanceElementDto(element);
@@ -142,11 +142,11 @@ class AcElementHandlerTest {
 
     @Test
     void testDeploy() {
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var acHttpClient = mock(AcHttpClient.class);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acHttpClient);
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, acHttpClient, MapperFactory.createJsonMapper());
 
         var compositionElement = createCompositionElementDtoFromSt(element);
         var instanceElement = creteInstanceElementDto(element);
@@ -158,11 +158,11 @@ class AcElementHandlerTest {
 
     @Test
     void testUpdate() throws PfModelException {
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
@@ -177,10 +177,10 @@ class AcElementHandlerTest {
     void testLock() throws PfModelException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
         automationCompositionElementHandler.lock(compositionElement, instanceElement);
@@ -193,10 +193,10 @@ class AcElementHandlerTest {
     void testUnlock() throws PfModelException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
         automationCompositionElementHandler.unlock(compositionElement, instanceElement);
@@ -209,10 +209,10 @@ class AcElementHandlerTest {
     void testDelete() throws PfModelException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
         automationCompositionElementHandler.delete(compositionElement, instanceElement);
@@ -224,8 +224,8 @@ class AcElementHandlerTest {
     @Test
     void testPrime() throws PfModelException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
         var compositionId = UUID.randomUUID();
         var composition = new CompositionDto(compositionId, Map.of(), Map.of());
@@ -237,8 +237,8 @@ class AcElementHandlerTest {
     @Test
     void testDeprime() throws PfModelException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
         var compositionId = UUID.randomUUID();
         var composition = new CompositionDto(compositionId, Map.of(), Map.of());
@@ -251,10 +251,10 @@ class AcElementHandlerTest {
     void testMigrate() throws PfModelException {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        var automationCompositionElementHandler = new AutomationCompositionElementHandler(
+                participantIntermediaryApi, mock(AcHttpClient.class), new ObjectMapper());
 
-        var element = commonTestData.getAutomationCompositionElement();
+        var element = CommonTestData.getAutomationCompositionElement();
         var compositionElement = createCompositionElementDto(element);
         var instanceElement = creteInstanceElementDto(element);
         automationCompositionElementHandler.migrate(compositionElement, compositionElement,

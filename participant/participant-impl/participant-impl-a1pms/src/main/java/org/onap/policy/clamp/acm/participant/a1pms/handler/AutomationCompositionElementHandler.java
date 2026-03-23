@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2024 Nordix Foundation.
+ *  Copyright (C) 2022-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
 import java.lang.invoke.MethodHandles;
@@ -34,9 +36,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -48,16 +47,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
-    private static final Coder CODER = new StandardCoder();
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final AcA1PmsClient acA1PmsClient;
+    private final ObjectMapper objectMapper;
 
+    /**
+     * Constructor.
+     *
+     * @param intermediaryApi the ParticipantIntermediaryApi
+     * @param acA1PmsClient the AcA1PmsClient
+     * @param objectMapper the ObjectMapper
+     */
     public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi,
-        AcA1PmsClient acA1PmsClient) {
+        AcA1PmsClient acA1PmsClient, ObjectMapper objectMapper) {
         super(intermediaryApi);
         this.acA1PmsClient = acA1PmsClient;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -116,7 +122,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
 
     private ConfigurationEntity getConfigurationEntity(Map<String, Object> properties) throws A1PolicyServiceException {
         try {
-            var configurationEntity = CODER.convert(properties, ConfigurationEntity.class);
+            var json = objectMapper.writeValueAsString(properties);
+            var configurationEntity = objectMapper.readValue(json, ConfigurationEntity.class);
             try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
                 var violations = validatorFactory.getValidator().validate(configurationEntity);
                 if (!violations.isEmpty()) {
@@ -125,7 +132,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV3 {
                 }
             }
             return  configurationEntity;
-        } catch (CoderException e) {
+        } catch (JsonProcessingException e) {
             throw new A1PolicyServiceException(HttpStatus.BAD_REQUEST.value(), "Invalid Configuration", e);
         }
     }
