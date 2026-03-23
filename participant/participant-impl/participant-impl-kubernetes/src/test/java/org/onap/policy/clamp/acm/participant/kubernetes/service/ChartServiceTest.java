@@ -34,7 +34,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.io.File;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,28 +44,25 @@ import org.onap.policy.clamp.acm.participant.kubernetes.helm.HelmClient;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
+import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.HelmRepositoryConfig;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.mock.web.MockMultipartFile;
 
 class ChartServiceTest {
 
-    private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
 
     @BeforeAll
-    static void init() throws CoderException {
-        charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
+    static void init() {
+        charts = CommonTestData.getObjectFromJsonFile(CHART_INFO, ChartList.class).getCharts();
     }
 
     @Test
     void test_getAllCharts() {
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig());
+        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig(), new ObjectMapper());
 
         assertThat(chartService.getAllCharts()).isEmpty();
         doReturn(charts).when(chartStore).getAllCharts();
@@ -78,7 +75,7 @@ class ChartServiceTest {
     void test_getChart() {
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig());
+        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig(), new ObjectMapper());
         assertNull(chartService.getChart("dummyName", "dummyversion"));
 
         var chart0 = charts.get(0);
@@ -94,7 +91,7 @@ class ChartServiceTest {
         var chartStore = mock(ChartStore.class);
         doThrow(IOException.class).when(chartStore).saveChart(chart0, null, null);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig());
+        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig(), new ObjectMapper());
         assertThatThrownBy(() -> chartService.saveChart(chart0, null, null))
             .isInstanceOf(IOException.class);
 
@@ -115,7 +112,7 @@ class ChartServiceTest {
         helmRepositoryConfig.setProtocols("http,https");
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, helmRepositoryConfig);
+        var chartService = new ChartService(chartStore, helmClient, helmRepositoryConfig, new ObjectMapper());
         doReturn("dummyRepoName").when(helmClient).findChartRepository(any());
         var testChart = charts.get(1);
         var result = chartService.installChart(testChart);
@@ -129,21 +126,21 @@ class ChartServiceTest {
         helmRepositoryConfig.setProtocols("http,https");
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, helmRepositoryConfig);
+        var chartService = new ChartService(chartStore, helmClient, helmRepositoryConfig, new ObjectMapper());
         var chart0 = charts.get(0);
         assertThatThrownBy(() -> chartService.installChart(chart0)).isInstanceOf(ServiceException.class);
     }
 
     @Test
-    void test_installChart() throws IOException, ServiceException, CoderException {
+    void test_installChart() throws IOException, ServiceException {
         var helmRepositoryConfig = new HelmRepositoryConfig();
         var repos = List.of(HelmRepository.builder().address("https://localhost:8080").build());
-        helmRepositoryConfig.setRepos(CODER.encode(repos));
+        helmRepositoryConfig.setRepos(CommonTestData.getJsonFromObject(repos));
         helmRepositoryConfig.setProtocols("http,https");
         var chart0 = charts.get(0);
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, helmRepositoryConfig);
+        var chartService = new ChartService(chartStore, helmClient, helmRepositoryConfig, new ObjectMapper());
         assertDoesNotThrow(() -> chartService.installChart(chart0));
 
         doThrow(ServiceException.class).when(helmClient).installChart(any());
@@ -167,7 +164,7 @@ class ChartServiceTest {
         var chart0 = charts.get(0);
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig());
+        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig(), new ObjectMapper());
         assertDoesNotThrow(() -> chartService.uninstallChart(chart0));
         doThrow(ServiceException.class).when(helmClient).uninstallChart(any());
         assertThatThrownBy(() -> chartService.uninstallChart(chart0)).isInstanceOf(ServiceException.class);
@@ -178,7 +175,7 @@ class ChartServiceTest {
         var chart0 = charts.get(0);
         var chartStore = mock(ChartStore.class);
         var helmClient = mock(HelmClient.class);
-        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig());
+        var chartService = new ChartService(chartStore, helmClient, new HelmRepositoryConfig(), new ObjectMapper());
         assertDoesNotThrow(() -> chartService.findChartRepo(chart0));
         doReturn("dummyRepoName").when(helmClient).findChartRepository(any());
         assertEquals("dummyRepoName", chartService.findChartRepo(charts.get(1)));

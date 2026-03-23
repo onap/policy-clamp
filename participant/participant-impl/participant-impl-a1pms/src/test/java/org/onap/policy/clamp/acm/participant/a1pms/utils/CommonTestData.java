@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2024 Nordix Foundation.
+ *  Copyright (C) 2022-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,16 +21,26 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.utils;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.a1pms.models.A1PolicyServiceEntity;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
+import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public class CommonTestData {
 
+    public static final String TOSCA_TEMPLATE_YAML = "clamp/acm/test/participant-a1pms.yaml";
+
+    private static final ObjectMapper yamlMapper = MapperFactory.createYamlMapper();
     private static final String TEST_KEY_NAME = "org.onap.domain.database.A1PMSAutomationCompositionElement";
     private static final List<UUID> AC_ID_LIST = List.of(UUID.randomUUID(), UUID.randomUUID());
 
@@ -39,7 +49,7 @@ public class CommonTestData {
      *
      * @return InstanceElementDto object
      */
-    public InstanceElementDto getAutomationCompositionElement() {
+    public static InstanceElementDto getAutomationCompositionElement() {
         return new InstanceElementDto(
                 getAutomationCompositionId(), UUID.randomUUID(), null, Map.of(), Map.of());
     }
@@ -50,7 +60,7 @@ public class CommonTestData {
      * @param properties common properties from service template
      * @return CompositionElementDto object
      */
-    public CompositionElementDto getCompositionElement(Map<String, Object> properties) {
+    public static CompositionElementDto getCompositionElement(Map<String, Object> properties) {
         return new CompositionElementDto(UUID.randomUUID(),
                 new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"),
                 properties, Map.of());
@@ -62,7 +72,7 @@ public class CommonTestData {
      * @param instanceNo Identifier instance no
      * @return ToscaConceptIdentifier automationCompositionId
      */
-    public ToscaConceptIdentifier getA1PolicyServiceId(int instanceNo) {
+    public static ToscaConceptIdentifier getA1PolicyServiceId(int instanceNo) {
         return new ToscaConceptIdentifier("A1PMSInstance" + instanceNo, "1.0.0");
     }
 
@@ -71,7 +81,7 @@ public class CommonTestData {
      *
      * @return UUID automationCompositionId
      */
-    public UUID getAutomationCompositionId() {
+    public static UUID getAutomationCompositionId() {
         return getAutomationCompositionId(0);
     }
 
@@ -81,7 +91,7 @@ public class CommonTestData {
      * @param instanceNo Identifier instance no
      * @return UUID automationCompositionId
      */
-    public UUID getAutomationCompositionId(int instanceNo) {
+    public static UUID getAutomationCompositionId(int instanceNo) {
         return AC_ID_LIST.get(instanceNo);
     }
 
@@ -90,11 +100,34 @@ public class CommonTestData {
      *
      * @return List of policy entities
      */
-    public List<A1PolicyServiceEntity> getValidPolicyEntities() {
+    public static List<A1PolicyServiceEntity> getValidPolicyEntities() {
         var a1PolicyServiceEntity1 = new A1PolicyServiceEntity(getA1PolicyServiceId(0),
                 "testService1", "http://localhost", 0);
         var a1PolicyServiceEntity2 = new A1PolicyServiceEntity(getA1PolicyServiceId(1),
                 "testService2", "http://127.0.0.1", 0);
         return List.of(a1PolicyServiceEntity1, a1PolicyServiceEntity2);
+    }
+
+    /**
+     * Get ToscaServiceTemplate from resource.
+     *
+     * @param path path of the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYamlFile(String path) {
+        return getToscaServiceTemplateFromYaml(ResourceUtils.getResourceAsString(path));
+    }
+
+    /**
+     * Get ToscaServiceTemplate from yaml.
+     *
+     * @param yaml the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYaml(String yaml) {
+        try {
+            return yamlMapper.readValue(yaml, ToscaServiceTemplate.class);
+        } catch (JsonProcessingException e) {
+            fail("Cannot read or decode " + yaml);
+            return null;
+        }
     }
 }

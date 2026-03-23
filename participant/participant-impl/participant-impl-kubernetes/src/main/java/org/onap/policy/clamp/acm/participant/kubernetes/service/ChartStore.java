@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,8 +42,6 @@ import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.ParticipantK8sParameters;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +53,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class ChartStore {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final StandardCoder STANDARD_CODER = new StandardCoder();
-
     private final ParticipantK8sParameters participantK8sParameters;
+    private final ObjectMapper objectMapper;
 
     // ChartStore map contains chart name as key & ChartInfo as value.
     @Getter(AccessLevel.PACKAGE)
@@ -64,8 +63,9 @@ public class ChartStore {
     /**
      * Constructor method.
      */
-    public ChartStore(ParticipantK8sParameters participantK8sParameters) {
+    public ChartStore(ParticipantK8sParameters participantK8sParameters, ObjectMapper objectMapper) {
         this.participantK8sParameters = participantK8sParameters;
+        this.objectMapper = objectMapper;
         this.restoreFromLocalFileSystem();
     }
 
@@ -99,8 +99,8 @@ public class ChartStore {
      * @param chartFile helm chart file.
      * @param overrideFile override file.
      * @return chart
-     * @throws IOException incase of IO error
-     * @throws ServiceException incase of error.
+     * @throws IOException in case of IO error
+     * @throws ServiceException in case of error.
      */
     public synchronized ChartInfo saveChart(ChartInfo chartInfo, MultipartFile chartFile, MultipartFile overrideFile)
         throws IOException, ServiceException {
@@ -168,7 +168,7 @@ public class ChartStore {
 
     private void storeChartInFile(ChartInfo chart) {
         try (var out = new PrintStream(new FileOutputStream(getFile(chart)))) {
-            out.print(STANDARD_CODER.encode(chart));
+            out.print(objectMapper.writeValueAsString(chart));
         } catch (Exception exc) {
             LOGGER.warn("Could not store chart: {}", chart.getChartId(), exc);
         }
@@ -198,11 +198,11 @@ public class ChartStore {
                 try {
                     // Decode only the json file excluding the helm charts
                     if (localChartFile.endsWith(participantK8sParameters.getInfoFileName())) {
-                        ChartInfo chart = STANDARD_CODER.decode(localChartFile.toFile(), ChartInfo.class);
+                        var chart = objectMapper.readValue(localChartFile.toFile(), ChartInfo.class);
                         localChartMap.put(key(chart), chart);
                     }
                     return FileVisitResult.CONTINUE;
-                } catch (CoderException ce) {
+                } catch (JsonProcessingException ce) {
                     throw new IOException("Error decoding chart file", ce);
                 }
             }

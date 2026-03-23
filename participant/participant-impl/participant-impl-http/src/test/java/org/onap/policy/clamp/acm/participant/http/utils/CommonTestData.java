@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2023,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,10 @@
 
 package org.onap.policy.clamp.acm.participant.http.utils;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,10 +32,16 @@ import org.onap.policy.clamp.acm.participant.http.main.models.ConfigurationEntit
 import org.onap.policy.clamp.acm.participant.http.main.models.RestParams;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public class CommonTestData {
 
+    public static final String TOSCA_TEMPLATE_YAML = "clamp/acm/test/participant-http.yaml";
+
+    private static final ObjectMapper YAML_MAPPER = MapperFactory.createYamlMapper();
     private static final String TEST_KEY_NAME =
         "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
     public static final UUID AC_ID = UUID.randomUUID();
@@ -41,7 +51,7 @@ public class CommonTestData {
      *
      * @return automationCompositionElement object
      */
-    public AcElementDeploy getAutomationCompositionElement() {
+    public static AcElementDeploy getAutomationCompositionElement() {
         var element = new AcElementDeploy();
         element.setId(UUID.randomUUID());
         element.setDefinition(new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"));
@@ -54,7 +64,7 @@ public class CommonTestData {
      *
      * @return Map of query params
      */
-    public Map<String, String> getQueryParams() {
+    public static Map<String, String> getQueryParams() {
         return Map.of("name", "dummy", "version", "1.0");
     }
 
@@ -63,7 +73,7 @@ public class CommonTestData {
      *
      * @return Map of path params
      */
-    public Map<String, Object> getPathParams() {
+    public static Map<String, Object> getPathParams() {
         return Map.of("id", "123", "name", "dummy");
     }
 
@@ -72,7 +82,7 @@ public class CommonTestData {
      *
      * @return RestParams obj
      */
-    public RestParams restParamsWithGet() {
+    public static RestParams restParamsWithGet() {
         return new RestParams(new ToscaConceptIdentifier("getRequest", "1.0"), "GET", "get", 200, null,
             getQueryParams(), null);
     }
@@ -82,7 +92,7 @@ public class CommonTestData {
      *
      * @return RestParams obj
      */
-    public RestParams restParamsWithPost() {
+    public static RestParams restParamsWithPost() {
         return new RestParams(new ToscaConceptIdentifier("postRequest", "1.0"), "POST", "post", 200, null,
             getQueryParams(), "Test body");
     }
@@ -92,7 +102,7 @@ public class CommonTestData {
      *
      * @return RestParams obj
      */
-    public RestParams restParamsWithInvalidPost() {
+    public static RestParams restParamsWithInvalidPost() {
         return new RestParams(new ToscaConceptIdentifier("postRequest", "1.0"), "POST", "post/{id}/{name}", 200,
             getPathParams(), getQueryParams(), "Test body");
     }
@@ -102,7 +112,7 @@ public class CommonTestData {
      *
      * @return ConfigurationEntity obj
      */
-    public ConfigurationEntity getInvalidConfigurationEntity() {
+    public static ConfigurationEntity getInvalidConfigurationEntity() {
         return new ConfigurationEntity(new ToscaConceptIdentifier("config1", "1.0.1"),
             List.of(restParamsWithGet(), restParamsWithInvalidPost()));
     }
@@ -112,7 +122,7 @@ public class CommonTestData {
      *
      * @return ConfigurationEntity obj
      */
-    public ConfigurationEntity getConfigurationEntity() {
+    public static ConfigurationEntity getConfigurationEntity() {
         return new ConfigurationEntity(new ToscaConceptIdentifier("config1", "1.0.1"),
             List.of(restParamsWithGet(), restParamsWithPost()));
     }
@@ -122,7 +132,7 @@ public class CommonTestData {
      *
      * @return UUID automationCompositionId
      */
-    public UUID getAutomationCompositionId() {
+    public static UUID getAutomationCompositionId() {
         return AC_ID;
     }
 
@@ -131,8 +141,30 @@ public class CommonTestData {
      *
      * @return Map of headers
      */
-    public Map<String, String> getHeaders() {
+    public static Map<String, String> getHeaders() {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
     }
 
+    /**
+     * Get ToscaServiceTemplate from resource.
+     *
+     * @param path path of the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYamlFile(String path) {
+        return getToscaServiceTemplateFromYaml(ResourceUtils.getResourceAsString(path));
+    }
+
+    /**
+     * Get ToscaServiceTemplate from yaml.
+     *
+     * @param yaml the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYaml(String yaml) {
+        try {
+            return YAML_MAPPER.readValue(yaml, ToscaServiceTemplate.class);
+        } catch (JsonProcessingException e) {
+            fail("Cannot read or decode " + yaml);
+            return null;
+        }
+    }
 }

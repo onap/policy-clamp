@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2022,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,32 +31,31 @@ import org.junit.jupiter.api.Test;
 
 class ParticipantK8sParametersTest {
 
-    private final CommonTestData commonTestData = new CommonTestData();
     private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
     @Test
     void testParticipantPolicyParameters() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNullOrEmpty();
     }
 
     @Test
     void testParticipantK8sParameters_NullTopicSinks() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         participantParameters.getIntermediaryParameters().getClampAutomationCompositionTopics().setTopicSinks(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 
     @Test
     void testParticipantK8sParameters_NullTopicSources() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         participantParameters.getIntermediaryParameters().getClampAutomationCompositionTopics().setTopicSources(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 
     @Test
     void testParticipantK8sParameters_BlankLocalChartDirParameter() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         participantParameters.setLocalChartDirectory(" ");
         Set<ConstraintViolation<ParticipantK8sParameters>> violations = validatorFactory.getValidator()
             .validate(participantParameters);
@@ -65,7 +64,7 @@ class ParticipantK8sParametersTest {
 
     @Test
     void testParticipantK8sParameters_BlankInfoFileParameter() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         participantParameters.setInfoFileName("");
         Set<ConstraintViolation<ParticipantK8sParameters>> violations = validatorFactory.getValidator()
             .validate(participantParameters);
@@ -74,14 +73,14 @@ class ParticipantK8sParametersTest {
 
     @Test
     void testNoIntermediaryParameters() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         participantParameters.setIntermediaryParameters(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 
     @Test
     void testNoParticipantId() {
-        final ParticipantK8sParameters participantParameters = commonTestData.getParticipantK8sParameters();
+        final var participantParameters = CommonTestData.getParticipantK8sParameters();
         participantParameters.getIntermediaryParameters().setParticipantId(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }

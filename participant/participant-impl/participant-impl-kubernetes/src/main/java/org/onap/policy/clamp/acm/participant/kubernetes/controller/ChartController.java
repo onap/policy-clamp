@@ -18,6 +18,8 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -31,8 +33,6 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.InstallationInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -50,8 +50,7 @@ public class ChartController implements KubernetesParticipantControllerApi {
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final ChartService chartService;
-
-    private static final StandardCoder CODER = new StandardCoder();
+    private final ObjectMapper objectMapper;
 
     /**
      * REST endpoint to get all the charts.
@@ -69,12 +68,10 @@ public class ChartController implements KubernetesParticipantControllerApi {
      *
      * @param info Info of the chart to be installed
      * @return Status of the install operation
-     * @throws ServiceException in case of error
-     * @throws IOException in case of IO error
      */
     @Override
     public ResponseEntity<Void> installChart(UUID onapRequestId, InstallationInfo info) {
-        ChartInfo chart = chartService.getChart(info.getName(), info.getVersion());
+        var chart = chartService.getChart(info.getName(), info.getVersion());
         if (chart == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -93,11 +90,10 @@ public class ChartController implements KubernetesParticipantControllerApi {
      * @param name name of the chart
      * @param version version of the chart
      * @return Status of operation
-     * @throws ServiceException in case of error.
      */
     @Override
     public ResponseEntity<Void> uninstallChart(String name, String version, UUID onapRequestId) {
-        ChartInfo chart = chartService.getChart(name, version);
+        var chart = chartService.getChart(name, version);
         if (chart == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -117,8 +113,6 @@ public class ChartController implements KubernetesParticipantControllerApi {
      * @param infoJson AppInfo of the chart
      * @param overrideFile the file for overriding the chart
      * @return Status of onboard operation
-     * @throws ServiceException in case of error
-     * @throws IOException in case of IO error
      */
     @Override
     public ResponseEntity<Void> onboardChart(MultipartFile chartFile, MultipartFile overrideFile, String infoJson,
@@ -126,16 +120,18 @@ public class ChartController implements KubernetesParticipantControllerApi {
 
         ChartInfo info;
         try {
-            info = CODER.decode(infoJson, ChartInfo.class);
-        } catch (CoderException e) {
-            throw new ServiceRuntimeException("Error parsing the chart information", e);
+            info = objectMapper.readValue(infoJson, ChartInfo.class);
+        } catch (JsonProcessingException e) {
+            logger.warn("Error parsing the chart information", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {
             chartService.saveChart(info, chartFile, overrideFile);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException | ServiceException e) {
-            throw new ServiceRuntimeException(e);
+            logger.warn("Error onboarding", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -149,7 +145,7 @@ public class ChartController implements KubernetesParticipantControllerApi {
     @Override
     public ResponseEntity<Void> deleteChart(String name, String version, UUID onapRequestId) {
 
-        ChartInfo chart = chartService.getChart(name, version);
+        var chart = chartService.getChart(name, version);
         if (chart == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -163,15 +159,13 @@ public class ChartController implements KubernetesParticipantControllerApi {
      *
      * @param repo Helm repository to be configured
      * @return Status of the operation
-     * @throws ServiceException in case of error
-     * @throws IOException in case of IO error
      */
     @Override
     public ResponseEntity<String> configureRepo(UUID onapRequestId, String repo) {
         HelmRepository repository;
         try {
-            repository = CODER.decode(repo, HelmRepository.class);
-        } catch (CoderException e) {
+            repository = objectMapper.readValue(repo, HelmRepository.class);
+        } catch (JsonProcessingException e) {
             logger.warn("Error parsing the repository information:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error parsing the repository information");
