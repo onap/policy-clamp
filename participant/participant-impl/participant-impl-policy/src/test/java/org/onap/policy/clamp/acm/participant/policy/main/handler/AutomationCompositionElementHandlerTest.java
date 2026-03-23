@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,11 +39,10 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -53,8 +54,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 class AutomationCompositionElementHandlerTest {
 
-    private static final Coder CODER = new StandardCoder();
-
     private static final ToscaConceptIdentifier DEFINITION =
             new ToscaConceptIdentifier("1.0.1", "org.onap.PM_CDS_Blueprint");
 
@@ -62,7 +61,7 @@ class AutomationCompositionElementHandlerTest {
     void testHandlerUndeployNoPolicy() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class), intermediaryApi);
+                mock(PolicyPapHttpClient.class), intermediaryApi, new ObjectMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElementWithNullTopology();
@@ -87,12 +86,8 @@ class AutomationCompositionElementHandlerTest {
     }
 
     private Map<String, Object> getProperties(ToscaServiceTemplate template) {
-        try {
-            var json = CODER.encode(template);
-            return CODER.decode(json, Map.class);
-        } catch (CoderException e) {
-            throw new RuntimeException(e);
-        }
+        var json = CommonTestData.getJsonFromObject(template);
+        return CommonTestData.getObjectFromJson(json, new TypeReference<>() {});
     }
 
     @Test
@@ -101,7 +96,8 @@ class AutomationCompositionElementHandlerTest {
         var api = mock(PolicyApiHttpClient.class);
         var pap = mock(PolicyPapHttpClient.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(
+                api, pap, intermediaryApi, MapperFactory.createJsonMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElement();
@@ -123,7 +119,8 @@ class AutomationCompositionElementHandlerTest {
         var api = mock(PolicyApiHttpClient.class);
         var pap = mock(PolicyPapHttpClient.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(
+                api, pap, intermediaryApi, MapperFactory.createJsonMapper());
 
         doThrow(new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "", null, null, null))
                 .when(api).deletePolicyType(any(), any());
@@ -141,7 +138,7 @@ class AutomationCompositionElementHandlerTest {
         var api = mock(PolicyApiHttpClient.class);
         var pap = mock(PolicyPapHttpClient.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi, new ObjectMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
@@ -154,7 +151,7 @@ class AutomationCompositionElementHandlerTest {
     void testDeployNoPolicy() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class), intermediaryApi);
+                mock(PolicyPapHttpClient.class), intermediaryApi, new ObjectMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElementWithNullTopology();
@@ -199,7 +196,7 @@ class AutomationCompositionElementHandlerTest {
 
         var pap = mock(PolicyPapHttpClient.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi, new ObjectMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElement();
@@ -219,7 +216,7 @@ class AutomationCompositionElementHandlerTest {
 
         var pap = mock(PolicyPapHttpClient.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi, new ObjectMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElement();
@@ -239,7 +236,7 @@ class AutomationCompositionElementHandlerTest {
 
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var api = mock(PolicyApiHttpClient.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi, new ObjectMapper());
 
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElement();

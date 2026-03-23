@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021--2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,10 @@ package org.onap.policy.clamp.acm.participant.policy.main.parameters;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +33,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.common.parameters.topic.TopicParameters;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -46,21 +47,17 @@ public class CommonTestData {
     public static final List<TopicParameters> SINK_TOPIC_PARAMS = List.of(getSinkTopicParams());
     public static final List<TopicParameters> SOURCE_TOPIC_PARAMS = List.of(getSinkTopicParams(), getSyncTopicParams());
 
-    public static final Coder CODER = new StandardCoder();
-    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
+    private static final ObjectMapper YAML_MAPPER = MapperFactory.createYamlMapper();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     /**
      * Get ParticipantPolicyParameters.
      *
      * @return ParticipantPolicyParameters
      */
-    public ParticipantPolicyParameters getParticipantPolicyParameters() {
-        try {
-            return CODER.convert(getParticipantPolicyParametersMap(PARTICIPANT_GROUP_NAME),
-                    ParticipantPolicyParameters.class);
-        } catch (final CoderException e) {
-            throw new RuntimeException("cannot create ParticipantPolicyParameters from map", e);
-        }
+    public static ParticipantPolicyParameters getParticipantPolicyParameters() {
+        var json = getJsonFromObject(getParticipantPolicyParametersMap(PARTICIPANT_GROUP_NAME));
+        return getObjectFromJson(json, ParticipantPolicyParameters.class);
     }
 
     /**
@@ -70,7 +67,7 @@ public class CommonTestData {
      *
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getParticipantPolicyParametersMap(final String name) {
+    public static Map<String, Object> getParticipantPolicyParametersMap(final String name) {
         final Map<String, Object> map = new TreeMap<>();
 
         map.put("name", name);
@@ -87,7 +84,7 @@ public class CommonTestData {
      *
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getPolicyPapParametersMap() {
+    public static Map<String, Object> getPolicyPapParametersMap() {
         final Map<String, Object> map = new TreeMap<>();
         map.put("clientName", "pap");
         map.put("hostname", "localhost");
@@ -104,7 +101,7 @@ public class CommonTestData {
      *
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getPolicyApiParametersMap() {
+    public static Map<String, Object> getPolicyApiParametersMap() {
         final Map<String, Object> map = new TreeMap<>();
         map.put("clientName", "api");
         map.put("hostname", "localhost");
@@ -123,7 +120,7 @@ public class CommonTestData {
      * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getIntermediaryParametersMap(final boolean isEmpty) {
+    public static Map<String, Object> getIntermediaryParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
             map.put("name", "Participant parameters");
@@ -144,7 +141,7 @@ public class CommonTestData {
      * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
+    public static Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
             map.put("topicSources", SOURCE_TOPIC_PARAMS);
@@ -193,13 +190,68 @@ public class CommonTestData {
      *
      * @param path path of the resource
      */
-    public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYamlFile(String path) {
+        return getToscaServiceTemplateFromYaml(ResourceUtils.getResourceAsString(path));
+    }
+
+    /**
+     * Get ToscaServiceTemplate from yaml.
+     *
+     * @param yaml the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplateFromYaml(String yaml) {
         try {
-            return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
-        } catch (CoderException e) {
-            fail("Cannot read or decode " + path);
+            return YAML_MAPPER.readValue(yaml, ToscaServiceTemplate.class);
+        } catch (JsonProcessingException e) {
+            fail("Cannot read or decode " + yaml);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from json.
+     *
+     * @param json the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromJson(final String json, Class<T> clazz) {
+        try {
+            return MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
+            fail("Cannot decode " + json);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from json.
+     *
+     * @param json the resource
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObjectFromJson(final String json, TypeReference<T> clazz) {
+        try {
+            return MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
+            fail("Cannot decode " + json);
+            return null;
+        }
+    }
+
+    /**
+     * Get Json string from Object.
+     *
+     * @param object the Object
+     * @return the Json
+     */
+    public static String getJsonFromObject(final Object object) {
+        try {
+            return MAPPER.writeValueAsString(object);
+        } catch (IOException e) {
+            fail("Cannot encode " + object);
             return null;
         }
     }
 }
-

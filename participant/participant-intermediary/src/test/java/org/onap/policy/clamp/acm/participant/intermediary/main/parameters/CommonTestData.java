@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -46,9 +48,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.parameters.topic.TopicParameters;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
@@ -61,10 +61,10 @@ public class CommonTestData {
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final List<TopicParameters> TOPIC_SOURCE_PARAMS = List.of(getTopicParams(), getSyncTopicParams());
-    public static final Coder CODER = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
     public static final UUID AC_ID_0 = UUID.randomUUID();
     public static final UUID AC_ID_1 = UUID.randomUUID();
-    public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
+    public static final UUID PARTICIPANT_ID = UUID.randomUUID();
     public static final UUID REPLICA_ID = UUID.randomUUID();
 
     /**
@@ -74,10 +74,10 @@ public class CommonTestData {
      */
     public static ParticipantIntermediaryParameters getParticipantIntermediaryParameters() {
         try {
-            return CODER.convert(getIntermediaryParametersMap(PARTICIPANT_GROUP_NAME),
-                    ParticipantIntermediaryParameters.class);
-        } catch (final CoderException e) {
-            throw new RuntimeException("cannot create ParticipantSimulatorParameters from map", e);
+            var json = MAPPER.writeValueAsString(getIntermediaryParametersMap(PARTICIPANT_GROUP_NAME));
+            return MAPPER.readValue(json, ParticipantIntermediaryParameters.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -88,9 +88,10 @@ public class CommonTestData {
      */
     public static DummyParticipantParameters getParticipantParameters() {
         try {
-            return CODER.convert(getParametersMap(PARTICIPANT_GROUP_NAME), DummyParticipantParameters.class);
-        } catch (final CoderException e) {
-            throw new RuntimeException("cannot create ParticipantSimulatorParameters from map", e);
+            var json = MAPPER.writeValueAsString(getParametersMap(PARTICIPANT_GROUP_NAME));
+            return MAPPER.readValue(json, DummyParticipantParameters.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -178,7 +179,7 @@ public class CommonTestData {
      * @return participant Id
      */
     public static UUID getParticipantId() {
-        return PARTCICIPANT_ID;
+        return PARTICIPANT_ID;
     }
 
     public static UUID getReplicaId() {
@@ -210,7 +211,7 @@ public class CommonTestData {
     public static AutomationCompositions getTestAutomationCompositions() {
         try {
             var automationCompositions =
-                    new StandardCoder().decode(new File("src/test/resources/providers/TestAutomationCompositions.json"),
+                    MAPPER.readValue(new File("src/test/resources/providers/TestAutomationCompositions.json"),
                             AutomationCompositions.class);
             automationCompositions.getAutomationCompositionList().get(1).setInstanceId(AC_ID_0);
             automationCompositions.getAutomationCompositionList().get(1).setInstanceId(AC_ID_1);
@@ -254,7 +255,7 @@ public class CommonTestData {
         participantRestartAc.setLockState(LockState.LOCKED);
         var acElementRestart = new AcElementRestart();
         acElementRestart.setDefinition(getDefinition());
-        acElementRestart.setParticipantId(PARTCICIPANT_ID);
+        acElementRestart.setParticipantId(PARTICIPANT_ID);
         acElementRestart.setDeployState(DeployState.DEPLOYED);
         acElementRestart.setLockState(LockState.LOCKED);
         acElementRestart.setOperationalState("OperationalState");

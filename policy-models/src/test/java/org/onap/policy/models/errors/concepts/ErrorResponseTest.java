@@ -3,7 +3,7 @@
  * ONAP Policy Decision Models
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2023, 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2023, 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ class ErrorResponseTest {
     @Test
     void test() {
         assertThatCode(() -> {
-            ErrorResponse error = new ErrorResponse();
+            var error = new ErrorResponse();
 
             error.setResponseCode(Response.Status.NOT_ACCEPTABLE);
             error.setErrorMessage("Missing metadata section");
@@ -47,15 +47,14 @@ class ErrorResponseTest {
 
             error.setWarningDetails(List.of("Please make sure topology template field is included."));
 
-            StandardCoder coder = new StandardCoder();
-            String jsonOutput = coder.encode(error);
+            var mapper = MapperFactory.createJsonMapper();
+            var jsonOutput = mapper.writeValueAsString(error);
 
             logger.debug("Resulting json output {}", jsonOutput);
 
-            ErrorResponse deserializedResponse = coder.decode(jsonOutput, ErrorResponse.class);
+            var deserializedResponse = mapper.readValue(jsonOutput, ErrorResponse.class);
 
             assertEquals(deserializedResponse, error);
         }).doesNotThrowAnyException();
     }
-
 }

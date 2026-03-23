@@ -35,6 +35,7 @@ import org.onap.policy.clamp.acm.participant.policy.concepts.DeploymentSubGroup;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.RestClientParameters;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.web.reactive.function.client.WebClientException;
 
@@ -55,7 +56,7 @@ class HttpClientTest {
     @BeforeAll
     static void setUpMockServer() throws IOException {
         serviceTemplate = CommonTestData
-                .getToscaServiceTemplate("clamp/acm/pmsh/funtional-pmsh-usecase-migration.yaml");
+                .getToscaServiceTemplateFromYamlFile("clamp/acm/pmsh/funtional-pmsh-usecase-migration.yaml");
         // Setup mock web server
         int mockServerPort = 42545;
         var mockServer = new MockWebServer();
@@ -108,8 +109,8 @@ class HttpClientTest {
         params.setPolicyApiParameters(restClientParameters);
         params.setPolicyPapParameters(restClientParameters);
 
-        apiHttpClient = new PolicyApiHttpClient(params);
-        papHttpClient = new PolicyPapHttpClient(params);
+        apiHttpClient = new PolicyApiHttpClient(params, MapperFactory.createJsonMapper());
+        papHttpClient = new PolicyPapHttpClient(params, MapperFactory.createJsonMapper());
     }
 
     @Test
