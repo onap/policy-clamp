@@ -41,6 +41,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57b9a804_65f1e231",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-24T15:16:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e91a88d_6088510a",
+      "range": {
+        "startLine": 484,
+        "startChar": 21,
+        "endLine": 502,
+        "endChar": 21
+      },
+      "revId": "84920c568a8a6fed38e3c4a2f6d710f0abccff0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "408737a5_53bbee43",
@@ -77,6 +101,30 @@
       "writtenOn": "2026-03-20T12:01:34Z",
       "side": 1,
       "message": "Move test properties to test profile e.g. application-kafka.yaml",
+      "range": {
+        "startLine": 43,
+        "startChar": 69,
+        "endLine": 51,
+        "endChar": 2
+      },
+      "revId": "84920c568a8a6fed38e3c4a2f6d710f0abccff0b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b40e00f_c3af45b1",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/supervision/comm/SupervisionMessagesIntegrationTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-24T15:16:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6502c914_a4061342",
       "range": {
         "startLine": 43,
         "startChar": 69,
