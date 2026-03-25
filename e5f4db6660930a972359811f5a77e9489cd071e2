@@ -18,6 +18,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83b1efe6_393572c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-25T11:01:36Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "20d00208_b7c77ca2",
+      "revId": "e5f4db6660930a972359811f5a77e9489cd071e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "89154b5e_7cb38672",
@@ -31,6 +49,30 @@
       "writtenOn": "2026-03-06T10:07:02Z",
       "side": 1,
       "message": "Did we check the csits are running okay with this change? Old participants doesn\u0027t send replicaId in registration, but we may not need to maintain backward compatibility I guess.",
+      "range": {
+        "startLine": 35,
+        "startChar": 17,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "e5f4db6660930a972359811f5a77e9489cd071e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34d8a939_98e9ef40",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantReplica.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-25T11:01:36Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "89154b5e_7cb38672",
       "range": {
         "startLine": 35,
         "startChar": 17,
