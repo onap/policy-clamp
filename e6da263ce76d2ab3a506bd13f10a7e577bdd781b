@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3540142f_18056ca3",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove  @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18b08e50_d5a72be6",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove  @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfda5ad2_889969c0",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove  @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b38ce0a4_494a8531",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "insert @NotNull, is supposed to be provided by the user",
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4de244c5_d95ba6ce",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c110e4_d59731b7",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c44882d_f032f3c9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 47,
+        "startChar": 3,
+        "endLine": 47,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be58cef5_06fc7336",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 50,
+        "startChar": 3,
+        "endLine": 50,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "287bbd29_bc1b025a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 53,
+        "startChar": 3,
+        "endLine": 53,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f994a83_32420b74",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-03-25T15:25:32Z",
+      "side": 1,
+      "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
