@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31fdbedf_152274e4",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3540142f_18056ca3",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18b08e50_d5a72be6",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-03-25T15:25:32Z",
       "side": 1,
       "message": "remove  @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86ef17f3_ada6a9c9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "18b08e50_d5a72be6",
       "range": {
         "startLine": 52,
         "startChar": 4,
@@ -70,6 +118,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f2937aa_5503f297",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bfda5ad2_889969c0",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b38ce0a4_494a8531",
@@ -87,6 +159,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fcfd680_e872c533",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b38ce0a4_494a8531",
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4de244c5_d95ba6ce",
@@ -100,6 +190,30 @@
       "writtenOn": "2026-03-25T15:25:32Z",
       "side": 1,
       "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b6da769_62483fef",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4de244c5_d95ba6ce",
       "range": {
         "startLine": 45,
         "startChar": 4,
@@ -133,6 +247,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b28e8926_5c7499db",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e3c110e4_d59731b7",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c44882d_f032f3c9",
@@ -146,6 +284,30 @@
       "writtenOn": "2026-03-25T15:25:32Z",
       "side": 1,
       "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 47,
+        "startChar": 3,
+        "endLine": 47,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "214f1604_d0a2b7dd",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3c44882d_f032f3c9",
       "range": {
         "startLine": 47,
         "startChar": 3,
@@ -179,6 +341,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8c85428_e23568e8",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "be58cef5_06fc7336",
+      "range": {
+        "startLine": 50,
+        "startChar": 3,
+        "endLine": 50,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "287bbd29_bc1b025a",
@@ -202,6 +388,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "625fda05_d6c761a6",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "287bbd29_bc1b025a",
+      "range": {
+        "startLine": 53,
+        "startChar": 3,
+        "endLine": 53,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f994a83_32420b74",
@@ -215,6 +425,30 @@
       "writtenOn": "2026-03-25T15:25:32Z",
       "side": 1,
       "message": "remove @NotNull, it not supposed be provided by the user",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 12
+      },
+      "revId": "e6da263ce76d2ab3a506bd13f10a7e577bdd781b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d663385b_55d4773f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T09:26:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7f994a83_32420b74",
       "range": {
         "startLine": 56,
         "startChar": 4,
