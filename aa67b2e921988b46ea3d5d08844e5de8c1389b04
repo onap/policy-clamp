@@ -18,6 +18,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df4a3164_43c9aec5",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T13:51:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "294f7162_edd32bac",
+      "revId": "aa67b2e921988b46ea3d5d08844e5de8c1389b04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "614952ec_93b7a7b3",
@@ -31,6 +49,30 @@
       "writtenOn": "2026-03-26T10:31:58Z",
       "side": 1,
       "message": "remove @NotNull",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 12
+      },
+      "revId": "aa67b2e921988b46ea3d5d08844e5de8c1389b04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd7832a9_efde821c",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionElement.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-26T13:51:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "614952ec_93b7a7b3",
       "range": {
         "startLine": 47,
         "startChar": 4,
