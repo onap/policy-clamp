@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bb4ccc3_349c5907",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/comm/ParticipantMessageListener.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-26T11:21:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38e087bd_2ce14658",
+      "range": {
+        "startLine": 65,
+        "startChar": 8,
+        "endLine": 65,
+        "endChar": 107
+      },
+      "revId": "8abf96ec3eb68f00ed5bbcaa406ceffe4f0f7c10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bbde6a4d_5950c8bd",
@@ -70,6 +94,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec69413b_b246f63b",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/main/rest/ActuatorControllerTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-26T11:21:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f2ea638_0ea56983",
+      "range": {
+        "startLine": 45,
+        "startChar": 15,
+        "endLine": 45,
+        "endChar": 23
+      },
+      "revId": "8abf96ec3eb68f00ed5bbcaa406ceffe4f0f7c10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2f1bf4a_fafaad9f",
@@ -93,6 +141,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad7c4bb1_f153e772",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/supervision/comm/SupervisionMessagesIntegrationTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-26T11:21:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2f1bf4a_fafaad9f",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 40
+      },
+      "revId": "8abf96ec3eb68f00ed5bbcaa406ceffe4f0f7c10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d169caa2_03e30db5",
@@ -106,6 +178,30 @@
       "writtenOn": "2026-03-24T19:22:56Z",
       "side": 1,
       "message": "Should use ${runtime.topics.syncTopic}",
+      "range": {
+        "startLine": 64,
+        "startChar": 28,
+        "endLine": 64,
+        "endChar": 43
+      },
+      "revId": "8abf96ec3eb68f00ed5bbcaa406ceffe4f0f7c10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75303509_514fff70",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/supervision/comm/SupervisionMessagesIntegrationTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-26T11:21:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d169caa2_03e30db5",
       "range": {
         "startLine": 64,
         "startChar": 28,
