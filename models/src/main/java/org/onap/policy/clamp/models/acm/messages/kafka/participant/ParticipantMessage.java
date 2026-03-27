@@ -33,14 +33,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Class to represent the base class for various messages that will be exchanged between the ACM runtime and
+ * Class to represent the base class for various request messages that will be exchanged between the ACM runtime and
  * participants.
  */
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public abstract class ParticipantMessage {
+public abstract class ParticipantMessage implements ParticipantKafkaMessage {
     @Setter(AccessLevel.NONE)
     private ParticipantMessageType messageType;
 
@@ -81,24 +81,6 @@ public abstract class ParticipantMessage {
      */
     protected ParticipantMessage(final ParticipantMessageType messageType) {
         this.messageType = messageType;
-    }
-
-    /**
-     * Constructs the object, making a deep copy. Does <i>not</i> copy the request id or the time stamp.
-     *
-     * @param source source from which to copy
-     */
-    protected ParticipantMessage(final ParticipantMessage source) {
-        this.messageId = source.messageId;
-        this.timestamp = source.timestamp;
-        this.messageType = source.messageType;
-        this.participantId = source.participantId;
-        this.replicaId = source.replicaId;
-        this.automationCompositionId = source.automationCompositionId;
-        this.compositionId = source.compositionId;
-        this.revisionIdComposition = source.revisionIdComposition;
-        this.revisionIdInstance = source.revisionIdInstance;
-        this.participantIdList = new HashSet<>(source.participantIdList);
     }
 
     /**

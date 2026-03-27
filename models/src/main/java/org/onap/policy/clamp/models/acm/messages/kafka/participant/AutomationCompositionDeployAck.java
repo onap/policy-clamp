@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,10 @@ package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
-import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent the AUTOMATION_COMPOSITION_ACK message that a participant sends
@@ -56,22 +54,8 @@ public class AutomationCompositionDeployAck extends ParticipantAckMessage {
 
     /**
      * Constructor for instantiating ParticipantRegisterAck class with message name.
-     *
      */
     public AutomationCompositionDeployAck(final ParticipantMessageType messageType) {
         super(messageType);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public AutomationCompositionDeployAck(final AutomationCompositionDeployAck source) {
-        super(source);
-        this.automationCompositionId = source.automationCompositionId;
-        this.stage = source.stage;
-        this.automationCompositionResultMap =
-            PfUtils.mapMap(source.automationCompositionResultMap, UnaryOperator.identity());
     }
 }

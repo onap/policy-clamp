@@ -302,7 +302,7 @@ class ParticipantHandlerTest {
             mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class),
             mock(ParticipantMessagePublisher.class), cacheProvider, msgExecutor);
 
-        var participantAckMsg = new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
+        var participantAckMsg = new ParticipantRegisterAck();
         assertTrue(participantHandler.appliesTo(participantAckMsg));
 
         var participantMsg = new ParticipantStatus();
