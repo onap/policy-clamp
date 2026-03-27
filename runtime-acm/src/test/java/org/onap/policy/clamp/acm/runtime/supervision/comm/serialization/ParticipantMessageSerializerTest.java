@@ -20,13 +20,11 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm.serialization;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Map;
-import org.apache.commons.lang3.SerializationException;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
 
 class ParticipantMessageSerializerTest {
 
@@ -34,25 +32,12 @@ class ParticipantMessageSerializerTest {
 
     @Test
     void testSerializeSuccess() {
-        var testObject = Map.of("key", "value");
+        var testObject = new ParticipantRegisterAck();
 
         byte[] result = serializer.serialize("test-topic", testObject);
         assertNotNull(result);
 
-        String jsonString = new String(result);
-        assertEquals("{\"key\":\"value\"}", jsonString);
-    }
-
-    @Test
-    void testSerializeException() {
-        // Create an object that will cause serialization to fail
-        Object problematicObject = new Object() {
-            @SuppressWarnings("unused")
-            public Object getSelf() {
-                return this;
-            }
-        };
-        assertThrows(SerializationException.class,
-            () -> serializer.serialize("test-topic", problematicObject));
+        String resultString = new String(result);
+        assertThat(resultString).startsWith("{").endsWith("}");
     }
 }

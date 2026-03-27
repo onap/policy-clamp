@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.models.base.PfUtils;
 
 @Getter
 @Setter
@@ -43,17 +42,5 @@ public class AutomationCompositionPrepare extends ParticipantMessage {
      */
     public AutomationCompositionPrepare() {
         super(ParticipantMessageType.AUTOMATION_COMPOSITION_PREPARE);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public AutomationCompositionPrepare(AutomationCompositionPrepare source) {
-        super(source);
-        this.preDeploy = source.preDeploy;
-        this.stage = source.stage;
-        this.participantList = PfUtils.mapList(source.participantList, ParticipantDeploy::new);
     }
 }

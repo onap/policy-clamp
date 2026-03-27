@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent the AUTOMATION_COMPOSITION_DEPLOY message that the automation composition runtime sends to a
@@ -50,17 +49,5 @@ public class AutomationCompositionDeploy extends ParticipantMessage {
      */
     public AutomationCompositionDeploy() {
         super(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public AutomationCompositionDeploy(AutomationCompositionDeploy source) {
-        super(source);
-        this.startPhase = source.startPhase;
-        this.firstStartPhase = source.firstStartPhase;
-        this.participantUpdatesList = PfUtils.mapList(source.participantUpdatesList, ParticipantDeploy::new);
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,36 +21,14 @@
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializable;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 
 class ParticipantAckMessageTest {
-
-    @Test
-    void testCopyConstructor() {
-        assertThatThrownBy(() -> new ParticipantAckMessage((ParticipantAckMessage) null))
-                .isInstanceOf(NullPointerException.class);
-
-        // verify with null values
-        var message = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
-        var newmsg = new ParticipantAckMessage(message);
-        newmsg.setResponseTo(message.getResponseTo());
-        assertEquals(message.toString(), newmsg.toString());
-
-        // verify with all values
-        message = makeMessage();
-        newmsg = new ParticipantAckMessage(message);
-        newmsg.setResponseTo(message.getResponseTo());
-        assertEquals(message.toString(), newmsg.toString());
-
-        assertSerializable(message, ParticipantAckMessage.class);
-    }
 
     @Test
     void testAppliesTo_NullParticipantId() {
@@ -79,7 +57,7 @@ class ParticipantAckMessageTest {
     }
 
     private ParticipantAckMessage makeMessage() {
-        var msg = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK);
+        var msg = new ParticipantDeregisterAck();
 
         msg.setParticipantId(CommonTestData.getParticipantId());
         msg.setMessage("Successfull Ack");

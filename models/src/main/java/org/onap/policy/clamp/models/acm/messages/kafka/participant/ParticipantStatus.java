@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent the PARTICIPANT_STATUS message that all the participants send to the ACM runtime.
@@ -56,21 +55,5 @@ public class ParticipantStatus extends ParticipantMessage {
 
     public ParticipantStatus() {
         super(ParticipantMessageType.PARTICIPANT_STATUS);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public ParticipantStatus(final ParticipantStatus source) {
-        super(source);
-
-        this.state = source.state;
-        this.participantDefinitionUpdates =
-            PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
-        this.automationCompositionInfoList =
-            PfUtils.mapList(source.automationCompositionInfoList, AutomationCompositionInfo::new);
-        this.participantSupportedElementType = source.getParticipantSupportedElementType();
     }
 }

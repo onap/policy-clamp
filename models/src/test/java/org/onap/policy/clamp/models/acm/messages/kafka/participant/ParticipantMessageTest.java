@@ -21,10 +21,8 @@
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageUtils.assertSerializable;
 
 import java.time.Instant;
 import java.util.Set;
@@ -33,28 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 
 class ParticipantMessageTest {
-
-    @Test
-    void testCopyConstructor() {
-        assertThatThrownBy(() -> new TestParticipantMessage(null))
-                .isInstanceOf(NullPointerException.class);
-
-        // verify with null values
-        var message = new TestParticipantMessage();
-        var newmsg = new TestParticipantMessage(message);
-        newmsg.setMessageId(message.getMessageId());
-        newmsg.setTimestamp(message.getTimestamp());
-        assertEquals(message.toString(), newmsg.toString());
-
-        // verify with all values
-        message = makeMessage();
-        newmsg = new TestParticipantMessage(message);
-        newmsg.setMessageId(message.getMessageId());
-        newmsg.setTimestamp(message.getTimestamp());
-        assertEquals(message.toString(), newmsg.toString());
-
-        assertSerializable(message, TestParticipantMessage.class);
-    }
 
     @Test
     void testAppliesTo_NullParticipantId() {
@@ -112,10 +88,6 @@ class ParticipantMessageTest {
     private static class TestParticipantMessage extends ParticipantMessage {
         public TestParticipantMessage() {
             super(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
-        }
-
-        public TestParticipantMessage(ParticipantMessage source) {
-            super(source);
         }
     }
 }

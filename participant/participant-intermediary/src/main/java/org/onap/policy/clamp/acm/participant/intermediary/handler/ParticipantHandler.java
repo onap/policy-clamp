@@ -35,9 +35,9 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
@@ -220,17 +220,7 @@ public class ParticipantHandler {
      * @param participantMsg the message to check
      * @return true if it applies, false otherwise
      */
-    public boolean appliesTo(ParticipantMessage participantMsg) {
-        return participantMsg.appliesTo(cacheProvider.getParticipantId(), cacheProvider.getReplicaId());
-    }
-
-    /**
-     * Check if a participant message applies to this participant handler.
-     *
-     * @param participantMsg the message to check
-     * @return true if it applies, false otherwise
-     */
-    public boolean appliesTo(ParticipantAckMessage participantMsg) {
+    public boolean appliesTo(ParticipantKafkaMessage participantMsg) {
         return participantMsg.appliesTo(cacheProvider.getParticipantId(), cacheProvider.getReplicaId());
     }
 

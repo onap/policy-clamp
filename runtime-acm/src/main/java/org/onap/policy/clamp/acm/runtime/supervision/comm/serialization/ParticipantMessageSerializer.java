@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.onap.policy.common.utils.coder.MapperFactory;
 
-public class ParticipantMessageSerializer implements Serializer<Object> {
+public class ParticipantMessageSerializer implements Serializer<ParticipantKafkaMessage> {
 
     private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @Override
-    public byte[] serialize(final String topic, final Object object) {
+    public byte[] serialize(final String topic, final ParticipantKafkaMessage object) {
         try {
             return MAPPER.writeValueAsString(object).getBytes();
         } catch (final JsonProcessingException e) {

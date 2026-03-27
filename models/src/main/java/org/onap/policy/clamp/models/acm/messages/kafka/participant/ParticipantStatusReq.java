@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2024 Nordix Foundation.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,5 @@ public class ParticipantStatusReq extends ParticipantMessage {
      */
     public ParticipantStatusReq() {
         super(ParticipantMessageType.PARTICIPANT_STATUS_REQ);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public ParticipantStatusReq(final ParticipantStatusReq source) {
-        super(source);
     }
 }

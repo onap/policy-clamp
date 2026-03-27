@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent the PROPERTIES_UPDATE message that the ACM runtime sends to a participant.
@@ -48,15 +47,5 @@ public class PropertiesUpdate extends ParticipantMessage {
      */
     public PropertiesUpdate() {
         super(ParticipantMessageType.PROPERTIES_UPDATE);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public PropertiesUpdate(PropertiesUpdate source) {
-        super(source);
-        this.participantUpdatesList = PfUtils.mapList(source.participantUpdatesList, ParticipantDeploy::new);
     }
 }

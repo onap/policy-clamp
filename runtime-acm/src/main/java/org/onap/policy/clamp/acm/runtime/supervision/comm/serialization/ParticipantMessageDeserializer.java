@@ -31,6 +31,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
@@ -43,12 +44,12 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSy
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.common.utils.coder.MapperFactory;
 
-public class ParticipantMessageDeserializer implements Deserializer<Object> {
+public class ParticipantMessageDeserializer implements Deserializer<ParticipantKafkaMessage> {
 
     private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @Override
-    public Object deserialize(final String topic, final byte[] data) {
+    public ParticipantKafkaMessage deserialize(final String topic, final byte[] data) {
         try {
             // decode from JSON into a standard object
             var jsonNode = MAPPER.readValue(new String(data), JsonNode.class);
@@ -65,7 +66,8 @@ public class ParticipantMessageDeserializer implements Deserializer<Object> {
         }
     }
 
-    private static Class<?> resolveClass(final ParticipantMessageType participantMessageType) {
+    private static Class<? extends ParticipantKafkaMessage> resolveClass(
+            final ParticipantMessageType participantMessageType) {
         return switch (participantMessageType) {
             case PARTICIPANT_STATUS -> ParticipantStatus.class;
             case PARTICIPANT_STATE_CHANGE ->
