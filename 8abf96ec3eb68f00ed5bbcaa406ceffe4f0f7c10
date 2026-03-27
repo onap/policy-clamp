@@ -71,6 +71,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb76e816_405b9d86",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/config/TestOpenTelemetry.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-27T15:10:08Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bbde6a4d_5950c8bd",
+      "range": {
+        "startLine": 37,
+        "startChar": 6,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "8abf96ec3eb68f00ed5bbcaa406ceffe4f0f7c10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f2ea638_0ea56983",

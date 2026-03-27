@@ -22,6 +22,30 @@
       },
       "revId": "4453e862c37e0548efc8262cabefe256c2b1165d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f51bfc0b_49d1e10f",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/liquibase/HibernateValidationTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-27T15:10:08Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "507eecba_5d471f73",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 5
+      },
+      "revId": "4453e862c37e0548efc8262cabefe256c2b1165d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
