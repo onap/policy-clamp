@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ParticipantAckMessage {
+public abstract class ParticipantAckMessage implements ParticipantKafkaMessage {
 
     // The responseTo field should match the original request id in the request.
     private UUID responseTo;
@@ -71,25 +71,8 @@ public class ParticipantAckMessage {
      *
      * @param messageType the message type
      */
-    public ParticipantAckMessage(final ParticipantMessageType messageType) {
+    protected ParticipantAckMessage(final ParticipantMessageType messageType) {
         this.messageType = messageType;
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public ParticipantAckMessage(ParticipantAckMessage source) {
-        this.responseTo = source.responseTo;
-        this.result = source.result;
-        this.stateChangeResult = source.stateChangeResult;
-        this.message = source.message;
-        this.messageType = source.messageType;
-        this.compositionId = source.compositionId;
-        this.participantId = source.participantId;
-        this.replicaId = source.replicaId;
-        this.state = source.state;
     }
 
     /**

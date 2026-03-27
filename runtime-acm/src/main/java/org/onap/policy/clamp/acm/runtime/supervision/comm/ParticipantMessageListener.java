@@ -28,7 +28,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandl
 import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
@@ -124,16 +124,12 @@ public class ParticipantMessageListener {
     }
 
     /**
-     * Handle any unhandled events.
-     * @param object the unhandled event
+     * Log any unhandled events.
+     * @param participantKafkaMessage the unhandled message
      */
     @KafkaHandler(isDefault = true)
-    public void onUnhandledEvent(final Object object) {
-        if (object instanceof ParticipantMessage participantMessage) {
-            log.info("discarding event of type {}", participantMessage.getMessageType());
-        } else {
-            log.warn("received unknown message type: {}", object.getClass().getName());
-        }
+    public void onUnhandledEvent(final ParticipantKafkaMessage participantKafkaMessage) {
+        log.info("discarding event of type {}", participantKafkaMessage.getMessageType());
     }
 
     private void logEvent(final String message) {
