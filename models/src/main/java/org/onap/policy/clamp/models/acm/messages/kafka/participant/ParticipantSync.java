@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.models.base.PfUtils;
 
 @Getter
 @Setter
@@ -58,22 +57,5 @@ public class ParticipantSync extends ParticipantMessage {
      */
     public ParticipantSync() {
         super(ParticipantMessageType.PARTICIPANT_SYNC_MSG);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public ParticipantSync(ParticipantSync source) {
-        super(source);
-        this.state = source.state;
-        this.participantDefinitionUpdates =
-                PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
-        this.automationcompositionList = PfUtils.mapList(source.automationcompositionList, ParticipantRestartAc::new);
-        this.excludeReplicas = new HashSet<>(source.excludeReplicas);
-        this.restarting = source.restarting;
-        this.delete = source.delete;
-        this.stateChangeResult = source.getStateChangeResult();
     }
 }

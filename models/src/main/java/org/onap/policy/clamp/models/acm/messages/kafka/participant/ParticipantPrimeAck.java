@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021--2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -43,14 +43,5 @@ public class ParticipantPrimeAck extends ParticipantAckMessage {
      */
     public ParticipantPrimeAck() {
         super(ParticipantMessageType.PARTICIPANT_PRIME_ACK);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public ParticipantPrimeAck(final ParticipantPrimeAck source) {
-        super(source);
     }
 }
