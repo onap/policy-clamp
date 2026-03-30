@@ -21,11 +21,9 @@
 
 package org.onap.policy.common.utils.coder;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,43 +42,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class StandardCoder implements Coder {
 
-    private static final ObjectMapper MAPPER = createMapper();
-
-    /**
-     *  Create new Mapper.
-     *
-     * @return a new Mapper
-     */
-    public static ObjectMapper createMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        // Configure to handle empty beans (like test classes with no getters/setters)
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        // Configure to ignore unknown properties (similar to Gson behavior)
-        mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // Configure to handle null values more gracefully
-        mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-        // Configure to handle circular references - disable self-reference detection entirely
-        mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
-        // Don't write self references as null, just ignore them
-        mapper.configure(SerializationFeature.WRITE_SELF_REFERENCES_AS_NULL, false);
-        // Ignore null fields during serialization
-        mapper.setDefaultPropertyInclusion(
-                JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL));
-        // Register modules for Java 8 time support (JSR310)
-        mapper.findAndRegisterModules();
-
-        return mapper;
-    }
-
-    protected final ObjectMapper objectMapper;
-
-    public StandardCoder() {
-        this(MAPPER);
-    }
-
-    protected StandardCoder(ObjectMapper mapper) {
-        this.objectMapper = mapper;
-    }
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @Override
     public <S, T> T convert(S source, Class<T> clazz) throws CoderException {
@@ -97,7 +59,7 @@ public class StandardCoder implements Coder {
             return decode((String) source, clazz);
         }
         try {
-            var node = objectMapper.valueToTree(source);
+            var node = MAPPER.valueToTree(source);
             return fromJson(node, clazz);
         } catch (Exception e) {
             throw new CoderException(e);
@@ -183,7 +145,7 @@ public class StandardCoder implements Coder {
             throw new CoderException("Cannot serialize Class objects");
         }
         try {
-            return new StandardCoderObject(objectMapper.valueToTree(object));
+            return new StandardCoderObject(MAPPER.valueToTree(object));
         } catch (IllegalArgumentException e) {
             throw new CoderException(e);
         }
@@ -195,7 +157,7 @@ public class StandardCoder implements Coder {
             throw new CoderException("null argument");
         }
         try {
-            return objectMapper.treeToValue(sco.getData(), clazz);
+            return MAPPER.treeToValue(sco.getData(), clazz);
         } catch (Exception e) {
             throw new CoderException(e);
         }
@@ -250,7 +212,7 @@ public class StandardCoder implements Coder {
      * @return a json string representing the object
      */
     protected String toJson(Object object) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(object);
+        return MAPPER.writeValueAsString(object);
     }
 
     /**
@@ -260,7 +222,7 @@ public class StandardCoder implements Coder {
      * @param object object to be encoded
      */
     protected void toJson(Writer target, Object object) throws IOException {
-        objectMapper.writeValue(target, object);
+        MAPPER.writeValue(target, object);
     }
 
     /**
@@ -272,7 +234,7 @@ public class StandardCoder implements Coder {
      */
     protected <T> T fromJson(JsonNode node, Class<T> clazz) throws CoderException {
         try {
-            return objectMapper.treeToValue(node, clazz);
+            return MAPPER.treeToValue(node, clazz);
         } catch (Exception e) {
             throw new CoderException(e);
         }
@@ -286,7 +248,7 @@ public class StandardCoder implements Coder {
      * @return the object represented by the given json string
      */
     protected <T> T fromJson(String json, Class<T> clazz) throws IOException {
-        return objectMapper.readValue(json, clazz);
+        return MAPPER.readValue(json, clazz);
     }
 
     /**
@@ -297,6 +259,6 @@ public class StandardCoder implements Coder {
      * @return the object represented by the given json string
      */
     protected <T> T fromJson(Reader source, Class<T> clazz) throws IOException {
-        return objectMapper.readValue(source, clazz);
+        return MAPPER.readValue(source, clazz);
     }
 }

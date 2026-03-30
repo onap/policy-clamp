@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm.serialization;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
@@ -39,28 +41,24 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.StandardCoderObject;
+import org.onap.policy.common.utils.coder.MapperFactory;
 
 public class ParticipantMessageDeserializer implements Deserializer<Object> {
 
-    private static final Coder coder = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @Override
     public Object deserialize(final String topic, final byte[] data) {
         try {
             // decode from JSON into a standard object
-            final String jsonString = new String(data);
-            final StandardCoderObject sco = coder.decode(jsonString, StandardCoderObject.class);
-
+            var jsonNode = MAPPER.readValue(new String(data), JsonNode.class);
             // extract the message type
-            final String messageType = sco.getString("messageType");
-            final ParticipantMessageType participantMessageType = ParticipantMessageType.valueOf(messageType);
-            final Class<?> targetClass = resolveClass(participantMessageType);
+            final var messageType = jsonNode.get("messageType").asText();
+            final var participantMessageType = ParticipantMessageType.valueOf(messageType);
+            final var targetClass = resolveClass(participantMessageType);
 
             // deserialize into target class
-            return coder.fromStandard(sco, targetClass);
+            return MAPPER.treeToValue(jsonNode, targetClass);
 
         } catch (final Exception e) {
             throw new SerializationException("Failed to deserialize JSON", e);
