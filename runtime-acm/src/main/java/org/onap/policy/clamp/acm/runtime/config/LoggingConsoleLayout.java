@@ -49,7 +49,7 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
 
     private final Map<String, String> staticParameterMap = new HashMap<>();
 
-    private final ObjectMapper objectMapper = MapperFactory.createJsonMapper();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DEFAULT_FORMAT);
 
@@ -109,7 +109,7 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
 
     protected String getJson(Map<String, Object> map) {
         try {
-            return objectMapper.writeValueAsString(map) + CoreConstants.LINE_SEPARATOR;
+            return MAPPER.writeValueAsString(map) + CoreConstants.LINE_SEPARATOR;
         } catch (JsonProcessingException e) {
             return map.get("message").toString();
         }
