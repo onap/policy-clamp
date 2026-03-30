@@ -20,20 +20,21 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm.serialization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 
 public class ParticipantMessageSerializer implements Serializer<Object> {
 
-    private static final Coder coder = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @Override
     public byte[] serialize(final String topic, final Object object) {
         try {
-            return coder.encode(object).getBytes();
-        } catch (final Exception e) {
+            return MAPPER.writeValueAsString(object).getBytes();
+        } catch (final JsonProcessingException e) {
             throw new SerializationException("Failed to serialize to JSON", e);
         }
     }
