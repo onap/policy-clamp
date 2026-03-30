@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52e7c419_9c28466e",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-30T09:27:38Z",
+      "side": 1,
+      "message": "unused import",
+      "revId": "45bf0a451cf899fc7cbcfe29f0bccbccd1e7ac2a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "444b30b4_3366e310",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-03-30T09:27:38Z",
+      "side": 1,
+      "message": "unused import",
+      "revId": "45bf0a451cf899fc7cbcfe29f0bccbccd1e7ac2a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
