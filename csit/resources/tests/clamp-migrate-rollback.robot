@@ -195,6 +195,28 @@ ReviewAutomationCompositionMigrationFrom
     ChangeStatusAutomationComposition  ${compositionFromId}   ${instanceMigrationId}  ${postjson}
     Wait Until Keyword Succeeds    10 min    5 sec    VerifySubStatus  ${compositionFromId}  ${instanceMigrationId}
 
+FailAutomationCompositionUpdate
+    [Documentation]  Fail update of an automation composition.
+    SetParticipantSimFail  ${HTTP_PARTICIPANT_SIM1_IP}
+    ${auth}=    ClampAuth
+    ${postyaml}=  Get file  ${CURDIR}/data/ac-instance-update.yaml
+    ${updatedpostyaml}=   Replace String     ${postyaml}     COMPOSITIONIDPLACEHOLDER       ${compositionFromId}
+    ${updatedpostyaml}=   Replace String     ${updatedpostyaml}     INSTACEIDPLACEHOLDER       ${instanceMigrationId}
+    ${updatedpostyaml}=   Replace String     ${updatedpostyaml}     TEXTPLACEHOLDER       MyTextUpdated
+    ${resp}=   MakeYamlPostRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  /onap/policy/clamp/acm/v2/compositions/${compositionFromId}/instances  ${updatedpostyaml}  ${auth}
+    Should Be Equal As Strings    ${resp.status_code}     200
+    Wait Until Keyword Succeeds    2 min    5 sec    VerifyStateChangeResult  ${compositionFromId}  ${instanceMigrationId}  FAILED
+
+AutomationCompositionUpdateRollback
+    [Documentation]  Rollback automation composition after update failure.
+    SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM1_IP}
+    ${auth}=    ClampAuth
+    ${resp}=   MakePostRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  /onap/policy/clamp/acm/v2/compositions/${compositionFromId}/instances/${instanceMigrationId}/rollback  ${auth}
+    Should Be Equal As Strings    ${resp.status_code}     202
+    Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
+    VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextInit
+    VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
+
 AutomationCompositionUpdate
     [Documentation]  Update of an automation composition.
     ${auth}=    ClampAuth
