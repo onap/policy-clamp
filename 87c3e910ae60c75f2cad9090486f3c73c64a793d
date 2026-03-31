@@ -22,6 +22,30 @@
       },
       "revId": "87c3e910ae60c75f2cad9090486f3c73c64a793d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad7f2bbe_9676fba9",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-03-31T10:21:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e49c8f6f_a2f0c53b",
+      "range": {
+        "startLine": 132,
+        "startChar": 16,
+        "endLine": 132,
+        "endChar": 76
+      },
+      "revId": "87c3e910ae60c75f2cad9090486f3c73c64a793d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
