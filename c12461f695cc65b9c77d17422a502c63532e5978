@@ -22,6 +22,30 @@
       },
       "revId": "c12461f695cc65b9c77d17422a502c63532e5978",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a2e53ee_8c4b64cf",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-03-31T11:53:21Z",
+      "side": 1,
+      "message": "Do you want to handle this in this review or later?",
+      "parentUuid": "981f011c_4d4e3af6",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 236,
+        "endChar": 5
+      },
+      "revId": "c12461f695cc65b9c77d17422a502c63532e5978",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
