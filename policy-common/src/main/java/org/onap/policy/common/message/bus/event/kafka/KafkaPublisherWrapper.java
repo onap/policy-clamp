@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024-2025 OpenInfra Foundation Europe.
+ * Copyright (C) 2024-2026 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@
 
 package org.onap.policy.common.message.bus.event.kafka;
 
-import io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingProducerInterceptor;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.instrumentation.kafkaclients.v2_6.KafkaTelemetry;
 import java.util.Properties;
 import java.util.UUID;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -75,10 +76,9 @@ public class KafkaPublisherWrapper implements BusPublisher {
         }
 
         if (busTopicParams.isAllowTracing()) {
-            kafkaProps.setProperty(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
-                TracingProducerInterceptor.class.getName());
+            KafkaTelemetry telemetry = KafkaTelemetry.create(GlobalOpenTelemetry.get());
+            kafkaProps.putAll(telemetry.producerInterceptorConfigProperties());
         }
-
         producer = createProducer(kafkaProps);
     }
 

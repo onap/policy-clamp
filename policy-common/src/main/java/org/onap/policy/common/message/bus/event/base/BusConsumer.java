@@ -3,7 +3,7 @@
  * Copyright (C) 2017-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * Modifications Copyright (C) 2020,2023 Bell Canada. All rights reserved.
- * Modifications Copyright (C) 2022-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2022-2026 OpenInfra Foundation Europe.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ package org.onap.policy.common.message.bus.event.base;
 
 import static org.onap.policy.common.message.bus.properties.MessageBusProperties.DEFAULT_TIMEOUT_MS_FETCH;
 
+import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.api.trace.TraceFlags;
 import io.opentelemetry.api.trace.TraceState;
 import io.opentelemetry.context.Context;
-import io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingConsumerInterceptor;
+import io.opentelemetry.instrumentation.kafkaclients.v2_6.KafkaTelemetry;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -187,8 +188,8 @@ public interface BusConsumer {
             }
             if (busTopicParams.isAllowTracing()) {
                 this.allowTracing = true;
-                kafkaProps.setProperty(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG,
-                    TracingConsumerInterceptor.class.getName());
+                KafkaTelemetry telemetry = KafkaTelemetry.create(GlobalOpenTelemetry.get());
+                kafkaProps.putAll(telemetry.consumerInterceptorConfigProperties());
             }
 
             consumer = new KafkaConsumer<>(kafkaProps);
