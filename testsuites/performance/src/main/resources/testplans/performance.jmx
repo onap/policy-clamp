@@ -46,7 +46,7 @@
           <elementProp name="HTTP_PATH" elementType="Argument">
             <stringProp name="Argument.name">HTTP_PATH</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
-            <stringProp name="Argument.value">/onap/policyparticipant/health</stringProp>
+            <stringProp name="Argument.value">/onap/policy/clamp/acm/policyparticipant/health</stringProp>
           </elementProp>
           <elementProp name="HTTP_AUTHORIZATION" elementType="Argument">
             <stringProp name="Argument.name">HTTP_AUTHORIZATION</stringProp>
