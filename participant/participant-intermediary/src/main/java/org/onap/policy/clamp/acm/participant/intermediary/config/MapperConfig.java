@@ -24,13 +24,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.onap.policy.common.utils.coder.MapperFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class MapperConfig {
 
-    @Bean
-    @Primary
+    @Bean("participantIntermediaryObjectMapper")
     public ObjectMapper objectMapper() {
         return MapperFactory.createJsonMapper();
     }
