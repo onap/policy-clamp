@@ -39,6 +39,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -170,7 +171,7 @@ class AcElementHandlerTest {
         automationCompositionElementHandler.update(compositionElement, instanceElement, instanceElement);
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 element.getId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Update not supported");
+                AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -186,7 +187,8 @@ class AcElementHandlerTest {
         automationCompositionElementHandler.lock(compositionElement, instanceElement);
 
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                element.getId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+                element.getId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR,
+                AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -202,7 +204,8 @@ class AcElementHandlerTest {
         automationCompositionElementHandler.unlock(compositionElement, instanceElement);
 
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                element.getId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
+                element.getId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR,
+                AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -218,7 +221,8 @@ class AcElementHandlerTest {
         automationCompositionElementHandler.delete(compositionElement, instanceElement);
 
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                element.getId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+                element.getId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR,
+                AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -231,7 +235,7 @@ class AcElementHandlerTest {
         var composition = new CompositionDto(compositionId, Map.of(), Map.of());
         automationCompositionElementHandler.prime(composition);
         verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
-                StateChangeResult.NO_ERROR, "Primed");
+                StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -244,7 +248,7 @@ class AcElementHandlerTest {
         var composition = new CompositionDto(compositionId, Map.of(), Map.of());
         automationCompositionElementHandler.deprime(composition);
         verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
-                StateChangeResult.NO_ERROR, "Deprimed");
+                StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -261,6 +265,7 @@ class AcElementHandlerTest {
                 instanceElement, instanceElement, 0);
 
         verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                element.getId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+                element.getId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
+                AcElementListenerV4.NOT_IMPLEMENTED);
     }
 }

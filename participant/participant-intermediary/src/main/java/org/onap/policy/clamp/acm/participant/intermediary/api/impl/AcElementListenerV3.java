@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,7 @@ public abstract class AcElementListenerV3 extends AcElementListenerV4
     public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Prepare completed");
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, NOT_IMPLEMENTED);
     }
 
     @Override

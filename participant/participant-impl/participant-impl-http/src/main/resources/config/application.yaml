@@ -16,6 +16,7 @@ security:
   enable-csrf: false
 participant:
   intermediaryParameters:
+    failUnsupportedOperation: false
     topics:
       operationTopic: policy-acruntime-participant
       syncTopic: acm-ppnt-sync

@@ -24,6 +24,7 @@ security:
 
 participant:
   intermediaryParameters:
+    failUnsupportedOperation: false
     topics:
       operationTopic: policy-acruntime-participant
       syncTopic: acm-ppnt-sync
