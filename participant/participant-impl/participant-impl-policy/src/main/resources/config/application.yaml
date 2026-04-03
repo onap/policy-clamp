@@ -32,6 +32,7 @@ participant:
     useHttps: false
     allowSelfSignedCerts: true
   intermediaryParameters:
+    failUnsupported: false
     topics:
       operationTopic: policy-acruntime-participant
       syncTopic: acm-ppnt-sync

@@ -378,4 +378,12 @@ class AcmUtilsTest {
         subMap2.put("test", "value2");
         assertNotEquals(subMap.get("test"), subMap2.get("test"));
     }
+
+    @Test
+    void testEqualMap() {
+        Map<String, Object> map1 = Map.of("test", "value");
+        Map<String, Object> map2 = Map.of("test", "value2");
+        assertFalse(AcmUtils.equalMap(map1, map2));
+        assertTrue(AcmUtils.equalMap(map1, map1));
+    }
 }
