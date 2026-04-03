@@ -49,7 +49,8 @@ class AcElementListenerV2Test {
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.lock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+            instanceElement.elementId(), null, LockState.LOCKED,
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -61,7 +62,8 @@ class AcElementListenerV2Test {
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.delete(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+            instanceElement.elementId(), DeployState.DELETED, null,
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -74,7 +76,7 @@ class AcElementListenerV2Test {
         acElementListenerV2.update(compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Update not supported");
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -86,7 +88,8 @@ class AcElementListenerV2Test {
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.unlock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
+            instanceElement.elementId(), null, LockState.UNLOCKED,
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -97,8 +100,8 @@ class AcElementListenerV2Test {
         var toscaConceptIdentifier = new ToscaConceptIdentifier();
         var composition = new CompositionDto(compositionId, Map.of(toscaConceptIdentifier, Map.of()), Map.of());
         acElementListenerV2.prime(composition);
-        verify(intermediaryApi)
-            .updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+        verify(intermediaryApi).updateCompositionState(compositionId,
+            AcTypeState.PRIMED, StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -110,7 +113,8 @@ class AcElementListenerV2Test {
         var composition = new CompositionDto(compositionId, Map.of(toscaConceptIdentifier, Map.of()), Map.of());
         acElementListenerV2.deprime(composition);
         verify(intermediaryApi)
-            .updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR, "Deprimed");
+            .updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -137,7 +141,7 @@ class AcElementListenerV2Test {
         acElementListenerV2.migrate(compositionElement, compositionElement, instanceElement, instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Migrated");
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -150,7 +154,7 @@ class AcElementListenerV2Test {
         acElementListenerV1.migratePrecheck(compositionElement, compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Migration Precheck completed");
+                StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -162,8 +166,8 @@ class AcElementListenerV2Test {
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.review(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.DEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Review completed");
+            instanceElement.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     @Test
@@ -175,8 +179,8 @@ class AcElementListenerV2Test {
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.prepare(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Prepare completed");
+            instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+            StateChangeResult.NO_ERROR, AcElementListenerV4.NOT_IMPLEMENTED);
     }
 
     private AcElementListenerV2 createAcElementListenerV2(ParticipantIntermediaryApi intermediaryApi) {

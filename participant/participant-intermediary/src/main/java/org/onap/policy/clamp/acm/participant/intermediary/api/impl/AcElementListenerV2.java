@@ -64,7 +64,6 @@ public abstract class AcElementListenerV2 extends AcElementListenerV3
     public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
                         InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate)
         throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
-            instanceElementMigrate.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+        sendDeployStatus(instanceElementMigrate, DeployState.DEPLOYED, StateChangeResult.NO_ERROR, NOT_IMPLEMENTED);
     }
 }

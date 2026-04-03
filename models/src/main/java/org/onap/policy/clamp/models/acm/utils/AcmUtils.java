@@ -35,6 +35,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -476,5 +477,17 @@ public final class AcmUtils {
     public static Map<String, Object> cloneMap(Map<String, Object> map) {
         var str = MAP_CONVERTER.convertToDatabaseColumn(map);
         return MAP_CONVERTER.convertToEntityAttribute(str);
+    }
+
+    /**
+     * Compare two Maps.
+     * @param map1 the first Map
+     * @param map2 the second Map
+     * @return true the first Map is equal to second Map
+     */
+    public static boolean equalMap(@NonNull Map<String, Object> map1, @NonNull Map<String, Object> map2) {
+        var str1 = MAP_CONVERTER.convertToDatabaseColumn(map1);
+        var str2 = MAP_CONVERTER.convertToDatabaseColumn(map2);
+        return str1.equals(str2);
     }
 }

@@ -25,6 +25,7 @@ a1pms:
 
 participant:
   intermediaryParameters:
+    failUnsupported: false
     topics:
       operationTopic: policy-acruntime-participant
       syncTopic: acm-ppnt-sync
