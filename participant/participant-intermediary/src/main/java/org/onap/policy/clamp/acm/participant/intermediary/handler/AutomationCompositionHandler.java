@@ -214,7 +214,8 @@ public class AutomationCompositionHandler {
             int stage, ParticipantDeploy participantDeploy) {
         var acElementList = automationComposition.getElements();
         var acElement = acElementList.get(element.getId());
-        if (acElement == null) {  // NEW element with existing participant
+        if (acElement == null) { // NOSONAR
+            // NEW element with existing participant
             var newElement = CacheProvider.createAutomationCompositionElement(element);
             newElement.setParticipantId(participantDeploy.getParticipantId());
             newElement.setDeployState(automationComposition.getDeployState());

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     private UUID revisionId = UUID.randomUUID();
 
     /**
-     * Copy contructor, does a deep copy.
+     * Copy constructor, does a deep copy.
      *
      * @param otherAutomationComposition the other element to copy from
      */
