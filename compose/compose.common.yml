@@ -34,6 +34,8 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/simparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -115,9 +117,9 @@ services:
       - ./metrics/dashboards:/var/lib/grafana/dashboards
     healthcheck:
       test: "wget -q -O - http://localhost:3000/api/health || exit 1"
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 6
+      retries: 10
 
 # messaging services:
   kafka:
