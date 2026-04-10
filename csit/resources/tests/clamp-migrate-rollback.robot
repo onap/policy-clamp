@@ -13,9 +13,7 @@ Resource    clamp-common.robot
 *** Test Cases ***
 CommissionAutomationComposition
     [Documentation]  Commission automation composition definition.
-    Run Keyword If    '${TEST_ENV}'=='k8s'    set Suite variable  ${compositionFile}  acelement-usecase.yaml
-
-    ...    ELSE    set Suite variable  ${compositionFile}  acelement-usecaseDocker.yaml
+    set Suite variable  ${compositionFile}  acelement-usecaseDocker.yaml
     ${postyaml}=  Get file  ${CURDIR}/data/${compositionFile}
     ${tmpCompositionId}=  MakeCommissionAcDefinition  ${postyaml}
     set Suite variable  ${compositionId}  ${tmpCompositionId}
@@ -60,9 +58,7 @@ PrimeACDefinitionTo
 
 DeleteUndeployedInstantiateAutomationComposition
     [Documentation]  Delete Instantiate automation composition that has never been deployed.
-    Run Keyword If    '${TEST_ENV}'=='k8s'    set Suite variable  ${instantiationfile}  AcK8s.json
-
-    ...    ELSE    set Suite variable  ${instantiationfile}  AcDocker.json
+    set Suite variable  ${instantiationfile}  AcDocker.json
     ${postjson}=  Get file  ${CURDIR}/data/${instantiationfile}
     ${tmpInstanceId}=  MakeJsonInstantiateAutomationComposition  ${compositionId}  ${postjson}
     DeleteAutomationComposition  ${compositionId}  ${tmpInstanceId}
@@ -70,9 +66,7 @@ DeleteUndeployedInstantiateAutomationComposition
 
 InstantiateAutomationComposition
     [Documentation]  Instantiate automation composition.
-    Run Keyword If    '${TEST_ENV}'=='k8s'    set Suite variable  ${instantiationfile}  AcK8s.json
-
-    ...    ELSE    set Suite variable  ${instantiationfile}  AcDocker.json
+    set Suite variable  ${instantiationfile}  AcDocker.json
     ${postjson}=  Get file  ${CURDIR}/data/${instantiationfile}
     ${tmpInstanceId}=  MakeJsonInstantiateAutomationComposition  ${compositionId}  ${postjson}
     Set Suite Variable  ${instanceId}  ${tmpInstanceId}
@@ -133,30 +127,6 @@ DeployAutomationComposition
     ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
     ChangeStatusAutomationComposition  ${compositionId}  ${instanceId}  ${postjson}
     Wait Until Keyword Succeeds    10 min    5 sec    VerifyDeployStatus  ${compositionId}  ${instanceId}  DEPLOYED
-
-QueryPolicies
-    [Documentation]    Verify the new policies deployed
-    ${auth}=    PolicyAdminAuth
-    Sleep  10s
-    Log    Creating session http://${POLICY_PAP_IP}
-    ${session}=    Create Session      policy  http://${POLICY_PAP_IP}   auth=${auth}
-    ${headers}=  Create Dictionary     Accept=application/json    Content-Type=application/json
-    ${resp}=   GET On Session     policy  /policy/pap/v1/policies/deployed     headers=${headers}
-    Log    Received response from policy-pap {resp.text}
-    Should Be Equal As Strings    ${resp.status_code}     200
-    Dictionary Should Contain Value  ${resp.json()[0]}  onap.policies.native.apex.ac.element
-
-QueryPolicyTypes
-    [Documentation]    Verify the new policy types created
-    ${auth}=    PolicyAdminAuth
-    Sleep  10s
-    Log    Creating session http://${POLICY_API_IP}:6969
-    ${session}=    Create Session      policy  http://${POLICY_API_IP}   auth=${auth}
-    ${headers}=  Create Dictionary     Accept=application/json    Content-Type=application/json
-    ${resp}=   GET On Session     policy  /policy/api/v1/policytypes     headers=${headers}
-    Log    Received response from policy-api ${resp.text}
-    Should Be Equal As Strings    ${resp.status_code}     200
-    List Should Contain Value  ${resp.json()['policy_types']}  onap.policies.native.Apex
 
 DeployAutomationCompositionMigration
     [Documentation]  Deploy automation composition.

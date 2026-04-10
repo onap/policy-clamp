@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2025  OpenInfra Foundation Europe. All rights reserved.
+# Copyright (C) 2025-2026  OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,56 @@ data_types:
       version:
         type: string
         required: true
+  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      restRequestId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a REST request to be sent to a REST endpoint
+      httpMethod:
+        type: string
+        required: true
+        constraints:
+          - valid_values:
+              - POST
+              - PUT
+              - GET
+              - DELETE
+        description: The REST method to use
+      path:
+        type: string
+        required: true
+        description: The path of the REST request relative to the base URL
+      body:
+        type: string
+        required: false
+        description: The body of the REST request for PUT and POST requests
+      expectedResponse:
+        type: integer
+        required: true
+        constraints: [ ]
+        description: THe expected HTTP status code for the REST request
+  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      configurationEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled
+          by the HTTP Automation Composition Element
+      restSequence:
+        type: list
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
+          type_version: 1.0.0
+        description: A sequence of REST commands to send to the REST endpoint
+      password:
+        type: string
+        metadata:
+          sensitive: true
 
 node_types:
   org.onap.policy.clamp.acm.Participant:
@@ -110,41 +160,52 @@ node_types:
         entry_schema:
           type: onap.datatypes.ToscaConceptIdentifier
         description: Specifies a list of automation composition element definitions that make up this automation composition definition
-  org.onap.policy.clamp.acm.PolicyAutomationCompositionElement:
+  org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
     version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
-      policy_type_id:
-        type: onap.datatypes.ToscaConceptIdentifier
+      baseUrl:
+        type: string
         required: true
-      policy_id:
-        type: onap.datatypes.ToscaConceptIdentifier
+        description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
+        metadata:
+          sensitive: true
+      httpHeaders:
+        type: map
         required: false
+        entry_schema:
+          type: string
+        description: HTTP headers to send on REST requests
+      configurationEntities:
+        type: map
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
+          type_version: 1.0.0
+        description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
 
 topology_template:
-  inputs:
-    acm_element_policy:
-      type: onap.datatypes.ToscaConceptIdentifier
-      description: The ID of the operational policy to use
-      default:
-        name: onap.policies.native.apex.ac.element
-        version: 1.0.0
   node_templates:
-    org.onap.policy.clamp.acm.PolicyParticipant:
-      version: 2.3.1
+    org.onap.policy.clamp.acm.HttpParticipant:
+      version: 2.3.4
       type: org.onap.policy.clamp.acm.Participant
       type_version: 1.0.1
-      description: Participant for Policy microservices
+      description: Participant for Http requests
       properties:
         provider: ONAP
-    onap.policy.clamp.ac.element.Policy_AutomationCompositionElement:
+    onap.policy.clamp.ac.element.Http_AutomationCompositionElement:
+      # Http config for AC Element.
       version: 1.2.3
-      type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
+      type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
       type_version: 1.0.0
-      description: Automation composition element for the operational policy for Performance Management Subscription Handling
+      description: Automation composition element for the http requests of AC Element Starter microservice
       properties:
-        provider: Ericsson
+        uninitializedToPassiveTimeout: 180
+        provider: ONAP
         startPhase: 0
+        stage:
+          prepare: [ 0 ]
+          migrate: [ 0 ]
 
     onap.policy.clamp.ac.element.AutomationCompositionDefinition:
       version: 1.2.3
@@ -154,5 +215,5 @@ topology_template:
       properties:
         provider: ONAP
         elements:
-          - name: onap.policy.clamp.ac.element.Policy_AutomationCompositionElement
+          - name: onap.policy.clamp.ac.element.Http_AutomationCompositionElement
             version: 1.2.3

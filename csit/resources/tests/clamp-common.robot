@@ -18,18 +18,6 @@ ExecuteQuery
     ${result}=    Run Process    ${executeQueryFile}    ${file}
     Should Be Equal As Strings    ${result.rc}     0
 
-VerifyHealthcheckApi
-    [Documentation]    Verify Healthcheck on policy-api
-    ${auth}=    PolicyAdminAuth
-    ${resp}=    MakeGetRequest  policy  ${POLICY_API_IP}  /policy/api/v1/health  ${auth}
-    Should Be Equal As Strings    ${resp.status_code}   200
-
-VerifyHealthcheckPap
-    [Documentation]    Verify Healthcheck on policy-pap
-    ${auth}=    PolicyAdminAuth
-    ${resp}=    MakeGetRequest  policy  ${POLICY_PAP_IP}  /policy/pap/v1/health  ${auth}
-    Should Be Equal As Strings    ${resp.status_code}     200
-
 VerifyParticipantsRegistered
     [Documentation]    Verify that all participants are registered
     ${auth}=    ClampAuth

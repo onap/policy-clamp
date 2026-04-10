@@ -17,19 +17,11 @@ HealthcheckAcm
     ${resp}=    MakeGetRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  onap/policy/clamp/acm/actuator/health  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
 
-HealthcheckParticipantSim
+HealthcheckParticipantHttp
     [Documentation]    Healthcheck on Participant Simulator
     ${auth}=    ParticipantAuth
-    ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/health  ${auth}
+    ${resp}=    MakeGetRequest  participant  ${POLICY_HTTP_PARTICIPANT}  /onap/policy/clamp/acm/httpparticipant/health  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
-
-HealthcheckApi
-    [Documentation]    Healthcheck on policy-api
-    Wait Until Keyword Succeeds    5 min    10 sec    VerifyHealthcheckApi
-
-HealthcheckPap
-    [Documentation]    Healthcheck on policy-pap
-    Wait Until Keyword Succeeds    5 min    10 sec    VerifyHealthcheckPap
 
 RegisterParticipants
     [Documentation]  Register Participants.

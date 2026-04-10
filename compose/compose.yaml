@@ -26,75 +26,6 @@ include:
 
 services:
 
-  policy-api:
-    image: ${CONTAINER_LOCATION}onap/policy-api:${POLICY_API_VERSION}
-    container_name: policy-api
-    hostname: policy-api
-    depends_on:
-      policy-db-migrator:
-        condition: service_completed_successfully
-    ports:
-      - ${API_PORT}:6969
-    environment:
-      JAVA_TOOL_OPTIONS: >-
-        -Dlogging.config=/opt/app/policy/api/etc/logback.xml
-      SPRING_PROFILES_ACTIVE: ${API_PROFILE:-default}
-      SPRING_CONFIG_LOCATION: /opt/app/policy/api/etc/apiParameters.yaml
-    volumes:
-      - ./config/api/apiParameters.yaml:/opt/app/policy/api/etc/apiParameters.yaml:ro
-      - ./config/api/logback.xml:/opt/app/policy/api/etc/logback.xml:ro
-    healthcheck:
-      test: "curl --fail --silent --user 'policyadmin:zb!XztG34' http://localhost:6969/policy/api/v1/health | grep -q UP || exit 1"
-      interval: 10s
-      timeout: 10s
-      retries: 12
-      start_period: 30s
-
-  policy-pap:
-    image: ${CONTAINER_LOCATION}onap/policy-pap:${POLICY_PAP_VERSION}
-    container_name: policy-pap
-    hostname: policy-pap
-    depends_on:
-      - policy-api
-      - kafka
-    ports:
-      - ${PAP_PORT}:6969
-    environment:
-      JAVA_TOOL_OPTIONS: >-
-        -Dlogging.config=/opt/app/policy/pap/etc/logback.xml
-      SPRING_PROFILES_ACTIVE: ${PAP_PROFILE:-default}
-      SPRING_CONFIG_LOCATION: /opt/app/policy/pap/etc/papParameters.yaml
-    volumes:
-      - ./config/pap/papParameters.yaml:/opt/app/policy/pap/etc/papParameters.yaml:ro
-      - ./config/pap/groups.json:/opt/app/policy/pap/etc/mounted/groups.json:ro
-      - ./config/pap/logback.xml:/opt/app/policy/pap/etc/logback.xml:ro
-    healthcheck:
-      test: "curl --fail --silent --user 'policyadmin:zb!XztG34' http://localhost:6969/policy/pap/v1/health | grep -q UP || exit 1"
-      interval: 10s
-      timeout: 10s
-      retries: 12
-      start_period: 30s
-
-  policy-apex-pdp:
-    image: ${CONTAINER_LOCATION}onap/policy-apex-pdp:${POLICY_APEX_PDP_VERSION}
-    container_name: policy-apex-pdp
-    hostname: policy-apex-pdp
-    depends_on:
-      - policy-pap
-    ports:
-      - ${APEX_PORT}:6969
-      - ${APEX_EVENTS_PORT}:23324
-    volumes:
-      - ./config/apex-pdp/OnapPfConfig.json:/opt/app/policy/apex-pdp/etc/onappf/config/OnapPfConfig.json:ro
-      - ./config/apex-pdp/logback.xml:/opt/app/policy/apex-pdp/etc/logback.xml:ro
-    entrypoint: /opt/app/policy/apex-pdp/bin/apexOnapPf.sh -c /opt/app/policy/apex-pdp/etc/onappf/config/OnapPfConfig.json
-    healthcheck:
-      test: "curl --fail --silent --user 'policyadmin:zb!XztG34' http://localhost:6969/policy/apex-pdp/v1/healthcheck | grep -q '\"healthy\":true' || exit 1"
-      interval: 10s
-      timeout: 10s
-      retries: 12
-      start_period: 30s
-
   policy-clamp-runtime-acm:
     image: ${CONTAINER_LOCATION}onap/policy-clamp-runtime-acm:${POLICY_CLAMP_VERSION}
     hostname: policy-clamp-runtime-acm
@@ -102,7 +33,7 @@ services:
       - postgres
       - kafka
       - jaeger
-      - policy-clamp-ac-pf-ppnt
+      - policy-clamp-ac-http-ppnt
       - policy-clamp-ac-sim-ppnt-1
       - policy-clamp-ac-sim-ppnt-2
       - policy-clamp-ac-sim-ppnt-3
@@ -125,6 +56,8 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
       JAVA_TOOL_OPTIONS: >-
         -Dcom.sun.management.jmxremote.rmi.port=9090
         -Dcom.sun.management.jmxremote=true
@@ -159,6 +92,8 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/httpparticipant/health/readiness | grep -q UP || exit 1"
@@ -185,6 +120,8 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/k8sparticipant/health/readiness | grep -q UP || exit 1"
@@ -198,8 +135,6 @@ services:
     hostname: policy-clamp-ac-pf-ppnt
     depends_on:
       - kafka
-      - policy-api
-      - policy-apex-pdp
       - jaeger
     deploy:
       replicas: ${ACM_REPLICAS:-1}
@@ -217,6 +152,8 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/policyparticipant/health/readiness | grep -q UP || exit 1"
@@ -243,6 +180,8 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/a1pmsparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -268,6 +207,8 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
+      OTEL_METRICS_EXPORTER: none
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/kserveparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
