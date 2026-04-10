@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ============LICENSE_START====================================================
-#  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
 #  Modifications Copyright 2024 Deutsche Telekom
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,20 +35,18 @@ POLICY_RUNTIME_ACM_IP=policy-clamp-runtime-acm:${DEFAULT_PORT}
 HTTP_PARTICIPANT_SIM1_IP=policy-clamp-ac-sim-ppnt-1:${DEFAULT_PORT}
 HTTP_PARTICIPANT_SIM2_IP=policy-clamp-ac-sim-ppnt-2:${DEFAULT_PORT}
 HTTP_PARTICIPANT_SIM3_IP=policy-clamp-ac-sim-ppnt-3:${DEFAULT_PORT}
+POLICY_HTTP_PARTICIPANT=policy-clamp-ac-http-ppnt:${DEFAULT_PORT}
 JAEGER_IP=jaeger:16686
 
 KAFKA_IP=kafka:9092
 PROMETHEUS_IP=prometheus:9090
 
 ROBOT_VARIABLES="-v DATA:${DATA}
--v POLICY_API_IP:${POLICY_API_IP}
 -v POLICY_RUNTIME_ACM_IP:${POLICY_RUNTIME_ACM_IP}
 -v HTTP_PARTICIPANT_SIM1_IP:$HTTP_PARTICIPANT_SIM1_IP
 -v HTTP_PARTICIPANT_SIM2_IP:$HTTP_PARTICIPANT_SIM2_IP
 -v HTTP_PARTICIPANT_SIM3_IP:$HTTP_PARTICIPANT_SIM3_IP
--v POLICY_PAP_IP:${POLICY_PAP_IP}
--v APEX_IP:${APEX_IP}
--v APEX_EVENTS_IP:${APEX_EVENTS_IP}
+-v POLICY_HTTP_PARTICIPANT:${POLICY_HTTP_PARTICIPANT}
 -v KAFKA_IP:${KAFKA_IP}
 -v PROMETHEUS_IP:${PROMETHEUS_IP}
 -v TEST_ENV:${TEST_ENV}
