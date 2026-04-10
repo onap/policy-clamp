@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;

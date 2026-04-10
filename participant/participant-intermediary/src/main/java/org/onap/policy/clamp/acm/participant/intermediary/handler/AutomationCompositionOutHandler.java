@@ -87,7 +87,7 @@ public class AutomationCompositionOutHandler {
         }
 
         var element = automationComposition.getElements().get(elementId);
-        if (element == null) {
+        if (element == null) { // NOSONAR
             LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC_ELEMENT, elementId);
             return;
         }
@@ -155,7 +155,7 @@ public class AutomationCompositionOutHandler {
         }
 
         var element = automationComposition.getElements().get(elementId);
-        if (element == null) {
+        if (element == null) { // NOSONAR
             checkElement(automationComposition, instance, elementId, deployState, stateChangeResult, message);
             return;
         }
@@ -240,7 +240,7 @@ public class AutomationCompositionOutHandler {
         }
 
         var element = automationComposition.getElements().get(elementId);
-        if (element == null) {
+        if (element == null) { // NOSONAR
             // elementId is a UUID, safe to log
             LOGGER.error(MSG_NOT_PRESENT, "outProperties", MSG_AC_ELEMENT, elementId); // NOSONAR
             return;

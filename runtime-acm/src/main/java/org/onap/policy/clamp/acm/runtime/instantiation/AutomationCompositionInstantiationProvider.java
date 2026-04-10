@@ -187,7 +187,7 @@ public class AutomationCompositionInstantiationProvider {
      * @param acToBeUpdated         the composition to be updated
      * @return the result of the update
      */
-    InstantiationResponse updateDeployedAutomationComposition(
+    private InstantiationResponse updateDeployedAutomationComposition(
         AutomationComposition automationComposition, AutomationComposition acToBeUpdated,
         AutomationCompositionDefinition acDefinition) {
         // save copy in case of a rollback
@@ -198,7 +198,7 @@ public class AutomationCompositionInstantiationProvider {
         for (var element : automationComposition.getElements().entrySet()) {
             var elementId = element.getKey();
             var dbAcElement = acToBeUpdated.getElements().get(elementId);
-            if (dbAcElement == null) {
+            if (dbAcElement == null) { // NOSONAR
                 throw new PfModelRuntimeException(Status.BAD_REQUEST, ELEMENT_ID_NOT_PRESENT + elementId);
             }
             AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
