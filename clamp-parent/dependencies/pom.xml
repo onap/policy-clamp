@@ -41,7 +41,7 @@
         <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
         <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
         <!-- Dependency Versions -->
-        <version.springboot>4.0.4</version.springboot>
+        <version.springboot>4.0.5</version.springboot>
         <version.swagger.core.v3>2.2.45</version.swagger.core.v3>
         <surefireArgLine>
             --add-opens java.base/java.time=ALL-UNNAMED
