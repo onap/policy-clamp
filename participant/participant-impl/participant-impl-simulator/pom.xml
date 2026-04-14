@@ -35,6 +35,8 @@
     <!-- This overrides parent pom to use Spring Boot 3.5 to test compatibility with intermediary on Spring Boot 4 -->
     <properties>
         <version.springboot>3.5.12</version.springboot>
+        <!-- Override embedded Tomcat to fix CVE-2026-29145 (minimum safe version for Spring Boot 3.5) -->
+        <version.tomcat>10.1.53</version.tomcat>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -69,6 +71,22 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.18.0</version>
+            </dependency>
+            <!-- Override embedded Tomcat to fix CVE-2026-29145 (minimum safe version for Spring Boot 3.5) -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${version.tomcat}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>${version.tomcat}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>${version.tomcat}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
