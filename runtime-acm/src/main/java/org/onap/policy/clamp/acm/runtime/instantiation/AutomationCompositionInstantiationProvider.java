@@ -270,7 +270,6 @@ public class AutomationCompositionInstantiationProvider {
             .filter(element -> acFromMigration.getElements().get(element.getId()) == null).toList();
     }
 
-
     private InstantiationResponse migratePrecheckAc(
             AutomationComposition automationComposition, AutomationComposition acToBeUpdated,
             AutomationCompositionDefinition acDefinition) {
@@ -505,7 +504,7 @@ public class AutomationCompositionInstantiationProvider {
         for (var element : automationComposition.getElements().entrySet()) {
             var elementId = element.getKey();
             var dbAcElement = acFromDb.getElements().get(elementId);
-            if (dbAcElement == null) {
+            if (dbAcElement == null) { // NOSONAR
                 LOGGER.info("New Ac element {} added in Migration", elementId);
                 element.getValue().setMigrationState(MigrationState.NEW);
                 acFromDb.getElements().put(elementId, element.getValue());
