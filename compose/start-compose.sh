@@ -69,14 +69,14 @@ source get-versions.sh > /dev/null 2>&1
 
 if [ -n "$component" ]; then
   if [ "$grafana" = true ]; then
-    docker compose up -d "${component}" grafana --wait
+    docker compose up -d "${component}" grafana init-kafka --wait
     echo "Prometheus server: http://localhost:${PROMETHEUS_PORT}"
     echo "Grafana server: http://localhost:${GRAFANA_PORT}"
   else
-    docker compose up -d "${component}" --wait
+    docker compose up -d "${component}" init-kafka --wait
   fi
 else
-  docker compose up -d --wait
+  docker compose up -d  init-kafka --wait
 fi
 
 cd "${WORKSPACE}"

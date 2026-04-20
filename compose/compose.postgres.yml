@@ -36,19 +36,3 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
-
-  policy-db-migrator:
-    image: ${CONTAINER_LOCATION}onap/policy-db-migrator:${POLICY_DOCKER_VERSION}
-    container_name: policy-db-migrator
-    hostname: policy-db-migrator
-    depends_on:
-      postgres:
-        condition: service_healthy
-    env_file: config/db-pg/db-pg.conf
-    environment:
-      POSTGRES_PASSWORD: policy_user
-      SQL_DB: policyadmin
-      SQL_HOST: postgres
-    volumes:
-      - ./config/db-migrator/init_pg.sh:/opt/app/policy/bin/db_migrator_policy_init_pg.sh:ro
-    entrypoint: /opt/app/policy/bin/db_migrator_policy_init_pg.sh

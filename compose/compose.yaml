@@ -41,6 +41,10 @@ services:
       - ${ACM_PORT}-${ACM_PORT_END}:6969
     deploy:
       replicas: ${ACM_REPLICAS:-1}
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
     environment:
       RUNTIME_USER: runtimeUser
       RUNTIME_PASSWORD: zb!XztG34
@@ -49,6 +53,7 @@ services:
       SQL_PORT: 5432
       SQL_USER: policy_user
       SQL_PASSWORD: policy_user
+      KAFKA_ALLOW_AUTO_CREATE_TOPICS: false
       ALLOW_TRACING: true
       PROMETHEUS_PORT: 6969
       OTEL_SERVICE_NAME: acm-r
@@ -86,6 +91,7 @@ services:
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
+      TOPIC_VALIDATION: true
       allowTracing: true
       OTEL_SERVICE_NAME: http-ppnt
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -114,6 +120,7 @@ services:
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
+      TOPIC_VALIDATION: true
       allowTracing: true
       OTEL_SERVICE_NAME: k8s-ppnt
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -146,6 +153,7 @@ services:
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
+      TOPIC_VALIDATION: true
       allowTracing: true
       OTEL_SERVICE_NAME: policy-ppnt
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -174,6 +182,7 @@ services:
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
+      TOPIC_VALIDATION: true
       allowTracing: true
       OTEL_SERVICE_NAME: a1pms-ppnt
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -201,6 +210,7 @@ services:
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
+      TOPIC_VALIDATION: true
       allowTracing: true
       OTEL_SERVICE_NAME: kserve-ppnt
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
