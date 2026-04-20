@@ -1,0 +1,13 @@
+resourcePaths:
+  toscaTemplate: "src/test/resources/providers/AcDefinitionEncryptTest.yaml"
+  instantiateJson: "src/test/resources/providers/AcInstantiateEncryptTest.json"
+
+acSuffix: "Crud"
+
+expectedValues:
+  secret: "mysecret"
+  password: "mypass"
+  encryptedPrefix: "ENCRYPTED:"
+
+errorMessages:
+  decryptFailure: "decrypt"

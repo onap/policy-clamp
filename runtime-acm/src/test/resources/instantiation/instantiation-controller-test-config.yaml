@@ -1,0 +1,8 @@
+endpointPattern: "compositions/%s/instances"
+nodeType: "org.onap.policy.clamp.acm.AutomationComposition"
+numInstances: 10
+
+resourcePaths:
+  acCreate: "src/test/resources/rest/acm/AutomationComposition.json"
+  acUpdate: "src/test/resources/rest/acm/AutomationCompositionUpdate.json"
+  acVersioning: "src/test/resources/rest/acm/AutomationCompositionVersioning.yaml"

@@ -1,0 +1,12 @@
+endpoint: "participants"
+nodeType: "org.onap.policy.clamp.acm.AutomationComposition"
+numberRecords: 10
+
+resourcePaths:
+  acInstantiationCreate: "rest/acm/AutomationComposition.json"
+  testParticipant1: "src/test/resources/providers/TestParticipant.json"
+  testParticipant2: "src/test/resources/providers/TestParticipant2.json"
+
+syncPaths:
+  syncAll: "/sync"
+  syncKnown: "/sync/82fd8ef9-1d1e-4343-9b28-7f9564ee3de6"

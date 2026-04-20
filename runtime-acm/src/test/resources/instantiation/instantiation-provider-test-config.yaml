@@ -1,0 +1,18 @@
+resourcePaths:
+  acCreate: "src/test/resources/rest/acm/AutomationComposition.json"
+  acUpdate: "src/test/resources/rest/acm/AutomationCompositionUpdate.json"
+  acMigrate: "src/test/resources/rest/acm/AutomationCompositionMigrate.json"
+  acElementNotFound: "src/test/resources/rest/acm/AutomationCompositionElementsNotFound.json"
+  acDefNotFound: "src/test/resources/rest/acm/AutomationCompositionNotFound.json"
+  migrationYaml: "clamp/acm/pmsh/funtional-pmsh-usecase-migration.yaml"
+
+errorMessages:
+  doNotMatch: " do not match with "
+  notPrimed: "not primed"
+  alreadyDefined: "already defined"
+  notFound: "Not found"
+  elementIdNotPresent: "Element id not present"
+  notValidOrderDelete: "Not valid order DELETE;"
+  notAllowedUpdateDeploying: "Not allowed to UPDATE in the state DEPLOYING"
+  notAllowedMigrateUpdating: "Not allowed to MIGRATE in the state UPDATING"
+  notAllowedNoneDeploying: "Not allowed to NONE in the state DEPLOYING"

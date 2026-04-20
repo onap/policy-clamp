@@ -49,7 +49,7 @@ public class CommonRestClient {
      *
      * @param endpoint the endpoint of interest
      */
-    protected void testSwagger(final String endpoint) {
+    public void testSwagger(final String endpoint) {
         var resp = getRestClient(true, false).get().uri(ACTUATOR_ENDPOINT + "v3/api-docs")
                 .retrieve()
                 .body(String.class);
@@ -63,7 +63,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestHeadersSpec
      */
-    protected RestClient.RequestHeadersSpec<?> sendGet(final String endpoint) {
+    public RestClient.RequestHeadersSpec<?> sendGet(final String endpoint) {
         return sendGet(endpoint, true, true);
     }
 
@@ -77,7 +77,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestHeadersSpec
      */
-    protected RestClient.RequestHeadersSpec<?> sendGetNoAuth(final String endpoint) {
+    public RestClient.RequestHeadersSpec<?> sendGetNoAuth(final String endpoint) {
         return sendGet(endpoint, false, false);
     }
 
@@ -87,7 +87,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestBodySpec
      */
-    protected RestClient.RequestBodySpec sendPost(final String endpoint) {
+    public RestClient.RequestBodySpec sendPost(final String endpoint) {
         return sendPost(endpoint, true, true);
     }
 
@@ -101,7 +101,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestBodySpec
      */
-    protected RestClient.RequestBodySpec sendPostNoAuth(final String endpoint) {
+    public RestClient.RequestBodySpec sendPostNoAuth(final String endpoint) {
         return sendPost(endpoint, false, false);
     }
 
@@ -111,7 +111,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestBodySpec
      */
-    protected RestClient.RequestBodySpec sendPut(final String endpoint) {
+    public RestClient.RequestBodySpec sendPut(final String endpoint) {
         return sendPut(endpoint, true, true);
     }
 
@@ -125,7 +125,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestBodySpec
      */
-    protected RestClient.RequestBodySpec sendPutNoAuth(final String endpoint) {
+    public RestClient.RequestBodySpec sendPutNoAuth(final String endpoint) {
         return sendPut(endpoint, false, false);
     }
 
@@ -135,7 +135,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestHeadersSpec
      */
-    protected RestClient.RequestHeadersSpec<?> sendDelete(final String endpoint) {
+    public RestClient.RequestHeadersSpec<?> sendDelete(final String endpoint) {
         return sendDelete(endpoint, true, true);
     }
 
@@ -149,7 +149,7 @@ public class CommonRestClient {
      * @param endpoint the target endpoint
      * @return a RequestHeadersSpec
      */
-    protected RestClient.RequestHeadersSpec<?> sendDeleteNoAuth(final String endpoint) {
+    public RestClient.RequestHeadersSpec<?> sendDeleteNoAuth(final String endpoint) {
         return sendDelete(endpoint, false, false);
     }
 
@@ -159,7 +159,7 @@ public class CommonRestClient {
      * @param endPoint the endpoint
      * @param body the body
      */
-    protected void assertUnauthorizedPost(final String endPoint, final Object body) {
+    public void assertUnauthorizedPost(final String endPoint, final Object body) {
         try {
             sendPostNoAuth(endPoint).body(body).retrieve().toBodilessEntity();
             throw new AssertionError("Expected HttpClientErrorException was not thrown");
@@ -174,7 +174,7 @@ public class CommonRestClient {
      * @param endPoint the endpoint
      * @param body the body
      */
-    protected void assertUnauthorizedPut(final String endPoint, final Object body) {
+    public void assertUnauthorizedPut(final String endPoint, final Object body) {
         try {
             sendPutNoAuth(endPoint).body(body).retrieve().toBodilessEntity();
             throw new AssertionError("Expected HttpClientErrorException was not thrown");
@@ -188,7 +188,7 @@ public class CommonRestClient {
      *
      * @param endPoint the endpoint
      */
-    protected void assertUnauthorizedGet(final String endPoint) {
+    public void assertUnauthorizedGet(final String endPoint) {
         try {
             sendGetNoAuth(endPoint).retrieve().toBodilessEntity();
             throw new AssertionError("Expected HttpClientErrorException was not thrown");
@@ -202,7 +202,7 @@ public class CommonRestClient {
      *
      * @param endPoint the endpoint
      */
-    protected void assertUnauthorizedDelete(final String endPoint) {
+    public void assertUnauthorizedDelete(final String endPoint) {
         try {
             sendDeleteNoAuth(endPoint).retrieve().toBodilessEntity();
             throw new AssertionError("Expected HttpClientErrorException was not thrown");

@@ -1,0 +1,15 @@
+endpoint: "compositions"
+acElementType: "org.onap.policy.clamp.acm.AutomationCompositionElement"
+
+dataType:
+  derivedFrom: "tosca.datatypes.Root"
+  propertyName: "configurationEntityId"
+  propertyType: "onap.datatypes.ToscaConceptIdentifier"
+
+testCases:
+  create:
+    expectedNodeTemplateCount: 7
+  versioning:
+    expectedNodeTemplateCount: 11
+  invalidVersion: "1.0.wrong"
+  updateDataTypeName: "org.onap.datatypes.policy.clamp.Configuration"

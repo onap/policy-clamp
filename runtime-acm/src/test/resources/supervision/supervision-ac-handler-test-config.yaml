@@ -1,0 +1,4 @@
+resourcePaths:
+  acJson: "src/test/resources/rest/acm/AutomationComposition.json"
+
+latchTimeoutSeconds: 2

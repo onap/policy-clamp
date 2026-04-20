@@ -1,0 +1,11 @@
+expectedAffectedDefinitionsCount: 7
+
+errorMessages:
+  deleteWithInstances: "Delete instances, to commission automation composition definitions"
+  deleteNotCommissioned: "ACM not in COMMISSIONED state, Delete of ACM Definition not allowed"
+  primingWithInstances: "There are instances, Priming/Depriming not allowed"
+  primingWithTargetComposition: "This compositionId is referenced as a targetCompositionId in the instance table."
+  updateWithInstances: "There are ACM instances, Update of ACM Definition not allowed"
+  updateNotCommissioned: "ACM not in COMMISSIONED state, Update of ACM Definition not allowed"
+
+latchTimeoutSeconds: 2
