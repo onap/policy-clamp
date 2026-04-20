@@ -24,6 +24,14 @@ services:
     depends_on:
       - kafka
       - jaeger
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 8G
+        reservations:
+          cpus: '0.2'
+          memory: 2G
     environment: &policy-clamp-ac-sim-ppnt-env
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
