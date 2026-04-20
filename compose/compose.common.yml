@@ -28,6 +28,7 @@ services:
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
       topicCommInfrastructure: kafka
+      TOPIC_VALIDATION: true
       allowTracing: true
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
@@ -146,6 +147,15 @@ services:
       timeout: 10s
       retries: 10
       start_period: 30s
+
+  init-kafka:
+    image: nexus3.onap.org:10001/confluentinc/cp-kafka:7.7.7
+    container_name: init-kafka
+    depends_on:
+      - kafka
+    command: "bash -c 'sh /home/appuser/create-topic.sh'"
+    volumes:
+      - ./config/kafka/create-topic.sh:/home/appuser/create-topic.sh
 
   jaeger:
     image: nexus3.onap.org:10001/jaegertracing/all-in-one:1.76.0
