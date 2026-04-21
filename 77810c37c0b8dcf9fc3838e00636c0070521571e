@@ -22,6 +22,30 @@
       },
       "revId": "77810c37c0b8dcf9fc3838e00636c0070521571e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78262e30_c5a109f4",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningControllerSpec.groovy",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-04-21T14:38:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f5ea6bd5_4fcac936",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "77810c37c0b8dcf9fc3838e00636c0070521571e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
