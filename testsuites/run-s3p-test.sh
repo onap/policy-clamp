@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2023-2025 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,22 +24,26 @@ fi
 
 export PROJECT="clamp"
 export TESTDIR=${WORKSPACE}/testsuites
-export ACM_PERF_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance.jmx
-export ACM_STAB_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability.jmx
 
 function run_tests() {
-    local test_file=$1
+    bash $WORKSPACE/testsuites/script/start-sp3.sh
+}
 
+function clean() {
+    bash $WORKSPACE/testsuites/script/clean-sp3.sh
+}
+
+function run_tests_k8s() {
     mkdir -p automate-s3p-test
     cd automate-s3p-test || exit 1
     git clone "https://gerrit.onap.org/r/policy/docker"
     cd docker/csit || exit 1
 
-    bash run-s3p-tests.sh test "$test_file" $PROJECT
+    bash run-s3p-tests.sh test $ACM_TEST_FILE $PROJECT
 }
 
-function clean() {
-    cd $TESTDIR/automate-s3p-test/docker/csit
+function clean_k8s() {
+   cd $TESTDIR/automate-s3p-test/docker/csit
     bash run-s3p-tests.sh clean
 }
 
@@ -49,16 +53,29 @@ echo "================================="
 
 case $1 in
     performance)
-        run_tests "$ACM_PERF_TEST_FILE"
+        export ACM_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance.jmx
+        run_tests
         ;;
     stability)
-        run_tests "$ACM_STAB_TEST_FILE"
+        export ACM_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability.jmx
+        run_tests
         ;;
     clean)
         clean
         ;;
+    performance-k8s)
+        export ACM_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance-k8s.jmx
+        run_tests_k8s
+        ;;
+    stability-k8s)
+        export ACM_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability-k8s.jmx
+        run_tests_k8s
+        ;;
+    clean-k8s)
+        clean_k8s
+        ;;
     *)
-        echo "Invalid arguments provided. Usage: $0 {performance | stability | clean}"
+        echo "Invalid arguments provided. Usage: $0 {performance | stability | clean | performance-k8s | stability-k8s | clean-k8s}"
         exit 1
         ;;
 esac
