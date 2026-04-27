@@ -32,28 +32,25 @@ alerting:
 # scrape config
 scrape_configs:
 
-- job_name: "api-metrics"
-  metrics_path: /policy/api/v1/metrics
-  static_configs:
-  - targets: ["policy-api:6969"]
-  basic_auth:
-    username: "policyadmin"
-    password: "zb!XztG34"
-
-- job_name: "pap-metrics"
-  metrics_path: /policy/pap/v1/metrics
-  static_configs:
-  - targets: ["policy-pap:6969"]
-  basic_auth:
-    username: "policyadmin"
-    password: "zb!XztG34"
-
-- job_name: "apex-pdp-metrics"
+- job_name: "acm-sim-metrics"
+  metrics_path: "/onap/policy/simparticipant/prometheus"
   static_configs:
   - targets:
-    - "policy-apex-pdp:6969"
+    - "policy-clamp-ac-sim-ppnt-1:6969"
+    - "policy-clamp-ac-sim-ppnt-2:6969"
+    - "policy-clamp-ac-sim-ppnt-3:6969"
   basic_auth:
-    username: "policyadmin"
+    username: "participantUser"
+    password: "zb!XztG34"
+
+- job_name: "acm-http-metrics"
+  metrics_path: "onap/policy/clamp/acm/httpparticipant/prometheus"
+  static_configs:
+  - targets:
+    - "compose-policy-clamp-ac-http-ppnt-1:6969"
+    - "compose-policy-clamp-ac-http-ppnt-2:6969"
+  basic_auth:
+    username: "participantUser"
     password: "zb!XztG34"
 
 - job_name: "acm-metrics"

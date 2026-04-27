@@ -194,3 +194,11 @@ services:
       ROBOT_FILE: ${ROBOT_FILES:-none}
       TEST_ENV: ${TEST_ENV:-docker}
       PROJECT: ${PROJECT:-clamp}
+
+  # Jmeter tests:
+  jmeter-tests:
+    image: onap/policy-jmeter:latest
+    container_name: policy-jmeter
+    volumes:
+      - ${JMETER_LOG_DIR:-/tmp}:/app/log
+      - ${ACM_TEST_FILE}:/app/acm_test.jmx

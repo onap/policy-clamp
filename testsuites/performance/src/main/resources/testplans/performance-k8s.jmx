@@ -10,17 +10,22 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="RUNTIME_HOST" elementType="Argument">
             <stringProp name="Argument.name">RUNTIME_HOST</stringProp>
-            <stringProp name="Argument.value">policy-clamp-runtime-acm</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="RUNTIME_PORT" elementType="Argument">
             <stringProp name="Argument.name">RUNTIME_PORT</stringProp>
-            <stringProp name="Argument.value">6969</stringProp>
+            <stringProp name="Argument.value">30007</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="HOME_PATH" elementType="Argument">
+            <stringProp name="Argument.name">HOME_PATH</stringProp>
+            <stringProp name="Argument.value">./</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="LOGS_PATH" elementType="Argument">
             <stringProp name="Argument.name">LOGS_PATH</stringProp>
-            <stringProp name="Argument.value">/app/log</stringProp>
+            <stringProp name="Argument.value">${HOME_PATH}/acm_perf/</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="INSTANCES" elementType="Argument">
@@ -34,14 +39,14 @@
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="HTTP_BASE_URL" elementType="Argument">
-            <stringProp name="Argument.value">http://policy-clamp-ac-sim-ppnt-1:6969</stringProp>
+            <stringProp name="Argument.value">http://policy-clamp-ac-pf-ppnt:6969</stringProp>
             <stringProp name="Argument.name">HTTP_BASE_URL</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="HTTP_PATH" elementType="Argument">
             <stringProp name="Argument.name">HTTP_PATH</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
-            <stringProp name="Argument.value">/onap/policy/simparticipant/health</stringProp>
+            <stringProp name="Argument.value">/onap/policy/clamp/acm/policyparticipant/health</stringProp>
           </elementProp>
           <elementProp name="HTTP_AUTHORIZATION" elementType="Argument">
             <stringProp name="Argument.name">HTTP_AUTHORIZATION</stringProp>
@@ -1116,7 +1121,7 @@ log.info(&quot;instanceId: &quot; + instanceId);
             <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
             <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
             <stringProp name="HTTPSampler.protocol">http</stringProp>
-            <stringProp name="HTTPSampler.path">/onap/policy/clamp/acm/actuator/prometheus</stringProp>
+            <stringProp name="HTTPSampler.path">/onap/policy/clamp/acm/prometheus</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1159,6 +1164,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
 
     assert res.contains(&quot;http_server_requests_seconds_count&quot;)
 
+    assert res.contains(&quot;publisher_automation_composition_state_change_seconds_count&quot;)
     assert res.contains(&quot;publisher_participant_update_seconds_count&quot;)
     assert res.contains(&quot;publisher_automation_composition_deploy_seconds_count&quot;)
 
@@ -1396,7 +1402,7 @@ if (jsonArray.equals(&quot;[]&quot;)) {
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">${LOGS_PATH}/testresults.jtl</stringProp>
+        <stringProp name="filename">/tmp/testresults.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1433,7 +1439,7 @@ if (jsonArray.equals(&quot;[]&quot;)) {
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">${LOGS_PATH}/resultTree.log</stringProp>
+        <stringProp name="filename">${LOGS_PATH}resultTree.log</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
@@ -1470,7 +1476,7 @@ if (jsonArray.equals(&quot;[]&quot;)) {
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">${LOGS_PATH}/resultTable.log</stringProp>
+        <stringProp name="filename">${LOGS_PATH}resultTable.log</stringProp>
       </ResultCollector>
       <hashTree/>
     </hashTree>

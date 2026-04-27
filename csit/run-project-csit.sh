@@ -22,6 +22,7 @@
 
 SKIP_BUILDING_ROBOT_IMG=false
 DO_NOT_TEARDOWN=false
+SKIP_TEST=false
 
 # even with forced finish, clean up docker containers
 function on_exit(){
@@ -111,6 +112,12 @@ do
       export SKIP_BUILDING_ROBOT_IMG=true
       shift
       ;;
+    --skip-test)
+      export SKIP_BUILDING_ROBOT_IMG=true
+      export SKIP_TEST=true
+      export DO_NOT_TEARDOWN=true
+      shift
+      ;;
     --local)
       export USE_LOCAL_IMAGES=true
       shift
@@ -134,6 +141,9 @@ done
 if [ -z "${WORKSPACE}" ]; then
     WORKSPACE=$(git rev-parse --show-toplevel)
     export WORKSPACE
+fi
+if [ -z "${ACM_TEST_FILE}" ]; then
+    export ACM_TEST_FILE=$WORKSPACE/testsuites/performance/src/main/resources/testplans/performance.jmx
 fi
 
 export GERRIT_BRANCH=$(awk -F= '$1 == "defaultbranch" { print $2 }' "${WORKSPACE}"/.gitreview)
@@ -184,6 +194,10 @@ fi
 docker_stats | tee "${ROBOT_LOG_DIR}/_sysinfo-1-after-setup.txt"
 
 # start the CSIT container and run the tests
-run_robot
+if [ "${SKIP_TEST}" == "true" ]; then
+    echo "Skipping test"
+else
+    run_robot
+fi
 
 docker ps --format "table {{ .Image }}\t{{ .Names }}\t{{ .Status }}"
