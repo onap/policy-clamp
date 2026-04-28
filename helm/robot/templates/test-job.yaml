@@ -1,0 +1,73 @@
+{{/*
+# Copyright (C) 2023-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+*/}}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: policy-csit-robot-test
+  namespace: default
+  labels:
+    app: policy-csit-robot-test
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: policy-pods-readiness
+          image: {{ .Values.imageCredentials.readinessImage.name }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          - /app/ready.py
+          args:
+          {{- range $container := .Values.readiness }}
+          - --container-name
+          - {{ $container}}
+          {{- end }}
+          - --timeout
+          - "15"
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+      containers:
+        - name: {{ .Chart.Name }}-test
+          image: {{ .Values.imageCredentials.csitTestImage.name }}
+          imagePullPolicy: Never
+          env:
+            - name: PG_USER
+              value: {{ .Values.db.user }}
+            - name: PGPASSWORD
+              value: {{ .Values.db.password }}
+            - name: PG_HOST
+              value: {{ .Values.db.service.name }}
+            - name: PG_PORT
+              value: {{ .Values.db.service.internalPort | quote }}
+            - name: PG_SCHEMA
+              value: {{ .Values.db.name }}
+            - name: ROBOT_FILE
+              value: {{ .Values.robot }}
+            - name: TEST_ENV
+              value: "k8s"
+          command: [ "./run-test.sh" ]
+          volumeMounts:
+            - name: robot-csit-pv
+              mountPath: /tmp
+      restartPolicy: OnFailure
+      volumes:
+        - name: robot-csit-pv
+          hostPath:
+            path: {{ .Values.robotLogDir }}

@@ -1,0 +1,119 @@
+#  ============LICENSE_START=======================================================
+#   Copyright (C) 2022,2024-2026 OpenInfra Foundation Europe. All rights reserved.
+#  ================================================================================
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+#  SPDX-License-Identifier: Apache-2.0
+#  ============LICENSE_END=========================================================
+
+
+#################################################################
+# Application configuration defaults.
+#################################################################
+# application image
+pullPolicy: Always
+
+# flag to enable debugging - application support required
+debugEnabled: false
+
+# application configuration
+config:
+  policyAppUserName: runtimeUser
+  policyAppUserPassword: zb!XztG34
+
+runtime:
+  participantParameters:
+    heartBeatMs: 120000
+    maxStatusWaitMs: 150000
+    maxOperationWaitMs: 200000
+
+db:
+  user: policy-user
+  password: policy-user
+  service:
+    name: postgres-service
+    internalPort: 5432
+
+# default number of instances
+replicaCount: 1
+
+nodeSelector: {}
+
+affinity: {}
+
+# probe configuration parameters
+liveness:
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  failureThreshold: 10
+  # necessary to disable liveness probe when setting breakpoints
+  # in debugger so K8s doesn't restart unresponsive container
+  enabled: true
+  port: runtime-api
+
+readiness:
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  failureThreshold: 10
+  port: runtime-api
+
+service:
+  type: NodePort
+  name: policy-clamp-runtime-acm
+  useNodePortExt: true
+  ports:
+    name: runtime-api
+    port: 6969
+    nodePort: 30442
+
+ingress:
+  enabled: false
+
+flavor: small
+resources:
+  small:
+    limits:
+      cpu: 1
+      memory: 4Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
+  unlimited: {}
+
+#Pods Service Account
+serviceAccount:
+  nameOverride: policy-clamp-runtime-acm
+  roles:
+    - read
+
+customNaming:
+  toscaElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
+  toscaCompositionName: org.onap.policy.clamp.acm.AutomationComposition
+
+
+jaeger:
+  service:
+    name: jaeger
+  enabled: true
+  sampling:
+    probability: "1.0"
+  producer:
+    type: "[B3,W3C,B3_MULTI]"
+  collector:
+    protocol: grpc
+    host: "http://jaeger"
+    portOtlpGrpc: 4317
+    portOtlpHttp: 4318
+    portJaegerGrpc: 14250
+
+applicationName: acm-r

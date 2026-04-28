@@ -26,8 +26,6 @@ SKIP_TEST=false
 
 # even with forced finish, clean up docker containers
 function on_exit(){
-    rm -rf "${CSAR_DIR}"/csar_temp.csar
-
     if [ "${DO_NOT_TEARDOWN}" = false ]; then
         source "${DOCKER_COMPOSE_DIR}"/stop-compose.sh "${PROJECT}"
         mv "${DOCKER_COMPOSE_DIR}"/*.log "${ROBOT_LOG_DIR}"

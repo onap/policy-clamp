@@ -34,8 +34,3 @@ fi
 
 echo "Building robot framework docker image"
 docker build . --file Dockerfile --tag "onap/${ROBOT_DOCKER_IMAGE}" --quiet
-
-docker save -o policy-csit-robot.tar "onap/${ROBOT_DOCKER_IMAGE}":latest
-
-rm -rf "${WORKSPACE}"/csit/resources/policy-csit-robot.tar
-rm -rf "${WORKSPACE}"/csit/resources/tests/models/

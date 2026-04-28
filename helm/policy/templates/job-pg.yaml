@@ -1,0 +1,86 @@
+{{/*
+# Copyright (C) 2025 Nordix Foundation.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#       SPDX-License-Identifier: Apache-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+*/}}
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: policy-pg-init
+  namespace: default
+  labels:
+    app: policy-pg-init
+spec:
+  template:
+    metadata:
+      labels:
+        app: policy-pg-init
+      name: policy-pg-init
+    spec:
+      initContainers:
+      - name: policy-pg-readiness
+        image: {{ .Values.global.repository }}/{{ .Values.global.image.readiness }}
+        imagePullPolicy: {{ .Values.global.pullPolicy | default .Values.pullPolicy }}
+        command:
+        - /app/ready.py
+        - --container-name
+        - postgres
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+      containers:
+      - name: policy-pg-config
+        image: {{ .Values.global.repository }}/{{ .Values.global.image.postgres}}
+        imagePullPolicy: {{ .Values.global.pullPolicy | default .Values.pullPolicy }}
+        volumeMounts:
+        - mountPath: /dbcmd-config/db-pg.sh
+          name: {{ .Chart.Name }}-config
+          subPath: db-pg.sh
+        command:
+        - /bin/sh
+        - -cx
+        - |
+           /dbcmd-config/db-pg.sh
+        env:
+        - name: PG_PASSWORD
+          value: {{ .Values.dbConfig.postgres.password }} 
+        - name: PG_HOST
+          value: {{ .Values.dbConfig.postgres.service }}
+        - name: PG_USER
+          value: {{ .Values.dbConfig.postgres.user }}
+        - name: PG_PORT
+          value: "{{ .Values.dbConfig.postgres.port }}"
+        resources:
+          limits:
+            cpu: 1
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+      restartPolicy: Never
+      serviceAccount: {{ .Chart.Name }}-read
+      serviceAccountName: {{ .Chart.Name }}-read
+      volumes:
+        - name: {{ .Chart.Name }}-config
+          configMap:
+            name: {{ .Chart.Name }}-db-configmap
+            defaultMode: 0755
+            items:
+              - key: db-pg.sh
+                path: db-pg.sh

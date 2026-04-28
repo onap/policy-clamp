@@ -1,0 +1,166 @@
+{{/*
+#  ============LICENSE_START=======================================================
+#   Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
+#  ================================================================================
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+#  SPDX-License-Identifier: Apache-2.0
+#  ============LICENSE_END=========================================================
+*/}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "6969"
+        prometheus.io/path: "/onap/policy/clamp/acm/actuator/prometheus"
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/instance: RELEASE
+        app.kubernetes.io/managed-by: Helm
+        type: "runtime"
+      name: {{ .Chart.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.global.repository }}/{{ .Values.global.image.runtimeacm }}
+          imagePullPolicy: {{ .Values.global.pullPolicy }}
+          env:
+            - name: RUNTIME_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-runtime-secret
+                  key: login
+            - name: RUNTIME_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-runtime-secret
+                  key: password
+            - name: TIMEZONE
+              value: UTC
+            - name: SQL_HOST
+              value: {{ .Values.db.service.name }}
+            - name: SQL_PORT
+              value: {{ .Values.db.service.internalPort | quote }}
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-db-secret
+                  key: login
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-db-secret
+                  key: password
+            - name: SERVER_PORT
+              value: {{ .Values.service.ports.port | quote }}
+            - name: KAFKA_SERVER
+              value: "{{ .Values.global.kafkaServer }}:9092"
+          {{- if eq .Values.global.strimzi.enabled true }}
+            - name: KAFKA_ALLOW_AUTO_CREATE_TOPICS
+              value: "false"
+            - name: kafkaSecurityProtocol
+              value: SASL_PLAINTEXT
+            - name: kafkaSaslMechanism
+              value: "{{ .Values.global.saslMechanism | upper }}"
+            - name: kafkaSaslJaasConfig
+              valueFrom:
+                secretKeyRef:
+                  name: acm-kafka-user
+                  key: sasl.jaas.config
+                  optional: false
+          {{- end }}
+            - name: TOSCA_ELEMENT_NAME
+              value: {{ .Values.customNaming.toscaElementName }}
+            - name: TOSCA_COMPOSITION_NAME
+              value: {{ .Values.customNaming.toscaCompositionName }}
+            - name: PROMETHEUS_PORT
+              value: {{ .Values.service.ports.port | quote }}
+          {{- $jaegerEnabled := tpl "policy-clamp-runtime-acm.jaeger-enabled" . | trimSuffix "\n" -}}
+          {{- if $jaegerEnabled }}
+            - name: ALLOW_TRACING
+              value: "true"
+            - name: JAEGER_PRODUCER_TYPE
+              value: {{ .Values.jaeger.producer.type | quote }}
+            - name: JAEGER_SAMPLING_PROBABILITY
+              value: {{ .Values.jaeger.sampling.probability | quote }}
+            - name: TRACING_EXPORTER_ENDPOINT
+              value: {{ .Values.jaeger.collector.host }}:{{ include "policy-clamp-runtime-acm.exporter-port" . }}
+            - name: TRACING_EXPORTER_PROTOCOL
+              value: {{ .Values.jaeger.collector.protocol }}
+            - name: TRACING_SAMPLER_ENDPOINT
+              value: "{{ .Values.jaeger.collector.host }}:{{ .Values.jaeger.collector.portJaegerGrpc }}"
+            - name: OTEL_SERVICE_NAME
+              value: {{ .Values.applicationName }}
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: {{ include "policy-clamp-runtime-acm.jaeger-protocol" . }}
+            - name: OTEL_EXPORTER_OTLP_TRACES_PROTOCOL
+              value: {{ include "policy-clamp-runtime-acm.jaeger-protocol" . }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ printf "%s:%s" (.Values.jaeger.collector.host) (include "policy-clamp-runtime-acm.exporter-port" .) }}
+            - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
+              value: "true"
+            - name: MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED
+              value: "false"
+            - name: OTEL_METRICS_EXPORTER
+              value: "none"
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.service.ports.port }}
+              name: runtime-api
+          # disable liveness probe when breakpoints set in debugger
+          # so K8s doesn't restart unresponsive container
+          {{- if eq .Values.liveness.enabled true }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.liveness.port }}
+            initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.liveness.periodSeconds }}
+          {{ end -}}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.readiness.port }}
+            initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readiness.periodSeconds }}
+          volumeMounts:
+          - mountPath: /etc/localtime
+            name: localtime
+            readOnly: true
+          resources:
+{{ toYaml .Values.resources.small | indent 12 }}
+        {{- if .Values.nodeSelector }}
+        nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 10 }}
+        {{- end -}}
+        {{- if .Values.affinity }}
+        affinity:
+{{ toYaml .Values.affinity | indent 10 }}
+        {{- end }}
+      serviceAccountName: {{ .Chart.Name }}-read
+      volumes:
+        - name: localtime
+          hostPath:
+             path: /etc/localtime
+      imagePullSecrets:
+      - name: "default-docker-registry-key"

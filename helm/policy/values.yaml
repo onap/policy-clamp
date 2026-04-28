@@ -1,0 +1,126 @@
+#
+# ===========LICENSE_START====================================================
+# Copyright © 2022-2025 OpenInfra Foundation Europe. All rights reserved.
+# Modifications Copyright 2024-2025 Deutsche Telekom
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+# 
+#       SPDX-License-Identifier: Apache-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ============LICENSE_END=====================================================
+#
+
+#################################################################
+# Global configuration defaults.
+#################################################################
+
+global:
+  prometheusEnabled: false
+  kafkaServer: kafka
+  saslMechanism: SCRAM-SHA-512
+  repository: nexus3.onap.org:10001
+  pullPolicy: IfNotPresent
+  dockerRepository: docker.io
+  strimzi:
+    enabled: false
+
+  image:
+    readiness: onap/oom/readiness:6.1.2
+    postgres: library/postgres:16.4
+    runtimeacm: onap/policy-clamp-runtime-acm:$tag
+    httpparticipant: onap/policy-clamp-ac-http-ppnt:$tag
+    simparticipant: onap/policy-clamp-ac-sim-ppnt:$tag
+
+postgres:
+  enabled: true
+policy-clamp-runtime-acm:
+  enabled: true
+  replicaCount: 2
+policy-clamp-ac-http-ppnt:
+  enabled: true
+  replicaCount: 2
+policy-clamp-ac-sim-ppnt-1:
+  enabled: true
+  applicationName: sim-ppnt-1
+  participantId: 101c62b3-8918-41b9-a747-d21eb79c6c90
+  groupId: policy-clamp-ac-sim-ppnt-1
+  service:
+    name: policy-clamp-ac-sim-ppnt-1
+  serviceAccount:
+    nameOverride: policy-clamp-ac-sim-ppnt-1
+  supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement
+policy-clamp-ac-sim-ppnt-2:
+  enabled: true
+  applicationName: sim-ppnt-2
+  participantId: 101c62b3-8918-41b9-a747-d21eb79c6c91
+  groupId: policy-clamp-ac-sim-ppnt-2
+  service:
+    name: policy-clamp-ac-sim-ppnt-2
+  serviceAccount:
+    nameOverride: policy-clamp-ac-sim-ppnt-2
+  supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement2
+policy-clamp-ac-sim-ppnt-3:
+  enabled: true
+  applicationName: sim-ppnt-3
+  participantId: 101c62b3-8918-41b9-a747-d21eb79c6c92
+  groupId: policy-clamp-ac-sim-ppnt-3
+  service:
+    name: policy-clamp-ac-sim-ppnt-3
+  serviceAccount:
+    nameOverride: policy-clamp-ac-sim-ppnt-3
+  supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement3
+jaeger:
+  enabled: true
+  fullnameOverride: jaeger
+  enableHttpOpenTelemetryCollector: true
+#################################################################
+# DB configuration defaults.
+#################################################################
+
+dbConfig:
+  postgres:
+    user: "policy-user"
+    service: "postgres-service"
+    port: "5432"
+    password: "policy-user"
+
+subChartsOnly:
+  enabled: true
+
+# flag to enable debugging - application support required
+debugEnabled: false
+
+# default number of instances
+#replicaCount: 1
+
+nodeSelector: {}
+
+affinity: {}
+
+
+# Resource Limit flavor -By Default using small
+# Segregation for Different environment (small, large, or unlimited)
+flavor: small
+resources:
+  small:
+    limits:
+      cpu: 1
+      memory: 4Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
+  unlimited: {}
+
+#Pods Service Account
+serviceAccount:
+  nameOverride: policy
+  roles:
+  - read
