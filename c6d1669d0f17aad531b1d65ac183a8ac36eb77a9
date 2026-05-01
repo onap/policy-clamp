@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70b032f9_c774c90f",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T13:42:29Z",
+      "side": 1,
+      "message": "Latest is 2.4-groovy-5.0",
+      "range": {
+        "startLine": 46,
+        "startChar": 23,
+        "endLine": 46,
+        "endChar": 40
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be3a49aa_a9375e11",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T13:42:29Z",
+      "side": 1,
+      "message": "Latest groovy is 5.0.5, but groovy is already a dependency of spring boot, so could be removed",
+      "range": {
+        "startLine": 47,
+        "startChar": 24,
+        "endLine": 47,
+        "endChar": 30
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0aa1ac58_3984b5fd",
+        "filename": "runtime-acm/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T13:42:29Z",
+      "side": 1,
+      "message": "this plugin config could probably be moved to dependencies/pom.xml - useful if other modules need to use groovy tests later",
+      "range": {
+        "startLine": 301,
+        "startChar": 58,
+        "endLine": 319,
+        "endChar": 32
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c347702_a72fd24d",
+        "filename": "runtime-acm/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T13:42:29Z",
+      "side": 1,
+      "message": "There is an existing maven-surefire-plugin config in dependencies/pom.xml line 350, this could be added there",
+      "range": {
+        "startLine": 324,
+        "startChar": 31,
+        "endLine": 328,
+        "endChar": 31
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1361835f_ab1cb382",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningControllerSpec.groovy",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T13:42:29Z",
+      "side": 1,
+      "message": "For all the groovy tests being added, we should delete the corresponding java junit ones too",
+      "range": {
+        "startLine": 43,
+        "startChar": 6,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33c84c60_dd538f87",
+        "filename": "runtime-acm/src/test/resources/commissioning/commissioning-provider-test-config.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T13:42:29Z",
+      "side": 1,
+      "message": "not sure of the value of separate config files, they could be inlined in the helper classes:\n\n    final Map config \u003d [\n        expectedAffectedDefinitionsCount: 7,\n        errorMessages: [\n            deleteWithInstances: \"Delete instances\",\n        // ...",
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
