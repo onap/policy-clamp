@@ -118,6 +118,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c6c67301_faa109f4",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProviderSpec.groovy",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T17:36:13Z",
+      "side": 1,
+      "message": "Optional: We can simplify cases like these by just matching any arguments in the mock:\n\n    helper.acDefinitionProvider.getServiceTemplateList(*_) \u003e\u003e []",
+      "range": {
+        "startLine": 61,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 90
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5b223ab_16a46d9d",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/supervision/SupervisionAcHandlerSpec.groovy",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T17:36:13Z",
+      "side": 1,
+      "message": "Test could be simplified using a \u0027where\u0027 table:\n\n    given: \"an automation composition and an ack message built from it\"\n    def ac \u003d helper.loadAc(\"Crud\")\n    def msg \u003d helper.buildAck(ac)\n\n    and: \"parameters are set from the table\"\n    msg.stateChangeResult \u003d stateChangeResult\n    msg.automationCompositionId \u003d automationCompositionId\n\n    when: \"the ack message is handled\"\n    helper.handler.handleAutomationCompositionStateChangeAckMessage(msg)\n\n    then: \"the message should not be saved\"\n    0 * helper.messageProvider.save(_)\n\n    where: \"the following parameters are used\"\n    scenario                          | stateChangeResult          | automationCompositionId\n    \u0027stateChangeResult is null\u0027       | null                       | identifier\n    \u0027stateChangeResult is TIMEOUT\u0027    | StateChangeResult.TIMEOUT  | identifier\n    \u0027automationCompositionId is null\u0027 | StateChangeResult.NO_ERROR | null",
+      "range": {
+        "startLine": 51,
+        "startChar": 106,
+        "endLine": 76,
+        "endChar": 42
+      },
+      "revId": "c6d1669d0f17aad531b1d65ac183a8ac36eb77a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33c84c60_dd538f87",
         "filename": "runtime-acm/src/test/resources/commissioning/commissioning-provider-test-config.yaml",
         "patchSetId": 4
