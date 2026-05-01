@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46864a45_8c519ef1",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-01T19:34:12Z",
+      "side": 1,
+      "message": "Below executions all run in same phase with same goal, so they could be combined in the rules section of a single execution.",
+      "revId": "4e50716cd2525c9156d78bfa39973706ab7933cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
