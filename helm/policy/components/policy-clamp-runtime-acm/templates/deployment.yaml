@@ -77,20 +77,8 @@ spec:
               value: {{ .Values.service.ports.port | quote }}
             - name: KAFKA_SERVER
               value: "{{ .Values.global.kafkaServer }}:9092"
-          {{- if eq .Values.global.strimzi.enabled true }}
             - name: KAFKA_ALLOW_AUTO_CREATE_TOPICS
               value: "false"
-            - name: kafkaSecurityProtocol
-              value: SASL_PLAINTEXT
-            - name: kafkaSaslMechanism
-              value: "{{ .Values.global.saslMechanism | upper }}"
-            - name: kafkaSaslJaasConfig
-              valueFrom:
-                secretKeyRef:
-                  name: acm-kafka-user
-                  key: sasl.jaas.config
-                  optional: false
-          {{- end }}
             - name: TOSCA_ELEMENT_NAME
               value: {{ .Values.customNaming.toscaElementName }}
             - name: TOSCA_COMPOSITION_NAME
