@@ -24,7 +24,7 @@ export ROBOT_FILE=""
 
 PROJECT="$1"
 CSIT_SCRIPT="scripts/run-test.sh"
-ROBOT_DOCKER_IMAGE="policy-csit-robot"
+ROBOT_DOCKER_IMAGE="onap/policy-csit-robot"
 ROBOT_LOG_DIR=${WORKSPACE}/csit/archives
 
 export POLICY_CLAMP_ROBOT="clamp-health-check.robot clamp-db-restore.robot clamp-single-element-test.robot clamp-timeout-test.robot clamp-migrate-rollback.robot clamp-trace-test.robot clamp-slas.robot"

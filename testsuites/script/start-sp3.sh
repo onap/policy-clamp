@@ -39,6 +39,13 @@ function start_docker() {
     bash run-project-csit.sh $PROJECT --skip-test
 }
 
+# Start Kubernetes
+function start_k8s() {
+    log_message "INFO" "Starting Kubernetes for $PROJECT"
+    cd $WORKSPACE/csit || { log_message "ERROR" "Failed to change directory"; ((errors_encountered++)); exit 1; }
+    bash run-k8s-csit.sh -c install $PROJECT
+}
+
 # crete jmeter image
 function crete_jmeter_image() {
     log_message "INFO" "Create JMeter Image"
@@ -81,12 +88,40 @@ function on_exit() {
     log_message "INFO" "============================================"
 }
 
-start_docker
+function start_jmeter_k8s() {
+    log_message "INFO" "Importing jmeter image into microk8s registry"
+    TAR_IMAGE=${TESTDIR}/jmeter/policy-jmeter.tar
+    docker save -o ${TAR_IMAGE} ${JMETER_DOCKER_IMAGE}:latest
+    sudo microk8s ctr image import ${TAR_IMAGE}
+    rm -rf ${TAR_IMAGE}
+    log_message "INFO" "---------------------------------------------"
+    log_message "INFO" "Installing Jmeter pod for running Tests"
+    cd "${WORKSPACE}"/helm || exit
+    JMETER_LOG_DIR="${TESTDIR}/automate-s3p-test/log"
+    helm install jmeter jmeter --set jmeterLogDir=$JMETER_LOG_DIR --set jmeterTestFile=$ACM_TEST_FILE
+    log_message "INFO" "Jmeter pod installed"
+    JMETER_POD=$(kubectl get pods --no-headers -o custom-columns=':metadata.name' | grep jmeter)
+    kubectl wait --for=jsonpath='{.status.phase}'=Running --timeout=18m pod/"$JMETER_POD"
+    kubectl logs ${JMETER_POD} -f
+}
 
-export JMETER_DOCKER_IMAGE="onap/policy-jmeter"
-crete_jmeter_image
+if [[ $ACM_TEST_ENV == 'docker' ]]
+then
+  start_docker
 
-log_message "INFO" "Executing tests"
-start_jmeter
+  export JMETER_DOCKER_IMAGE="onap/policy-jmeter"
+  crete_jmeter_image
+
+  log_message "INFO" "Executing tests"
+  start_jmeter
+else
+  start_k8s
+
+  export JMETER_DOCKER_IMAGE="onap/policy-jmeter"
+  crete_jmeter_image
+
+  log_message "INFO" "Executing tests"
+  start_jmeter_k8s
+fi
 
 on_exit
