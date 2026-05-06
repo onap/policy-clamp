@@ -69,20 +69,8 @@ spec:
               value: kafka
             - name: kafkaServer
               value: "{{ .Values.global.kafkaServer }}:9092"
-          {{- if eq .Values.global.strimzi.enabled true }}
             - name: TOPIC_VALIDATION
               value: "true"
-            - name: kafkaSecurityProtocol
-              value: SASL_PLAINTEXT
-            - name: kafkaSaslMechanism
-              value: "{{ .Values.global.saslMechanism | upper }}"
-            - name: kafkaSaslJaasConfig
-              valueFrom:
-                secretKeyRef:
-                  name: acm-kafka-user
-                  key: sasl.jaas.config
-                  optional: false
-          {{- end }}
           {{- $jaegerEnabled := tpl "policy-clamp-ac-http-ppnt.jaeger-enabled" . | trimSuffix "\n" -}}
           {{- if $jaegerEnabled }}
             - name: allowTracing

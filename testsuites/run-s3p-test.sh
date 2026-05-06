@@ -33,20 +33,6 @@ function clean() {
     bash $WORKSPACE/testsuites/script/clean-sp3.sh
 }
 
-function run_tests_k8s() {
-    mkdir -p automate-s3p-test
-    cd automate-s3p-test || exit 1
-    git clone "https://gerrit.onap.org/r/policy/docker"
-    cd docker/csit || exit 1
-
-    bash run-s3p-tests.sh test $ACM_TEST_FILE $PROJECT
-}
-
-function clean_k8s() {
-   cd $TESTDIR/automate-s3p-test/docker/csit
-    bash run-s3p-tests.sh clean
-}
-
 echo "================================="
 echo "Triggering S3P test for: $PROJECT"
 echo "================================="
@@ -54,25 +40,31 @@ echo "================================="
 case $1 in
     performance)
         export ACM_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance.jmx
+        export ACM_TEST_ENV=docker
         run_tests
         ;;
     stability)
         export ACM_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability.jmx
+        export ACM_TEST_ENV=docker
         run_tests
         ;;
     clean)
+        export ACM_TEST_ENV=docker
         clean
         ;;
     performance-k8s)
-        export ACM_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance-k8s.jmx
-        run_tests_k8s
+        export ACM_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance.jmx
+        export ACM_TEST_ENV=k8s
+        run_tests
         ;;
     stability-k8s)
-        export ACM_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability-k8s.jmx
-        run_tests_k8s
+        export ACM_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability.jmx
+        export ACM_TEST_ENV=k8s
+        run_tests
         ;;
     clean-k8s)
-        clean_k8s
+        export ACM_TEST_ENV=k8s
+        clean
         ;;
     *)
         echo "Invalid arguments provided. Usage: $0 {performance | stability | clean | performance-k8s | stability-k8s | clean-k8s}"

@@ -18,9 +18,15 @@ HealthcheckAcm
     Should Be Equal As Strings    ${resp.status_code}     200
 
 HealthcheckParticipantHttp
-    [Documentation]    Healthcheck on Participant Simulator
+    [Documentation]    Healthcheck on Participant Http
     ${auth}=    ParticipantAuth
     ${resp}=    MakeGetRequest  participant  ${POLICY_HTTP_PARTICIPANT}  /onap/policy/clamp/acm/httpparticipant/health  ${auth}
+    Should Be Equal As Strings    ${resp.status_code}     200
+
+HealthcheckParticipantSim
+    [Documentation]    Healthcheck on Participant Simulator
+    ${auth}=    ParticipantAuth
+    ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/health  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
 
 RegisterParticipants

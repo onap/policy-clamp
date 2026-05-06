@@ -155,7 +155,7 @@ export ROBOT_FILES=""
 cd "${WORKSPACE}" || exit
 
 # recreate the log folder with test results
-rm -rf "${ROBOT_LOG_DIR}"
+sudo rm -rf "${ROBOT_LOG_DIR}"
 mkdir -p "${ROBOT_LOG_DIR}"
 
 # log into nexus docker
