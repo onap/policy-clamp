@@ -23,14 +23,10 @@
 #################################################################
 
 global:
-  prometheusEnabled: false
-  kafkaServer: kafka
-  saslMechanism: SCRAM-SHA-512
+  kafkaServer: acm-kafka-bootstrap
   repository: nexus3.onap.org:10001
   pullPolicy: IfNotPresent
   dockerRepository: docker.io
-  strimzi:
-    enabled: false
 
   image:
     readiness: onap/oom/readiness:6.1.2

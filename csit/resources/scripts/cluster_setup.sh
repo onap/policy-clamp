@@ -103,48 +103,36 @@ function spin_microk8s_cluster() {
     fi
 }
 
-function install_kafka() {
-  echo "Installing Confluent kafka"
-  KAFKA_DIR=${WORKSPACE}/helm/cp-kafka
-  kubectl apply -f $KAFKA_DIR/zookeeper.yaml
-  kubectl apply -f $KAFKA_DIR/kafka.yaml
-  KAFKA_CONTAINERS=($KAFKA_CONTAINER,$ZK_CONTAINER)
-  wait_for_pods_running default 300 $KAFKA_CONTAINERS
-  echo "----------------------------------------"
-}
-
-function uninstall_kafka() {
-  echo "----------------------------------------"
-  echo "Removing Strimzi kafka"
-  kubectl delete deploy $ZK_CONTAINER $KAFKA_CONTAINER
-  echo "----------------------------------------"
-}
-
 function install_Strimzikafka() {
   echo "----------------------------------------"
   echo "Installing Strimzi kafka"
   helm repo add strimzi https://strimzi.io/charts/
   helm install kafka-operator strimzi/strimzi-kafka-operator --version 0.45.0
   KAFKA_DIR=${WORKSPACE}/helm/strimzi-kafka
+  sleep 5
   kubectl apply -f $KAFKA_DIR/kafka.yaml
+  sleep 5
   wait_for_pods_running default 300 "strimzi-cluster-operator"
+  sleep 5
+  wait_for_pods_running default 300 "acm-zookeeper-0"
+  sleep 5
+  wait_for_pods_running default 300 "acm-kafka-0"
   echo "----------------------------------------"
 }
 
 function uninstall_Strimzikafka() {
   echo "----------------------------------------"
   echo "Removing Strimzi kafka"
-    kubectl delete KafkaUser acm-kafka-user
-    kubectl delete KafkaTopic acm-ppnt-sync policy-acruntime-participant
-    kubectl delete Kafka acm
-    helm uninstall kafka-operator
+  kubectl delete KafkaTopic acm-ppnt-sync policy-acruntime-participant
+  kubectl delete Kafka acm
+  helm uninstall kafka-operator
   echo "----------------------------------------"
 }
 
 function uninstall_policy() {
     echo "Removing the policy helm deployment"
     helm uninstall csit-policy
-    helm uninstall prometheus
+    helm uninstall prometheus grafana
     helm uninstall csit-robot
     rm -rf ${WORKSPACE}/helm/policy/Chart.lock
 
@@ -250,7 +238,7 @@ LOCALIMAGE="${3:-false}"
 if [ $OPERATION == "install" ]; then
     spin_microk8s_cluster
     if [ "${?}" -eq 0 ]; then
-        install_kafka
+        install_Strimzikafka
         set_project_config "$PROJECT"
         echo "Installing policy helm charts in the default namespace"
         source ${WORKSPACE}/compose/get-k8s-versions.sh
@@ -263,13 +251,14 @@ if [ $OPERATION == "install" ]; then
         helm dependency build policy
         helm install csit-policy policy
         helm install prometheus prometheus
+        helm install grafana grafana
         wait_for_pods_running default 900 ${READINESS_CONTAINERS[@]}
         echo "Policy chart installation completed"
         echo "-------------------------------------------"
     fi
 elif [ $OPERATION == "uninstall" ]; then
     uninstall_policy
-    uninstall_kafka
+    uninstall_Strimzikafka
 elif [ $OPERATION == "clean" ]; then
     teardown_cluster
 else
