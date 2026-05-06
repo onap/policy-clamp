@@ -1,0 +1,63 @@
+{{/*
+# Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+*/}}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: policy-jmeter-test
+  namespace: default
+  labels:
+    app: policy-jmeter-test
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: policy-pods-readiness
+          image: {{ .Values.imageCredentials.readinessImage.name }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          - /app/ready.py
+          args:
+          {{- range $container := .Values.readiness }}
+          - --container-name
+          - {{ $container}}
+          {{- end }}
+          - --timeout
+          - "15"
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+      containers:
+        - name: {{ .Chart.Name }}-test
+          image: {{ .Values.imageCredentials.jmeterTestImage.name }}
+          imagePullPolicy: Never
+          command: [ "./run-test.sh" ]
+          volumeMounts:
+            - name: jmeter-logs
+              mountPath: /app/log
+            - name: jmeter-test-file
+              mountPath: /app/acm_test.jmx
+      restartPolicy: OnFailure
+      volumes:
+        - name: jmeter-logs
+          hostPath:
+            path: {{ .Values.jmeterLogDir }}
+        - name: jmeter-test-file
+          hostPath:
+            path: {{ .Values.jmeterTestFile }}
