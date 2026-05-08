@@ -75,7 +75,14 @@
                     <processDependencies>false</processDependencies>
                     <processDependencyManagement>true</processDependencyManagement>
                     <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
-                    <rulesUri>file:///${maven.multiModuleProjectDirectory}/version-rules.xml</rulesUri>
+                    <ruleSet>
+                        <ignoreVersions>
+                            <ignoreVersion>
+                                <type>regex</type>
+                                <version>(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</version>
+                            </ignoreVersion>
+                        </ignoreVersions>
+                    </ruleSet>
                 </configuration>
                 <executions>
                     <execution>
@@ -116,32 +123,19 @@
                             <rules>
                                 <maxDependencyUpdates>
                                     <maxUpdates>5</maxUpdates>
-                                    <rulesUri>file:///${maven.multiModuleProjectDirectory}/version-rules.xml</rulesUri>
                                     <processDependencies>false</processDependencies>
                                     <processDependencyManagement>true</processDependencyManagement>
                                     <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
                                     <processPluginDependencies>false</processPluginDependencies>
                                     <processPluginDependenciesInPluginManagement>false</processPluginDependenciesInPluginManagement>
-                                </maxDependencyUpdates>
-                            </rules>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>enforce-plugin-updates</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <maxDependencyUpdates>
-                                    <maxUpdates>5</maxUpdates>
-                                    <rulesUri>file:///${maven.multiModuleProjectDirectory}/version-rules.xml</rulesUri>
-                                    <processDependencies>false</processDependencies>
-                                    <processDependencyManagement>false</processDependencyManagement>
-                                    <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
-                                    <processPluginDependencies>true</processPluginDependencies>
-                                    <processPluginDependenciesInPluginManagement>true</processPluginDependenciesInPluginManagement>
+                                    <ruleSet>
+                                        <ignoreVersions>
+                                            <ignoreVersion>
+                                                <type>regex</type>
+                                                <version>(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</version>
+                                            </ignoreVersion>
+                                        </ignoreVersions>
+                                    </ruleSet>
                                 </maxDependencyUpdates>
                             </rules>
                         </configuration>
