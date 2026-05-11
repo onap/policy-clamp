@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdbfc46b_b69722ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2026-05-11T08:49:06Z",
+      "side": 1,
+      "message": "I\u0027m not very familiar with groovy, but it looks good to me.",
+      "revId": "3a65e42c4de21952c8850da61b98dafe6f2a455f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
