@@ -83,10 +83,10 @@
                                 <type>regex</type>
                                 <version>(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</version>
                             </ignoreVersion>
-                            <!-- Vendor-repackaged versions (e.g. 4.5.0-redhat-00001) -->
+                            <!-- Vendor-repackaged versions (e.g. 4.5.0.redhat-00001) -->
                             <ignoreVersion>
                                 <type>regex</type>
-                                <version>(?i).*-(redhat|jbossorg|atlassian|android|ibm)\-?\d*.*</version>
+                                <version>(?i).*[-.](redhat|jbossorg|atlassian|android|ibm)\-?\d*.*</version>
                             </ignoreVersion>
                         </ignoreVersions>
                     </ruleSet>
@@ -143,10 +143,10 @@
                                                 <type>regex</type>
                                                 <version>(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</version>
                                             </ignoreVersion>
-                                            <!-- Vendor-repackaged versions (e.g. 4.5.0-redhat-00001) -->
+                                            <!-- Vendor-repackaged versions (e.g. 4.5.0.redhat-00001) -->
                                             <ignoreVersion>
                                                 <type>regex</type>
-                                                <version>(?i).*-(redhat|jbossorg|atlassian|android|ibm)\-?\d*.*</version>
+                                                <version>(?i).*[-.](redhat|jbossorg|atlassian|android|ibm)\-?\d*.*</version>
                                             </ignoreVersion>
                                         </ignoreVersions>
                                     </ruleSet>
