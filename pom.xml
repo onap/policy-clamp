@@ -75,11 +75,18 @@
                     <processDependencies>false</processDependencies>
                     <processDependencyManagement>true</processDependencyManagement>
                     <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
+                    <!-- Keep ignoreVersions in sync with maven-enforcer-plugin below -->
                     <ruleSet>
                         <ignoreVersions>
+                            <!-- Pre-release versions -->
                             <ignoreVersion>
                                 <type>regex</type>
                                 <version>(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</version>
+                            </ignoreVersion>
+                            <!-- Vendor-repackaged versions (e.g. 4.5.0-redhat-00001) -->
+                            <ignoreVersion>
+                                <type>regex</type>
+                                <version>(?i).*-(redhat|jbossorg|atlassian|android|ibm)\-?\d*.*</version>
                             </ignoreVersion>
                         </ignoreVersions>
                     </ruleSet>
@@ -128,11 +135,18 @@
                                     <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
                                     <processPluginDependencies>false</processPluginDependencies>
                                     <processPluginDependenciesInPluginManagement>false</processPluginDependenciesInPluginManagement>
+                                    <!-- Keep ignoreVersions in sync with versions-maven-plugin above -->
                                     <ruleSet>
                                         <ignoreVersions>
+                                            <!-- Pre-release versions -->
                                             <ignoreVersion>
                                                 <type>regex</type>
                                                 <version>(?i).*-(alpha|beta|milestone|m|rc|cr|snapshot|preview|ea)([-.]?\d+)?([-.].*)?</version>
+                                            </ignoreVersion>
+                                            <!-- Vendor-repackaged versions (e.g. 4.5.0-redhat-00001) -->
+                                            <ignoreVersion>
+                                                <type>regex</type>
+                                                <version>(?i).*-(redhat|jbossorg|atlassian|android|ibm)\-?\d*.*</version>
                                             </ignoreVersion>
                                         </ignoreVersions>
                                     </ruleSet>
