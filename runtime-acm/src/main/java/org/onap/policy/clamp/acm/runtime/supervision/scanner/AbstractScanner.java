@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.UUID;
+import java.util.concurrent.locks.LockSupport;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -142,12 +143,21 @@ public abstract class AbstractScanner {
             acProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         }
         if (updateSync.isToBeSync()) {
-            decryptInstanceProperties(automationComposition);
-            participantSyncPublisher.sendSync(automationComposition);
+            var acToSend = new AutomationComposition(automationComposition);
+            decryptInstanceProperties(acToSend);
+            participantSyncPublisher.sendSync(acToSend);
         }
     }
 
     protected void decryptInstanceProperties(AutomationComposition automationComposition) {
         encryptionUtils.decryptInstanceProperties(automationComposition);
+    }
+
+    protected static boolean pause(int timeMs) {
+        long endTime = System.nanoTime() + (timeMs * 1_000_000L);
+        while (System.nanoTime() < endTime) {
+            LockSupport.parkNanos(10_000_000L);
+        }
+        return false;
     }
 }

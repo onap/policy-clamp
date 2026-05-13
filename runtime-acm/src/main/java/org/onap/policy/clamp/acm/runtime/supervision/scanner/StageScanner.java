@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,6 +125,10 @@ public class StageScanner extends AbstractScanner {
             savePhase(automationComposition, minStageNotCompleted);
             updateSync.setUpdated(true);
             saveAndSync(automationComposition, updateSync);
+
+            // create a pause between sync message and next stage message
+            pause(300);
+
             var acToSend = new AutomationComposition(automationComposition);
             decryptInstanceProperties(acToSend);
             sendNextStage(acToSend, minStageNotCompleted, revisionIdComposition, acDefinition);

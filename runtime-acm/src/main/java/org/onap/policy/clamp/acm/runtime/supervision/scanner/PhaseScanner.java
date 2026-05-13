@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 Nordix OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,14 +115,17 @@ public class PhaseScanner extends AbstractScanner {
         updateSync.setUpdated(true);
         saveAndSync(automationComposition, updateSync);
 
-        if (DeployState.DEPLOYING.equals(automationComposition.getDeployState())) {
+        // create a pause between sync message and next startPhase message
+        pause(300);
+
+        var acToSend = new AutomationComposition(automationComposition);
+        decryptInstanceProperties(acToSend);
+        if (DeployState.DEPLOYING.equals(acToSend.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionDeploy");
-            var acToSend = new AutomationComposition(automationComposition);
-            decryptInstanceProperties(acToSend);
             acDeployPublisher.send(acToSend, startPhase, false, acDefinition.getRevisionId());
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(automationComposition, startPhase, false, acDefinition.getRevisionId());
+            acStateChangePublisher.send(acToSend, startPhase, false, acDefinition.getRevisionId());
         }
     }
 }
