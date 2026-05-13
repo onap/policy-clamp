@@ -78,19 +78,20 @@ function set_project_config() {
     echo "Setting project configuration for: $PROJECT"
     case $PROJECT in
 
-    clamp | policy-clamp)
-        export ACM_REPLICAS=2
-        setup_clamp
-        ;;
-
     clamp-simple | policy-simple)
         export ACM_REPLICAS=1
         setup_clamp
         ;;
 
+    clamp | policy-clamp)
+        export ACM_REPLICAS=2
+        setup_clamp
+        ;;
+
     *)
-        echo "Unknown project supplied. No test will run."
-        exit 1
+        echo "Unknown project supplied. Defaulting to clamp test suite with 2 replicas."
+        export ACM_REPLICAS=2
+        setup_clamp
         ;;
     esac
 }
