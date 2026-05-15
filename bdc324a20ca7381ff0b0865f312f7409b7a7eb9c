@@ -22,6 +22,30 @@
       },
       "revId": "bdc324a20ca7381ff0b0865f312f7409b7a7eb9c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dca45b6_dee188bb",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/scanner/PhaseScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-05-15T13:29:52Z",
+      "side": 1,
+      "message": "Currently the functionality decrypt is always disabled.\nBefore \"copy\" and \"decryptInstanceProperties\" was used only for acDeployPublisher,\nbut it should be for all messages",
+      "parentUuid": "589860d0_f0e76878",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 72
+      },
+      "revId": "bdc324a20ca7381ff0b0865f312f7409b7a7eb9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
