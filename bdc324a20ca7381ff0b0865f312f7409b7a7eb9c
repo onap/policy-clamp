@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "589860d0_f0e76878",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/scanner/PhaseScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-15T10:30:19Z",
+      "side": 1,
+      "message": "Why is it needed to copy the object? Is it part of the fix?",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 72
+      },
+      "revId": "bdc324a20ca7381ff0b0865f312f7409b7a7eb9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
