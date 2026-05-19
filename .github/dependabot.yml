@@ -13,3 +13,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/clamp-parent/dependencies"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "io.opentelemetry.instrumentation:opentelemetry-kafka-clients-2.6"
