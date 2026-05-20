@@ -33,7 +33,7 @@ import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler extends AcElementListenerV3 {
+public class AutomationCompositionElementHandler extends AcElementListenerV4 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
