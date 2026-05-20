@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d52307c8_fe05d003",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProviderSpec.groovy",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-05-20T11:07:25Z",
+      "side": 1,
+      "message": "Could remove setup and just initialize directly:\n\n    def acDefinitionProvider \u003d Mock(AcDefinitionProvider)\n    \nIt behaves the same way as setup, e.g. each test will get a fresh mock (since they are not static/shared).",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 5
+      },
+      "revId": "6aab52c6408745180c29990a2f2ffd15b2927e15",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
