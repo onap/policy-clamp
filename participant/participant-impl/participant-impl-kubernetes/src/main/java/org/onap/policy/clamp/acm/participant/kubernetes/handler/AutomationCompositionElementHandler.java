@@ -31,7 +31,7 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler extends AcElementListenerV3 {
+public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final ChartService chartService;
