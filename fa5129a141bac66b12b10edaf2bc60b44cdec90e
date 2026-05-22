@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a16bd940_a0247c81",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProviderSpec.groovy",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-05-22T09:23:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4077efbc_8b81ccce",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 5
+      },
+      "revId": "fa5129a141bac66b12b10edaf2bc60b44cdec90e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0613ff76_703d6bd5",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-05-20T19:40:51Z",
       "side": 1,
       "message": "This test is a bit too complicated for me. I think we could break it into 4 separate tests and it would be clearer.",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 55
+      },
+      "revId": "fa5129a141bac66b12b10edaf2bc60b44cdec90e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36b320f1_dba00df0",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProviderSpec.groovy",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-05-22T09:23:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0613ff76_703d6bd5",
       "range": {
         "startLine": 250,
         "startChar": 0,
