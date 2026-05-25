@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -71,6 +72,7 @@ import org.slf4j.LoggerFactory;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AcmUtils {
+    public static final int DELAY_MESSAGE = 400;
     public static final String ENTRY = "entry ";
     private static final String NOT_VALID_INSTANCE =
             "Instance cannot be deployed; There are elements in an invalid Migration state."
@@ -489,5 +491,17 @@ public final class AcmUtils {
         var str1 = MAP_CONVERTER.convertToDatabaseColumn(map1);
         var str2 = MAP_CONVERTER.convertToDatabaseColumn(map2);
         return str1.equals(str2);
+    }
+
+    /**
+     * Add a delay.
+     *
+     * @param timeMs the time in milliseconds
+     */
+    public static void pause(int timeMs) {
+        long endTime = System.nanoTime() + (timeMs * 1_000_000L);
+        while (System.nanoTime() < endTime) {
+            LockSupport.parkNanos(10_000_000L);
+        }
     }
 }
