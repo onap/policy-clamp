@@ -1,5 +1,5 @@
 #!/bin/bash -xv
-# Copyright (C) 2025 Nordix Foundation. All rights reserved
+# Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,16 +19,11 @@ export PGPASSWORD=${PG_PASSWORD}  # Set the password
 
 psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "CREATE USER \"${PG_USER}\" WITH PASSWORD '${PG_PASSWORD}';"
 
-# Loop through the databases to create and set permissions
-for db in clampacm
-do
-    # Create the database
-    psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "CREATE DATABASE ${db};"
+# Create the database
+psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "CREATE DATABASE clampacm;"
 
-    # Alter database owner
-    psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "ALTER DATABASE ${db} OWNER TO \"${PG_USER}\";"
+# Alter database owner
+psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "ALTER DATABASE clampacm OWNER TO \"${PG_USER}\";"
 
-    # Grant all privileges on the database
-    psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "GRANT ALL PRIVILEGES ON DATABASE ${db} TO \"${PG_USER}\";"
-done
-
+# Grant all privileges on the database
+psql -h ${PG_HOST} -p ${PG_PORT} -U "${PG_USER}" -d postgres --command "GRANT ALL PRIVILEGES ON DATABASE clampacm TO \"${PG_USER}\";"
