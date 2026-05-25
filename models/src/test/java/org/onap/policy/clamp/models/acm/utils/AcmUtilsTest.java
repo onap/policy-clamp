@@ -386,4 +386,9 @@ class AcmUtilsTest {
         assertFalse(AcmUtils.equalMap(map1, map2));
         assertTrue(AcmUtils.equalMap(map1, map1));
     }
+
+    @Test
+    void testPause() {
+        assertDoesNotThrow(() -> AcmUtils.pause(1));
+    }
 }

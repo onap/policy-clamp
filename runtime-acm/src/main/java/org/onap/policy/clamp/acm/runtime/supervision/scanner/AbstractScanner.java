@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.UUID;
-import java.util.concurrent.locks.LockSupport;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -151,13 +150,5 @@ public abstract class AbstractScanner {
 
     protected void decryptInstanceProperties(AutomationComposition automationComposition) {
         encryptionUtils.decryptInstanceProperties(automationComposition);
-    }
-
-    protected static boolean pause(int timeMs) {
-        long endTime = System.nanoTime() + (timeMs * 1_000_000L);
-        while (System.nanoTime() < endTime) {
-            LockSupport.parkNanos(10_000_000L);
-        }
-        return false;
     }
 }
