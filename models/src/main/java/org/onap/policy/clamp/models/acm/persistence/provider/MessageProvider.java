@@ -67,6 +67,7 @@ public class MessageProvider {
         doc.setCompositionState(message.getCompositionState());
         doc.setMessage(AcmUtils.validatedMessage(message.getMessage()));
         var jpa = new JpaMessage(message.getCompositionId().toString(), doc);
+        jpa.setLastMsg(getDelay());
         ProviderUtils.validate(doc, jpa, "ParticipantPrimeAck message");
         messageRepository.save(jpa);
     }
@@ -86,9 +87,15 @@ public class MessageProvider {
             doc.setDeployState(entry.getValue().getDeployState());
             doc.setLockState(entry.getValue().getLockState());
             var jpa = new JpaMessage(message.getAutomationCompositionId().toString(), doc);
+            jpa.setLastMsg(getDelay());
             ProviderUtils.validate(doc, jpa, "AutomationCompositionDeployAck message");
             messageRepository.save(jpa);
         }
+    }
+
+    private Timestamp getDelay() {
+        var epochMilli = Instant.now().toEpochMilli() + AcmUtils.DELAY_MESSAGE;
+        return Timestamp.from(Instant.ofEpochMilli(epochMilli));
     }
 
     /**
@@ -165,6 +172,12 @@ public class MessageProvider {
     public List<DocMessage> getAllMessages(UUID identificationId) {
         var result = messageRepository.findByIdentificationIdOrderByLastMsgAsc(identificationId.toString());
         return result.stream().map(JpaMessage::toAuthorative).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Timestamp getLastMsg(UUID identificationId) {
+        var result = messageRepository.findByIdentificationIdOrderByLastMsgAsc(identificationId.toString());
+        return result.isEmpty() ? null : result.getLast().getLastMsg();
     }
 
     /**

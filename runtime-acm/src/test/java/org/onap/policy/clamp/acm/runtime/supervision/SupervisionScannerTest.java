@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,6 +120,7 @@ class SupervisionScannerTest {
         when(messageProvider.createJob(COMPOSITION_ID)).thenReturn(Optional.of(JOB_ID));
         when(messageProvider.findCompositionMessages()).thenReturn(Set.of(COMPOSITION_ID));
         var message = new DocMessage();
+        when(messageProvider.getLastMsg(COMPOSITION_ID)).thenReturn(TimestampHelper.nowTimestamp());
         when(messageProvider.getAllMessages(COMPOSITION_ID)).thenReturn(List.of(message));
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var monitoringScanner = new MonitoringScanner(automationCompositionProvider, acDefinitionProvider,
@@ -314,6 +315,7 @@ class SupervisionScannerTest {
         when(messageProvider.createJob(automationComposition.getInstanceId()))
                 .thenThrow(new DataIntegrityViolationException("", null));
         var message = new  DocMessage();
+        when(messageProvider.getLastMsg(INSTANCE_ID)).thenReturn(TimestampHelper.nowTimestamp());
         when(messageProvider.getAllMessages(INSTANCE_ID)).thenReturn(List.of(message));
         when(messageProvider.findInstanceMessages()).thenReturn(Set.of(INSTANCE_ID));
 
