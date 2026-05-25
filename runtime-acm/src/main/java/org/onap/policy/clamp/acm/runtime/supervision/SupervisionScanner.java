@@ -32,6 +32,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,6 +52,13 @@ public class SupervisionScanner {
     private final MessageProvider messageProvider;
     private final MonitoringScanner monitoringScanner;
 
+    private void checkLastMsg(UUID identificationId) {
+        var lastMsg = messageProvider.getLastMsg(identificationId);
+        if (lastMsg != null && TimestampHelper.nowTimestamp().getTime() - lastMsg.getTime() < AcmUtils.DELAY_MESSAGE) {
+            AcmUtils.pause(AcmUtils.DELAY_MESSAGE);
+        }
+    }
+
     /**
      * Run Scanning.
      */
@@ -61,6 +70,7 @@ public class SupervisionScanner {
         var compositionIds = acDefinitionProvider.getAllAcDefinitionsInTransition();
         compositionIds.addAll(messageProvider.findCompositionMessages());
         for (var compositionId : compositionIds) {
+            checkLastMsg(compositionId);
             scanAcDefinition(compositionId);
         }
 
@@ -68,6 +78,7 @@ public class SupervisionScanner {
         instanceIds.addAll(messageProvider.findInstanceMessages());
         Map<UUID, AutomationCompositionDefinition> acDefinitionMap = new HashMap<>();
         for (var instanceId : instanceIds) {
+            checkLastMsg(instanceId);
             scanAutomationComposition(instanceId, acDefinitionMap);
         }
         LOGGER.debug("Automation composition scan complete . . .");
