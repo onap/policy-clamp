@@ -30,13 +30,20 @@ services:
     image: ${CONTAINER_LOCATION}onap/policy-clamp-runtime-acm:${POLICY_CLAMP_VERSION}
     hostname: policy-clamp-runtime-acm
     depends_on:
-      - postgres
-      - kafka
-      - jaeger
-      - policy-clamp-ac-http-ppnt
-      - policy-clamp-ac-sim-ppnt-1
-      - policy-clamp-ac-sim-ppnt-2
-      - policy-clamp-ac-sim-ppnt-3
+      postgres:
+          condition: service_healthy
+      kafka:
+        condition: service_healthy
+      jaeger:
+        condition: service_healthy
+      policy-clamp-ac-http-ppnt:
+        condition: service_started
+      policy-clamp-ac-sim-ppnt-1:
+        condition: service_started
+      policy-clamp-ac-sim-ppnt-2:
+        condition: service_started
+      policy-clamp-ac-sim-ppnt-3:
+        condition: service_started
     ports:
       - ${ACM_PORT}-${ACM_PORT_END}:6969
     deploy:

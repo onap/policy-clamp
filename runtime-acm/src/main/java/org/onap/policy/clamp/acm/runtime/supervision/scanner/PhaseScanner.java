@@ -31,6 +31,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -116,7 +117,7 @@ public class PhaseScanner extends AbstractScanner {
         saveAndSync(automationComposition, updateSync);
 
         // create a pause between sync message and next startPhase message
-        pause(300);
+        AcmUtils.pause(300);
 
         var acToSend = new AutomationComposition(automationComposition);
         decryptInstanceProperties(acToSend);

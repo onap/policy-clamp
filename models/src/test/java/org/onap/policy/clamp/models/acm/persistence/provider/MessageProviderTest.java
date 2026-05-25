@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -152,8 +153,22 @@ class MessageProviderTest {
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
         var result = messageProvider.getAllMessages(instanceId);
         assertThat(result).hasSize(1);
-        var doc = result.iterator().next();
+        var doc = result.getFirst();
         assertEquals(jpaMessage.getMessageId(), doc.getMessageId());
+    }
+
+    @Test
+    void testGetLastMsg() {
+        var messageRepository = mock(MessageRepository.class);
+        var instanceId = UUID.randomUUID();
+        var jpaMessage = new JpaMessage();
+        var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
+        var result = messageProvider.getLastMsg(instanceId);
+        assertNull(result);
+        when(messageRepository.findByIdentificationIdOrderByLastMsgAsc(instanceId.toString()))
+                .thenReturn(List.of(jpaMessage));
+        result = messageProvider.getLastMsg(instanceId);
+        assertEquals(jpaMessage.getLastMsg(), result);
     }
 
     @Test
