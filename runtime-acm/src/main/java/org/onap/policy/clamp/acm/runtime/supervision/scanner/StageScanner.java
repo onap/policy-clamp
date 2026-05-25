@@ -38,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -127,7 +128,7 @@ public class StageScanner extends AbstractScanner {
             saveAndSync(automationComposition, updateSync);
 
             // create a pause between sync message and next stage message
-            pause(300);
+            AcmUtils.pause(300);
 
             var acToSend = new AutomationComposition(automationComposition);
             decryptInstanceProperties(acToSend);

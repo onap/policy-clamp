@@ -167,6 +167,12 @@ public class MessageProvider {
         return result.stream().map(JpaMessage::toAuthorative).toList();
     }
 
+    @Transactional(readOnly = true)
+    public Timestamp getLastMsg(UUID identificationId) {
+        var result = messageRepository.findByIdentificationIdOrderByLastMsgAsc(identificationId.toString());
+        return result.isEmpty() ? null : result.getFirst().getLastMsg();
+    }
+
     /**
      * Find all Composition ids from Messages.
      *

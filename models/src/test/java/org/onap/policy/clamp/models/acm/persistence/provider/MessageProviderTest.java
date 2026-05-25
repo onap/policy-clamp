@@ -152,8 +152,20 @@ class MessageProviderTest {
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
         var result = messageProvider.getAllMessages(instanceId);
         assertThat(result).hasSize(1);
-        var doc = result.iterator().next();
+        var doc = result.getFirst();
         assertEquals(jpaMessage.getMessageId(), doc.getMessageId());
+    }
+
+    @Test
+    void testGetLastMsg() {
+        var messageRepository = mock(MessageRepository.class);
+        var instanceId = UUID.randomUUID();
+        var jpaMessage = new JpaMessage();
+        when(messageRepository.findByIdentificationIdOrderByLastMsgAsc(instanceId.toString()))
+                .thenReturn(List.of(jpaMessage));
+        var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
+        var result = messageProvider.getLastMsg(instanceId);
+        assertEquals(jpaMessage.getLastMsg(), result);
     }
 
     @Test
