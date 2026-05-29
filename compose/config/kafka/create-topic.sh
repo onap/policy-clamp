@@ -17,8 +17,8 @@
 kafka-topics --bootstrap-server kafka:9092 --list
 
 echo -e 'Creating kafka topics'
-kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic policy-acruntime-participant --replication-factor 1 --partitions 10
-kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic acm-ppnt-sync --replication-factor 1 --partitions 10
+kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic policy-acruntime-participant --replication-factor 1 --partitions 1
+kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic acm-ppnt-sync --replication-factor 1 --partitions 1
 
 echo -e 'Successfully created the following topics:'
 kafka-topics --bootstrap-server kafka:9092 --list
