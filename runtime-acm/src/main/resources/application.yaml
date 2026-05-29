@@ -6,7 +6,7 @@ spring:
       name: ${RUNTIME_USER}
       password:  ${RUNTIME_PASSWORD}
   datasource:
-    url: jdbc:postgresql://${SQL_HOST:localhost}:${SQL_PORT:5432}/clampacm
+    url: jdbc:postgresql://${SQL_HOST:localhost}:${SQL_PORT:5432}/clampacm?sslmode=disable
     driverClassName: org.postgresql.Driver
     username: ${SQL_USER}
     password: ${SQL_PASSWORD}
