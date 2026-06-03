@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb928827_740944b7",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-06-03T10:15:23Z",
+      "side": 1,
+      "message": "I would suggest to use a placeholder like `${tomcat-embed-version}` and then declare that in the `properties` section as `\u003ctomcat-embed-version\u003e11.0.22\u003c/tomcat-embed-version\u003e` for all three deps to ensure that their version stays in sync",
+      "revId": "7570048dedf8fd091bda3941ea2b89cf610f2fb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
