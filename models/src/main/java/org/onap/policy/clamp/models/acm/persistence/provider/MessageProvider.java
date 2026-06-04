@@ -34,6 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaMessage;
@@ -63,11 +64,29 @@ public class MessageProvider {
      * @param message the ParticipantPrimeAck message
      */
     public void save(ParticipantPrimeAck message) {
+        if (message.getOutPropertiesList() != null) {
+            for (var element : message.getOutPropertiesList()) {
+                var jpaElement = new JpaMessage();
+                jpaElement.setIdentificationId(message.getCompositionId().toString());
+                jpaElement.setLastMsg(Timestamp.from(message.getTimestamp()));
+                var docElement = from(message);
+                docElement.setMessageType(ParticipantMessageType.PARTICIPANT_STATUS);
+                docElement.setOutProperties(element.outProperties());
+                docElement.setAcElementDefinitionId(element.elementDefinitionId());
+                jpaElement.fromAuthorative(docElement);
+                ProviderUtils.validate(docElement, jpaElement, "ParticipantPrimeAck outProperties message");
+                messageRepository.save(jpaElement);
+            }
+        }
         var doc = from(message);
         doc.setCompositionState(message.getCompositionState());
         doc.setMessage(AcmUtils.validatedMessage(message.getMessage()));
         var jpa = new JpaMessage(message.getCompositionId().toString(), doc);
-        jpa.setLastMsg(getDelay());
+        if (message.getOutPropertiesList() != null) {
+            jpa.setLastMsg(Timestamp.from(message.getTimestamp()));
+        } else {
+            jpa.setLastMsg(getDelay());
+        }
         ProviderUtils.validate(doc, jpa, "ParticipantPrimeAck message");
         messageRepository.save(jpa);
     }
@@ -79,6 +98,21 @@ public class MessageProvider {
      */
     public void save(AutomationCompositionDeployAck message) {
         for (var entry : message.getAutomationCompositionResultMap().entrySet()) {
+            if (Boolean.TRUE.equals(message.getOutPropertiesUpdated())) {
+                var jpaElement = new JpaMessage();
+                jpaElement.setIdentificationId(message.getAutomationCompositionId().toString());
+                jpaElement.setLastMsg(Timestamp.from(message.getTimestamp()));
+                var docElement = from(message);
+                docElement.setMessageType(ParticipantMessageType.PARTICIPANT_STATUS);
+                docElement.setInstanceId(message.getAutomationCompositionId());
+                docElement.setUseState(entry.getValue().getUseState());
+                docElement.setOperationalState(entry.getValue().getOperationalState());
+                docElement.setOutProperties(entry.getValue().getOutProperties());
+                docElement.setInstanceElementId(entry.getKey());
+                jpaElement.fromAuthorative(docElement);
+                ProviderUtils.validate(docElement, jpaElement, "AutomationCompositionDeployAck outProperties message");
+                messageRepository.save(jpaElement);
+            }
             var doc = from(message);
             doc.setStage(message.getStage());
             doc.setInstanceElementId(entry.getKey());
@@ -87,7 +121,11 @@ public class MessageProvider {
             doc.setDeployState(entry.getValue().getDeployState());
             doc.setLockState(entry.getValue().getLockState());
             var jpa = new JpaMessage(message.getAutomationCompositionId().toString(), doc);
-            jpa.setLastMsg(getDelay());
+            if (Boolean.TRUE.equals(message.getOutPropertiesUpdated())) {
+                jpa.setLastMsg(Timestamp.from(message.getTimestamp()));
+            } else {
+                jpa.setLastMsg(getDelay());
+            }
             ProviderUtils.validate(doc, jpa, "AutomationCompositionDeployAck message");
             messageRepository.save(jpa);
         }
