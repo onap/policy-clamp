@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021--2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -22,10 +22,12 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.dto.PrimeElementAck;
 
 /**
  * Class to represent the PARTICIPANT_PRIME_ACK message that registered participant sends to the ACM runtime.
@@ -36,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 public class ParticipantPrimeAck extends ParticipantAckMessage {
 
     private AcTypeState compositionState;
+    private List<PrimeElementAck> outPropertiesList;
 
     /**
      * Constructor for instantiating ParticipantPrimeAck class with message name.

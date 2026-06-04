@@ -40,6 +40,7 @@ public class AutomationCompositionDeployAck extends ParticipantAckMessage {
 
     private UUID automationCompositionId;
     private Integer stage;
+    private Boolean outPropertiesUpdated = Boolean.FALSE;
 
     // A map with AutomationCompositionElementID as its key, and a pair of result and message as value per
     // AutomationCompositionElement.
