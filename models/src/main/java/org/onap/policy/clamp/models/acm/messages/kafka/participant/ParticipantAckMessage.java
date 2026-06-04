@@ -20,13 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 
 /**
@@ -40,6 +41,12 @@ public abstract class ParticipantAckMessage implements ParticipantKafkaMessage {
 
     // The responseTo field should match the original request id in the request.
     private UUID responseTo;
+
+    /**
+     * Time-stamp, in milliseconds, when the message was created. Defaults to the current time.
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Instant timestamp = Instant.now();
 
     // Indicating participant failure
     private StateChangeResult stateChangeResult;
