@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -127,7 +128,7 @@ class SimulatorServiceTest {
         var simulatorService = new SimulatorService(intermediaryApi);
 
         var compositionId = UUID.randomUUID();
-        simulatorService.setCompositionOutProperties(compositionId, null, Map.of());
+        simulatorService.sendCompositionOutProperties(compositionId, null, Map.of());
         verify(intermediaryApi).sendAcDefinitionInfo(compositionId, null, Map.of());
     }
 
@@ -143,16 +144,16 @@ class SimulatorServiceTest {
 
         simulatorService.deploy(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
         simulatorService.undeploy(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
-        simulatorService.lock(UUID.randomUUID(), UUID.randomUUID());
-        simulatorService.unlock(UUID.randomUUID(), UUID.randomUUID());
-        simulatorService.delete(UUID.randomUUID(), UUID.randomUUID());
-        simulatorService.update(UUID.randomUUID(), UUID.randomUUID());
+        simulatorService.lock(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
+        simulatorService.unlock(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
+        simulatorService.delete(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
+        simulatorService.update(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
         simulatorService.prime(mock(CompositionDto.class));
         simulatorService.deprime(mock(CompositionDto.class));
         simulatorService.migrate(UUID.randomUUID(), UUID.randomUUID(), 0, 1, new HashMap<>());
-        simulatorService.review(UUID.randomUUID(), UUID.randomUUID());
+        simulatorService.review(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
         simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID(), 0, 1, new HashMap<>());
-        simulatorService.migratePrecheck(UUID.randomUUID(), UUID.randomUUID());
+        simulatorService.migratePrecheck(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
         verify(intermediaryApi, times(0)).sendAcDefinitionInfo(any(), any(), any());
     }
 
@@ -177,14 +178,15 @@ class SimulatorServiceTest {
         var simulatorService = new SimulatorService(intermediaryApi);
         var instanceId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
-        simulatorService.deleteInMigration(instanceId, elementId);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Migration - Deleted");
+        Map<String, Object> outProperties = Map.of("code", "value");
+        simulatorService.deleteInMigration(instanceId, elementId, outProperties);
+        verify(intermediaryApi).deleteAutomationCompositionElementState(instanceId, elementId);
 
         simulatorService.getConfig().setMigrateSuccess(false);
-        simulatorService.deleteInMigration(instanceId, elementId);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migration - Delete failed!");
+        simulatorService.deleteInMigration(instanceId, elementId, outProperties);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            instanceId, elementId, DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+            "Migration - Delete failed!", null, null, outProperties));
     }
 
 
@@ -194,13 +196,14 @@ class SimulatorServiceTest {
         var simulatorService = new SimulatorService(intermediaryApi);
         var instanceId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
-        simulatorService.deleteInRollback(instanceId, elementId);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Rollback - Deleted");
+        Map<String, Object> outProperties = Map.of("code", "value");
+        simulatorService.deleteInRollback(instanceId, elementId, outProperties);
+        verify(intermediaryApi).deleteAutomationCompositionElementState(instanceId, elementId);
 
         simulatorService.getConfig().setRollback(false);
-        simulatorService.deleteInRollback(instanceId, elementId);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
-                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Rollback - Delete failed!");
+        simulatorService.deleteInRollback(instanceId, elementId, outProperties);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            instanceId, elementId, DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+            "Rollback - Delete failed!", null, null, outProperties));
     }
 }

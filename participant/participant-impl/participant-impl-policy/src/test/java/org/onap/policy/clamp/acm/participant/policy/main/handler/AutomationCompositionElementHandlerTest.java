@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
@@ -67,9 +68,9 @@ class AutomationCompositionElementHandlerTest {
         var instanceElement = getInstanceElementWithNullTopology();
 
         handler.undeploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Undeployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Undeployed", "", "", Map.of()));
     }
 
     private CompositionElementDto getCompositionElement() {
@@ -103,15 +104,15 @@ class AutomationCompositionElementHandlerTest {
         var instanceElement = getInstanceElement();
 
         handler.deploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Deployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.DEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Deployed", "IDLE", "ENABLED", Map.of()));
 
         clearInvocations(intermediaryApi);
         handler.undeploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Undeployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Undeployed", "",  "", Map.of()));
     }
 
     @Test
@@ -128,9 +129,9 @@ class AutomationCompositionElementHandlerTest {
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElement();
         handler.undeploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Undeployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Undeployed", "", "", Map.of()));
     }
 
     @Test
@@ -156,22 +157,23 @@ class AutomationCompositionElementHandlerTest {
         var compositionElement = getCompositionElement();
         var instanceElement = getInstanceElementWithNullTopology();
         handler.deploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                "ToscaTopologyTemplate not defined");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(),
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "ToscaTopologyTemplate not defined", "", "", Map.of()));
 
         clearInvocations(intermediaryApi);
         instanceElement = getInstanceElementWithNoPolicy();
         handler.deploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Deployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.DEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Deployed", "IDLE", "ENABLED", Map.of()));
 
         clearInvocations(intermediaryApi);
         handler.undeploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Undeployed");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Undeployed", "", "", Map.of()));
     }
 
     private InstanceElementDto getInstanceElementWithNullTopology() {
@@ -203,9 +205,10 @@ class AutomationCompositionElementHandlerTest {
 
         // Mock failure in policy type creation
         handler.deploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.FAILED,
+                "Creation of PolicyTypes/Policies failed. Policies will not be deployed.", "", "", Map.of()));
     }
 
     @Test
@@ -223,9 +226,10 @@ class AutomationCompositionElementHandlerTest {
 
         // Mock failure in policy creation
         handler.deploy(compositionElement, instanceElement);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.FAILED,
+                "Creation of PolicyTypes/Policies failed. Policies will not be deployed.", "", "", Map.of()));
     }
 
     @Test

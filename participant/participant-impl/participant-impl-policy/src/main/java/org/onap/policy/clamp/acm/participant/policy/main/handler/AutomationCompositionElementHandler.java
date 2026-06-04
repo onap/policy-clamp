@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
@@ -86,20 +87,25 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException {
         var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
+        var elementStateDto = ElementStateDto.builder()
+                .instance(instanceElement.instanceId())
+                .elementId(instanceElement.elementId())
+                .deployState(DeployState.UNDEPLOYED)
+                .stateChangeResult(StateChangeResult.NO_ERROR)
+                .message("Undeployed")
+                .useState("")
+                .operationalState("")
+                .outProperties(Map.of()).build();
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
             LOGGER.debug("No policies to undeploy to {}", instanceElement.elementId());
-            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                    instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                    "Undeployed");
+            intermediaryApi.updateAutomationCompositionElementState(elementStateDto);
             return;
         }
         var policyList = getPolicyList(automationCompositionDefinition);
         undeployPolicies(policyList, instanceElement.elementId());
         var policyTypeList = getPolicyTypeList(automationCompositionDefinition);
         deletePolicyData(policyTypeList, policyList);
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Undeployed");
+        intermediaryApi.updateAutomationCompositionElementState(elementStateDto);
     }
 
     private void deletePolicyData(List<ToscaConceptIdentifier> policyTypeList,
@@ -138,10 +144,16 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
         }
         if (!deployFailure) {
             // Update the AC element state
-            intermediaryApi.sendAcElementInfo(automationCompositionId, automationCompositionElementId, "IDLE",
-                    "ENABLED", Map.of());
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+            intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
+                    .instance(automationCompositionId)
+                    .elementId(automationCompositionElementId)
+                    .deployState(DeployState.DEPLOYED)
+                    .stateChangeResult(StateChangeResult.NO_ERROR)
+                    .message("Deployed")
+                    .useState("IDLE")
+                    .operationalState("ENABLED")
+                    .outProperties(Map.of())
+                    .build());
         } else {
             throw new PfModelException(Status.BAD_REQUEST, "Deploy of Policy failed.");
         }
@@ -175,9 +187,16 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
 
         var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
-            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                    instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                    "ToscaTopologyTemplate not defined");
+            intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
+                    .instance(instanceElement.instanceId())
+                    .elementId(instanceElement.elementId())
+                    .deployState(DeployState.UNDEPLOYED)
+                    .stateChangeResult(StateChangeResult.FAILED)
+                    .message("ToscaTopologyTemplate not defined")
+                    .useState("")
+                    .operationalState("")
+                    .outProperties(Map.of())
+                    .build());
             return;
         }
         if (automationCompositionDefinition.getPolicyTypes() != null) {
@@ -207,9 +226,15 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
             var policyList = getPolicyList(automationCompositionDefinition);
             deployPolicies(policyList, instanceElement.instanceId(), instanceElement.elementId());
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                    instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                    "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+            intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
+                    .instance(instanceElement.instanceId())
+                    .elementId(instanceElement.elementId())
+                    .deployState(DeployState.UNDEPLOYED)
+                    .stateChangeResult(StateChangeResult.FAILED)
+                    .message("Creation of PolicyTypes/Policies failed. Policies will not be deployed.")
+                    .useState("")
+                    .operationalState("")
+                    .outProperties(Map.of()).build());
         }
     }
 
