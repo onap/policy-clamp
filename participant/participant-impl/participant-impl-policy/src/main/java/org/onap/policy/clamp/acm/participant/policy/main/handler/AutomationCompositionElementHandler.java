@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
@@ -88,18 +89,18 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
         var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
             LOGGER.debug("No policies to undeploy to {}", instanceElement.elementId());
-            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+            intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceElement.instanceId(),
                     instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                    "Undeployed");
+                    "Undeployed", "", "", Map.of()));
             return;
         }
         var policyList = getPolicyList(automationCompositionDefinition);
         undeployPolicies(policyList, instanceElement.elementId());
         var policyTypeList = getPolicyTypeList(automationCompositionDefinition);
         deletePolicyData(policyTypeList, policyList);
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+        intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
-                "Undeployed");
+                "Undeployed", "", "", Map.of()));
     }
 
     private void deletePolicyData(List<ToscaConceptIdentifier> policyTypeList,
@@ -138,10 +139,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
         }
         if (!deployFailure) {
             // Update the AC element state
-            intermediaryApi.sendAcElementInfo(automationCompositionId, automationCompositionElementId, "IDLE",
-                    "ENABLED", Map.of());
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+            intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(automationCompositionId,
+                automationCompositionElementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed",
+                "IDLE", "ENABLED", Map.of()));
         } else {
             throw new PfModelException(Status.BAD_REQUEST, "Deploy of Policy failed.");
         }
@@ -175,9 +175,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
 
         var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
-            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+            intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceElement.instanceId(),
                     instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                    "ToscaTopologyTemplate not defined");
+                    "ToscaTopologyTemplate not defined", "", "", Map.of()));
             return;
         }
         if (automationCompositionDefinition.getPolicyTypes() != null) {
@@ -207,9 +207,10 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
             var policyList = getPolicyList(automationCompositionDefinition);
             deployPolicies(policyList, instanceElement.instanceId(), instanceElement.elementId());
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+            intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceElement.instanceId(),
                     instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                    "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+                    "Creation of PolicyTypes/Policies failed. Policies will not be deployed.",
+                    "", "", Map.of()));
         }
     }
 

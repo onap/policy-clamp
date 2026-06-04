@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,21 @@
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
-import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -67,9 +66,44 @@ class ParticipantIntermediaryApiImplTest {
         var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, mock(CacheProvider.class));
         apiImpl.updateAutomationCompositionElementState(AUTOMATION_COMPOSITION_ID, ELEMENT_ID, DeployState.UNDEPLOYED,
-                LockState.NONE, StateChangeResult.NO_ERROR, null);
-        verify(automationCompositionHandler).updateAutomationCompositionElementState(AUTOMATION_COMPOSITION_ID,
-                ELEMENT_ID, DeployState.UNDEPLOYED, LockState.NONE, StateChangeResult.NO_ERROR, null);
+                LockState.NONE, StateChangeResult.NO_ERROR, "");
+        verify(automationCompositionHandler).updateAutomationCompositionElementState(new ElementStateDto(
+                AUTOMATION_COMPOSITION_ID, ELEMENT_ID, DeployState.UNDEPLOYED, LockState.NONE,
+                StateChangeResult.NO_ERROR, "", null, null, Map.of()), false);
+        clearInvocations(automationCompositionHandler);
+
+        var elementStateDto = new ElementStateDto(AUTOMATION_COMPOSITION_ID, ELEMENT_ID, DeployState.UNDEPLOYED,
+                StateChangeResult.NO_ERROR, "", Map.of("key", new Object()));
+        apiImpl.updateAutomationCompositionElementState(elementStateDto);
+        verify(automationCompositionHandler).updateAutomationCompositionElementState(elementStateDto, true);
+    }
+
+    @Test
+    void testDeleteAutomationCompositionElementState() {
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, mock(CacheProvider.class));
+        apiImpl.deleteAutomationCompositionElementState(AUTOMATION_COMPOSITION_ID, ELEMENT_ID);
+        verify(automationCompositionHandler).updateAutomationCompositionElementState(new ElementStateDto(
+                AUTOMATION_COMPOSITION_ID, ELEMENT_ID, DeployState.DELETED,
+                StateChangeResult.NO_ERROR, "Deleted", Map.of()), false);
+    }
+
+    @Test
+    void testUpdateAutomationCompositionElementStage() {
+        var cacheProvider = mock(CacheProvider.class);
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
+        apiImpl.updateAutomationCompositionElementStage(AUTOMATION_COMPOSITION_ID, ELEMENT_ID,
+                StateChangeResult.NO_ERROR, 1, "");
+        verify(automationCompositionHandler).updateAutomationCompositionElementStage(new ElementStageDto(
+                AUTOMATION_COMPOSITION_ID, ELEMENT_ID, "", 1, null, null,
+                Map.of()), false);
+        clearInvocations(automationCompositionHandler);
+
+        var elementStageDto = new ElementStageDto(AUTOMATION_COMPOSITION_ID, ELEMENT_ID, "", 1,
+                null, null, Map.of());
+        apiImpl.updateAutomationCompositionElementStage(elementStageDto);
+        verify(automationCompositionHandler).updateAutomationCompositionElementStage(elementStageDto, true);
     }
 
     @Test
@@ -78,7 +112,14 @@ class ParticipantIntermediaryApiImplTest {
         var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, mock(CacheProvider.class));
         apiImpl.updateCompositionState(COMPOSITION_ID, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "");
         verify(automationCompositionHandler).updateCompositionState(COMPOSITION_ID, AcTypeState.PRIMED,
-                StateChangeResult.NO_ERROR, "");
+                StateChangeResult.NO_ERROR, "", null);
+        clearInvocations(automationCompositionHandler);
+
+        var outProperties = Map.of(new ToscaConceptIdentifier(), Map.of("key", new Object()));
+        apiImpl.updateCompositionState(COMPOSITION_ID, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+                "", outProperties);
+        verify(automationCompositionHandler).updateCompositionState(COMPOSITION_ID, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "", outProperties);
     }
 
     @Test
@@ -280,24 +321,6 @@ class ParticipantIntermediaryApiImplTest {
         assertEquals(0, result);
         result = apiImpl.getRollbackNextStage(compositionElementTarget, 0);
         assertEquals(0, result);
-    }
-
-    @Test
-    void testUpdateAutomationCompositionElementStage() {
-        var instanceId = UUID.randomUUID();
-        var mockCacheProvider = mock(CacheProvider.class);
-        when(mockCacheProvider.getAutomationComposition(instanceId)).thenReturn(null);
-        var mockAutomationCompositionHandler = mock(AutomationCompositionOutHandler.class,
-            withSettings().useConstructor(mock(ParticipantMessagePublisher.class), mockCacheProvider));
-        var elementId = UUID.randomUUID();
-        doCallRealMethod().when(mockAutomationCompositionHandler)
-            .updateAutomationCompositionElementStage(instanceId, elementId, StateChangeResult.NO_ERROR, 1, "message");
-        var api = new ParticipantIntermediaryApiImpl(mockAutomationCompositionHandler, mockCacheProvider);
-
-        assertDoesNotThrow(() -> api.updateAutomationCompositionElementStage(instanceId, elementId,
-            StateChangeResult.NO_ERROR, 1, "message"));
-        verify(mockAutomationCompositionHandler).updateAutomationCompositionElementStage(instanceId, elementId,
-            StateChangeResult.NO_ERROR, 1, "message");
     }
 
     @Test

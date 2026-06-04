@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,6 +33,8 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -56,54 +60,72 @@ class AutomationCompositionOutHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
-        assertDoesNotThrow(
-                () -> acOutHandler.updateAutomationCompositionElementState(null, null, null, null, null, null));
+        assertThrows(NullPointerException.class,
+                () -> acOutHandler.updateAutomationCompositionElementState(null, false));
 
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(null,
-                UUID.randomUUID(), null, null, null, null));
+        assertThrows(NullPointerException.class,
+                () -> acOutHandler.updateAutomationCompositionElementStage(null, false));
 
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
-                null, null, null, null, null));
+        var elementStateDto1 = new ElementStateDto(null, null, null, null, null, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto1, false));
 
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
-                UUID.randomUUID(), null, null, null, null));
+        var elementStateDto2 = new ElementStateDto(null, UUID.randomUUID(), null, null, null, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto2, false));
 
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
-                UUID.randomUUID(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, null));
+        var elementStateDto3 = new ElementStateDto(UUID.randomUUID(), null, null, null, null, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto3, false));
 
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
-                UUID.randomUUID(), DeployState.DEPLOYED, null, null, null));
+        var elementStateDto4 = new ElementStateDto(UUID.randomUUID(), UUID.randomUUID(),
+                null, null, null, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto4, false));
+
+        var elementStateDto5 = new ElementStateDto(UUID.randomUUID(), UUID.randomUUID(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto5, false));
+
+        var elementStateDto6 = new ElementStateDto(UUID.randomUUID(), UUID.randomUUID(), DeployState.DEPLOYED,
+                null, null, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto6, false));
 
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), UUID.randomUUID(), DeployState.DEPLOYED,
-            null, StateChangeResult.NO_ERROR, null));
+
+        var elementStateDto7 = new ElementStateDto(automationComposition.getInstanceId(), UUID.randomUUID(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto7, false));
 
         var elementId = automationComposition.getElements().values().iterator().next().getId();
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), elementId, null, null,
-                StateChangeResult.NO_ERROR, null));
+        var elementStateDto8 = new ElementStateDto(automationComposition.getInstanceId(), elementId, null, null,
+                StateChangeResult.NO_ERROR, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto8, false));
 
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                elementId, null, StateChangeResult.NO_ERROR, 0, null));
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                null, elementId, StateChangeResult.NO_ERROR, 0, null));
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                UUID.randomUUID(), elementId, StateChangeResult.NO_ERROR, 0, null));
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                automationComposition.getInstanceId(), UUID.randomUUID(),
-                StateChangeResult.NO_ERROR, 0, null));
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), elementId, DeployState.DEPLOYED, LockState.LOCKED,
-                StateChangeResult.NO_ERROR, null));
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), elementId, DeployState.DEPLOYING, null,
-                StateChangeResult.NO_ERROR, ""));
-        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), elementId, DeployState.DEPLOYED, null,
-                StateChangeResult.TIMEOUT, ""));
+        var elementStageDto1 = new ElementStageDto(UUID.randomUUID(),
+                null, null, 0, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(elementStageDto1, false));
+
+        var elementStageDto2 = new ElementStageDto(null, elementId, null, 0,
+                null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(elementStageDto2, false));
+
+        var elementStageDto3 = new ElementStageDto(UUID.randomUUID(), elementId, null, 0, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(elementStageDto3, false));
+
+        var elementStageDto4 = new ElementStageDto(automationComposition.getInstanceId(), UUID.randomUUID(),
+                null, 0, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(elementStageDto4, false));
+
+        var elementStateDto13 = new ElementStateDto(automationComposition.getInstanceId(), elementId,
+                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, null, null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto13, false));
+
+        var elementStateDto14 = new ElementStateDto(automationComposition.getInstanceId(), elementId,
+                DeployState.DEPLOYING, null, StateChangeResult.NO_ERROR, "", null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto14, false));
+
+        var elementStateDto15 = new ElementStateDto(automationComposition.getInstanceId(), elementId,
+                DeployState.DEPLOYED, null, StateChangeResult.TIMEOUT, "", null, null, null);
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(elementStateDto15, false));
 
         verify(publisher, times(0)).sendAutomationCompositionAck(any());
     }
@@ -117,8 +139,13 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         var elementId = automationComposition.getElements().values().iterator().next().getId();
-        acOutHandler.updateAutomationCompositionElementStage(
-                automationComposition.getInstanceId(), elementId, StateChangeResult.NO_ERROR, 0, "OK");
+        var elementStageDto = new ElementStageDto(automationComposition.getInstanceId(), elementId,
+                "OK", 0, "", "", Map.of());
+        acOutHandler.updateAutomationCompositionElementStage(elementStageDto, false);
+        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+
+        clearInvocations(publisher);
+        acOutHandler.updateAutomationCompositionElementStage(elementStageDto, true);
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 
@@ -132,8 +159,14 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         var elementId = automationComposition.getElements().values().iterator().next().getId();
-        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId,
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+        var elementStateDto = new ElementStateDto(automationComposition.getInstanceId(),
+                elementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed",
+                null, null, Map.of());
+        acOutHandler.updateAutomationCompositionElementState(elementStateDto, false);
+        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+
+        clearInvocations(publisher);
+        acOutHandler.updateAutomationCompositionElementState(elementStateDto, true);
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 
@@ -149,8 +182,9 @@ class AutomationCompositionOutHandlerTest {
         var elementId = element.getId();
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
-        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId,
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed");
+        acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(automationComposition.getInstanceId(),
+                elementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed",
+                null, null, null), false);
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 
@@ -166,8 +200,9 @@ class AutomationCompositionOutHandlerTest {
         var elementId = element.getId();
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
-        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId,
-                DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Prepare failed");
+        acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(automationComposition.getInstanceId(),
+                elementId, DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Prepare failed",
+                null, null, null), false);
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 
@@ -181,8 +216,9 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         var elementId = automationComposition.getElements().values().iterator().next().getId();
-        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId, null,
-                LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+        acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(automationComposition.getInstanceId(),
+                elementId, null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked",
+                null, null, null), false);
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 
@@ -196,8 +232,10 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         for (var element : automationComposition.getElements().values()) {
-            acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), element.getId(),
-                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+            acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(
+                    automationComposition.getInstanceId(), element.getId(),
+                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted",
+                    null, null, null), false);
         }
         verify(publisher, times(automationComposition.getElements().size()))
                 .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
@@ -242,17 +280,17 @@ class AutomationCompositionOutHandlerTest {
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
         assertDoesNotThrow(
-                () -> acOutHandler.updateCompositionState(null, null, null, null));
+                () -> acOutHandler.updateCompositionState(null, null, null, null, null));
         assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), null,
-                                StateChangeResult.NO_ERROR, null));
+                StateChangeResult.NO_ERROR, null, null));
         assertDoesNotThrow(
-                () -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED, null, null));
+                () -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED, null, null, null));
         assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMING,
-                StateChangeResult.NO_ERROR, null));
+                StateChangeResult.NO_ERROR, null, null));
         assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.DEPRIMING,
-                StateChangeResult.NO_ERROR, null));
+                StateChangeResult.NO_ERROR, null, null));
         assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED,
-                StateChangeResult.TIMEOUT, null));
+                StateChangeResult.TIMEOUT, null, null));
 
         verify(publisher, times(0)).sendParticipantPrimeAck(any());
     }
@@ -264,9 +302,15 @@ class AutomationCompositionOutHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
         var compositionId = UUID.randomUUID();
-        acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+        acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+                "Primed", null);
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
         verify(cacheProvider, times(0)).removeElementDefinition(compositionId);
+
+        clearInvocations(publisher);
+        acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+                "Primed", Map.of(new ToscaConceptIdentifier(), Map.of()));
+        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
     }
 
     @Test
@@ -277,7 +321,7 @@ class AutomationCompositionOutHandlerTest {
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
         var compositionId = UUID.randomUUID();
         acOutHandler.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
-                "Deprimed");
+                "Deprimed", null);
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
         verify(cacheProvider).removeElementDefinition(compositionId);
     }
@@ -341,8 +385,10 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionTarget, new AcDefinition()));
 
         for (var element : automationComposition.getElements().values()) {
-            acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "");
+            acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(
+                    automationComposition.getInstanceId(), element.getId(),
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "",
+                    null, null, null), false);
         }
         verify(publisher, times(automationComposition.getElements().size()))
                 .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
@@ -364,8 +410,10 @@ class AutomationCompositionOutHandlerTest {
         var compositionId = automationComposition.getCompositionId();
         for (var element : automationComposition.getElements().values()) {
             element.setDeployState(DeployState.MIGRATING);
-            acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(),
-                    element.getId(), DeployState.DEPLOYED, null, StateChangeResult.FAILED, "");
+            acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(
+                    automationComposition.getInstanceId(),
+                    element.getId(), DeployState.DEPLOYED, null, StateChangeResult.FAILED, "",
+                    null, null, null), false);
         }
         verify(publisher, times(automationComposition.getElements().size()))
                 .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
@@ -385,8 +433,9 @@ class AutomationCompositionOutHandlerTest {
         automationComposition.setDeployState(DeployState.MIGRATING);
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
-        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(),
-            UUID.randomUUID(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "");
+        acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(automationComposition.getInstanceId(),
+            UUID.randomUUID(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "",
+                null, null, null), false);
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 }

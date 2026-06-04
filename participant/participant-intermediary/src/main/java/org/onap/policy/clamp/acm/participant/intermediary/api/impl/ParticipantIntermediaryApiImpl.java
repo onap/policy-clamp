@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,9 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
@@ -58,15 +60,33 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public void updateAutomationCompositionElementState(UUID instance, UUID elementId, DeployState deployState,
             LockState lockState, StateChangeResult stateChangeResult, String message) {
-        automationCompositionHandler.updateAutomationCompositionElementState(instance, elementId, deployState,
-            lockState, stateChangeResult, message);
+        automationCompositionHandler.updateAutomationCompositionElementState(
+            new ElementStateDto(instance, elementId, deployState, lockState, stateChangeResult, message,
+                    null, null, Map.of()), false);
+    }
+
+    @Override
+    public void updateAutomationCompositionElementState(ElementStateDto elementStateDto) {
+        automationCompositionHandler.updateAutomationCompositionElementState(elementStateDto, true);
+    }
+
+    @Override
+    public void deleteAutomationCompositionElementState(UUID instance, UUID elementId) {
+        automationCompositionHandler.updateAutomationCompositionElementState(
+                new ElementStateDto(instance, elementId, DeployState.DELETED, StateChangeResult.NO_ERROR,
+                        "Deleted", Map.of()), false);
     }
 
     @Override
     public void updateAutomationCompositionElementStage(UUID instance, UUID elementId,
-            StateChangeResult stateChangeResult, int stage, String message) {
-        automationCompositionHandler.updateAutomationCompositionElementStage(instance, elementId, stateChangeResult,
-            stage, message);
+            StateChangeResult stateChangeResult, int nextStage, String message) {
+        automationCompositionHandler.updateAutomationCompositionElementStage(
+                new ElementStageDto(instance, elementId, message, nextStage, Map.of()), false);
+    }
+
+    @Override
+    public void updateAutomationCompositionElementStage(ElementStageDto elementStageDto) {
+        automationCompositionHandler.updateAutomationCompositionElementStage(elementStageDto, true);
     }
 
     @Override
@@ -84,7 +104,14 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message) {
-        automationCompositionHandler.updateCompositionState(compositionId, state, stateChangeResult, message);
+        automationCompositionHandler.updateCompositionState(compositionId, state, stateChangeResult, message, null);
+    }
+
+    @Override
+    public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
+            String message, Map<ToscaConceptIdentifier, Map<String, Object>> outPropertiesMap) {
+        automationCompositionHandler.updateCompositionState(compositionId, state, stateChangeResult,
+                message, outPropertiesMap);
     }
 
     @Override
