@@ -23,7 +23,10 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -39,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.PrimeElementAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
@@ -67,43 +71,42 @@ public class AutomationCompositionOutHandler {
     /**
      * Handle a automation composition element stage change message.
      *
-     * @param instance the automationComposition Id
-     * @param elementId the automationComposition Element Id
-     * @param stage the next stage
-     * @param message the message
-     * @param stateChangeResult the indicator if error occurs
+     * @param elementStageDto all data related to the change stage
+     * @param sendOutput if true send OutputPoperties
      */
-    public void updateAutomationCompositionElementStage(UUID instance, UUID elementId,
-        StateChangeResult stateChangeResult, int stage, String message) {
-        if (!validateData(instance, elementId, stateChangeResult)) {
+    public void updateAutomationCompositionElementStage(
+            @NonNull ElementStageDto elementStageDto, boolean sendOutput) {
+        if (!validateData(elementStageDto.instance(), elementStageDto.elementId(), StateChangeResult.NO_ERROR)) {
             return;
         }
 
-        var automationComposition = cacheProvider.getAutomationComposition(instance);
+        var automationComposition = cacheProvider.getAutomationComposition(elementStageDto.instance());
         if (automationComposition == null) {
-            LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC, instance);
+            LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC, elementStageDto.instance());
             return;
         }
 
-        var element = automationComposition.getElements().get(elementId);
+        var element = automationComposition.getElements().get(elementStageDto.elementId());
         if (element == null) { // NOSONAR
-            LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC_ELEMENT, elementId);
+            LOGGER.error(MSG_NOT_PRESENT, MSG_STAGE, MSG_AC_ELEMENT, elementStageDto.elementId());
             return;
         }
+        if (sendOutput) {
+            element.setUseState(elementStageDto.useState());
+            element.setOperationalState(elementStageDto.operationalState());
+            element.setOutProperties(elementStageDto.outProperties());
+        }
 
-        var automationCompositionStateChangeAck =
-            new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-        automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
-        automationCompositionStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
-        automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
-        automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
-        automationCompositionStateChangeAck.setStage(stage);
-        automationCompositionStateChangeAck.setAutomationCompositionId(instance);
-        automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
+        var acStateChangeAck = createAutomationCompositionDeployAck(elementStageDto.instance(),
+                elementStageDto.elementId(), StateChangeResult.NO_ERROR, elementStageDto.message());
+        acStateChangeAck.setStage(elementStageDto.nextStage());
+        acStateChangeAck.setOutPropertiesUpdated(sendOutput);
+        acStateChangeAck.getAutomationCompositionResultMap().put(elementStageDto.elementId(),
             new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
-                element.getUseState(), element.getOutProperties(), true, message));
-        LOGGER.debug("Automation composition element {} stage changed to {}", elementId, stage);
-        publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
+                element.getUseState(), element.getOutProperties(), true, elementStageDto.message()));
+        LOGGER.debug("Automation composition element {} stage changed to {}", elementStageDto.elementId(),
+                elementStageDto.nextStage());
+        publisher.sendAutomationCompositionAck(acStateChangeAck);
         cacheProvider.getMsgIdentification().remove(element.getId());
     }
 
@@ -124,91 +127,102 @@ public class AutomationCompositionOutHandler {
         return true;
     }
 
-    /**
-     * Handle a automation composition element state change message.
-     *
-     * @param instance the automationComposition Id
-     * @param elementId the automationComposition Element Id
-     * @param deployState the DeployState state
-     * @param lockState the LockState state
-     * @param message the message
-     * @param stateChangeResult the indicator if error occurs
-     */
-    public void updateAutomationCompositionElementState(UUID instance, UUID elementId,
-            DeployState deployState, LockState lockState, StateChangeResult stateChangeResult, String message) {
+    private boolean validateData(UUID instance, UUID elementId, StateChangeResult stateChangeResult,
+            DeployState deployState, LockState lockState) {
         if (!validateData(instance, elementId, stateChangeResult)) {
-            return;
+            return false;
         }
 
         if ((deployState != null && lockState != null) || (deployState == null && lockState == null)
                 || AcmStateUtils.isInTransitionalState(deployState, lockState, SubState.NONE)) {
             LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Handle a automation composition element state change message.
+     *
+     * @param elementStateDto all data related to the change state
+     * @param sendOutput send OutputPoperties
+     */
+    public void updateAutomationCompositionElementState(@NonNull ElementStateDto elementStateDto, boolean sendOutput) {
+        if (!validateData(elementStateDto.instance(), elementStateDto.elementId(),
+                elementStateDto.stateChangeResult(), elementStateDto.deployState(), elementStateDto.lockState())) {
             return;
         }
 
-        var automationComposition = cacheProvider.getAutomationComposition(instance);
+        var automationComposition = cacheProvider.getAutomationComposition(elementStateDto.instance());
         if (automationComposition == null) {
-            LOGGER.error(MSG_NOT_PRESENT, "state", MSG_AC, instance);
+            LOGGER.error(MSG_NOT_PRESENT, "state", MSG_AC, elementStateDto.instance());
             return;
         }
 
-        var element = automationComposition.getElements().get(elementId);
+        var element = automationComposition.getElements().get(elementStateDto.elementId());
         if (element == null) { // NOSONAR
-            checkElement(automationComposition, instance, elementId, deployState, stateChangeResult, message);
+            checkElement(automationComposition, elementStateDto, sendOutput);
             return;
         }
 
         if (!SubState.NONE.equals(element.getSubState())) {
-            if (!StateChangeResult.FAILED.equals(stateChangeResult)) {
+            if (!StateChangeResult.FAILED.equals(elementStateDto.stateChangeResult())) {
                 element.setSubState(SubState.NONE);
             }
-        } else if (deployState != null) {
-            element.setDeployState(deployState);
+        } else if (elementStateDto.deployState() != null) {
+            element.setDeployState(elementStateDto.deployState());
             element.setLockState(
                     DeployState.DEPLOYED.equals(element.getDeployState()) ? LockState.LOCKED : LockState.NONE);
         }
-        if (lockState != null) {
-            element.setLockState(lockState);
+        if (elementStateDto.lockState() != null) {
+            element.setLockState(elementStateDto.lockState());
         }
-
-        var acStateChangeAck = createAutomationCompositionDeployAck();
-        acStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
-        acStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
-        acStateChangeAck.setStateChangeResult(stateChangeResult);
-        acStateChangeAck.setAutomationCompositionId(instance);
-        acStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
+        if (sendOutput) {
+            element.setUseState(elementStateDto.useState());
+            element.setOperationalState(elementStateDto.operationalState());
+            element.setOutProperties(elementStateDto.outProperties());
+        }
+        var message = elementStateDto.message();
+        var acStateChangeAck = createAutomationCompositionDeployAck(elementStateDto.instance(),
+                elementStateDto.elementId(), elementStateDto.stateChangeResult(), message);
+        acStateChangeAck.setOutPropertiesUpdated(sendOutput);
+        acStateChangeAck.getAutomationCompositionResultMap().put(elementStateDto.elementId(),
                 new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
                         element.getUseState(), element.getOutProperties(), true, message));
-        LOGGER.debug(MSG_STATE_CHANGE, elementId, deployState);
+        LOGGER.debug(MSG_STATE_CHANGE, elementStateDto.elementId(), elementStateDto.deployState());
         publisher.sendAutomationCompositionAck(acStateChangeAck);
         cacheProvider.getMsgIdentification().remove(element.getId());
     }
 
-    private void checkElement(AutomationComposition automationComposition, UUID instance, UUID elementId,
-            DeployState deployState, StateChangeResult stateChangeResult, String message) {
+    private void checkElement(AutomationComposition automationComposition, ElementStateDto elementStateDto,
+            boolean sendOutput) {
         if ((DeployState.MIGRATING.equals(automationComposition.getDeployState())
                 || DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState()))) {
-            var acStateChangeAck = createAutomationCompositionDeployAck();
-            acStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
-            acStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(elementId));
-            acStateChangeAck.setStateChangeResult(stateChangeResult);
-            acStateChangeAck.setAutomationCompositionId(instance);
-            acStateChangeAck.getAutomationCompositionResultMap().put(elementId,
-                    new AcElementDeployAck(deployState, LockState.NONE, null,
-                            null, Map.of(), true, message));
-            LOGGER.debug(MSG_STATE_CHANGE, elementId, deployState);
+            var acStateChangeAck = createAutomationCompositionDeployAck(elementStateDto.instance(),
+                    elementStateDto.elementId(), elementStateDto.stateChangeResult(), elementStateDto.message());
+            acStateChangeAck.setOutPropertiesUpdated(sendOutput);
+            acStateChangeAck.getAutomationCompositionResultMap().put(elementStateDto.elementId(),
+                    new AcElementDeployAck(elementStateDto.deployState(), LockState.NONE,
+                            elementStateDto.operationalState(), elementStateDto.useState(),
+                            elementStateDto.outProperties(), true, elementStateDto.message()));
+            LOGGER.debug(MSG_STATE_CHANGE, elementStateDto.elementId(), elementStateDto.deployState());
             publisher.sendAutomationCompositionAck(acStateChangeAck);
-            cacheProvider.getMsgIdentification().remove(elementId);
+            cacheProvider.getMsgIdentification().remove(elementStateDto.elementId());
         } else {
-            LOGGER.error(MSG_NOT_PRESENT, "state", MSG_AC_ELEMENT, elementId);
+            LOGGER.error(MSG_NOT_PRESENT, "state", MSG_AC_ELEMENT, elementStateDto.elementId());
         }
     }
 
-    private AutomationCompositionDeployAck createAutomationCompositionDeployAck() {
+    private AutomationCompositionDeployAck createAutomationCompositionDeployAck(UUID instance, UUID elementId,
+            StateChangeResult stateChangeResult, String message) {
         var acStateChangeAck =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         acStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
         acStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
+        acStateChangeAck.setAutomationCompositionId(instance);
+        acStateChangeAck.setStateChangeResult(stateChangeResult);
+        acStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
+        acStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(elementId));
         return acStateChangeAck;
     }
 
@@ -281,9 +295,10 @@ public class AutomationCompositionOutHandler {
      * @param state the Composition State
      * @param stateChangeResult the indicator if error occurs
      * @param message the message
+     * @param outPropertiesMap the outProperties for each element
      */
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
-            String message) {
+            String message, Map<ToscaConceptIdentifier, Map<String, Object>> outPropertiesMap) {
         if (compositionId == null) {
             LOGGER.error("Cannot update Automation composition definition state, id is null");
             return;
@@ -312,6 +327,11 @@ public class AutomationCompositionOutHandler {
         participantPrimeAck.setStateChangeResult(stateChangeResult);
         participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
         participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
+        if (outPropertiesMap != null) {
+            participantPrimeAck.setOutPropertiesList(outPropertiesMap.entrySet().stream()
+                    .map(element -> new PrimeElementAck(element.getKey(), element.getValue()))
+                    .toList());
+        }
         publisher.sendParticipantPrimeAck(participantPrimeAck);
         cacheProvider.getMsgIdentification().remove(compositionId);
         if (AcTypeState.COMMISSIONED.equals(state) && StateChangeResult.NO_ERROR.equals(stateChangeResult)) {
