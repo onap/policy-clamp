@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,6 +47,7 @@ import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
+import org.onap.policy.clamp.models.acm.dto.PrimeElementAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
@@ -69,7 +71,12 @@ class MessageProviderTest {
         var messageRepository = mock(MessageRepository.class);
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
         messageProvider.save(message);
-        verify(messageRepository).save(any());
+        verify(messageRepository).save(any(JpaMessage.class));
+        clearInvocations(messageRepository);
+
+        message.setOutPropertiesList(List.of(new PrimeElementAck(new ToscaConceptIdentifier(), Map.of())));
+        messageProvider.save(message);
+        verify(messageRepository, times(2)).save(any(JpaMessage.class));
     }
 
     @Test
@@ -86,7 +93,12 @@ class MessageProviderTest {
         var messageRepository = mock(MessageRepository.class);
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
         messageProvider.save(message);
-        verify(messageRepository).save(any());
+        verify(messageRepository).save(any(JpaMessage.class));
+        clearInvocations(messageRepository);
+
+        message.setOutPropertiesUpdated(true);
+        messageProvider.save(message);
+        verify(messageRepository, times(2)).save(any(JpaMessage.class));
     }
 
     @Test
