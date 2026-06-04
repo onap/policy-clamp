@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,15 +51,38 @@ public interface ParticipantIntermediaryApi {
             LockState lockState, StateChangeResult stateChangeResult, String message);
 
     /**
+     * Update the state of an AutomationComposition Instance Element.
+     *
+     * @param elementStateDto all data related to the change state
+     */
+    void updateAutomationCompositionElementState(ElementStateDto elementStateDto);
+
+    /**
+     * Delete the state of an AutomationComposition Instance Element.
+     *
+     * @param instance the ID of the AutomationComposition Instance to delete
+     * @param elementId the ID of the AutomationComposition Instance element to delete
+     */
+    void deleteAutomationCompositionElementState(UUID instance, UUID elementId);
+
+    /**
      * Update the stage of an AutomationComposition Instance Element.
      *
      * @param instance the ID of the AutomationComposition Instance to update the state on
      * @param elementId the ID of the AutomationComposition Instance Element to update the state on
      * @param stateChangeResult the indicator if error occurs
+     * @param stage the next stage
      * @param message the message
      */
     void updateAutomationCompositionElementStage(UUID instance, UUID elementId, StateChangeResult stateChangeResult,
             int stage, String message);
+
+    /**
+     * Update the stage of an AutomationComposition Instance Element.
+     *
+     * @param elementStageDto all data related to the next stage
+     */
+    void updateAutomationCompositionElementStage(ElementStageDto elementStageDto);
 
     /**
      * Get a copy of all AutomationComposition Instances.
@@ -158,6 +181,18 @@ public interface ParticipantIntermediaryApi {
      */
     void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message);
+
+    /**
+     * Update the state of an Automation Composition Definition.
+     *
+     * @param compositionId the composition id
+     * @param state the state of Automation Composition Definition
+     * @param stateChangeResult the indicator if error occurs
+     * @param message the message
+     * @param outPropertiesMap the outProperties for each element
+     */
+    void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
+            String message, Map<ToscaConceptIdentifier, Map<String, Object>> outPropertiesMap);
 
     /**
      * Get next stage in Migration.
