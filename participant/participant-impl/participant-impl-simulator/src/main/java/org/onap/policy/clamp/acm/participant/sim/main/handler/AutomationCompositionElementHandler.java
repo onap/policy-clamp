@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,19 +79,22 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     @Override
     public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.info("lock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.lock(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.lock(
+                instanceElement.instanceId(), instanceElement.elementId(), instanceElement.outProperties());
     }
 
     @Override
     public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.info("unlock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.unlock(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.unlock(
+                instanceElement.instanceId(), instanceElement.elementId(), instanceElement.outProperties());
     }
 
     @Override
     public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.info("delete call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.delete(
+                instanceElement.instanceId(), instanceElement.elementId(), instanceElement.outProperties());
     }
 
     @Override
@@ -99,7 +102,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
                        InstanceElementDto instanceElementUpdated) {
         LOGGER.info("update call compositionElement: {}, instanceElement: {}, instanceElementUpdated: {}",
                 compositionElement, instanceElement, instanceElementUpdated);
-        simulatorService.update(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.update(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElementUpdated.outProperties());
     }
 
     @Override
@@ -125,7 +129,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
             LOGGER.debug("new element scenario");
         }
         if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
-            simulatorService.deleteInMigration(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.deleteInMigration(
+                    instanceElement.instanceId(), instanceElement.elementId(), instanceElementMigrate.outProperties());
         } else {
             var nextStage = intermediaryApi.getMigrateNextStage(compositionElementTarget, stage);
             simulatorService.migrate(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId(), stage,
@@ -140,7 +145,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
         LOGGER.info("migrate precheck call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
                         + " instanceElementMigrate: {}",
                 compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
-        simulatorService.migratePrecheck(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.migratePrecheck(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElementMigrate.outProperties());
     }
 
     @Override
@@ -154,7 +160,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     @Override
     public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.info("review call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.review(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.review(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElement.outProperties());
     }
 
     @Override
@@ -169,7 +176,8 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
             LOGGER.debug("new element scenario");
         }
         if (ElementState.REMOVED.equals(instanceElementRollback.state())) {
-            simulatorService.deleteInRollback(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.deleteInRollback(
+                    instanceElement.instanceId(), instanceElement.elementId(), instanceElementRollback.outProperties());
         } else {
             var nextStage = intermediaryApi.getRollbackNextStage(compositionElementRollback, stage);
             simulatorService.rollback(instanceElementRollback.instanceId(), instanceElementRollback.elementId(), stage,
