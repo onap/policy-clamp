@@ -130,6 +130,29 @@ class SupervisionParticipantHandlerSpec extends Specification {
         0 * syncPublisher.sendRestartMsg(_, _, _, _)
     }
 
+    def "register with intermediaryVersion should log and process successfully"() {
+        given:
+        def participantProvider = Mock(ParticipantProvider)
+        def registerAck = Mock(ParticipantRegisterAckPublisher)
+        def handler = buildHandler(
+                participantProvider: participantProvider,
+                registerAckPublisher: registerAck)
+        def msg = createRegisterMessage(intermediaryVersion: "9.0.2-SNAPSHOT", replicaId: REPLICA_ID)
+
+        when:
+        handler.handleParticipantMessage(msg)
+
+        then:
+        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
+                Optional.empty()
+        1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
+                Optional.empty()
+        1 * participantProvider.saveParticipant(_)
+        1 * participantProvider.getCompositionIds(PARTICIPANT_ID) >>
+                Collections.emptySet()
+        1 * registerAck.send(msg.messageId, PARTICIPANT_ID, REPLICA_ID)
+    }
+
     // ---- Status ----
 
     def "status with instance out properties should save them"() {
