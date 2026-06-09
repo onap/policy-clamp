@@ -22,6 +22,30 @@
       },
       "revId": "5200f106b5e9fc468cea1284f6ffa7b5cacfbe70",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80d54191_2d297ca6",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/supervision/SupervisionParticipantHandlerSpec.groovy",
+        "patchSetId": 3
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-06-09T11:14:05Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "47c37142_3adec6ae",
+      "range": {
+        "startLine": 75,
+        "startChar": 14,
+        "endLine": 85,
+        "endChar": 49
+      },
+      "revId": "5200f106b5e9fc468cea1284f6ffa7b5cacfbe70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
