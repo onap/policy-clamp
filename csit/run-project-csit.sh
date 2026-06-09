@@ -21,12 +21,33 @@
 # SPDX-License-Identifier: Apache-2.0
 
 SKIP_BUILDING_ROBOT_IMG=false
-DO_NOT_TEARDOWN=false
+DO_TEARDOWN=true
 SKIP_TEST=false
+
+CLAMP_ROBOT_FILES=(
+    "clamp-health-check.robot"
+    "clamp-db-restore.robot"
+    "clamp-single-element-test.robot"
+    "clamp-multiple-element-type-test.robot"
+    "clamp-timeout-test.robot"
+    "clamp-migrate-rollback.robot"
+    "clamp-trace-test.robot"
+    "clamp-slas.robot"
+)
+
+CLAMP_REGRESSION_ROBOT_FILES=(
+    "clamp-health-check.robot"
+    "clamp-db-restore.robot"
+    "clamp-single-element-test.robot"
+    "clamp-multiple-element-type-test.robot"
+    "clamp-timeout-test.robot"
+    "clamp-migrate-rollback.robot"
+    "clamp-trace-test.robot"
+)
 
 # even with forced finish, clean up docker containers
 function on_exit(){
-    if [ "${DO_NOT_TEARDOWN}" = false ]; then
+    if [ "${DO_TEARDOWN}" = true ]; then
         source "${DOCKER_COMPOSE_DIR}"/stop-compose.sh "${PROJECT}"
         mv "${DOCKER_COMPOSE_DIR}"/*.log "${ROBOT_LOG_DIR}"
     fi
@@ -35,20 +56,15 @@ function on_exit(){
 }
 
 function docker_stats(){
-    # General memory details
-    if [ "$(uname -s)" == "Darwin" ]
-    then
+    if [ "$(uname -s)" == "Darwin" ]; then
         sh -c "top -l1 | head -10"
-        echo
     else
         sh -c "top -bn1 | head -3"
         echo
-
         sh -c "free -h"
-        echo
     fi
+    echo
 
-    # Memory details per Docker
     docker ps --format "table {{ .Image }}\t{{ .Names }}\t{{ .Status }}"
     echo
 
@@ -56,13 +72,6 @@ function docker_stats(){
     echo
 }
 
-function setup_clamp() {
-    export ROBOT_FILES="clamp-health-check.robot clamp-db-restore.robot clamp-single-element-test.robot clamp-multiple-element-type-test.robot clamp-timeout-test.robot
-    clamp-migrate-rollback.robot clamp-trace-test.robot clamp-slas.robot"
-    export TEST_ENV="docker"
-    export PROJECT="clamp"
-    source "${DOCKER_COMPOSE_DIR}"/start-compose.sh policy-clamp-runtime-acm --grafana
-}
 
 function build_robot_image() {
     bash "${SCRIPTS}"/build-csit-docker-image.sh
@@ -71,69 +80,71 @@ function build_robot_image() {
 
 function run_robot() {
     docker compose -f "${DOCKER_COMPOSE_DIR}"/compose.yaml up csit-tests
-    export RC=$?
+    RC=$?
 }
 
 function set_project_config() {
     echo "Setting project configuration for: $PROJECT"
     case $PROJECT in
 
-    clamp-simple | policy-simple)
+    clamp-simple)
         export ACM_REPLICAS=1
-        setup_clamp
+        export ROBOT_FILES="${CLAMP_ROBOT_FILES[*]}"
         ;;
 
     clamp | policy-clamp)
         export ACM_REPLICAS=2
-        setup_clamp
+        export ROBOT_FILES="${CLAMP_ROBOT_FILES[*]}"
+        ;;
+
+    clamp-regression)
+        export ACM_REPLICAS=2
+        export ROBOT_FILES="${CLAMP_REGRESSION_ROBOT_FILES[*]}"
         ;;
 
     *)
         echo "Unknown project supplied. Defaulting to clamp test suite with 2 replicas."
         export ACM_REPLICAS=2
-        setup_clamp
+        export ROBOT_FILES="${CLAMP_ROBOT_FILES[*]}"
         ;;
     esac
+
+    source "${DOCKER_COMPOSE_DIR}"/start-compose.sh policy-clamp-runtime-acm
 }
 
 # ensure that teardown and other finalizing steps are always executed
 trap on_exit EXIT
 
-# start the script
-
 # Parse the command-line arguments
-while [[ $# -gt 0 ]]
-do
-  key="$1"
-
-  case $key in
+while [[ $# -gt 0 ]]; do
+    case "$1" in
     --skip-build-csit)
-      export SKIP_BUILDING_ROBOT_IMG=true
-      shift
-      ;;
+        SKIP_BUILDING_ROBOT_IMG=true
+        shift
+        ;;
     --skip-test)
-      export SKIP_BUILDING_ROBOT_IMG=true
-      export SKIP_TEST=true
-      export DO_NOT_TEARDOWN=true
-      shift
-      ;;
+        SKIP_BUILDING_ROBOT_IMG=true
+        SKIP_TEST=true
+        DO_TEARDOWN=false
+        shift
+        ;;
     --local)
-      export USE_LOCAL_IMAGES=true
-      shift
-      ;;
+        export USE_LOCAL_IMAGES=true
+        shift
+        ;;
     --no-exit)
-      export DO_NOT_TEARDOWN=true
-      shift
-      ;;
+        DO_TEARDOWN=false
+        shift
+        ;;
     --stop)
-      export TEARDOWN=true
-      shift
-      ;;
+        # teardown immediately and exit
+        on_exit
+        ;;
     *)
-      export PROJECT="${1}"
-      shift
-      ;;
-  esac
+        PROJECT="${1}"
+        shift
+        ;;
+    esac
 done
 
 # setup all directories used for test resources
@@ -150,7 +161,6 @@ export ROBOT_LOG_DIR="${WORKSPACE}/csit/archives/${PROJECT}"
 export SCRIPTS="${WORKSPACE}/csit/resources/scripts"
 export CSAR_DIR="${WORKSPACE}/csit/resources/tests/data/csar"
 export DOCKER_COMPOSE_DIR="${WORKSPACE}/compose"
-export ROBOT_FILES=""
 
 cd "${WORKSPACE}" || exit
 
@@ -161,9 +171,8 @@ mkdir -p "${ROBOT_LOG_DIR}"
 # log into nexus docker
 docker login -u docker -p docker nexus3.onap.org:10001
 
-# based on $PROJECT var, setup robot test files and docker compose execution
+# ensure docker compose plugin is available
 compose_version=$(docker compose version)
-
 if [[ $compose_version == *"Docker Compose version"* ]]; then
     echo "$compose_version"
 else
@@ -173,17 +182,10 @@ else
     sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 fi
 
-if [ "${TEARDOWN}" == "true" ]; then
-    on_exit
-fi
-
 set_project_config
 
 unset http_proxy https_proxy
 
-export ROBOT_FILES
-
-# use a separate script to build a CSIT docker image, to isolate the test run
 if [ "${SKIP_BUILDING_ROBOT_IMG}" == "true" ]; then
     echo "Skipping build csit robot image"
 else
@@ -192,7 +194,6 @@ fi
 
 docker_stats | tee "${ROBOT_LOG_DIR}/_sysinfo-1-after-setup.txt"
 
-# start the CSIT container and run the tests
 if [ "${SKIP_TEST}" == "true" ]; then
     echo "Skipping test"
 else
