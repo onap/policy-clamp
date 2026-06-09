@@ -109,24 +109,6 @@ if [ $2 ]; then
     PPNT_RELEASE=$2
 fi
 
-export POLICY_MARIADB_VER=10.10.2
-echo POLICY_MARIADB_VER=${POLICY_MARIADB_VER}
-
-export POLICY_POSTGRES_VER=11.1
-echo POLICY_POSTGRES_VER=${POLICY_POSTGRES_VER}
-
-getDockerVersion docker $ACM_RELEASE
-export POLICY_DOCKER_VERSION="$docker_image_version"
-
-getDockerVersion api $ACM_RELEASE
-export POLICY_API_VERSION="$docker_image_version"
-
-getDockerVersion pap $ACM_RELEASE
-export POLICY_PAP_VERSION="$docker_image_version"
-
-getDockerVersion apex-pdp $ACM_RELEASE
-export POLICY_APEX_PDP_VERSION="$docker_image_version"
-
 getDockerVersion clamp $ACM_RELEASE
 export POLICY_CLAMP_VERSION="$docker_image_version"
 

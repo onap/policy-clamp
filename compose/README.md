@@ -71,11 +71,11 @@ so it's recommended to keep an eye on it.
 
 If needed, the version can be edited on any docker compose yml file.
 
-i.e: need to change db-migrator version
-from compose.{database}.yml:
-``image: ${CONTAINER_LOCATION}onap/policy-db-migrator:${POLICY_DOCKER_VERSION}``
+i.e: need to change runtime-acm version
+from compose.yml:
+``image: ${CONTAINER_LOCATION}onap/policy-clamp-runtime-acm:${POLICY_CLAMP_VERSION}``
 
-replace the ${POLICY_DOCKER_VERSION} for the specific version needed
+replace the ${POLICY_CLAMP_VERSION} for the specific version needed
 
 
 ## Logs
