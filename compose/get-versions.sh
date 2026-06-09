@@ -1,7 +1,7 @@
 #! /bin/bash
 # ============LICENSE_START====================================================
 #  Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
-#  Modification Copyright 2021-2025 Nordix Foundation.
+#  Modification Copyright 2021-2026 OpenInfra Foundation Europe. All rights reserved.
 #  Modifications Copyright (C) 2021 Bell Canada. All rights reserved.
 #  Modifications Copyright 2024-2025 Deutsche Telekom
 # =============================================================================
@@ -31,14 +31,8 @@ echo POLICY_POSTGRES_VER=${POLICY_POSTGRES_VER}
 
 if [ -n "${USE_LOCAL_IMAGES}" ] && [ "${USE_LOCAL_IMAGES}" = "true" ]; then
     echo "Running with local images."
-    export POLICY_DOCKER_VERSION="latest"
-    export POLICY_MODELS_VERSION="latest"
-    export POLICY_API_VERSION="latest"
-    export POLICY_PAP_VERSION="latest"
-    export POLICY_APEX_PDP_VERSION="latest"
     export POLICY_CLAMP_VERSION="latest"
     export POLICY_CLAMP_PPNT_VERSION=$POLICY_CLAMP_VERSION
-    export POLICY_DROOLS_APPS_VERSION="latest"
     export CONTAINER_LOCATION=""
 
 else
@@ -117,22 +111,7 @@ else
         fi
     }
 
-    getDockerVersion docker
-    export POLICY_DOCKER_VERSION="$docker_image_version"
-
-    getDockerVersion models
-    export POLICY_MODELS_VERSION="$docker_image_version"
-
-    getDockerVersion api
-    export POLICY_API_VERSION="$docker_image_version"
-
-    getDockerVersion pap
-    export POLICY_PAP_VERSION="$docker_image_version"
-
-    getDockerVersion apex-pdp
-    export POLICY_APEX_PDP_VERSION="$docker_image_version"
-
     getDockerVersion clamp
-    export POLICY_CLAMP_VERSION="$docker_image_version"
-    export POLICY_CLAMP_PPNT_VERSION=$POLICY_CLAMP_VERSION
+    export POLICY_CLAMP_VERSION=${POLICY_CLAMP_VERSION:-$docker_image_version}
+    export POLICY_CLAMP_PPNT_VERSION=${POLICY_CLAMP_PPNT_VERSION:-$POLICY_CLAMP_VERSION}
 fi

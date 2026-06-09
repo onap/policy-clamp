@@ -64,6 +64,13 @@ function setup_clamp() {
     source "${DOCKER_COMPOSE_DIR}"/start-compose.sh policy-clamp-runtime-acm --grafana
 }
 
+function setup_clamp_regression() {
+    export ROBOT_FILES="clamp-health-check.robot clamp-single-element-test.robot clamp-multiple-element-type-test.robot clamp-migrate-rollback.robot"
+    export TEST_ENV="docker"
+    export PROJECT="clamp"
+    source "${DOCKER_COMPOSE_DIR}"/start-compose.sh policy-clamp-runtime-acm
+}
+
 function build_robot_image() {
     bash "${SCRIPTS}"/build-csit-docker-image.sh
     cd "${WORKSPACE}" || exit
@@ -81,6 +88,11 @@ function set_project_config() {
     clamp-simple | policy-simple)
         export ACM_REPLICAS=1
         setup_clamp
+        ;;
+
+    clamp-regression)
+        export ACM_REPLICAS=2
+        setup_clamp_regression
         ;;
 
     clamp | policy-clamp)

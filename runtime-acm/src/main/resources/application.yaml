@@ -101,3 +101,59 @@ tracing:
       endpoint: ${TRACING_SAMPLER_ENDPOINT:http://jaeger:14250}
 
 basicAuth: ${BASIC_AUTH:true}
+
+
+#
+# Legacy profile for regression testing with old ACMR versions
+#
+---
+spring:
+  config:
+    activate:
+      on-profile: legacy
+
+# Versions of ACMR before 9.0.2 use legacy policy message bus instead of Spring Kafka.
+# Additionally, the application.yaml in the older versions have topicCommInfrastructure hardcoded to NOOP.
+runtime:
+  topicParameterGroup:
+    topicSources:
+      - topic: ${runtime.topics.operationTopic}
+        servers:
+          - ${KAFKA_SERVER:kafka:9092}
+        topicCommInfrastructure: kafka
+        fetchTimeout: 15000
+        useHttps: ${KAFKA_USE_HTTPS:false}
+        additionalProps:
+          group.id : ${KAFKA_GROUP_ID:acm-runtime}
+          max.poll.records: ${KAFKA_MAX_POLL_RECORDS:100}
+          max.partition.fetch.bytes: ${KAFKA_MAX_PARTITION_FETCH_BYTES:524288}
+          fetch.max.bytes: ${KAFKA_FETCH_MAX_BYTES:10485760}
+          enable.auto.commit: ${KAFKA_ENABLE_AUTO_COMMIT:true}
+          allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+          security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+          sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+          sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
+    topicSinks:
+      - topic: ${runtime.topics.operationTopic}
+        servers:
+          - ${KAFKA_SERVER:kafka:9092}
+        topicCommInfrastructure: kafka
+        useHttps: ${KAFKA_USE_HTTPS:false}
+        allowTracing: ${ALLOW_TRACING:false}
+        additionalProps:
+          allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+          security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+          sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+          sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
+
+      - topic: ${runtime.topics.syncTopic}
+        servers:
+          - ${KAFKA_SERVER:kafka:9092}
+        topicCommInfrastructure: kafka
+        useHttps: ${KAFKA_USE_HTTPS:false}
+        allowTracing: ${ALLOW_TRACING:false}
+        additionalProps:
+          allow.auto.create.topics: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+          security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+          sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+          sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
