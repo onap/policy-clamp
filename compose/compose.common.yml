@@ -41,10 +41,13 @@ services:
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
-      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+    volumes:
+      - ../participant/participant-impl/participant-impl-simulator/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/simparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
