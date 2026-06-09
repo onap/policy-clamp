@@ -79,6 +79,8 @@ public class SupervisionParticipantHandler {
      */
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
+        LOGGER.info("Received ParticipantRegister from participant {} with intermediary version {}",
+                participantRegisterMsg.getParticipantId(), participantRegisterMsg.getIntermediaryVersion());
         saveIfNotPresent(participantRegisterMsg.getReplicaId(), participantRegisterMsg.getParticipantId(),
                 participantRegisterMsg.getParticipantSupportedElementType(), true);
 

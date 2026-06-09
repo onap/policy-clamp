@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
@@ -322,7 +323,10 @@ class ParticipantHandlerTest {
             cacheProvider, msgExecutor);
 
         participantHandler.sendParticipantRegister();
-        verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
+        var captor = org.mockito.ArgumentCaptor.forClass(ParticipantRegister.class);
+        verify(publisher).sendParticipantRegister(captor.capture());
+        assertNotNull(captor.getValue().getIntermediaryVersion());
+        assertFalse(captor.getValue().getIntermediaryVersion().isBlank());
     }
 
     @Test

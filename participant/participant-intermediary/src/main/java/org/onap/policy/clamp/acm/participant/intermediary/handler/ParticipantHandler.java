@@ -23,6 +23,8 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import io.micrometer.core.annotation.Timed;
+import java.io.IOException;
+import java.util.Properties;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
@@ -232,8 +234,22 @@ public class ParticipantHandler {
         participantRegister.setParticipantId(cacheProvider.getParticipantId());
         participantRegister.setReplicaId(cacheProvider.getReplicaId());
         participantRegister.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
+        participantRegister.setIntermediaryVersion(getVersion());
 
         publisher.sendParticipantRegister(participantRegister);
+    }
+
+    private String getVersion() {
+        try (var stream = getClass().getResourceAsStream("/intermediary-version.properties")) {
+            if (stream != null) {
+                var props = new Properties();
+                props.load(stream);
+                return props.getProperty("intermediary.version", "unknown");
+            }
+        } catch (IOException e) {
+            LOGGER.warn("Failed to load intermediary version", e);
+        }
+        return "unknown";
     }
 
     /**
