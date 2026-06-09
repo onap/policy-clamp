@@ -31,7 +31,7 @@ services:
     hostname: policy-clamp-runtime-acm
     depends_on:
       postgres:
-          condition: service_healthy
+        condition: service_healthy
       kafka:
         condition: service_healthy
       jaeger:
@@ -86,6 +86,12 @@ services:
         -Dcom.sun.management.jmxremote.local.only=false
         -Dotel.java.global-autoconfigure.enabled=true
       SPRING_PROFILES_ACTIVE: ${CLAMP_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+      LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
+    volumes:
+      - ../runtime-acm/src/main/resources/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+      - ../runtime-acm/src/main/resources/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    entrypoint: java -jar /app/app.jar
     healthcheck:
       test: "curl --fail --silent --user 'runtimeUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/actuator/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -122,6 +128,12 @@ services:
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+      LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
+    volumes:
+      - ../participant/participant-impl/participant-impl-http/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+      - ../participant/participant-impl/participant-impl-http/src/main/resources/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    entrypoint: java -jar /app/app.jar
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/httpparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -158,6 +170,12 @@ services:
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+      LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
+    volumes:
+      - ../participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+      - ../participant/participant-impl/participant-impl-kubernetes/src/main/resources/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    entrypoint: java -jar /app/app.jar
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/k8sparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -198,6 +216,12 @@ services:
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+      LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
+    volumes:
+      - ../participant/participant-impl/participant-impl-policy/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+      - ../participant/participant-impl/participant-impl-policy/src/main/resources/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    entrypoint: java -jar /app/app.jar
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/policyparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -233,6 +257,13 @@ services:
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+      LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
+    volumes:
+      - ../participant/participant-impl/participant-impl-a1pms/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+      - ../participant/participant-impl/participant-impl-a1pms/src/main/resources/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    entrypoint: java -jar /app/app.jar
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/a1pmsparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
@@ -268,6 +299,13 @@ services:
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
+      SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+      LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
+    volumes:
+      - ../participant/participant-impl/participant-impl-kserve/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+      - ../participant/participant-impl/participant-impl-kserve/src/main/resources/logback.xml:/opt/app/policy/clamp/etc/logback.xml:ro
+    entrypoint: java -jar /app/app.jar
     healthcheck:
       test: "curl --fail --silent --user 'participantUser:zb!XztG34' http://localhost:6969/onap/policy/clamp/acm/kserveparticipant/health/readiness | grep -q UP || exit 1"
       interval: 10s
