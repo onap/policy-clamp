@@ -36,6 +36,8 @@ public class ParticipantRegister extends ParticipantMessage {
 
     private List<ParticipantSupportedElementType> participantSupportedElementType;
 
+    private String intermediaryVersion;
+
     /**
      * Constructor for instantiating ParticipantRegister class with message name.
      *
