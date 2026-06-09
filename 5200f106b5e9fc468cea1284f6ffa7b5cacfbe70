@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47c37142_3adec6ae",
+        "filename": "runtime-acm/src/test/groovy/org/onap/policy/clamp/acm/runtime/supervision/SupervisionParticipantHandlerSpec.groovy",
+        "patchSetId": 3
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-06-09T11:03:18Z",
+      "side": 1,
+      "message": "This could be a single table:\n\n    where:\n    desc             | msgParams                  | lookupId       | replicaOpt                                                      | deleteCount\n    \"no replicaId\"   | [:]                        | PARTICIPANT_ID | Optional.empty()                                                | 0\n    \"with replicaId\" | [replicaId: REPLICA_ID]    | REPLICA_ID     | Optional.of(CommonTestData.createParticipantReplica(REPLICA_ID)) | 1\n\nTo make the table smaller, you could do what you did in the test on line 199 (\"status \u0027#desc\u0027 should handle participant\") - only extract out the replicaOpt parameter.",
+      "range": {
+        "startLine": 75,
+        "startChar": 14,
+        "endLine": 85,
+        "endChar": 49
+      },
+      "revId": "5200f106b5e9fc468cea1284f6ffa7b5cacfbe70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
