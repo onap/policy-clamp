@@ -21,7 +21,9 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
@@ -30,8 +32,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
+import org.mockito.MockedConstruction;
+import org.mockito.Mockito;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -322,7 +328,35 @@ class ParticipantHandlerTest {
             cacheProvider, msgExecutor);
 
         participantHandler.sendParticipantRegister();
-        verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
+        var captor = org.mockito.ArgumentCaptor.forClass(ParticipantRegister.class);
+        verify(publisher).sendParticipantRegister(captor.capture());
+        assertNotNull(captor.getValue().getIntermediaryVersion());
+        assertFalse(captor.getValue().getIntermediaryVersion().isBlank());
+    }
+
+    @Test
+    void getVersionTest() {
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+            mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class),
+            mock(ParticipantMessagePublisher.class), mock(CacheProvider.class), mock(MsgExecutor.class));
+
+        var version = participantHandler.getVersion();
+        assertNotNull(version);
+        assertFalse(version.isBlank());
+        assertEquals("unknown", participantHandler.getVersion("/non-existent.properties"));
+    }
+
+    @Test
+    void getVersionIOExceptionTest() {
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+            mock(AcLockHandler.class), mock(AcSubStateHandler.class), mock(AcDefinitionHandler.class),
+            mock(ParticipantMessagePublisher.class), mock(CacheProvider.class), mock(MsgExecutor.class));
+
+        try (MockedConstruction<Properties> mocked = Mockito.mockConstruction(Properties.class,
+                (props, context) -> Mockito.doThrow(new IOException("test")).when(props)
+                    .load(any(java.io.InputStream.class)))) {
+            assertEquals("unknown", participantHandler.getVersion());
+        }
     }
 
     @Test

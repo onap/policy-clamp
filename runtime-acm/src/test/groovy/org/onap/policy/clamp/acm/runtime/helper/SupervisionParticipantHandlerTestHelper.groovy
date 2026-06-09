@@ -95,6 +95,9 @@ class SupervisionParticipantHandlerTestHelper {
         if (params.containsKey('replicaId')) {
             msg.replicaId = params.replicaId
         }
+        if (params.containsKey('intermediaryVersion')) {
+            msg.intermediaryVersion = params.intermediaryVersion
+        }
         def supported = CommonTestData.createParticipantSupportedElementType()
         msg.participantSupportedElementType = [supported]
         return msg
