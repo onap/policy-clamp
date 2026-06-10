@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ef9b792e_8e4cd81f",
+        "filename": "compose/get-versions-regression.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-06-10T19:23:01Z",
+      "side": 1,
+      "message": "This function is very similar (perhaps identical) to the one in get-version.sh. It should be checked if the scripts can be refactored into a single script.",
+      "range": {
+        "startLine": 22,
+        "startChar": 9,
+        "endLine": 22,
+        "endChar": 25
+      },
+      "revId": "cd8ede0e2b3dabe66939a6425571dcdf317ecd20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1280263c_78f018db",
         "filename": "csit/run-project-csit.sh",
         "patchSetId": 2
