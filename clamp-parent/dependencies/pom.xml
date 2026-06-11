@@ -41,7 +41,7 @@
         <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
         <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
         <!-- Dependency Versions -->
-        <version.springboot>4.0.6</version.springboot>
+        <version.springboot>4.0.7</version.springboot>
         <version.swagger.core.v3>2.2.50</version.swagger.core.v3>
         <spock.version>2.4-groovy-5.0</spock.version>
         <gmavenplus-plugin.version>3.0.2</gmavenplus-plugin.version>

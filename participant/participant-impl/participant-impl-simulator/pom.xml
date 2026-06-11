@@ -34,7 +34,7 @@
 
     <!-- This overrides parent pom to use Spring Boot 3.5 to test compatibility with intermediary on Spring Boot 4 -->
     <properties>
-        <version.springboot>3.5.14</version.springboot>
+        <version.springboot>3.5.15</version.springboot>
     </properties>
     <dependencyManagement>
         <dependencies>
