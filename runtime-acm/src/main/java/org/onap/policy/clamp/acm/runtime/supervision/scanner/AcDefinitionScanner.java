@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmTimeoutUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
@@ -113,7 +114,8 @@ public class AcDefinitionScanner {
      */
     public void scanAutomationCompositionDefinition(AutomationCompositionDefinition acDefinition,
             UpdateSync updateSync) {
-        if (StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult())) {
+        if (!AcmStateUtils.isInTransitionalState(acDefinition.getState())
+                || StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult())) {
             LOGGER.debug("automation definition {} scanned, OK", acDefinition.getCompositionId());
             updateAcDefinitionState(acDefinition, updateSync);
             return;

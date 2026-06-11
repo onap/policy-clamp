@@ -185,6 +185,11 @@ class AcDefinitionScannerTest {
         acDefinitionScanner.scanAutomationCompositionDefinition(acDefinition, new UpdateSync());
         verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any());
         verify(participantSyncPublisher, times(0)).sendSync(any(), any());
+
+        acDefinition = createAutomationCompositionDefinition(AcTypeState.PRIMED, StateChangeResult.NO_ERROR);
+        acDefinitionScanner.scanAutomationCompositionDefinition(acDefinition, new UpdateSync());
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any());
+        verify(participantSyncPublisher, times(0)).sendSync(any(), any());
     }
 
     @Test
