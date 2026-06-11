@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -52,6 +53,16 @@ class CacheProviderTest {
         assertEquals(parameter.getIntermediaryParameters().getParticipantId(), cacheProvider.getParticipantId());
         assertEquals(parameter.getIntermediaryParameters().getParticipantSupportedElementTypes().get(0),
                 cacheProvider.getSupportedAcElementTypes().get(0));
+    }
+
+    @Test
+    void testValidationOfSupportedAcElementTypes() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var supportedElementType = new ParticipantSupportedElementType();
+        supportedElementType.setTypeName("name.*");
+        supportedElementType.setTypeVersion("1.0.*");
+        parameter.getIntermediaryParameters().getParticipantSupportedElementTypes().add(supportedElementType);
+        assertThatThrownBy(() -> new CacheProvider(parameter)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
