@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.common.utils.validation.Assertions;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -87,7 +89,15 @@ public class CacheProvider {
     public CacheProvider(ParticipantParameters parameters) {
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.supportedAcElementTypes = parameters.getIntermediaryParameters().getParticipantSupportedElementTypes();
+        validateParticipantSupportedElementTypes();
         this.replicaId = UUID.randomUUID();
+    }
+
+    private void validateParticipantSupportedElementTypes() {
+        for (var supElementType : supportedAcElementTypes) {
+            Assertions.validateStringParameter("name", supElementType.getTypeName(), PfKey.NAME_REGEXP);
+            Assertions.validateStringParameter("version", supElementType.getTypeVersion(), PfKey.VERSION_REGEXP);
+        }
     }
 
     public List<ParticipantSupportedElementType> getSupportedAcElementTypes() {
