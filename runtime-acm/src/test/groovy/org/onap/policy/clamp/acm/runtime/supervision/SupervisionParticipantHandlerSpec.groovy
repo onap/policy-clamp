@@ -19,6 +19,10 @@
  */
 package org.onap.policy.clamp.acm.runtime.supervision
 
+import jakarta.validation.ValidationException
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier
+
 import static org.onap.policy.clamp.acm.runtime.helper.SupervisionParticipantHandlerTestHelper.buildAcDef
 import static org.onap.policy.clamp.acm.runtime.helper.SupervisionParticipantHandlerTestHelper.buildAcDefWithElement
 import static org.onap.policy.clamp.acm.runtime.helper.SupervisionParticipantHandlerTestHelper.buildAcDefWithServiceTemplate
@@ -38,8 +42,6 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAck
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo
-import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider
@@ -73,13 +75,13 @@ class SupervisionParticipantHandlerSpec extends Specification {
         1 * deregisterAck.send(msg.messageId)
 
         where:
-        msgParams               | lookupId       | replicaOpt                                                       | deleteCount
-        [replicaId: REPLICA_ID] | REPLICA_ID     | Optional.of(CommonTestData.createParticipantReplica(REPLICA_ID)) | 1
+        msgParams               | lookupId   | replicaOpt                                                       | deleteCount
+        [replicaId: REPLICA_ID] | REPLICA_ID | Optional.of(CommonTestData.createParticipantReplica(REPLICA_ID)) | 1
     }
 
     // ---- Register ----
 
-    def "register new participant should save and send ack"() {
+    def "register '#desc' should save and send ack"() {
         given:
         def participantProvider = Mock(ParticipantProvider)
         def registerAck = Mock(ParticipantRegisterAckPublisher)
@@ -92,14 +94,47 @@ class SupervisionParticipantHandlerSpec extends Specification {
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
-                Optional.empty()
+        1 * participantProvider.getSupportedElementMap() >> Map.of()
         1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
-                Optional.empty()
+                participantOpt
         1 * participantProvider.saveParticipant(_)
         1 * participantProvider.getCompositionIds(PARTICIPANT_ID) >>
                 Collections.emptySet()
         1 * registerAck.send(msg.messageId, PARTICIPANT_ID, REPLICA_ID)
+
+        where:
+        participantOpt                       | desc
+        Optional.empty()                     | "new replica"
+        Optional.of(buildParticipantDiff())  | "new replica with new supported element type"
+    }
+
+    def "register existing supported element type should throw ValidationException"() {
+        given:
+        def participantProvider = Mock(ParticipantProvider)
+        def registerAck = Mock(ParticipantRegisterAckPublisher)
+        def syncPublisher = Mock(ParticipantSyncPublisher)
+        def acDefinitionProvider = Mock(AcDefinitionProvider)
+        def handler = buildHandler(
+                participantProvider: participantProvider,
+                registerAckPublisher: registerAck,
+                acDefinitionProvider: acDefinitionProvider,
+                syncPublisher: syncPublisher)
+        def msg = createRegisterMessage(replicaId: REPLICA_ID)
+        def participant = buildParticipant()
+        def supportedElement = CommonTestData.createParticipantSupportedElementType()
+
+        when:
+        handler.handleParticipantMessage(msg)
+
+        then: "a ValidationException should be thrown"
+        then:
+        1 * participantProvider.getSupportedElementMap() >>
+                Map.of(new ToscaConceptIdentifier(supportedElement.typeName, supportedElement.typeVersion),
+                        UUID.randomUUID())
+        0 * registerAck.send(msg.messageId, PARTICIPANT_ID, REPLICA_ID)
+        0 * acDefinitionProvider.updateAcDefinition(_, _)
+        0 * syncPublisher.sendRestartMsg(_, _, _, _)
+        thrown(ValidationException)
     }
 
     def "register existing replica should ack without restart"() {
@@ -108,23 +143,24 @@ class SupervisionParticipantHandlerSpec extends Specification {
         def registerAck = Mock(ParticipantRegisterAckPublisher)
         def syncPublisher = Mock(ParticipantSyncPublisher)
         def acDefinitionProvider = Mock(AcDefinitionProvider)
-        def replica = new ParticipantReplica(
-                replicaId: REPLICA_ID,
-                participantState: ParticipantState.OFF_LINE)
         def handler = buildHandler(
                 participantProvider: participantProvider,
                 registerAckPublisher: registerAck,
                 acDefinitionProvider: acDefinitionProvider,
                 syncPublisher: syncPublisher)
         def msg = createRegisterMessage(replicaId: REPLICA_ID)
+        def participant = buildParticipant()
+        def supportedElement = CommonTestData.createParticipantSupportedElementType()
 
         when:
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
-                Optional.of(replica)
-        1 * participantProvider.saveParticipantReplica(replica)
+        1 * participantProvider.getSupportedElementMap() >>
+                Map.of(new ToscaConceptIdentifier(supportedElement.typeName, supportedElement.typeVersion),
+                        PARTICIPANT_ID)
+        1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
+                Optional.of(participant)
         1 * registerAck.send(msg.messageId, PARTICIPANT_ID, REPLICA_ID)
         0 * acDefinitionProvider.updateAcDefinition(_, _)
         0 * syncPublisher.sendRestartMsg(_, _, _, _)
@@ -159,7 +195,6 @@ class SupervisionParticipantHandlerSpec extends Specification {
         given:
         def participantProvider = Mock(ParticipantProvider)
         def messageProvider = Mock(MessageProvider)
-        def replica = CommonTestData.createParticipantReplica(REPLICA_ID)
         def handler = buildHandler(
                 participantProvider: participantProvider,
                 messageProvider: messageProvider)
@@ -168,13 +203,15 @@ class SupervisionParticipantHandlerSpec extends Specification {
                 replicaId: REPLICA_ID)
         msg.automationCompositionInfoList = [
                 new AutomationCompositionInfo()]
+        def participant = buildParticipant()
+        def replica = participant.getReplicas().get(REPLICA_ID)
 
         when:
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
-                Optional.of(replica)
+        1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
+                Optional.of(participant)
         1 * participantProvider.saveParticipantReplica(replica)
         1 * messageProvider.saveInstanceOutProperties(_)
     }
@@ -191,24 +228,22 @@ class SupervisionParticipantHandlerSpec extends Specification {
                 messageProvider: messageProvider)
         def msg = createStatusMessageWithParticipantDef(
                 compositionId, PARTICIPANT_ID)
+        def participant = buildParticipant()
 
         when:
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
-                Optional.empty()
         1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
-                Optional.empty()
-        1 * participantProvider.saveParticipant(_)
+                Optional.of(participant)
         1 * acDefinitionProvider.findAcDefinition(compositionId) >>
                 definitionOpt
         saveCount * messageProvider.saveCompositionOutProperties(_, _)
 
         where:
-        desc        | definitionOpt                             | saveCount
-        "found"     | Optional.of(buildAcDefWithElement("code"))| 1
-        "not found" | Optional.empty()                          | 0
+        desc        | definitionOpt                              | saveCount
+        "found"     | Optional.of(buildAcDefWithElement("code")) | 1
+        "not found" | Optional.empty()                           | 0
     }
 
     def "status '#desc' should handle participant"() {
@@ -216,28 +251,27 @@ class SupervisionParticipantHandlerSpec extends Specification {
         def participantProvider = Mock(ParticipantProvider)
         def handler = buildHandler(
                 participantProvider: participantProvider)
-        def msg = createStatusMessage(compositionId: UUID.randomUUID())
+        def msg = createStatusMessage()
         msg.automationCompositionInfoList = []
 
         when:
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
-                replicaOpt
+        1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
+                participantOpt
+        restart * participantProvider.getCompositionIds(PARTICIPANT_ID) >>
+                Set.of()
         saveReplicaCount * participantProvider.saveParticipantReplica(_)
         savePartCount * participantProvider.saveParticipant(_)
-        findPartCount * participantProvider
-                .findParticipant(PARTICIPANT_ID) >> Optional.empty()
 
         where:
-        desc             | registered | saveReplicaCount | savePartCount | findPartCount
+        desc             | registered | saveReplicaCount | savePartCount | restart
         "not registered" | false      | 0                | 1             | 1
         "check online"   | true       | 1                | 0             | 0
 
-        replicaOpt = registered
-                ? Optional.of(CommonTestData
-                        .createParticipantReplica(PARTICIPANT_ID))
+        participantOpt = registered
+                ? Optional.of(buildParticipant())
                 : Optional.empty()
     }
 
@@ -320,24 +354,44 @@ class SupervisionParticipantHandlerSpec extends Specification {
         1 * syncPublisher.sendSync(ac)
 
         where:
-        desc                  | phase | rollbackCount
-        "not at first stage"  | 1     | 0
-        "at first stage"      | 0     | 1
+        desc                 | phase | rollbackCount
+        "not at first stage" | 1     | 0
+        "at first stage"     | 0     | 1
     }
 
     // ---- Helpers ----
 
     def buildHandler(Map overrides) {
         def defaults = [
-                participantProvider: Mock(ParticipantProvider),
-                registerAckPublisher: Mock(ParticipantRegisterAckPublisher),
+                participantProvider   : Mock(ParticipantProvider),
+                registerAckPublisher  : Mock(ParticipantRegisterAckPublisher),
                 deregisterAckPublisher: Mock(ParticipantDeregisterAckPublisher),
-                acProvider: Mock(AutomationCompositionProvider),
-                acDefinitionProvider: Mock(AcDefinitionProvider),
-                syncPublisher: Mock(ParticipantSyncPublisher),
-                messageProvider: Mock(MessageProvider),
-                encryptionUtils: Mock(EncryptionUtils)
+                acProvider            : Mock(AutomationCompositionProvider),
+                acDefinitionProvider  : Mock(AcDefinitionProvider),
+                syncPublisher         : Mock(ParticipantSyncPublisher),
+                messageProvider       : Mock(MessageProvider),
+                encryptionUtils       : Mock(EncryptionUtils)
         ]
         createHandler(defaults + overrides)
+    }
+
+    def buildParticipant() {
+        def replica = CommonTestData.createParticipantReplica(REPLICA_ID)
+        def participant = CommonTestData
+                .createParticipant(PARTICIPANT_ID)
+        participant.participantSupportedElementTypes = Map.of(
+                UUID.randomUUID(), CommonTestData.createParticipantSupportedElementType())
+        participant.getReplicas().put(REPLICA_ID, replica)
+        return participant
+    }
+    def buildParticipantDiff() {
+        def participant = buildParticipant()
+        def participantSupportedElementType = new ParticipantSupportedElementType()
+        participantSupportedElementType.setTypeName("name")
+        participantSupportedElementType.setTypeVersion("1.0.0")
+        participant.participantSupportedElementTypes = Map.of(
+                UUID.randomUUID(), CommonTestData.createParticipantSupportedElementType(),
+                participantSupportedElementType.getId(), participantSupportedElementType)
+        return participant
     }
 }
