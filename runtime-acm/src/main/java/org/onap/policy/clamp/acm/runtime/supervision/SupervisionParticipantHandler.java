@@ -21,12 +21,14 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.validation.ValidationException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
@@ -51,6 +53,8 @@ import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -72,6 +76,19 @@ public class SupervisionParticipantHandler {
     private final MessageProvider messageProvider;
     private final EncryptionUtils encryptionUtils;
 
+    private void validation(UUID participantId,
+            List<ParticipantSupportedElementType> participantSupportedElementTypes) {
+        var map = participantProvider.getSupportedElementMap();
+        for (var element : participantSupportedElementTypes) {
+            var supportedElement = new ToscaConceptIdentifier(element.getTypeName(), element.getTypeVersion());
+            var result = map.get(supportedElement);
+            if (result != null && !result.equals(participantId)) {
+                var msg = "The supplied " + supportedElement + " is already used by " + result;
+                throw new ValidationException(msg);
+            }
+        }
+    }
+
     /**
      * Handle a ParticipantRegister message from a participant.
      *
@@ -79,6 +96,8 @@ public class SupervisionParticipantHandler {
      */
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
+        validation(participantRegisterMsg.getParticipantId(),
+                participantRegisterMsg.getParticipantSupportedElementType());
         saveIfNotPresent(participantRegisterMsg.getReplicaId(), participantRegisterMsg.getParticipantId(),
                 participantRegisterMsg.getParticipantSupportedElementType(), true);
 
@@ -110,9 +129,6 @@ public class SupervisionParticipantHandler {
     @MessageIntercept
     @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMsg) {
-        saveIfNotPresent(participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantId(),
-                participantStatusMsg.getParticipantSupportedElementType(), false);
-
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
             messageProvider.saveInstanceOutProperties(participantStatusMsg);
         }
@@ -127,23 +143,37 @@ public class SupervisionParticipantHandler {
                 LOGGER.error("Not valid ParticipantStatus message");
             }
         }
+        saveIfNotPresent(participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantId(),
+                participantStatusMsg.getParticipantSupportedElementType(), false);
     }
 
     private void saveIfNotPresent(UUID replicaId, UUID participantId,
             List<ParticipantSupportedElementType> participantSupportedElementType, boolean registration) {
-        var replicaOpt = participantProvider.findParticipantReplica(replicaId);
+        var participant = getParticipant(participantId, listToMap(participantSupportedElementType));
         var toRestart = registration;
-        if (replicaOpt.isPresent()) {
-            updateTimestamp(replicaOpt.get());
+        var replica = participant.getReplicas().get(replicaId);
+        if (replica != null) {
+            updateTimestamp(replica);
             toRestart = false;
         } else {
-            var participant = getParticipant(participantId, listToMap(participantSupportedElementType));
             participant.getReplicas().put(replicaId, createReplica(replicaId));
-            participantProvider.saveParticipant(participant);
+            toRestart = true;
+        }
+        if (!CollectionUtils.isEqualCollection(
+                participant.getParticipantSupportedElementTypes().values()
+                        .stream().map(this::toToscaConceptIdentifier).toList(),
+                participantSupportedElementType.stream().map(this::toToscaConceptIdentifier).toList())) {
+            participant.setParticipantSupportedElementTypes(listToMap(participantSupportedElementType));
+            toRestart = true;
         }
         if (toRestart) {
+            participantProvider.saveParticipant(participant);
             handleRestart(participantId, replicaId);
         }
+    }
+
+    private PfConceptKey toToscaConceptIdentifier(ParticipantSupportedElementType elementType) {
+        return new PfConceptKey(elementType.getTypeName(), elementType.getTypeVersion());
     }
 
     private Participant getParticipant(UUID participantId,
