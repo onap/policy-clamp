@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -381,7 +382,12 @@ class AcmUtilsTest {
 
     @Test
     void testEqualMap() {
+        assertThatThrownBy(() -> AcmUtils.equalMap(null, null));
+
         Map<String, Object> map1 = Map.of("test", "value");
+        assertThatThrownBy(() -> AcmUtils.equalMap(map1, null));
+        assertThatThrownBy(() -> AcmUtils.equalMap(null, map1));
+
         Map<String, Object> map2 = Map.of("test", "value2");
         assertFalse(AcmUtils.equalMap(map1, map2));
         assertTrue(AcmUtils.equalMap(map1, map1));
@@ -390,5 +396,21 @@ class AcmUtilsTest {
     @Test
     void testPause() {
         assertDoesNotThrow(() -> AcmUtils.pause(1));
+    }
+
+    @Test
+    void testEqualList() {
+        assertThatThrownBy(() -> AcmUtils.equalList(null, null));
+
+        List<Object> list1 = List.of("test1", "test2");
+        assertThatThrownBy(() -> AcmUtils.equalList(list1, null));
+        assertThatThrownBy(() -> AcmUtils.equalList(null, list1));
+
+        List<Object> list2 = List.of(new Object(), "test2");
+        assertFalse(AcmUtils.equalList(list1, list2));
+        assertTrue(AcmUtils.equalList(list1, list1));
+
+        list2 = List.of("test1", "test2", "test3");
+        assertFalse(AcmUtils.equalList(list1, list2));
     }
 }

@@ -23,6 +23,7 @@ package org.onap.policy.clamp.models.acm.utils;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
@@ -503,5 +504,21 @@ public final class AcmUtils {
         while (System.nanoTime() < endTime) {
             LockSupport.parkNanos(10_000_000L);
         }
+    }
+
+    /**
+     * Compare two Collections.
+     *
+     * @param list1 the first Collection
+     * @param list2 the second Collection
+     * @return true the first Collection is equal to second Collection
+     */
+    public static <T> boolean equalList(@NonNull Collection<T> list1, @NonNull Collection<T> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+        var list = new ArrayList<>(list1);
+        list.removeAll(list2);
+        return list.isEmpty();
     }
 }
