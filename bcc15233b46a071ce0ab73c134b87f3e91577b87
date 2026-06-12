@@ -22,6 +22,30 @@
       },
       "revId": "bcc15233b46a071ce0ab73c134b87f3e91577b87",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbdcc989_604f67a4",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/SupervisionParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-06-12T14:36:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ab54148b_5c4b4ff9",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 14
+      },
+      "revId": "bcc15233b46a071ce0ab73c134b87f3e91577b87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
