@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1c404021_6a442c5c",
+        "filename": "compose/get-versions-regression.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-12T09:42:28Z",
+      "side": 1,
+      "message": "We can double check and remove it if it is redundant. The regression script was accepting either branch names or version tags. I coudln\u0027t recall if this logic was slightly different to support both parameters.",
+      "parentUuid": "ef9b792e_8e4cd81f",
+      "range": {
+        "startLine": 22,
+        "startChar": 9,
+        "endLine": 22,
+        "endChar": 25
+      },
+      "revId": "cd8ede0e2b3dabe66939a6425571dcdf317ecd20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1280263c_78f018db",
         "filename": "csit/run-project-csit.sh",
         "patchSetId": 2
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "71ee7931_aa823817",
+        "filename": "csit/run-project-csit.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-12T09:42:28Z",
+      "side": 1,
+      "message": "We need to have a discussion for this. I think the initial idea was to run different set of tests in cucumber (only relevant usecases) based on the participant version we are testing. Since we are falling back to robot, it may not be feasible.",
+      "parentUuid": "1280263c_78f018db",
+      "range": {
+        "startLine": 68,
+        "startChar": 23,
+        "endLine": 68,
+        "endChar": 149
+      },
+      "revId": "cd8ede0e2b3dabe66939a6425571dcdf317ecd20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "eac729bf_caf4c88d",
         "filename": "runtime-acm/src/main/resources/application.yaml",
         "patchSetId": 2
@@ -60,6 +108,24 @@
       "writtenOn": "2026-06-10T14:31:39Z",
       "side": 1,
       "message": "This whole profile is only needed if testing old ACMR versions with newer participants. If this scenario is not needed, the profile can be deleted.",
+      "revId": "cd8ede0e2b3dabe66939a6425571dcdf317ecd20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caf38c87_137b8ed3",
+        "filename": "runtime-acm/src/main/resources/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-12T09:42:28Z",
+      "side": 1,
+      "message": "This can be removed as we need to use only the older ppnt versions.",
+      "parentUuid": "eac729bf_caf4c88d",
       "revId": "cd8ede0e2b3dabe66939a6425571dcdf317ecd20",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
