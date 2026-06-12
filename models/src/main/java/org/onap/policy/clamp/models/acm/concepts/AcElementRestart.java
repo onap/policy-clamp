@@ -29,7 +29,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor
 @Data
@@ -53,9 +52,6 @@ public class AcElementRestart {
     private String operationalState;
     private String useState;
 
-    // backward compatibility
-    private ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
-
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
     private Map<String, Object> properties = new LinkedHashMap<>();
@@ -76,7 +72,6 @@ public class AcElementRestart {
         this.migrationState = otherElement.migrationState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
-        this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
         this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
     }
@@ -93,7 +88,6 @@ public class AcElementRestart {
                 + ", migrationState=" + migrationState
                 + ", operationalState='" + operationalState + '\''
                 + ", useState='" + useState + '\''
-                + ", toscaServiceTemplateFragment=" + toscaServiceTemplateFragment
                 + ", outProperties=" + outProperties
                 + '}';
     }

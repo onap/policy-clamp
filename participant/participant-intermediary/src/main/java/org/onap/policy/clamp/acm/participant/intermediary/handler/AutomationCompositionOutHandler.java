@@ -37,7 +37,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
@@ -104,7 +103,6 @@ public class AutomationCompositionOutHandler {
             new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
                 element.getUseState(), element.getOutProperties(), true, message));
         LOGGER.debug("Automation composition element {} stage changed to {}", elementId, stage);
-        automationCompositionStateChangeAck.setResult(true);
         publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
         cacheProvider.getMsgIdentification().remove(element.getId());
     }
@@ -211,7 +209,6 @@ public class AutomationCompositionOutHandler {
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         acStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
         acStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
-        acStateChangeAck.setResult(true);
         return acStateChangeAck;
     }
 
@@ -310,13 +307,11 @@ public class AutomationCompositionOutHandler {
         var participantPrimeAck = new ParticipantPrimeAck();
         participantPrimeAck.setCompositionId(compositionId);
         participantPrimeAck.setMessage(AcmUtils.validatedMessage(message));
-        participantPrimeAck.setResult(true);
         participantPrimeAck.setResponseTo(cacheProvider.getMsgIdentification().get(compositionId));
         participantPrimeAck.setCompositionState(state);
         participantPrimeAck.setStateChangeResult(stateChangeResult);
         participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
         participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
-        participantPrimeAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantPrimeAck(participantPrimeAck);
         cacheProvider.getMsgIdentification().remove(compositionId);
         if (AcTypeState.COMMISSIONED.equals(state) && StateChangeResult.NO_ERROR.equals(stateChangeResult)) {
@@ -375,7 +370,6 @@ public class AutomationCompositionOutHandler {
         var statusMsg = new ParticipantStatus();
         statusMsg.setParticipantId(cacheProvider.getParticipantId());
         statusMsg.setReplicaId(cacheProvider.getReplicaId());
-        statusMsg.setState(ParticipantState.ON_LINE);
         statusMsg.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
         return statusMsg;
     }

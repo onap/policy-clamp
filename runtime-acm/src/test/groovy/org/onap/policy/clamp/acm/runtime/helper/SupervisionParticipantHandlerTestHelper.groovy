@@ -34,7 +34,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback
 import org.onap.policy.clamp.models.acm.concepts.DeployState
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync
@@ -81,9 +80,7 @@ class SupervisionParticipantHandlerTestHelper {
         msg.messageId = UUID.randomUUID()
         msg.participantId = params.getOrDefault(
                 'participantId', PARTICIPANT_ID)
-        if (params.containsKey('replicaId')) {
-            msg.replicaId = params.replicaId
-        }
+        msg.replicaId = params.getOrDefault('replicaId', REPLICA_ID)
         return msg
     }
 
@@ -92,9 +89,7 @@ class SupervisionParticipantHandlerTestHelper {
         msg.messageId = UUID.randomUUID()
         msg.participantId = params.getOrDefault(
                 'participantId', PARTICIPANT_ID)
-        if (params.containsKey('replicaId')) {
-            msg.replicaId = params.replicaId
-        }
+        msg.replicaId = params.getOrDefault('replicaId', REPLICA_ID)
         def supported = CommonTestData.createParticipantSupportedElementType()
         msg.participantSupportedElementType = [supported]
         return msg
@@ -104,15 +99,12 @@ class SupervisionParticipantHandlerTestHelper {
         def msg = new ParticipantStatus()
         msg.participantId = params.getOrDefault(
                 'participantId', PARTICIPANT_ID)
-        msg.state = ParticipantState.ON_LINE
         def supported = CommonTestData.createParticipantSupportedElementType()
         msg.participantSupportedElementType = [supported]
         if (params.containsKey('compositionId')) {
             msg.compositionId = params.compositionId
         }
-        if (params.containsKey('replicaId')) {
-            msg.replicaId = params.replicaId
-        }
+        msg.replicaId = params.getOrDefault('replicaId', REPLICA_ID)
         return msg
     }
 
@@ -137,9 +129,7 @@ class SupervisionParticipantHandlerTestHelper {
         def msg = createStatusMessage(
                 compositionId: compositionId,
                 participantId: participantId)
-        if (params.containsKey('replicaId')) {
-            msg.replicaId = params.replicaId
-        }
+        msg.replicaId = params.getOrDefault('replicaId', REPLICA_ID)
         return msg
     }
 

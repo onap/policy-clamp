@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,7 +83,6 @@ class ParticipantMessagesTest {
         final var participantRegisterAckMsg = new ParticipantRegisterAck();
         participantRegisterAckMsg.setMessage("ParticipantRegisterAck message");
         participantRegisterAckMsg.setResponseTo(UUID.randomUUID());
-        participantRegisterAckMsg.setResult(true);
 
         synchronized (lockit) {
             var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
@@ -113,7 +112,6 @@ class ParticipantMessagesTest {
         final var participantDeregisterAckMsg = new ParticipantDeregisterAck();
         participantDeregisterAckMsg.setMessage("ParticipantDeregisterAck message");
         participantDeregisterAckMsg.setResponseTo(UUID.randomUUID());
-        participantDeregisterAckMsg.setResult(true);
 
         synchronized (lockit) {
             var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
@@ -138,7 +136,6 @@ class ParticipantMessagesTest {
         final var participantPrimeAckMsg = new ParticipantPrimeAck();
         participantPrimeAckMsg.setMessage("ParticipantPrimeAck message");
         participantPrimeAckMsg.setResponseTo(UUID.randomUUID());
-        participantPrimeAckMsg.setResult(true);
 
         synchronized (lockit) {
             var participantMessagePublisher = new ParticipantMessagePublisher();

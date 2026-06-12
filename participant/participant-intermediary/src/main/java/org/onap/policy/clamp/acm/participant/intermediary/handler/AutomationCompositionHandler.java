@@ -80,7 +80,6 @@ public class AutomationCompositionHandler {
                 automationCompositionAck.setParticipantId(cacheProvider.getParticipantId());
                 automationCompositionAck.setReplicaId(cacheProvider.getReplicaId());
                 automationCompositionAck.setMessage("Already deleted or never used");
-                automationCompositionAck.setResult(true);
                 automationCompositionAck.setStateChangeResult(StateChangeResult.NO_ERROR);
                 automationCompositionAck.setResponseTo(stateChangeMsg.getMessageId());
                 automationCompositionAck.setAutomationCompositionId(stateChangeMsg.getAutomationCompositionId());

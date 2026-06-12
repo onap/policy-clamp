@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CachePro
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
@@ -93,13 +92,11 @@ public class AcDefinitionHandler {
             var participantPrimeAck = new ParticipantPrimeAck();
             participantPrimeAck.setCompositionId(compositionId);
             participantPrimeAck.setMessage("Already deprimed or never primed");
-            participantPrimeAck.setResult(true);
             participantPrimeAck.setResponseTo(messageId);
             participantPrimeAck.setCompositionState(AcTypeState.COMMISSIONED);
             participantPrimeAck.setStateChangeResult(StateChangeResult.NO_ERROR);
             participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
             participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
-            participantPrimeAck.setState(ParticipantState.ON_LINE);
             publisher.sendParticipantPrimeAck(participantPrimeAck);
             return;
         }

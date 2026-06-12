@@ -41,9 +41,6 @@ public abstract class ParticipantAckMessage implements ParticipantKafkaMessage {
     // The responseTo field should match the original request id in the request.
     private UUID responseTo;
 
-    // Intermediary result: Success/Fail.
-    private Boolean result;
-
     // Indicating participant failure
     private StateChangeResult stateChangeResult;
 
@@ -60,11 +57,6 @@ public abstract class ParticipantAckMessage implements ParticipantKafkaMessage {
     private UUID participantId;
 
     private UUID replicaId;
-
-    /**
-     * Participant State, or {@code null} for messages from participants.
-     */
-    private ParticipantState state;
 
     /**
      * Constructor for instantiating a participant ack message class.

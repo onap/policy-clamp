@@ -51,7 +51,7 @@ public class CommonTestData {
      */
     public static InstanceElementDto getAutomationCompositionElement() {
         return new InstanceElementDto(
-                getAutomationCompositionId(), UUID.randomUUID(), null, Map.of(), Map.of());
+                getAutomationCompositionId(), UUID.randomUUID(), Map.of(), Map.of());
     }
 
     /**

@@ -93,8 +93,7 @@ public class SupervisionParticipantHandler {
      */
     @Timed(value = "listener.participant_deregister", description = "PARTICIPANT_DEREGISTER messages received")
     public void handleParticipantMessage(ParticipantDeregister participantDeregisterMsg) {
-        var replicaId = participantDeregisterMsg.getReplicaId() != null
-                ? participantDeregisterMsg.getReplicaId() : participantDeregisterMsg.getParticipantId();
+        var replicaId = participantDeregisterMsg.getReplicaId();
         var replicaOpt = participantProvider.findParticipantReplica(replicaId);
         if (replicaOpt.isPresent()) {
             participantProvider.deleteParticipantReplica(replicaId);
@@ -130,14 +129,12 @@ public class SupervisionParticipantHandler {
         }
     }
 
-    private void saveIfNotPresent(UUID msgReplicaId, UUID participantId,
+    private void saveIfNotPresent(UUID replicaId, UUID participantId,
             List<ParticipantSupportedElementType> participantSupportedElementType, boolean registration) {
-        var replicaId = msgReplicaId != null ? msgReplicaId : participantId;
         var replicaOpt = participantProvider.findParticipantReplica(replicaId);
         var toRestart = registration;
         if (replicaOpt.isPresent()) {
-            var replica = replicaOpt.get();
-            checkOnline(replica);
+            updateTimestamp(replicaOpt.get());
             toRestart = false;
         } else {
             var participant = getParticipant(participantId, listToMap(participantSupportedElementType));
@@ -164,10 +161,7 @@ public class SupervisionParticipantHandler {
 
     }
 
-    private void checkOnline(ParticipantReplica replica) {
-        if (ParticipantState.OFF_LINE.equals(replica.getParticipantState())) {
-            replica.setParticipantState(ParticipantState.ON_LINE);
-        }
+    private void updateTimestamp(ParticipantReplica replica) {
         replica.setLastMsg(TimestampHelper.now());
         participantProvider.saveParticipantReplica(replica);
     }

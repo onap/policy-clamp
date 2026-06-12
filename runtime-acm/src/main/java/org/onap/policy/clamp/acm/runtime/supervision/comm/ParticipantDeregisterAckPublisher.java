@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2022,2024 Nordix Foundation.
+ * Copyright (C) 2021,2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ public class ParticipantDeregisterAckPublisher {
         var message = new ParticipantDeregisterAck();
         message.setResponseTo(responseTo);
         message.setMessage("Participant Deregister Ack");
-        message.setResult(true);
         participantAckPublisher.send(message);
     }
 }

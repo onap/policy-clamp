@@ -27,7 +27,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 
 /**
@@ -37,9 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 @Setter
 @ToString(callSuper = true)
 public class ParticipantStatus extends ParticipantMessage {
-
-    // State and health status of the participant
-    private ParticipantState state;
 
     // A list of ParticipantDefinition updates, returned in response to ParticipantStatusReq only
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();

@@ -53,7 +53,7 @@ class SupervisionParticipantHandlerSpec extends Specification {
 
     // ---- Deregister ----
 
-    def "deregister '#desc' should send ack"() {
+    def "deregister should send ack"() {
         given:
         def deregisterAck = Mock(ParticipantDeregisterAckPublisher)
         def participantProvider = Mock(ParticipantProvider)
@@ -73,9 +73,8 @@ class SupervisionParticipantHandlerSpec extends Specification {
         1 * deregisterAck.send(msg.messageId)
 
         where:
-        desc             | msgParams               | lookupId       | replicaOpt                                                       | deleteCount
-        "no replicaId"   | [:]                     | PARTICIPANT_ID | Optional.empty()                                                 | 0
-        "with replicaId" | [replicaId: REPLICA_ID] | REPLICA_ID     | Optional.of(CommonTestData.createParticipantReplica(REPLICA_ID)) | 1
+        msgParams               | lookupId       | replicaOpt                                                       | deleteCount
+        [replicaId: REPLICA_ID] | REPLICA_ID     | Optional.of(CommonTestData.createParticipantReplica(REPLICA_ID)) | 1
     }
 
     // ---- Register ----
@@ -93,14 +92,14 @@ class SupervisionParticipantHandlerSpec extends Specification {
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(PARTICIPANT_ID) >>
+        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
                 Optional.empty()
         1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
                 Optional.empty()
         1 * participantProvider.saveParticipant(_)
         1 * participantProvider.getCompositionIds(PARTICIPANT_ID) >>
                 Collections.emptySet()
-        1 * registerAck.send(msg.messageId, PARTICIPANT_ID, null)
+        1 * registerAck.send(msg.messageId, PARTICIPANT_ID, REPLICA_ID)
     }
 
     def "register existing replica should ack without restart"() {
@@ -174,7 +173,7 @@ class SupervisionParticipantHandlerSpec extends Specification {
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(PARTICIPANT_ID) >>
+        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
                 Optional.empty()
         1 * participantProvider.findParticipant(PARTICIPANT_ID) >>
                 Optional.empty()
@@ -201,7 +200,7 @@ class SupervisionParticipantHandlerSpec extends Specification {
         handler.handleParticipantMessage(msg)
 
         then:
-        1 * participantProvider.findParticipantReplica(PARTICIPANT_ID) >>
+        1 * participantProvider.findParticipantReplica(REPLICA_ID) >>
                 replicaOpt
         saveReplicaCount * participantProvider.saveParticipantReplica(_)
         savePartCount * participantProvider.saveParticipant(_)

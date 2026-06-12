@@ -30,7 +30,6 @@ import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to represent a automation composition instance to send for deploy.
@@ -51,9 +50,6 @@ public class AcElementDeploy {
     @NotNull
     private MigrationState migrationState = MigrationState.DEFAULT;
 
-    // backward compatibility
-    private ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
-
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
     private Map<String, Object> properties = new LinkedHashMap<>();
@@ -67,7 +63,6 @@ public class AcElementDeploy {
         this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
         this.orderedState = otherElement.orderedState;
-        this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
         this.migrationState = otherElement.migrationState;
     }
@@ -79,8 +74,6 @@ public class AcElementDeploy {
                 + "id=" + id
                 + ", definition=" + definition
                 + ", orderedState=" + orderedState
-                + ", migrationState=" + migrationState
-                + ", toscaServiceTemplateFragment="
-                + toscaServiceTemplateFragment + '}';
+                + ", migrationState=" + migrationState + '}';
     }
 }

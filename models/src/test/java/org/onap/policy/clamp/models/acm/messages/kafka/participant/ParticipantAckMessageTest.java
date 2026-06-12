@@ -61,7 +61,6 @@ class ParticipantAckMessageTest {
 
         msg.setParticipantId(CommonTestData.getParticipantId());
         msg.setMessage("Successfull Ack");
-        msg.setResult(true);
         msg.setResponseTo(UUID.randomUUID());
 
         return msg;

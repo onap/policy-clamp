@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -30,7 +30,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CachePro
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
@@ -316,7 +315,6 @@ public class ParticipantHandler {
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(cacheProvider.getParticipantId());
         heartbeat.setReplicaId(cacheProvider.getReplicaId());
-        heartbeat.setState(ParticipantState.ON_LINE);
         heartbeat.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
 
         return heartbeat;
