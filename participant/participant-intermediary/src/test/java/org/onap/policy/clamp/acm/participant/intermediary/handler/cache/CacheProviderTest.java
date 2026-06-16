@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantDtoUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -41,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -342,6 +344,33 @@ class CacheProviderTest {
     }
 
     @Test
+    void test_addElementDefinitionFromCompositionDto() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var revisionId = UUID.randomUUID();
+        var elementId = new ToscaConceptIdentifier("name", "1.0.0");
+
+        var inProperties = Map.of(elementId, Map.<String, Object>of("startPhase", 0));
+        var outProperties = Map.of(elementId, Map.<String, Object>of("key", "value"));
+        var compositionDto = new CompositionDto(compositionId, inProperties, outProperties);
+
+        cacheProvider.addElementDefinition(compositionDto, revisionId);
+        assertEquals(1, cacheProvider.getAcElementsDefinitions().size());
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        assertNotNull(acDefinition);
+        assertEquals(compositionId, acDefinition.getCompositionId());
+        assertEquals(revisionId, acDefinition.getRevisionId());
+
+        var element = acDefinition.getElements().get(elementId);
+        assertNotNull(element);
+        assertEquals(elementId, element.getAcElementDefinitionId());
+        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
+        assertEquals(0, element.getAutomationCompositionElementToscaNodeTemplate().getProperties().get("startPhase"));
+        assertEquals("value", element.getOutProperties().get("key"));
+    }
+
+    @Test
     void test_initializeAutomationComposition_NullValue() {
         var parameter = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameter);
@@ -400,5 +429,30 @@ class CacheProviderTest {
         assertNotNull(acInstance);
         assertEquals(instanceId.get(), acInstance.getInstanceId());
         assertEquals(compositionId, acInstance.getCompositionId());
+    }
+
+    @Test
+    void test_createAcInstanceFromDtoMap() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var compositionTargetId = UUID.randomUUID();
+        var automationComposition = CommonTestData.getTestAutomationCompositions()
+                .getAutomationCompositionList().get(0);
+        var instanceId = automationComposition.getInstanceId() != null
+                ? automationComposition.getInstanceId() : UUID.randomUUID();
+
+        var participantDtoList = CommonTestData.createParticipantDtoList(
+                cacheProvider.getParticipantId(), automationComposition);
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
+                participantDtoList, cacheProvider.getParticipantId());
+
+        var acInstance = cacheProvider.createAcInstance(compositionId, compositionTargetId, instanceId,
+                elementDtoMap, DeployState.DEPLOYING, SubState.NONE, UUID.randomUUID());
+        assertNotNull(acInstance);
+        assertEquals(instanceId, acInstance.getInstanceId());
+        assertEquals(compositionId, acInstance.getCompositionId());
+        assertEquals(compositionTargetId, acInstance.getCompositionTargetId());
+        assertFalse(acInstance.getElements().isEmpty());
     }
 }
