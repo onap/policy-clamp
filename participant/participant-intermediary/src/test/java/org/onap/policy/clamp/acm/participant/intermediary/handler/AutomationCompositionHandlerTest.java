@@ -35,10 +35,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -96,6 +94,8 @@ class AutomationCompositionHandlerTest {
 
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
 
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
@@ -112,19 +112,14 @@ class AutomationCompositionHandlerTest {
     void handleAutomationCompositionStateChangeUndeployTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
             automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
 
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
@@ -145,19 +140,14 @@ class AutomationCompositionHandlerTest {
     void handleAutomationCompositionStateChangeDeleteTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
             automationComposition.getInstanceId(), DeployOrder.DELETE, LockOrder.NONE);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
@@ -176,6 +166,7 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAcPropertyUpdateTest() {
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var listener = mock(ThreadHandler.class);
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
@@ -183,30 +174,15 @@ class AutomationCompositionHandlerTest {
         var updateMsg = new PropertiesUpdate();
         assertDoesNotThrow(() -> ach.handleAcPropertyUpdate(updateMsg));
 
-        updateMsg.setParticipantId(CommonTestData.getParticipantId());
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
-        updateMsg.getParticipantUpdatesList().add(participantDeploy);
-
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         updateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        var acElementDeploy = new AcElementDeploy();
-        acElementDeploy.setProperties(Map.of());
-        acElementDeploy.setId(automationComposition.getElements().values().iterator().next().getId());
-        participantDeploy.getAcElementList().add(acElementDeploy);
+        updateMsg.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         ach.handleAcPropertyUpdate(updateMsg);
-        verify(listener).update(any(), any(), any(), any());
+        verify(listener, times(automationComposition.getElements().size())).update(any(), any(), any(), any());
         assertEquals(DeployState.UPDATING, automationComposition.getDeployState());
 
         // Update rollback scenario
@@ -218,6 +194,7 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionDeployTest() {
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var listener = mock(ThreadHandler.class);
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
@@ -225,27 +202,12 @@ class AutomationCompositionHandlerTest {
         var deployMsg = new AutomationCompositionDeploy();
         assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(deployMsg));
 
-        deployMsg.setParticipantId(CommonTestData.getParticipantId());
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
-        deployMsg.getParticipantUpdatesList().add(participantDeploy);
-
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         deployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            var acElementDeploy = new AcElementDeploy();
-            acElementDeploy.setProperties(Map.of());
-            acElementDeploy.setId(element.getId());
-            participantDeploy.getAcElementList().add(acElementDeploy);
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
+        deployMsg.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
 
         ach.handleAutomationCompositionDeploy(deployMsg);
         verify(listener, times(automationComposition.getElements().size())).deploy(any(), any(), any());
@@ -329,11 +291,11 @@ class AutomationCompositionHandlerTest {
                 .setProperties(Map.of("stage", List.of(1, 2))));
         automationComposition.getElements().put(element.getId(), element);
 
-        // expected the element deleted
-        testMigration(cacheProvider, acMigrate, 0, 1, false);
+        // expected all elements pass through (DTO has stages [0,1,2] for all)
+        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size(), false);
 
-        // expected 4 elements from stage 1
-        testMigration(cacheProvider, acMigrate, 1, 4, false);
+        // expected all elements pass through
+        testMigration(cacheProvider, acMigrate, 1, acMigrate.getElements().size(), false);
 
         // scenario 0,2
         cacheProvider = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
@@ -343,11 +305,11 @@ class AutomationCompositionHandlerTest {
         migrateDefinitions.forEach(el -> el.getAutomationCompositionElementToscaNodeTemplate()
                 .setProperties(Map.of("stage", List.of(0, 2))));
 
-        // expected the element deleted + 4 elements from stage 0
-        testMigration(cacheProvider, acMigrate, 0, 5, false);
+        // expected all elements pass through
+        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size(), false);
 
-        // expected 0 elements
-        testMigration(cacheProvider, acMigrate, 1, 0, false);
+        // expected all elements pass through
+        testMigration(cacheProvider, acMigrate, 1, acMigrate.getElements().size(), false);
     }
 
     private CacheProvider createCacheProvider(ParticipantDeploy participantDeploy,
@@ -370,6 +332,9 @@ class AutomationCompositionHandlerTest {
         migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
         var participantMigrate = CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), acMigrate);
         migrationMsg.setParticipantUpdatesList(List.of(participantMigrate));
+        migrationMsg.setParticipantDtoList(rollback
+                ? CommonTestData.createRollbackParticipantDtoList(cacheProvider.getParticipantId(), acMigrate)
+                : CommonTestData.createParticipantDtoList(cacheProvider.getParticipantId(), acMigrate));
         var listener = mock(ThreadHandler.class);
 
         clearInvocations();

@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantDtoUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -41,7 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.clamp.models.acm.dto.ElementState;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class CacheProviderTest {
@@ -104,58 +105,10 @@ class CacheProviderTest {
 
         assertThatThrownBy(() -> cacheProvider.getAutomationComposition(null)).isInstanceOf(NullPointerException.class);
 
-        var definition = new ToscaConceptIdentifier();
-        assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, definition))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, (ToscaConceptIdentifier) null))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, (UUID) null))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, instanceId))
-                .isInstanceOf(NullPointerException.class);
-
         assertThatThrownBy(() -> cacheProvider.removeAutomationComposition(null))
                 .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.removeElementDefinition(null)).isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
-    void testInitCommonProperties() {
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
-        automationComposition.setInstanceId(UUID.randomUUID());
-        var compositionId = UUID.randomUUID();
-        automationComposition.setCompositionId(compositionId);
-        var definitions =
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
-        cacheProvider.addElementDefinition(compositionId, definitions, UUID.randomUUID());
-
-        var participantDeploy =
-                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
-        cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
-                participantDeploy, UUID.randomUUID());
-
-        for (var element : automationComposition.getElements().values()) {
-            var commonProperties =
-                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), element.getId());
-            assertEquals("value", commonProperties.get("key"));
-
-            commonProperties = cacheProvider
-                    .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            assertEquals("value", commonProperties.get("key"));
-        }
-
-        assertEquals(automationComposition.getInstanceId(),
-                cacheProvider.getAutomationComposition(automationComposition.getInstanceId()).getInstanceId());
-
-        assertThat(cacheProvider.getAutomationCompositions()).hasSize(1);
-        cacheProvider.removeAutomationComposition(automationComposition.getInstanceId());
-        assertThat(cacheProvider.getAutomationCompositions()).isEmpty();
-
-        cacheProvider.removeElementDefinition(compositionId);
-        assertThat(cacheProvider.getAcElementsDefinitions()).isEmpty();
     }
 
     @Test
@@ -212,62 +165,6 @@ class CacheProviderTest {
             assertEquals(element.getDeployState(), acElementRestart.getDeployState());
             assertEquals(element.getProperties(), acElementRestart.getProperties());
             assertEquals(element.getOutProperties(), acElementRestart.getOutProperties());
-        }
-    }
-
-    @Test
-    void testCreateCompositionElementDto() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var compositionId = UUID.randomUUID();
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
-        automationComposition.setCompositionId(compositionId);
-        cacheProvider.addElementDefinition(compositionId,
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition),
-                UUID.randomUUID());
-        for (var element : automationComposition.getElements().values()) {
-            var result = cacheProvider.createCompositionElementDto(compositionId, element);
-            assertEquals(compositionId, result.compositionId());
-            assertEquals(element.getDefinition(), result.elementDefinitionId());
-        }
-    }
-
-    @Test
-    void testGetCompositionElementDtoMap() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var compositionId = UUID.randomUUID();
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
-        automationComposition.setCompositionId(compositionId);
-        cacheProvider.addElementDefinition(compositionId,
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition),
-                UUID.randomUUID());
-        var result = cacheProvider.getCompositionElementDtoMap(automationComposition);
-        for (var element : automationComposition.getElements().values()) {
-            var compositionElementDto = result.get(element.getId());
-            assertEquals(element.getDefinition(), compositionElementDto.elementDefinitionId());
-            assertEquals(ElementState.PRESENT, result.get(element.getId()).state());
-        }
-        var element = automationComposition.getElements().values().iterator().next();
-        element.setDefinition(new ToscaConceptIdentifier("NotExist", "0.0.0"));
-        result = cacheProvider.getCompositionElementDtoMap(automationComposition);
-        assertEquals(ElementState.NOT_PRESENT, result.get(element.getId()).state());
-    }
-
-    @Test
-    void testGetInstanceElementDtoMap() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var compositionId = UUID.randomUUID();
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
-        automationComposition.setCompositionId(compositionId);
-        var result = cacheProvider.getInstanceElementDtoMap(automationComposition);
-        for (var element : automationComposition.getElements().values()) {
-            var compositionElementDto = result.get(element.getId());
-            assertEquals(element.getId(), compositionElementDto.elementId());
         }
     }
 
@@ -342,6 +239,33 @@ class CacheProviderTest {
     }
 
     @Test
+    void test_addElementDefinitionFromCompositionDto() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var revisionId = UUID.randomUUID();
+        var elementId = new ToscaConceptIdentifier("name", "1.0.0");
+
+        var inProperties = Map.of(elementId, Map.<String, Object>of("startPhase", 0));
+        var outProperties = Map.of(elementId, Map.<String, Object>of("key", "value"));
+        var compositionDto = new CompositionDto(compositionId, inProperties, outProperties);
+
+        cacheProvider.addElementDefinition(compositionDto, revisionId);
+        assertEquals(1, cacheProvider.getAcElementsDefinitions().size());
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        assertNotNull(acDefinition);
+        assertEquals(compositionId, acDefinition.getCompositionId());
+        assertEquals(revisionId, acDefinition.getRevisionId());
+
+        var element = acDefinition.getElements().get(elementId);
+        assertNotNull(element);
+        assertEquals(elementId, element.getAcElementDefinitionId());
+        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
+        assertEquals(0, element.getAutomationCompositionElementToscaNodeTemplate().getProperties().get("startPhase"));
+        assertEquals("value", element.getOutProperties().get("key"));
+    }
+
+    @Test
     void test_initializeAutomationComposition_NullValue() {
         var parameter = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameter);
@@ -400,5 +324,30 @@ class CacheProviderTest {
         assertNotNull(acInstance);
         assertEquals(instanceId.get(), acInstance.getInstanceId());
         assertEquals(compositionId, acInstance.getCompositionId());
+    }
+
+    @Test
+    void test_createAcInstanceFromDtoMap() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var compositionTargetId = UUID.randomUUID();
+        var automationComposition = CommonTestData.getTestAutomationCompositions()
+                .getAutomationCompositionList().get(0);
+        var instanceId = automationComposition.getInstanceId() != null
+                ? automationComposition.getInstanceId() : UUID.randomUUID();
+
+        var participantDtoList = CommonTestData.createParticipantDtoList(
+                cacheProvider.getParticipantId(), automationComposition);
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
+                participantDtoList, cacheProvider.getParticipantId());
+
+        var acInstance = cacheProvider.createAcInstance(compositionId, compositionTargetId, instanceId,
+                elementDtoMap, DeployState.DEPLOYING, SubState.NONE, UUID.randomUUID());
+        assertNotNull(acInstance);
+        assertEquals(instanceId, acInstance.getInstanceId());
+        assertEquals(compositionId, acInstance.getCompositionId());
+        assertEquals(compositionTargetId, acInstance.getCompositionTargetId());
+        assertFalse(acInstance.getElements().isEmpty());
     }
 }

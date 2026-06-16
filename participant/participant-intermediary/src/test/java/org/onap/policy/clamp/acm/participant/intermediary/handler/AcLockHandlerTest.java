@@ -29,13 +29,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Map;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
@@ -63,19 +59,14 @@ class AcLockHandlerTest {
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.UNLOCKED);
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
         var listener = mock(ThreadHandler.class);
         var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
@@ -96,19 +87,14 @@ class AcLockHandlerTest {
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.LOCKED);
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
         var listener = mock(ThreadHandler.class);
         var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
