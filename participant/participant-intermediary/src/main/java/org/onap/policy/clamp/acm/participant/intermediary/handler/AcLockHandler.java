@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -28,6 +29,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
+import org.onap.policy.clamp.models.acm.dto.ParticipantDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.slf4j.Logger;
@@ -63,47 +65,49 @@ public class AcLockHandler {
 
         switch (stateChangeMsg.getLockOrderedState()) {
             case LOCK -> handleLockState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getStartPhase());
+                    stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
             case UNLOCK -> handleUnlockState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getStartPhase());
+                    stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
             default -> LOGGER.error("StateChange message has no lock order {}", automationComposition.getInstanceId());
         }
     }
 
     private void handleLockState(UUID messageId, final AutomationComposition automationComposition,
-                                 Integer startPhaseMsg) {
+                                 Integer startPhaseMsg, List<ParticipantDto> participantDtoList) {
         automationComposition.setLockState(LockState.LOCKING);
-        for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider
-                    .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            int startPhase = AcmStageUtils.findStartPhase(compositionInProperties);
+
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
+
+        for (var dto : elementDtoMap.values()) {
+            var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
+            int startPhase = AcmStageUtils.findStartPhase(dto.getCompositionElement().inProperties());
             if (startPhaseMsg.equals(startPhase)) {
-                element.setLockState(LockState.LOCKING);
-                element.setSubState(SubState.NONE);
-                var compositionElement = cacheProvider.createCompositionElementDto(
-                        automationComposition.getCompositionId(), element);
-                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                        element.getProperties(), element.getOutProperties());
-                listener.lock(messageId, compositionElement, instanceElement);
+                var element = automationComposition.getElements().get(instanceElement.elementId());
+                if (element != null) {
+                    element.setLockState(LockState.LOCKING);
+                    element.setSubState(SubState.NONE);
+                }
+                listener.lock(messageId, dto.getCompositionElement(), instanceElement);
             }
         }
     }
 
     private void handleUnlockState(UUID messageId, final AutomationComposition automationComposition,
-                                   Integer startPhaseMsg) {
+                                   Integer startPhaseMsg, List<ParticipantDto> participantDtoList) {
         automationComposition.setLockState(LockState.UNLOCKING);
-        for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider
-                    .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            int startPhase = AcmStageUtils.findStartPhase(compositionInProperties);
+
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
+
+        for (var dto : elementDtoMap.values()) {
+            var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
+            int startPhase = AcmStageUtils.findStartPhase(dto.getCompositionElement().inProperties());
             if (startPhaseMsg.equals(startPhase)) {
-                element.setLockState(LockState.UNLOCKING);
-                element.setSubState(SubState.NONE);
-                var compositionElement = cacheProvider.createCompositionElementDto(
-                        automationComposition.getCompositionId(), element);
-                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                        element.getProperties(), element.getOutProperties());
-                listener.unlock(messageId, compositionElement, instanceElement);
+                var element = automationComposition.getElements().get(instanceElement.elementId());
+                if (element != null) {
+                    element.setLockState(LockState.UNLOCKING);
+                    element.setSubState(SubState.NONE);
+                }
+                listener.unlock(messageId, dto.getCompositionElement(), instanceElement);
             }
         }
     }

@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantDtoUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -40,13 +41,11 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
-import org.onap.policy.clamp.models.acm.dto.ElementState;
-import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
+import org.onap.policy.clamp.models.acm.dto.AcElementDto;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.common.utils.validation.Assertions;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,58 +147,34 @@ public class CacheProvider {
         LOGGER.info("Updated cache for the composition id {}", compositionId);
     }
 
+    /**
+     * Add element definition from a CompositionDto.
+     *
+     * @param compositionDto the CompositionDto from the prime message
+     * @param revisionId last revision
+     */
+    public void addElementDefinition(@NonNull CompositionDto compositionDto, UUID revisionId) {
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(compositionDto.compositionId());
+        acDefinition.setRevisionId(revisionId);
+        for (var entry : compositionDto.inPropertiesMap().entrySet()) {
+            var acElementDefinition = new AutomationCompositionElementDefinition();
+            acElementDefinition.setAcElementDefinitionId(entry.getKey());
+            var nodeTemplate = new ToscaNodeTemplate();
+            nodeTemplate.setProperties(new HashMap<>(entry.getValue()));
+            acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
+            var outProps = compositionDto.outPropertiesMap().get(entry.getKey());
+            if (outProps != null) {
+                acElementDefinition.setOutProperties(new LinkedHashMap<>(outProps));
+            }
+            acDefinition.getElements().put(entry.getKey(), acElementDefinition);
+        }
+        acElementsDefinitions.put(compositionDto.compositionId(), acDefinition);
+        LOGGER.info("Updated cache for the composition id {}", compositionDto.compositionId());
+    }
+
     public void removeElementDefinition(@NonNull UUID compositionId) {
         acElementsDefinitions.remove(compositionId);
-    }
-
-    /**
-     * Get CommonProperties.
-     *
-     * @param instanceId the Automation Composition Id
-     * @param acElementId the Automation Composition Element Id
-     * @return the common Properties as Map
-     */
-    public Map<String, Object> getCommonProperties(@NonNull UUID instanceId, @NonNull UUID acElementId) {
-        var automationComposition = automationCompositions.get(instanceId);
-        var element = automationComposition.getElements().get(acElementId);
-        return getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-    }
-
-    /**
-     * Get CommonProperties.
-     *
-     * @param compositionId the composition Id
-     * @param definition the AutomationCompositionElementDefinition Id
-     * @return the common Properties as Map
-     */
-    public Map<String, Object> getCommonProperties(@NonNull UUID compositionId,
-        @NonNull ToscaConceptIdentifier definition) {
-        var map = getAcElementDefinition(acElementsDefinitions.get(compositionId), definition);
-        return map != null ? map.getAutomationCompositionElementToscaNodeTemplate().getProperties() : new HashMap<>();
-    }
-
-    /**
-     * Get AutomationCompositionElementDefinition from AcDefinition and ToscaConceptIdentifier.
-     *
-     * @param acDefinition the AcDefinition
-     * @param definition the ToscaConceptIdentifier
-     * @return the AutomationCompositionElementDefinition
-     */
-    public AutomationCompositionElementDefinition getAcElementDefinition(AcDefinition acDefinition,
-            ToscaConceptIdentifier definition) {
-        if (acDefinition == null) {
-            return null;
-        }
-        var acDefinitionElement = acDefinition.getElements().get(definition);
-        if (acDefinitionElement == null) {
-            var val = acDefinition.getElements().entrySet().stream()
-                    .filter(entry -> definition.getName().equals(entry.getKey().getName()))
-                    .findFirst();
-            if (val.isPresent()) {
-                acDefinitionElement = val.get().getValue();
-            }
-        }
-        return acDefinitionElement;
     }
 
     /**
@@ -328,6 +303,61 @@ public class CacheProvider {
     }
 
     /**
+     * Create AutomationComposition instance from DTOs.
+     *
+     * @param compositionId the composition Id
+     * @param compositionTargetId the composition target Id
+     * @param instanceId the instance Id
+     * @param elementDtoMap map of element Id to AcElementDto
+     * @param deployState the DeployState
+     * @param subState the SubState
+     * @param revisionId the identification of the last update
+     * @return the AutomationComposition
+     */
+    public AutomationComposition createAcInstance(@NonNull UUID compositionId, UUID compositionTargetId,
+            @NonNull UUID instanceId, Map<UUID, AcElementDto> elementDtoMap,
+            DeployState deployState, SubState subState, UUID revisionId) {
+        var acLast = automationCompositions.get(instanceId);
+        Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
+        for (var dto : elementDtoMap.values()) {
+            var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
+            var elementId = instanceElement.elementId();
+            var acElement = new AutomationCompositionElement();
+            acElement.setId(elementId);
+            acElement.setDefinition(dto.getCompositionElement().elementDefinitionId());
+            acElement.setProperties(new HashMap<>(instanceElement.inProperties()));
+            acElement.setParticipantId(getParticipantId());
+            acElement.setDeployState(deployState);
+            acElement.setSubState(subState);
+            acElement.setLockState(LockState.LOCKED);
+            var acElementLast = acLast != null ? acLast.getElements().get(elementId) : null;
+            if (acElementLast != null) {
+                acElement.setOutProperties(acElementLast.getOutProperties());
+                acElement.setOperationalState(acElementLast.getOperationalState());
+                acElement.setUseState(acElementLast.getUseState());
+            }
+            acElementMap.put(elementId, acElement);
+        }
+        var automationComposition = acLast != null ? acLast : new AutomationComposition();
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(instanceId);
+        if (acLast != null) {
+            automationComposition.getElements().putAll(acElementMap);
+        } else {
+            automationComposition.setElements(acElementMap);
+        }
+        automationComposition.setDeployState(deployState);
+        automationComposition.setSubState(subState);
+        automationComposition.setRevisionId(revisionId);
+        if (compositionTargetId != null) {
+            automationComposition.setCompositionTargetId(compositionTargetId);
+        }
+
+        automationCompositions.put(instanceId, automationComposition);
+        return automationComposition;
+    }
+
+    /**
      * Create AutomationCompositionElement to save in memory.
      *
      * @param element AcElementDeploy
@@ -342,91 +372,6 @@ public class CacheProvider {
         acElement.setLockState(LockState.LOCKED);
         acElement.setMigrationState(element.getMigrationState());
         return acElement;
-    }
-
-    /**
-     * Create CompositionElementDto.
-     *
-     * @param compositionId the composition Id
-     * @param element AutomationComposition Element
-     * @return the CompositionElementDto
-     */
-    public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element) {
-        var acDefinition = acElementsDefinitions.get(compositionId);
-        var acDefinitionElement = getAcElementDefinition(acDefinition, element.getDefinition());
-
-        return (acDefinitionElement != null) ? new CompositionElementDto(compositionId,
-                acDefinitionElement.getAcElementDefinitionId(),
-                acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
-                acDefinitionElement.getOutProperties()) :
-            new CompositionElementDto(compositionId, element.getDefinition(),
-                Map.of(), Map.of(), ElementState.NOT_PRESENT);
-    }
-
-    /**
-     * Get a Map of CompositionElementDto by elementId from the elements of an AutomationComposition.
-     *
-     * @param automationComposition the AutomationComposition
-     * @param compositionId the compositionId
-     * @return the Map of CompositionElementDto
-     */
-    public Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
-            UUID compositionId) {
-        var acDefinition = acElementsDefinitions.get(compositionId);
-        Map<UUID, CompositionElementDto> map = new HashMap<>();
-        for (var element : automationComposition.getElements().values()) {
-            var acDefinitionElement = getAcElementDefinition(acDefinition, element.getDefinition());
-            var compositionElement = (acDefinitionElement != null)
-                    ? new CompositionElementDto(compositionId, acDefinitionElement.getAcElementDefinitionId(),
-                    acDefinitionElement.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
-                    acDefinitionElement.getOutProperties()) :
-                    new CompositionElementDto(compositionId, element.getDefinition(),
-                            Map.of(), Map.of(), ElementState.NOT_PRESENT);
-            map.put(element.getId(), compositionElement);
-        }
-        return map;
-    }
-
-    public Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition) {
-        return getCompositionElementDtoMap(automationComposition, automationComposition.getCompositionId());
-    }
-
-    /**
-     * Get a Map of InstanceElementDto by elementId from the elements of an AutomationComposition.
-     *
-     * @param automationComposition the AutomationComposition
-     * @return the Map of InstanceElementDto
-     */
-    public Map<UUID, InstanceElementDto> getInstanceElementDtoMap(AutomationComposition automationComposition) {
-        Map<UUID, InstanceElementDto> map = new HashMap<>();
-        for (var element : automationComposition.getElements().values()) {
-            var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    element.getProperties(), element.getOutProperties());
-            map.put(element.getId(), instanceElement);
-        }
-        return map;
-    }
-
-    /**
-     * Create a new InstanceElementDto record with state New.
-     *
-     * @param instanceElement the InstanceElementDto
-     * @return a new InstanceElementDto
-     */
-    public static InstanceElementDto changeStateToNew(InstanceElementDto instanceElement) {
-        return new InstanceElementDto(instanceElement.instanceId(), instanceElement.elementId(),
-                instanceElement.inProperties(), instanceElement.outProperties(), ElementState.NEW);
-    }
-
-    /**
-     * Create a new CompositionElementDto record with state New.
-     *
-     * @param compositionElement the CompositionElementDto
-     * @return a new CompositionElementDto
-     */
-    public static CompositionElementDto changeStateToNew(CompositionElementDto compositionElement) {
-        return new CompositionElementDto(compositionElement.compositionId(), compositionElement.elementDefinitionId(),
-                compositionElement.inProperties(), compositionElement.outProperties(), ElementState.NEW);
     }
 
     /**
