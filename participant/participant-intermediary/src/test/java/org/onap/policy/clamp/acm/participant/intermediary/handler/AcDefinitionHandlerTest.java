@@ -37,11 +37,13 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CachePro
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantPrimeDto;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AcDefinitionHandlerTest {
@@ -50,10 +52,13 @@ class AcDefinitionHandlerTest {
     void handleCompositionPrimeTest() {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var compositionId = UUID.randomUUID();
         var participantPrimeMsg = new ParticipantPrime();
-        participantPrimeMsg.setCompositionId(UUID.randomUUID());
+        participantPrimeMsg.setCompositionId(compositionId);
         participantPrimeMsg.setRevisionIdComposition(UUID.randomUUID());
         participantPrimeMsg.setParticipantDefinitionUpdates(List.of(createParticipantDefinition()));
+        participantPrimeMsg.setPrimeOrder(PrimeOrder.PRIME);
+        participantPrimeMsg.setPrimeDtoList(List.of(createParticipantPrimeDto(compositionId)));
         var listener = mock(ThreadHandler.class);
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handlePrime(participantPrimeMsg);
@@ -70,6 +75,17 @@ class AcDefinitionHandlerTest {
         return def;
     }
 
+    private ParticipantPrimeDto createParticipantPrimeDto(UUID compositionId) {
+        var elementId = new ToscaConceptIdentifier("key", "1.0.0");
+        var compositionDto = new CompositionDto(compositionId,
+                Map.of(elementId, Map.of("startPhase", 0)),
+                Map.of(elementId, Map.of()));
+        var primeDto = new ParticipantPrimeDto();
+        primeDto.setParticipantId(CommonTestData.getParticipantId());
+        primeDto.setCompositionDto(compositionDto);
+        return primeDto;
+    }
+
     @Test
     void handleCompositionDeprimeTest() {
         var acElementDefinition = CommonTestData.createAutomationCompositionElementDefinition(
@@ -79,12 +95,15 @@ class AcDefinitionHandlerTest {
         acDefinition.setCompositionId(compositionId);
         acDefinition.getElements().put(acElementDefinition.getAcElementDefinitionId(), acElementDefinition);
 
-        var listener = mock(ThreadHandler.class);
         var cacheProvider = mock(CacheProvider.class);
-        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionId, acDefinition));
         var participantPrimeMsg = new ParticipantPrime();
         participantPrimeMsg.setCompositionId(compositionId);
+        participantPrimeMsg.setPrimeOrder(PrimeOrder.DEPRIME);
+        participantPrimeMsg.setPrimeDtoList(List.of(createParticipantPrimeDto(compositionId)));
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handlePrime(participantPrimeMsg);
         verify(listener).deprime(any(UUID.class), any(CompositionDto.class));
     }
@@ -92,11 +111,14 @@ class AcDefinitionHandlerTest {
     @Test
     void handleCompositionAlreadyDeprimedTest() {
         var compositionId = UUID.randomUUID();
-        var participantMessagePublisher =  mock(ParticipantMessagePublisher.class);
-        var ach = new AcDefinitionHandler(mock(CacheProvider.class), participantMessagePublisher,
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var ach = new AcDefinitionHandler(cacheProvider, participantMessagePublisher,
                 mock(ThreadHandler.class));
         var participantPrimeMsg = new ParticipantPrime();
         participantPrimeMsg.setCompositionId(compositionId);
+        participantPrimeMsg.setPrimeOrder(PrimeOrder.DEPRIME);
         ach.handlePrime(participantPrimeMsg);
         verify(participantMessagePublisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
     }

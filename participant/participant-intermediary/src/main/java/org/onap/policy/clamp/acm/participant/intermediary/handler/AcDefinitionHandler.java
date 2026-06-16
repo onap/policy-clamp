@@ -22,19 +22,19 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantPrimeDto;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,18 +51,54 @@ public class AcDefinitionHandler {
      * @param participantPrimeMsg the ParticipantPrime message
      */
     public void handlePrime(ParticipantPrime participantPrimeMsg) {
-        if (!participantPrimeMsg.getParticipantDefinitionUpdates().isEmpty()) {
-            // prime
-            var list = collectAcElementDefinition(participantPrimeMsg.getParticipantDefinitionUpdates());
-            if (!list.isEmpty()) {
-                cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list,
-                        participantPrimeMsg.getRevisionIdComposition());
-                prime(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId(), list);
-            }
+        if (PrimeOrder.PRIME.equals(participantPrimeMsg.getPrimeOrder())) {
+            prime(participantPrimeMsg);
         } else {
-            // deprime
-            deprime(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId());
+            deprime(participantPrimeMsg);
         }
+    }
+
+    private void prime(ParticipantPrime participantPrimeMsg) {
+        var list = collectAcElementDefinition(participantPrimeMsg.getParticipantDefinitionUpdates());
+        if (!list.isEmpty()) {
+            cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list,
+                    participantPrimeMsg.getRevisionIdComposition());
+        }
+
+        var compositionDto = getCompositionDto(participantPrimeMsg.getPrimeDtoList());
+        if (compositionDto != null) {
+            listener.prime(participantPrimeMsg.getMessageId(), compositionDto);
+        }
+    }
+
+    private void deprime(ParticipantPrime participantPrimeMsg) {
+        var compositionDto = getCompositionDto(participantPrimeMsg.getPrimeDtoList());
+        if (compositionDto != null) {
+            listener.deprime(participantPrimeMsg.getMessageId(), compositionDto);
+            return;
+        }
+
+        // this participant does not handle this composition
+        var participantPrimeAck = new ParticipantPrimeAck();
+        participantPrimeAck.setCompositionId(participantPrimeMsg.getCompositionId());
+        participantPrimeAck.setMessage("Already deprimed or never primed");
+        participantPrimeAck.setResponseTo(participantPrimeMsg.getMessageId());
+        participantPrimeAck.setCompositionState(AcTypeState.COMMISSIONED);
+        participantPrimeAck.setStateChangeResult(StateChangeResult.NO_ERROR);
+        participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
+        participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
+        publisher.sendParticipantPrimeAck(participantPrimeAck);
+    }
+
+    private CompositionDto getCompositionDto(List<ParticipantPrimeDto> primeDtoList) {
+        if (primeDtoList == null || primeDtoList.isEmpty()) {
+            return null;
+        }
+        return primeDtoList.stream()
+                .filter(p -> cacheProvider.getParticipantId().equals(p.getParticipantId()))
+                .map(ParticipantPrimeDto::getCompositionDto)
+                .findFirst()
+                .orElse(null);
     }
 
     private List<AutomationCompositionElementDefinition> collectAcElementDefinition(
@@ -73,41 +109,6 @@ public class AcDefinitionHandler {
                 .map(ParticipantDefinition::getAutomationCompositionElementDefinitionList)
                 .flatMap(List::stream)
                 .toList();
-    }
-
-    private void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
-        var inPropertiesMap = list.stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = list.stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                AutomationCompositionElementDefinition::getOutProperties));
-        listener.prime(messageId, new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap));
-    }
-
-    private void deprime(UUID messageId, UUID compositionId) {
-        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acDefinition == null) {
-            // this participant does not handle this composition
-            var participantPrimeAck = new ParticipantPrimeAck();
-            participantPrimeAck.setCompositionId(compositionId);
-            participantPrimeAck.setMessage("Already deprimed or never primed");
-            participantPrimeAck.setResponseTo(messageId);
-            participantPrimeAck.setCompositionState(AcTypeState.COMMISSIONED);
-            participantPrimeAck.setStateChangeResult(StateChangeResult.NO_ERROR);
-            participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
-            participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
-            publisher.sendParticipantPrimeAck(participantPrimeAck);
-            return;
-        }
-        var list = acDefinition.getElements().values();
-        var inPropertiesMap = list.stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = list.stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                AutomationCompositionElementDefinition::getOutProperties));
-        listener.deprime(messageId, new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap));
     }
 
     /**

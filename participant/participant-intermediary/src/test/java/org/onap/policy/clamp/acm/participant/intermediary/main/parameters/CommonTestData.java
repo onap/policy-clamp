@@ -42,8 +42,13 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDto;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
+import org.onap.policy.clamp.models.acm.dto.AcElementDto;
+import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
+import org.onap.policy.clamp.models.acm.dto.ElementState;
+import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -320,5 +325,89 @@ public class CommonTestData {
         nodeTemplate.setProperties(Map.of("key", "value"));
         acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
         return acElementDefinition;
+    }
+
+    /**
+     * Create a List of ParticipantDto for testing with pre-built DTOs.
+     *
+     * @param participantId the participantId
+     * @param automationComposition the AutomationComposition
+     * @return List of ParticipantDto
+     */
+    public static List<ParticipantDto> createParticipantDtoList(UUID participantId,
+            AutomationComposition automationComposition) {
+        var participantDto = new ParticipantDto();
+        participantDto.setParticipantId(participantId);
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDto = new AcElementDto();
+            acElementDto.setCompositionElement(new CompositionElementDto(
+                    automationComposition.getCompositionId(), element.getDefinition(),
+                    Map.of("startPhase", 0), Map.of()));
+            acElementDto.setInstanceElement(new InstanceElementDto(
+                    automationComposition.getInstanceId(), element.getId(),
+                    element.getProperties() != null ? element.getProperties() : Map.of(),
+                    element.getOutProperties() != null ? element.getOutProperties() : Map.of()));
+            acElementDto.setCompositionElementTarget(new CompositionElementDto(
+                    automationComposition.getCompositionTargetId() != null
+                            ? automationComposition.getCompositionTargetId()
+                            : automationComposition.getCompositionId(),
+                    element.getDefinition(), Map.of("startPhase", 0, "stage",
+                            Map.of("migrate", List.of(0, 1, 2), "prepare", List.of(0, 1, 2))),
+                    Map.of()));
+            acElementDto.setInstanceElementTarget(new InstanceElementDto(
+                    automationComposition.getInstanceId(), element.getId(),
+                    element.getProperties() != null ? element.getProperties() : Map.of(),
+                    element.getOutProperties() != null ? element.getOutProperties() : Map.of()));
+            participantDto.getElementDtos().add(acElementDto);
+        }
+        return List.of(participantDto);
+    }
+
+    /**
+     * Create a List of ParticipantDto for rollback testing with correct ElementState values.
+     * NEW elements get NOT_PRESENT on compositionElement (being rolled back/removed).
+     * REMOVED elements get NOT_PRESENT on compositionElementTarget (being restored).
+     *
+     * @param participantId the participantId
+     * @param automationComposition the AutomationComposition
+     * @return List of ParticipantDto
+     */
+    public static List<ParticipantDto> createRollbackParticipantDtoList(UUID participantId,
+            AutomationComposition automationComposition) {
+        var participantDto = new ParticipantDto();
+        participantDto.setParticipantId(participantId);
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDto = new AcElementDto();
+            var compositionState = ElementState.PRESENT;
+            var targetState = ElementState.PRESENT;
+            if (MigrationState.NEW.equals(element.getMigrationState())) {
+                targetState = ElementState.REMOVED;
+            } else if (MigrationState.REMOVED.equals(element.getMigrationState())) {
+                compositionState = ElementState.NOT_PRESENT;
+                targetState = ElementState.NEW;
+            }
+            acElementDto.setCompositionElement(new CompositionElementDto(
+                    automationComposition.getCompositionId(), element.getDefinition(),
+                    Map.of("startPhase", 0, "stage",
+                            Map.of("migrate", List.of(0, 1, 2), "prepare", List.of(0, 1, 2))),
+                    Map.of(), compositionState));
+            acElementDto.setInstanceElement(new InstanceElementDto(
+                    automationComposition.getInstanceId(), element.getId(),
+                    element.getProperties() != null ? element.getProperties() : Map.of(),
+                    element.getOutProperties() != null ? element.getOutProperties() : Map.of()));
+            acElementDto.setCompositionElementTarget(new CompositionElementDto(
+                    automationComposition.getCompositionTargetId() != null
+                            ? automationComposition.getCompositionTargetId()
+                            : automationComposition.getCompositionId(),
+                    element.getDefinition(), Map.of("startPhase", 0, "stage",
+                            Map.of("migrate", List.of(0, 1, 2), "prepare", List.of(0, 1, 2))),
+                    Map.of(), targetState));
+            acElementDto.setInstanceElementTarget(new InstanceElementDto(
+                    automationComposition.getInstanceId(), element.getId(),
+                    element.getProperties() != null ? element.getProperties() : Map.of(),
+                    element.getOutProperties() != null ? element.getOutProperties() : Map.of()));
+            participantDto.getElementDtos().add(acElementDto);
+        }
+        return List.of(participantDto);
     }
 }
