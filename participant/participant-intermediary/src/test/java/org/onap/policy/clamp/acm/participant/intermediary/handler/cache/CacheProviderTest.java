@@ -41,6 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -339,6 +340,33 @@ class CacheProviderTest {
         assertEquals(acElementDefinition, element);
         assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
         assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate().getProperties());
+    }
+
+    @Test
+    void test_addElementDefinitionFromCompositionDto() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var revisionId = UUID.randomUUID();
+        var elementId = new ToscaConceptIdentifier("name", "1.0.0");
+
+        var inProperties = Map.of(elementId, Map.<String, Object>of("startPhase", 0));
+        var outProperties = Map.of(elementId, Map.<String, Object>of("key", "value"));
+        var compositionDto = new CompositionDto(compositionId, inProperties, outProperties);
+
+        cacheProvider.addElementDefinition(compositionDto, revisionId);
+        assertEquals(1, cacheProvider.getAcElementsDefinitions().size());
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        assertNotNull(acDefinition);
+        assertEquals(compositionId, acDefinition.getCompositionId());
+        assertEquals(revisionId, acDefinition.getRevisionId());
+
+        var element = acDefinition.getElements().get(elementId);
+        assertNotNull(element);
+        assertEquals(elementId, element.getAcElementDefinitionId());
+        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
+        assertEquals(0, element.getAutomationCompositionElementToscaNodeTemplate().getProperties().get("startPhase"));
+        assertEquals("value", element.getOutProperties().get("key"));
     }
 
     @Test

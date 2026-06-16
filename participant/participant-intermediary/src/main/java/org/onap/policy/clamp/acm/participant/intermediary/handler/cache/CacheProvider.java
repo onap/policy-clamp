@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantDtoUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -40,6 +41,8 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.AcElementDto;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
 import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
@@ -146,6 +149,32 @@ public class CacheProvider {
         }
         acElementsDefinitions.put(compositionId, acDefinition);
         LOGGER.info("Updated cache for the composition id {}", compositionId);
+    }
+
+    /**
+     * Add element definition from a CompositionDto.
+     *
+     * @param compositionDto the CompositionDto from the prime message
+     * @param revisionId last revision
+     */
+    public void addElementDefinition(@NonNull CompositionDto compositionDto, UUID revisionId) {
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(compositionDto.compositionId());
+        acDefinition.setRevisionId(revisionId);
+        for (var entry : compositionDto.inPropertiesMap().entrySet()) {
+            var acElementDefinition = new AutomationCompositionElementDefinition();
+            acElementDefinition.setAcElementDefinitionId(entry.getKey());
+            var nodeTemplate = new ToscaNodeTemplate();
+            nodeTemplate.setProperties(new HashMap<>(entry.getValue()));
+            acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
+            var outProps = compositionDto.outPropertiesMap().get(entry.getKey());
+            if (outProps != null) {
+                acElementDefinition.setOutProperties(new LinkedHashMap<>(outProps));
+            }
+            acDefinition.getElements().put(entry.getKey(), acElementDefinition);
+        }
+        acElementsDefinitions.put(compositionDto.compositionId(), acDefinition);
+        LOGGER.info("Updated cache for the composition id {}", compositionDto.compositionId());
     }
 
     public void removeElementDefinition(@NonNull UUID compositionId) {
@@ -324,6 +353,61 @@ public class CacheProvider {
             automationComposition.setCompositionTargetId(compositionTargetId);
         }
 
+        return automationComposition;
+    }
+
+    /**
+     * Create AutomationComposition instance from DTOs.
+     *
+     * @param compositionId the composition Id
+     * @param compositionTargetId the composition target Id
+     * @param instanceId the instance Id
+     * @param elementDtoMap map of element Id to AcElementDto
+     * @param deployState the DeployState
+     * @param subState the SubState
+     * @param revisionId the identification of the last update
+     * @return the AutomationComposition
+     */
+    public AutomationComposition createAcInstance(@NonNull UUID compositionId, UUID compositionTargetId,
+            @NonNull UUID instanceId, Map<UUID, AcElementDto> elementDtoMap,
+            DeployState deployState, SubState subState, UUID revisionId) {
+        var acLast = automationCompositions.get(instanceId);
+        Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
+        for (var dto : elementDtoMap.values()) {
+            var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
+            var elementId = instanceElement.elementId();
+            var acElement = new AutomationCompositionElement();
+            acElement.setId(elementId);
+            acElement.setDefinition(dto.getCompositionElement().elementDefinitionId());
+            acElement.setProperties(new HashMap<>(instanceElement.inProperties()));
+            acElement.setParticipantId(getParticipantId());
+            acElement.setDeployState(deployState);
+            acElement.setSubState(subState);
+            acElement.setLockState(LockState.LOCKED);
+            var acElementLast = acLast != null ? acLast.getElements().get(elementId) : null;
+            if (acElementLast != null) {
+                acElement.setOutProperties(acElementLast.getOutProperties());
+                acElement.setOperationalState(acElementLast.getOperationalState());
+                acElement.setUseState(acElementLast.getUseState());
+            }
+            acElementMap.put(elementId, acElement);
+        }
+        var automationComposition = acLast != null ? acLast : new AutomationComposition();
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(instanceId);
+        if (acLast != null) {
+            automationComposition.getElements().putAll(acElementMap);
+        } else {
+            automationComposition.setElements(acElementMap);
+        }
+        automationComposition.setDeployState(deployState);
+        automationComposition.setSubState(subState);
+        automationComposition.setRevisionId(revisionId);
+        if (compositionTargetId != null) {
+            automationComposition.setCompositionTargetId(compositionTargetId);
+        }
+
+        automationCompositions.put(instanceId, automationComposition);
         return automationComposition;
     }
 
