@@ -63,19 +63,14 @@ class AcLockHandlerTest {
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.UNLOCKED);
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
         var listener = mock(ThreadHandler.class);
         var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
@@ -96,19 +91,14 @@ class AcLockHandlerTest {
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.LOCKED);
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            acDefinition.getElements().put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), acDefinition));
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
+        automationCompositionStateChange.setParticipantDtoList(
+                CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
         var listener = mock(ThreadHandler.class);
         var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
