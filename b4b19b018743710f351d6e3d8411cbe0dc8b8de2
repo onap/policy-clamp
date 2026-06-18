@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "880fd075_800c8b3f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/utils/AcmUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-06-18T12:51:48Z",
+      "side": 1,
+      "message": "This whole method can be replaced with `CollectionUtils.isEqualCollection(list1, list2);` from org.apache.commons.collections4.CollectionUtils, which is already used in ACM.\n\nAdditionally, other methods here like `equalMap` could be replaced too",
+      "range": {
+        "startLine": 508,
+        "startChar": 0,
+        "endLine": 523,
+        "endChar": 5
+      },
+      "revId": "b4b19b018743710f351d6e3d8411cbe0dc8b8de2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
