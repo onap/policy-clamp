@@ -16,6 +16,24 @@
       "message": "Should we decide between robot and cucumber to use for regression? With cucumber, it might be easier to keep different test cases based out on the participant versions? And we can also identify what behaviour to test?",
       "revId": "f72be6e65873ee90cc48cfa2e87d982b618ed958",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54cd17d6_280b3304",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-06-18T11:46:11Z",
+      "side": 1,
+      "message": "As agreed in meeting, we will use robot for now, and consider migrating the CSITs from robot framework to alternative later, e.g. k6, groovy, cucumber",
+      "parentUuid": "25d8214c_07279819",
+      "revId": "f72be6e65873ee90cc48cfa2e87d982b618ed958",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
