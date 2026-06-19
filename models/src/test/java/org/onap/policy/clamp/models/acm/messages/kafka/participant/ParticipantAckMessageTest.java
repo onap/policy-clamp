@@ -21,7 +21,9 @@
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
@@ -29,6 +31,19 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 
 class ParticipantAckMessageTest {
+
+    @Test
+    void testGetPartitionKey() {
+        var message = makeMessage();
+        assertEquals(message.getParticipantId().toString(), message.getPartitionKey());
+
+        message.setCompositionId(UUID.randomUUID());
+        assertEquals(message.getCompositionId().toString(), message.getPartitionKey());
+
+        message.setCompositionId(null);
+        message.setParticipantId(null);
+        assertNull(message.getPartitionKey());
+    }
 
     @Test
     void testAppliesTo_NullParticipantId() {
