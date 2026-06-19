@@ -35,4 +35,19 @@ public interface ParticipantKafkaMessage {
      * Determines if this message applies to this participant type.
      */
     boolean appliesTo(UUID participantId, UUID replicaId);
+
+    /**
+     * Gets the default Partition Key.
+     *
+     * @return the Partition Key
+     */
+    default String getPartitionKey() {
+        if (getCompositionId() != null) {
+            return getCompositionId().toString();
+        } else if (getParticipantId() != null) {
+            return getParticipantId().toString();
+        } else {
+            return null;
+        }
+    }
 }
