@@ -35,7 +35,6 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
     </properties>
 
     <modules>
@@ -92,11 +91,6 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <release>${maven.compiler.release}</release>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.21.0</version>
             </plugin>
         </plugins>
     </build>
