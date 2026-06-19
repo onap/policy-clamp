@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -238,17 +239,17 @@ class SupervisionMessagesTest {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         publisher.sendSync(automationComposition);
-        verify(participantPublisher).sendToSyncTopic(any(ParticipantSync.class));
+        verify(participantPublisher).sendToSyncTopic(anyString(), any(ParticipantSync.class));
 
         clearInvocations(participantPublisher);
         automationComposition.setDeployState(DeployState.DELETED);
         publisher.sendSync(automationComposition);
-        verify(participantPublisher).sendToSyncTopic(any(ParticipantSync.class));
+        verify(participantPublisher).sendToSyncTopic(anyString(), any(ParticipantSync.class));
 
         clearInvocations(participantPublisher);
         automationComposition.getElements().values().iterator().next().setDeployState(DeployState.DELETED);
         publisher.sendDeleteSync(automationComposition, UUID.randomUUID());
-        verify(participantPublisher).sendToSyncTopic(any(ParticipantSync.class));
+        verify(participantPublisher).sendToSyncTopic(anyString(), any(ParticipantSync.class));
     }
 
     @Test
@@ -256,7 +257,7 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantSyncPublisher(CommonTestData.getTestParamaterGroup(), participantPublisher);
         var acmDefinition = getAcmDefinition();
         publisher.sendSync(acmDefinition, null);
-        verify(participantPublisher).sendToSyncTopic(any(ParticipantSync.class));
+        verify(participantPublisher).sendToSyncTopic(anyString(), any(ParticipantSync.class));
     }
 
     @Test
@@ -265,7 +266,7 @@ class SupervisionMessagesTest {
         var acmDefinition = getAcmDefinition();
         acmDefinition.setState(AcTypeState.COMMISSIONED);
         publisher.sendSync(acmDefinition, UUID.randomUUID());
-        verify(participantPublisher).sendToSyncTopic(any(ParticipantSync.class));
+        verify(participantPublisher).sendToSyncTopic(anyString(), any(ParticipantSync.class));
     }
 
     @Test
@@ -278,7 +279,7 @@ class SupervisionMessagesTest {
         acmDefinition.getElementStateMap().values().iterator().next().setParticipantId(participantId);
         var replicaId = UUID.randomUUID();
         publisher.sendRestartMsg(participantId, replicaId, acmDefinition, List.of(automationComposition));
-        verify(participantPublisher).sendToSyncTopic(any(ParticipantSync.class));
+        verify(participantPublisher).sendToSyncTopic(anyString(), any(ParticipantSync.class));
     }
 
     private AutomationCompositionDefinition getAcmDefinition() {

@@ -38,18 +38,22 @@ public abstract class AbstractParticipantPublisher<T> {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    public void sendToSyncTopic(String key, final T message) {
+        this.send(syncTopic, key, message);
+    }
+
     public void sendToSyncTopic(final T message) {
-        this.send(syncTopic, message);
+        this.send(syncTopic, null, message);
     }
 
     public void send(final T message) {
-        this.send(operationTopic, message);
+        this.send(operationTopic, null, message);
     }
 
-    private void send(final String topic, final T message) {
+    private void send(final String topic, String key, final T message) {
         NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "KAFKA", topic, message.toString());
         try {
-            kafkaTemplate.send(topic, message).join();
+            kafkaTemplate.send(topic, key, message).join();
         } catch (final Exception e) {
             log.warn("send to {} failed because of {}", topic, e.getMessage(), e);
         }

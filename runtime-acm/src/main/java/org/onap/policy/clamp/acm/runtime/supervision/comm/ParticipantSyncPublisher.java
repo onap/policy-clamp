@@ -78,7 +78,7 @@ public class ParticipantSyncPublisher {
         }
 
         LOGGER.debug("Participant Restarting Sync sent {}", message);
-        participantPublisher.sendToSyncTopic(message);
+        participantPublisher.sendToSyncTopic(message.getCompositionId().toString(), message);
     }
 
     /**
@@ -108,7 +108,7 @@ public class ParticipantSyncPublisher {
                     -> message.getParticipantIdList().add(participantDefinition.getParticipantId()));
         }
         LOGGER.debug("Participant AutomationCompositionDefinition Sync sent {}", message);
-        participantPublisher.sendToSyncTopic(message);
+        participantPublisher.sendToSyncTopic(message.getCompositionId().toString(), message);
     }
 
     /**
@@ -139,7 +139,7 @@ public class ParticipantSyncPublisher {
         message.getAutomationcompositionList().add(syncAc);
 
         LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
-        participantPublisher.sendToSyncTopic(message);
+        participantPublisher.sendToSyncTopic(message.getCompositionId().toString(), message);
     }
 
     /**
@@ -162,7 +162,7 @@ public class ParticipantSyncPublisher {
         message.getAutomationcompositionList().add(syncAc);
 
         LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
-        participantPublisher.sendToSyncTopic(message);
+        participantPublisher.sendToSyncTopic(message.getCompositionId().toString(), message);
     }
 
     private ParticipantSync createSyncMsg(AutomationComposition automationComposition) {
