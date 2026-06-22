@@ -101,6 +101,10 @@ management:
       produce: ${jaegerProducerType:B3}
     sampling:
       probability: ${jaegerSamplingProbability:1.0}
+  otlp:
+    metrics:
+      export:
+        enabled: false
   endpoints:
     web:
       base-path: /
