@@ -75,7 +75,6 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
       OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
-      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: false
       OTEL_METRICS_EXPORTER: none
       JAVA_TOOL_OPTIONS: >-
         -Dcom.sun.management.jmxremote.rmi.port=9090

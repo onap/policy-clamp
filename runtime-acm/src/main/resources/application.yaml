@@ -76,6 +76,10 @@ management:
       produce: ${JAEGER_PRODUCER_TYPE:B3}
     sampling:
       probability: ${JAEGER_SAMPLING_PROBABILITY:1.0}
+  otlp:
+    metrics:
+      export:
+        enabled: false
   endpoints:
     web:
       base-path: /actuator
