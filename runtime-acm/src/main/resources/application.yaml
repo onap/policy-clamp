@@ -35,6 +35,7 @@ spring:
       sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     listener:
       observation-enabled: ${ALLOW_TRACING:false}
+      auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
     template:
       observation-enabled: ${ALLOW_TRACING:false}
     consumer:
