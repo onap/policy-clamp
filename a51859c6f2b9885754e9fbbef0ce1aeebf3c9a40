@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21a6f57c_2d03cc0c",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ElementStageDto.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-25T16:19:18Z",
+      "side": 1,
+      "message": "Do we need builder for this class if lot of null parameters to be supplied?",
+      "range": {
+        "startLine": 26,
+        "startChar": 14,
+        "endLine": 26,
+        "endChar": 29
+      },
+      "revId": "a51859c6f2b9885754e9fbbef0ce1aeebf3c9a40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a069b525_922d1050",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ElementStateDto.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-25T16:19:18Z",
+      "side": 1,
+      "message": "Should we use builder for this class, so that callers can set only the required fields, avoiding lot of null values to be supplied?",
+      "range": {
+        "startLine": 33,
+        "startChar": 11,
+        "endLine": 33,
+        "endChar": 26
+      },
+      "revId": "a51859c6f2b9885754e9fbbef0ce1aeebf3c9a40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc622433_fe8f0ee0",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionOutHandler.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-25T16:19:18Z",
+      "side": 1,
+      "message": "outProperties",
+      "range": {
+        "startLine": 75,
+        "startChar": 38,
+        "endLine": 75,
+        "endChar": 53
+      },
+      "revId": "a51859c6f2b9885754e9fbbef0ce1aeebf3c9a40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5d3af10_40877106",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionOutHandler.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-06-25T16:19:18Z",
+      "side": 1,
+      "message": "Should we rename this to updateOutProperties or applyOutProperties for more self descriptive?",
+      "range": {
+        "startLine": 78,
+        "startChar": 62,
+        "endLine": 78,
+        "endChar": 72
+      },
+      "revId": "a51859c6f2b9885754e9fbbef0ce1aeebf3c9a40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
