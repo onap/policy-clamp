@@ -88,6 +88,59 @@ class LoggingConsoleLayoutSpec extends Specification {
         "chained exception"  | FORMAT            | "UTC" | null                                              | true      | Level.ERROR| "Operation failed" | "org.onap.policy.Service"  | "worker-1" | new RuntimeException("outer", new IllegalStateException("inner cause"))           | false
     }
 
+    def "given MDC with traceId and spanId, doLayout should include them in output"() {
+        given: "a layout and an event with MDC containing traceId and spanId"
+        def layout = new LoggingConsoleLayout()
+        layout.timestampFormat = FORMAT
+        layout.timestampFormatTimezoneId = "UTC"
+        layout.start()
+
+        def mdcMap = ["traceId": "0b59e7f6a6eeede89b143e7b26f8a9ce", "spanId": "b6fc54215b3d77d3"]
+        def event = Stub(ILoggingEvent) {
+            getThreadName() >> "main"
+            getLevel() >> Level.INFO
+            getFormattedMessage() >> "test message"
+            getLoggerName() >> "test.Logger"
+            getInstant() >> Instant.now()
+            getThrowableProxy() >> null
+            getMDCPropertyMap() >> mdcMap
+        }
+
+        when: "doLayout is called"
+        def result = layout.doLayout(event)
+        def map = MAPPER.readValue(result, Map)
+
+        then: "traceId and spanId are present in the JSON output"
+        map.traceId == "0b59e7f6a6eeede89b143e7b26f8a9ce"
+        map.spanId == "b6fc54215b3d77d3"
+    }
+
+    def "given empty MDC, doLayout should not include traceId or spanId"() {
+        given: "a layout and an event with empty MDC"
+        def layout = new LoggingConsoleLayout()
+        layout.timestampFormat = FORMAT
+        layout.timestampFormatTimezoneId = "UTC"
+        layout.start()
+
+        def event = Stub(ILoggingEvent) {
+            getThreadName() >> "main"
+            getLevel() >> Level.INFO
+            getFormattedMessage() >> "test message"
+            getLoggerName() >> "test.Logger"
+            getInstant() >> Instant.now()
+            getThrowableProxy() >> null
+            getMDCPropertyMap() >> [:]
+        }
+
+        when: "doLayout is called"
+        def result = layout.doLayout(event)
+        def map = MAPPER.readValue(result, Map)
+
+        then: "traceId and spanId are not present in the JSON output"
+        !map.containsKey("traceId")
+        !map.containsKey("spanId")
+    }
+
     def createEvent(Level level, String message, String logger, String thread, Throwable exception) {
         Stub(ILoggingEvent) {
             getThreadName() >> thread

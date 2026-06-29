@@ -103,8 +103,24 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
             extraDatamap.put("exception", m);
         }
         map.put("extra_data", extraDatamap);
+        addMdcTracingFields(event, map);
         map.putAll(staticParameterMap);
         return getJson(map);
+    }
+
+    private void addMdcTracingFields(ILoggingEvent event, Map<String, Object> map) {
+        var mdcMap = event.getMDCPropertyMap();
+        if (mdcMap == null || mdcMap.isEmpty()) {
+            return;
+        }
+        var traceId = mdcMap.get("traceId");
+        if (traceId != null && !traceId.isBlank()) {
+            map.put("traceId", traceId);
+        }
+        var spanId = mdcMap.get("spanId");
+        if (spanId != null && !spanId.isBlank()) {
+            map.put("spanId", spanId);
+        }
     }
 
     protected String getJson(Map<String, Object> map) {
