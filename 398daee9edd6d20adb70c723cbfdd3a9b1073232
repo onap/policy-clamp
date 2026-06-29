@@ -22,6 +22,30 @@
       },
       "revId": "398daee9edd6d20adb70c723cbfdd3a9b1073232",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d879eb18_75157798",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ElementStateDto.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-06-29T07:38:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0716a00_4efedd51",
+      "range": {
+        "startLine": 33,
+        "startChar": 11,
+        "endLine": 33,
+        "endChar": 26
+      },
+      "revId": "398daee9edd6d20adb70c723cbfdd3a9b1073232",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
