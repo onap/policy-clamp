@@ -26,12 +26,14 @@ import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.LayoutBase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.common.util.StringUtils;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.common.utils.coder.MapperFactory;
 
 public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
@@ -103,8 +105,24 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
             extraDatamap.put("exception", m);
         }
         map.put("extra_data", extraDatamap);
+        addMdcTracingFields(event, map);
         map.putAll(staticParameterMap);
         return getJson(map);
+    }
+
+    private void addMdcTracingFields(ILoggingEvent event, Map<String, Object> map) {
+        var mdcMap = event.getMDCPropertyMap();
+        if (CollectionUtils.sizeIsEmpty(mdcMap)) {
+            return;
+        }
+        var traceId = mdcMap.get("traceId");
+        if (StringUtils.isNotBlank(traceId)) {
+            map.put("traceId", traceId);
+        }
+        var spanId = mdcMap.get("spanId");
+        if (StringUtils.isNotBlank(spanId)) {
+            map.put("spanId", spanId);
+        }
     }
 
     protected String getJson(Map<String, Object> map) {
