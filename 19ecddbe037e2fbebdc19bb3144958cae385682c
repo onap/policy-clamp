@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e585766_169ebd62",
+        "filename": "packages/policy-clamp-docker/pom.xml.versionsBackup",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-01T14:25:44Z",
+      "side": 1,
+      "message": "should we delete this file?",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "19ecddbe037e2fbebdc19bb3144958cae385682c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
