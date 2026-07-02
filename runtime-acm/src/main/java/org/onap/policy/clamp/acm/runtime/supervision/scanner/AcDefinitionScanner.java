@@ -84,7 +84,6 @@ public class AcDefinitionScanner {
         if (elementOpt.isPresent()) {
             elementOpt.get().setOutProperties(message.getOutProperties());
             result.setUpdated(true);
-            result.setToBeSync(true);
         }
         return result;
     }
