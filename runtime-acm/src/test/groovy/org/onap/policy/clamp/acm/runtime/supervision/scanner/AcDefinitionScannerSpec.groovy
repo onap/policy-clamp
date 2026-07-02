@@ -127,7 +127,7 @@ class AcDefinitionScannerSpec extends Specification {
 
         then:
         result.updated
-        result.toBeSync
+        !result.toBeSync
         acDefinition.elementStateMap[element.nodeTemplateStateId.toString()].outProperties == OUT_PROPERTIES
     }
 
