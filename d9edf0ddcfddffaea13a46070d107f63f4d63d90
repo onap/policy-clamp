@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f01eebc8_b3dd5957",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/LoggingConsoleLayout.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-07-07T15:06:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "50df29ae_634d450f",
+      "range": {
+        "startLine": 113,
+        "startChar": 12,
+        "endLine": 113,
+        "endChar": 46
+      },
+      "revId": "d9edf0ddcfddffaea13a46070d107f63f4d63d90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b4a672e_e2f1d75f",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-07-07T12:36:34Z",
       "side": 1,
       "message": "`StringUtils.isNotBlank(traceId)` will cover the null \u0026 blank",
+      "range": {
+        "startLine": 117,
+        "startChar": 12,
+        "endLine": 117,
+        "endChar": 49
+      },
+      "revId": "d9edf0ddcfddffaea13a46070d107f63f4d63d90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edef29aa_73bdab93",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/LoggingConsoleLayout.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-07-07T15:06:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6b4a672e_e2f1d75f",
       "range": {
         "startLine": 117,
         "startChar": 12,
