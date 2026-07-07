@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2022,2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,46 +24,23 @@ import java.util.Collection;
 import java.util.List;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AutomationCompositionRepository extends JpaRepository<JpaAutomationComposition, String> {
+public interface AutomationCompositionRepository extends JpaRepository<JpaAutomationComposition, String>,
+        JpaSpecificationExecutor<JpaAutomationComposition> {
 
     List<JpaAutomationComposition> findByCompositionId(String compositionId);
 
     List<JpaAutomationComposition> findByDeployStateIn(Collection<DeployState> deployStates);
-
-    Page<JpaAutomationComposition> findByDeployStateIn(Collection<DeployState> deployStates,
-                                                       Pageable pageable);
 
     List<JpaAutomationComposition> findByLockStateIn(Collection<LockState> lockStates);
 
     List<JpaAutomationComposition> findBySubStateIn(Collection<SubState> subStates);
 
     List<JpaAutomationComposition> findByCompositionTargetId(String compositionTargetId);
-
-    Page<JpaAutomationComposition> findByStateChangeResultInAndDeployStateIn(
-            Collection<StateChangeResult> stateChangeResults, Collection<DeployState> deployStates,
-            Pageable pageable);
-
-    Page<JpaAutomationComposition> findByStateChangeResultIn(Collection<StateChangeResult> stateChangeResults,
-                                                             Pageable pageable);
-
-    Page<JpaAutomationComposition> findByInstanceIdIn(Collection<String> instanceIds, Pageable pageable);
-
-    Page<JpaAutomationComposition> findByInstanceIdInAndStateChangeResultIn(
-        Collection<String> instanceIds, Collection<StateChangeResult> stateChangeResults, Pageable pageable);
-
-    Page<JpaAutomationComposition> findByInstanceIdInAndDeployStateIn(
-        Collection<String> instanceIds, Collection<DeployState> deployStates, Pageable pageable);
-
-    Page<JpaAutomationComposition> findByInstanceIdInAndStateChangeResultInAndDeployStateIn(
-        Collection<String> instanceIds, Collection<StateChangeResult> stateChangeResults,
-        Collection<DeployState> deployStates, Pageable pageable);
 }
