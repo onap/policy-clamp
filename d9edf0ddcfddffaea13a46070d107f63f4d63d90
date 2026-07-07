@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50df29ae_634d450f",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/LoggingConsoleLayout.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-07T12:36:34Z",
+      "side": 1,
+      "message": "`CollectionUtils.sizeIsEmpty(mdcMap)` will cover the null and empty cases.\nIt might help with improve branch coverage -\u003e 1 boolean instead of 2, I think",
+      "range": {
+        "startLine": 113,
+        "startChar": 12,
+        "endLine": 113,
+        "endChar": 46
+      },
+      "revId": "d9edf0ddcfddffaea13a46070d107f63f4d63d90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b4a672e_e2f1d75f",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/LoggingConsoleLayout.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-07T12:36:34Z",
+      "side": 1,
+      "message": "`StringUtils.isNotBlank(traceId)` will cover the null \u0026 blank",
+      "range": {
+        "startLine": 117,
+        "startChar": 12,
+        "endLine": 117,
+        "endChar": 49
+      },
+      "revId": "d9edf0ddcfddffaea13a46070d107f63f4d63d90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
