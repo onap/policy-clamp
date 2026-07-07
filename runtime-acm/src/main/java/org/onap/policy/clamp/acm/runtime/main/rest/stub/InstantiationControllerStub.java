@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022-2023,2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ public class InstantiationControllerStub extends AbstractRestController implemen
 
     @Override
     public ResponseEntity<AutomationCompositions> queryCompositionInstancesByFilter(
-        String compositionIds, String deployState, String stateChangeResult,
+        UUID participantId, String compositionIds, String deployState, String stateChangeResult,
         Integer page, Integer size, String sort, String sortOrder, UUID onapRequestId) {
         return stubUtils.getResponse(pathToAllInstances, AutomationCompositions.class);
     }
