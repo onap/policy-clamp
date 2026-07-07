@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -21,6 +21,10 @@
  */
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
+
+import static org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceSpecs.hasParticipantId;
+import static org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceSpecs.in;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -53,7 +57,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -347,6 +350,7 @@ public class AutomationCompositionProvider {
      * Retrieves a list of AutomationComposition instances filtered by the specified state change results
      * and deployment states. The result can be paginated and sorted based on the provided parameters.
      *
+     * @param participantId the participant Id
      * @param instanceIds a list of instance UUIDs
      * @param stateChangeResults a list of StateChangeResult values to filter the AutomationComposition instances
      * @param deployStates a list of DeployState values to filter the AutomationComposition instances
@@ -354,43 +358,17 @@ public class AutomationCompositionProvider {
      * @return a list of AutomationComposition instances that match the specified filters
      */
     public List<AutomationComposition> getAcInstancesByFilter(
+            UUID participantId,
             @NonNull final List<String> instanceIds,
             @NonNull final List<StateChangeResult> stateChangeResults,
             @NonNull final List<DeployState> deployStates,
             @NonNull final Pageable pageable) {
-        Page<JpaAutomationComposition> page;
 
-        if (!instanceIds.isEmpty()) {
-            page = filterWithInstanceIds(instanceIds, stateChangeResults, deployStates, pageable);
-        } else if (stateChangeResults.isEmpty() && deployStates.isEmpty()) {
-            page = automationCompositionRepository.findAll(pageable);
-        } else if (!stateChangeResults.isEmpty() && deployStates.isEmpty()) {
-            page = automationCompositionRepository.findByStateChangeResultIn(stateChangeResults, pageable);
-        } else if (stateChangeResults.isEmpty()) {
-            page = automationCompositionRepository.findByDeployStateIn(deployStates, pageable);
-        } else {
-            page = automationCompositionRepository.findByStateChangeResultInAndDeployStateIn(
-                stateChangeResults, deployStates, pageable);
-        }
-
+        var query = where(in(instanceIds, "instanceId"))
+                .and(in(stateChangeResults, "stateChangeResult"))
+                .and(in(deployStates, "deployState"))
+                .and(hasParticipantId(participantId));
+        var page = automationCompositionRepository.findAll(query, pageable);
         return ProviderUtils.asEntityList(page.toList());
-    }
-
-    private Page<JpaAutomationComposition> filterWithInstanceIds(final List<String> instanceIds,
-                                                                    final List<StateChangeResult> stages,
-                                                                    final List<DeployState> deployStates,
-                                                                    final Pageable pageable) {
-        if (stages.isEmpty() && deployStates.isEmpty()) {
-            return automationCompositionRepository.findByInstanceIdIn(instanceIds, pageable);
-        } else if (!stages.isEmpty() && deployStates.isEmpty()) {
-            return automationCompositionRepository.findByInstanceIdInAndStateChangeResultIn(
-                    instanceIds, stages, pageable);
-        } else if (stages.isEmpty()) {
-            return automationCompositionRepository.findByInstanceIdInAndDeployStateIn(
-                    instanceIds, deployStates, pageable);
-        } else {
-            return automationCompositionRepository.findByInstanceIdInAndStateChangeResultInAndDeployStateIn(
-                    instanceIds, stages, deployStates, pageable);
-        }
     }
 }

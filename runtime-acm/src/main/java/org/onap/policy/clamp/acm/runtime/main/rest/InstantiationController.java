@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2023,2025-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -101,6 +101,7 @@ public class InstantiationController extends AbstractRestController implements A
     /**
      * Queries automation composition instances based on deployment state and state change results.
      *
+     * @param participantId the participant Id
      * @param deployStates the deployment states to filter automation compositions
      * @param stateChangeResults the state change results to filter automation compositions
      * @param page the page number for pagination; may be null
@@ -112,10 +113,11 @@ public class InstantiationController extends AbstractRestController implements A
      */
     @Override
     public ResponseEntity<AutomationCompositions> queryCompositionInstancesByFilter(
-        String instanceIds, String deployStates, String stateChangeResults,
+        UUID participantId, String instanceIds, String deployStates, String stateChangeResults,
         Integer page, Integer size, String sort, String sortOrder, UUID requestId) {
         var pageable = getPageableWithSorting(page, size, sort, sortOrder);
-        var instances = provider.getAcInstancesByFilter(instanceIds, stateChangeResults, deployStates, pageable);
+        var instances = provider
+                .getAcInstancesByFilter(participantId, instanceIds, stateChangeResults, deployStates, pageable);
         return ResponseEntity.ok().body(instances);
     }
 
