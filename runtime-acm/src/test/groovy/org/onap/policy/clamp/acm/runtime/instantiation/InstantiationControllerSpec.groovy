@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.instantiation
 import org.onap.policy.clamp.acm.runtime.helper.InstantiationControllerTestHelper
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions
 import org.onap.policy.clamp.models.acm.concepts.DeployState
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate
@@ -365,8 +366,18 @@ class InstantiationControllerSpec extends Specification {
         def compositionId = helper.createDefinition("Query")
         def ac = helper.loadAc("acCreate", "Query")
         ac.compositionId = compositionId
+        def list = new ArrayList<>(ac.getElements().values())
         def n = helper.numInstances
-        n.times { ac.name = "acmr_$it"; instantiationProvider.createAutomationComposition(compositionId, ac) }
+        n.times {
+            ac.instanceId = null
+            ac.elements.clear()
+            for (AutomationCompositionElement element: list) {
+                // elementId must be unique
+                element.id = UUID.randomUUID()
+                ac.elements.put(element.id, element)
+            }
+            ac.name = "acmr_$it"; instantiationProvider.createAutomationComposition(compositionId, ac)
+        }
 
         expect:
         helper.querySize("instances") == n
@@ -376,6 +387,8 @@ class InstantiationControllerSpec extends Specification {
         helper.querySize("instances?deployState=UNDEPLOYED") == n
         helper.querySize("instances?stateChangeResult=NO_ERROR&deployState=UNDEPLOYED") == n
         helper.querySize("instances?sort=name&sortOrder=DESC") == n
+        helper.querySize("instances?participantId=" + UUID.randomUUID()) == 0
+        helper.querySize("instances?participantId=" + CommonTestData.participantId) == n
     }
 
     def "query by filter with instance IDs"() {
@@ -383,8 +396,16 @@ class InstantiationControllerSpec extends Specification {
         def compositionId = helper.createDefinition("Query")
         def ac = helper.loadAc("acCreate", "Query")
         ac.compositionId = compositionId
+        def list = new ArrayList<>(ac.getElements().values())
         def n = helper.numInstances
         def ids = (0..<n).collect {
+            ac.instanceId = null
+            ac.elements.clear()
+            for (AutomationCompositionElement element: list) {
+                // elementId must be unique
+                element.id = UUID.randomUUID()
+                ac.elements.put(element.id, element)
+            }
             ac.name = "acmr_$it"
             instantiationProvider.createAutomationComposition(compositionId, ac).instanceId
         }.join(",")
@@ -396,5 +417,7 @@ class InstantiationControllerSpec extends Specification {
         helper.querySize("instances?stateChangeResult=FAILED,TIMEOUT&instanceIds=$ids") == 0
         helper.querySize("instances?deployState=UNDEPLOYED&instanceIds=$ids") == n
         helper.querySize("instances?sort=name&sortOrder=DESC&instanceIds=$ids") == n
+        helper.querySize("instances?instanceIds=$ids&participantId=" + UUID.randomUUID()) == 0
+        helper.querySize("instances?instanceIds=$ids&participantId=" + CommonTestData.participantId) == n
     }
 }
