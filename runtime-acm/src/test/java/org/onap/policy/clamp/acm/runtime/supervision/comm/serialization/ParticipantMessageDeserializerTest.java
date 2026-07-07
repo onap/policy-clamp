@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm.serialization;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.SerializationException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,18 +45,18 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.MapperFactory;
 
 class ParticipantMessageDeserializerTest {
 
     private final ParticipantMessageDeserializer deserializer = new ParticipantMessageDeserializer();
-    private final StandardCoder coder = new StandardCoder();
+    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
 
     @ParameterizedTest
     @MethodSource("provideValidMessages")
     void testDeserializeValidMessages(Object message, Class<?> expectedClass) throws Exception {
-        byte[] data = coder.encode(message).getBytes();
-        Object result = deserializer.deserialize("topic", data);
+        var data = MAPPER.writeValueAsString(message).getBytes();
+        var result = deserializer.deserialize("topic", data);
         assertInstanceOf(expectedClass, result);
     }
 
@@ -83,7 +84,7 @@ class ParticipantMessageDeserializerTest {
     @ParameterizedTest
     @MethodSource("provideInvalidInputs")
     void testDeserializeInvalidInputs(String json) {
-        byte[] data = json.getBytes();
+        var data = json.getBytes();
         assertThrows(SerializationException.class, () -> deserializer.deserialize("topic", data));
     }
 
