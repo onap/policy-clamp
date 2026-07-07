@@ -559,6 +559,7 @@ public class AutomationCompositionInstantiationProvider {
      * Retrieves a list of AutomationComposition instances filtered by the specified state change results
      * and deployment states. The result can be paginated and sorted based on the provided parameters.
      *
+     * @param participantId the participant Id
      * @param instanceIds a list of instance UUIDs
      * @param stateChangeResults a list of StateChangeResult values to filter the AutomationComposition instances
      * @param deployStates a list of DeployState values to filter the AutomationComposition instances
@@ -566,7 +567,7 @@ public class AutomationCompositionInstantiationProvider {
      * @return a list of AutomationComposition instances that match the specified filters
      */
     public AutomationCompositions getAcInstancesByFilter(
-        final String instanceIds, final String stateChangeResults, final String deployStates,
+        final UUID participantId, final String instanceIds, final String stateChangeResults, final String deployStates,
         final Pageable pageable) {
 
         LOGGER.info("Get automation compositions request received with filters");
@@ -587,8 +588,8 @@ public class AutomationCompositionInstantiationProvider {
                 .forEach(deployState -> deployStateList.add(DeployState.valueOf(deployState)));
         }
 
-        var instances = automationCompositionProvider.getAcInstancesByFilter(acIds, stateChangeResultList,
-            deployStateList, pageable);
+        var instances = automationCompositionProvider
+            .getAcInstancesByFilter(participantId, acIds, stateChangeResultList, deployStateList, pageable);
         return new AutomationCompositions(instances);
     }
 }
