@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -41,7 +40,6 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -58,10 +56,12 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 class AutomationCompositionProviderTest {
 
@@ -139,7 +139,7 @@ class AutomationCompositionProviderTest {
                 mock(AutomationCompositionRollbackRepository.class));
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         when(automationCompositionRepository
-            .findAll(Mockito.any(), any(Pageable.class)))
+            .findAll(any(Example.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(inputAutomationCompositionsJpa));
         var acList = automationCompositionProvider.getAutomationCompositions(UUID.randomUUID(),
             automationComposition.getName(), automationComposition.getVersion(), Pageable.unpaged());
@@ -150,7 +150,7 @@ class AutomationCompositionProviderTest {
         assertThat(acList).hasSize(2);
 
         when(automationCompositionRepository
-            .findAll(Mockito.any(), Mockito.any(Pageable.class)))
+            .findAll(any(Example.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(inputAutomationCompositionsJpa));
         acList = automationCompositionProvider.getAutomationCompositions(automationComposition.getCompositionId(), null,
             null, PageRequest.of(0, 10));
@@ -408,7 +408,7 @@ class AutomationCompositionProviderTest {
             automationCompositionProvider.validateNameVersion(acIdentifier);
         });
 
-        when(automationCompositionRepository.findOne(Mockito.any()))
+        when(automationCompositionRepository.findOne(any(Example.class)))
                 .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
         assertThatThrownBy(() -> {
             automationCompositionProvider.validateNameVersion(acIdentifier);
@@ -434,35 +434,34 @@ class AutomationCompositionProviderTest {
     void testGetAcInstancesByFilter_WithoutInstanceIds() {
         Page<JpaAutomationComposition> mockPage = new PageImpl<>(inputAutomationCompositionsJpa);
         var acRepository = mock(AutomationCompositionRepository.class);
-        when(acRepository.findByStateChangeResultIn(anyCollection(), any(Pageable.class)))
-            .thenReturn(mockPage);
-        when(acRepository.findByDeployStateIn(anyCollection(), any(Pageable.class)))
-            .thenReturn(mockPage);
 
         var acIds = new ArrayList<String>();
         var stateChangeResults = new ArrayList<StateChangeResult>();
         var deployStates = new ArrayList<DeployState>();
         var pageable = Pageable.unpaged();
-        when(acRepository.findByStateChangeResultInAndDeployStateIn(
-            stateChangeResults, deployStates, pageable)).thenReturn(mockPage);
-        when(acRepository.findAll(any(Pageable.class))).thenReturn(mockPage);
+        when(acRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(mockPage);
         var acProvider = new AutomationCompositionProvider(acRepository,
             mock(AutomationCompositionElementRepository.class), mock(AutomationCompositionRollbackRepository.class));
 
-        var acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        UUID participantId = null;
+        var acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
         assertEquals(2, acInstances.size());
 
         stateChangeResults.add(StateChangeResult.NO_ERROR);
-        acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
 
         deployStates.add(DeployState.DEPLOYED);
-        acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
 
         stateChangeResults.clear();
-        acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
     }
 
@@ -475,33 +474,31 @@ class AutomationCompositionProviderTest {
         var stateChangeResults = new ArrayList<StateChangeResult>();
         var deployStates = new ArrayList<DeployState>();
         var pageable = Pageable.unpaged();
-
-        when(acRepository.findByInstanceIdInAndStateChangeResultInAndDeployStateIn(
-            acIds, stateChangeResults, deployStates, pageable)).thenReturn(mockPage);
-        when(acRepository.findByInstanceIdInAndStateChangeResultIn(acIds, stateChangeResults, pageable))
-            .thenReturn(mockPage);
-        when(acRepository.findByInstanceIdInAndDeployStateIn(acIds, deployStates, pageable)).thenReturn(mockPage);
-        when(acRepository.findByInstanceIdIn(acIds, pageable)).thenReturn(mockPage);
-
+        when(acRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(mockPage);
         var acProvider = new AutomationCompositionProvider(acRepository,
             mock(AutomationCompositionElementRepository.class), mock(AutomationCompositionRollbackRepository.class));
 
         acIds.add(inputAutomationCompositions.getAutomationCompositionList().get(0).getCompositionId().toString());
 
-        var acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        UUID participantId = null;
+        var acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
         assertEquals(2, acInstances.size());
 
         stateChangeResults.add(StateChangeResult.NO_ERROR);
-        acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
 
         deployStates.add(DeployState.DEPLOYED);
-        acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
 
         stateChangeResults.clear();
-        acInstances = acProvider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, pageable);
+        acInstances = acProvider
+                .getAcInstancesByFilter(participantId, acIds, stateChangeResults, deployStates, pageable);
         assertNotNull(acInstances);
     }
 
@@ -514,12 +511,12 @@ class AutomationCompositionProviderTest {
         var deployStates = new ArrayList<DeployState>();
         var pageable = Pageable.unpaged();
         assertThrows(NullPointerException.class, () ->
-            provider.getAcInstancesByFilter(null, stateChangeResults, deployStates, pageable));
+            provider.getAcInstancesByFilter(null, null, stateChangeResults, deployStates, pageable));
         assertThrows(NullPointerException.class, () ->
-            provider.getAcInstancesByFilter(acIds, null, deployStates, pageable));
+            provider.getAcInstancesByFilter(null, acIds, null, deployStates, pageable));
         assertThrows(NullPointerException.class, () ->
-            provider.getAcInstancesByFilter(acIds, stateChangeResults, null, pageable));
+            provider.getAcInstancesByFilter(null, acIds, stateChangeResults, null, pageable));
         assertThrows(NullPointerException.class, () ->
-            provider.getAcInstancesByFilter(acIds, stateChangeResults, deployStates, null));
+            provider.getAcInstancesByFilter(null, acIds, stateChangeResults, deployStates, null));
     }
 }
