@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023,2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2023,2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,16 +80,18 @@ public class CommissioningController extends AbstractRestController implements A
     /**
      * Queries details of all or specific automation composition definitions.
      *
+     * @param participantId the participantId, null for all definitions
      * @param name the name of the automation composition definition to get, null for all definitions
      * @param version the version of the automation composition definition to get, null for all definitions
      * @param requestId request ID used in ONAP logging
      * @return the automation composition definitions
      */
     @Override
-    public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(String name, String version,
-        Integer page, Integer size, UUID requestId) {
+    public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(UUID participantId, String name,
+        String version, Integer page, Integer size, UUID requestId) {
         var pageable = getPageable(page, size);
-        return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(name, version, pageable));
+        return ResponseEntity.ok().body(provider
+                .getAutomationCompositionDefinitions(participantId, name, version, pageable));
     }
 
     @Override
