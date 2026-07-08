@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024 Nordix Foundation.
+ *  Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,13 @@ import java.util.List;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AutomationCompositionDefinitionRepository
-        extends JpaRepository<JpaAutomationCompositionDefinition, String> {
+        extends JpaRepository<JpaAutomationCompositionDefinition, String>,
+        JpaSpecificationExecutor<JpaAutomationCompositionDefinition> {
 
     List<JpaAutomationCompositionDefinition> findByStateIn(Collection<AcTypeState> states);
 }
