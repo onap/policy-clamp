@@ -161,12 +161,13 @@ public class CommissioningProvider {
      * @return automation composition definition
      */
     @Transactional(readOnly = true)
-    public ToscaServiceTemplates getAutomationCompositionDefinitions(String acName, String acVersion,
-            @NonNull Pageable pageable) {
-        LOGGER.info("Get automation compositions request received for name: {} "
-                + "and version: {}", acName, acVersion);
+    public ToscaServiceTemplates getAutomationCompositionDefinitions(UUID participantId, String acName,
+                String acVersion, @NonNull Pageable pageable) {
+        LOGGER.info("Get automation compositions request received for participantId:{}, name: {} "
+                + "and version: {}", participantId, acName, acVersion);
         var result = new ToscaServiceTemplates();
-        result.setServiceTemplates(acDefinitionProvider.getServiceTemplateList(acName, acVersion, pageable));
+        result.setServiceTemplates(
+                acDefinitionProvider.getServiceTemplateList(participantId, acName, acVersion, pageable));
         return result;
     }
 
