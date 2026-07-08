@@ -69,7 +69,7 @@ class CommissioningProviderSpec extends Specification {
 
         when: "querying for automation composition definitions"
         def result = commissioningProvider
-                .getAutomationCompositionDefinitions(null, null, Pageable.unpaged())
+                .getAutomationCompositionDefinitions(null, null, null, Pageable.unpaged())
 
         then: "the result should contain the expected number of service templates"
         result.serviceTemplates.size() == expectedSize
@@ -85,7 +85,7 @@ class CommissioningProviderSpec extends Specification {
         def commissioningProvider = createProvider(Mock(AcRuntimeParameterGroup))
 
         when: "querying with null pageable"
-        commissioningProvider.getAutomationCompositionDefinitions(null, null, null)
+        commissioningProvider.getAutomationCompositionDefinitions(null, null, null, null)
 
         then: "a NullPointerException should be thrown"
         thrown(NullPointerException)
