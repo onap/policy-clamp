@@ -243,11 +243,12 @@ class CommissioningControllerSpec extends Specification {
         helper.get("$ep$query").serviceTemplates.size() >= minSize
 
         where:
-        query              | minSize | condition
-        "?name=wrongName"  | 0       | "0 results for wrong name"
-        "?name=pageable1"  | 1       | "1 result for exact name"
-        "?page=1&size=5"   | 5       | "5 results for page size 5"
-        ""                 | 10      | "at least 10 results without filters"
+        query                                  | minSize | condition
+        "?name=wrongName"                      | 0       | "0 results for wrong name"
+        "?name=pageable1"                      | 1       | "1 result for exact name"
+        "?page=1&size=5"                       | 5       | "5 results for page size 5"
+        "?participantId=" + UUID.randomUUID()  | 0       | "0 results for wrong participantId"
+        ""                                     | 10      | "at least 10 results without filters"
     }
 
     // ------------------- delete -------------------
