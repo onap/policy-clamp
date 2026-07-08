@@ -640,6 +640,13 @@ paths:
         definitions, returning the automation composition details
       operationId: queryCompositionDefinitions
       parameters:
+      - name: participantId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: the participant Id
       - name: name
         in: query
         required: false

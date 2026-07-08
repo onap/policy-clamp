@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@
  */
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
+
+import static org.onap.policy.clamp.models.acm.persistence.provider.CompositionSpecs.hasField;
+import static org.onap.policy.clamp.models.acm.persistence.provider.CompositionSpecs.hasParticipantId;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
@@ -40,7 +44,6 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -207,26 +210,22 @@ public class AcDefinitionProvider {
     /**
      * Get service templates.
      *
+     * @param participantId the participantId, null for all definitions
      * @param name the name of the topology template to get, set to null to get all service templates
      * @param version the version of the service template to get, set to null to get all service templates
      * @param pageable the Pageable
      * @return the topology templates found
      */
     @Transactional(readOnly = true)
-    public List<ToscaServiceTemplate> getServiceTemplateList(final String name, final String version,
-            @NonNull Pageable pageable) {
-        List<JpaAutomationCompositionDefinition> jpaList = null;
-        if (name != null || version != null) {
-            var entity = new JpaAutomationCompositionDefinition();
-            entity.setName(name);
-            entity.setVersion(version);
-            var example = Example.of(entity);
-            jpaList = acmDefinitionRepository.findAll(example, pageable).toList();
-        } else {
-            jpaList = acmDefinitionRepository.findAll(pageable).toList();
-        }
+    public List<ToscaServiceTemplate> getServiceTemplateList(final UUID participantId, final String name,
+            final String version, @NonNull Pageable pageable) {
 
-        return jpaList.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
+        var query = where(hasParticipantId(participantId))
+                .and(hasField(name, "name"))
+                .and(hasField(version, "version"))
+                .and(hasParticipantId(participantId));
+        var page = acmDefinitionRepository.findAll(query, pageable);
+        return page.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
                 .map(DocToscaServiceTemplate::toAuthorative).toList();
     }
 
