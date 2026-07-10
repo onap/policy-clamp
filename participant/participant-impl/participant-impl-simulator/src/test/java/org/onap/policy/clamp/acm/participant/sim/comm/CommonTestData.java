@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
@@ -36,6 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public class CommonTestData {
     public static final String DESCRIPTION = "Participant description";
@@ -154,6 +156,18 @@ public class CommonTestData {
         element.setId(UUID.randomUUID());
         automationComposition.setElements(Map.of(element.getId(), element));
         return automationComposition;
+    }
+
+    /**
+     * Returns an InstanceDto for test cases.
+     *
+     * @return InstanceDto
+     */
+    public static CompositionDto getTestCompositionDto() {
+        var key = new ToscaConceptIdentifier("code", "1.0.0");
+        return new CompositionDto(UUID.randomUUID(),
+                Map.of(key, Map.of("key", "value")),
+                Map.of(key, Map.of("code", "value")));
     }
 
     /**
