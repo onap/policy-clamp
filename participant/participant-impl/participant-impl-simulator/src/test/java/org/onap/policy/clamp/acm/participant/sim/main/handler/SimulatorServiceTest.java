@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -37,11 +38,8 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 class SimulatorServiceTest {
 
@@ -50,10 +48,37 @@ class SimulatorServiceTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
 
-        var map = CommonTestData.getTestAutomationCompositionMap();
-        when(intermediaryApi.getAutomationCompositions()).thenReturn(map);
-        var result = simulatorService.getAutomationCompositions();
-        assertEquals(map.values().iterator().next(), result.getAutomationCompositionList().get(0));
+        var ac = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        when(intermediaryApi.findAutomationCompositions(List.of(), List.of(), List.of()))
+                .thenReturn(List.of(ac));
+        when(intermediaryApi.findAutomationCompositions(List.of(ac.getInstanceId()), List.of(), List.of()))
+                .thenReturn(List.of(ac));
+        when(intermediaryApi.findAutomationCompositions(List.of(), List.of(ac.getDeployState()), List.of()))
+                .thenReturn(List.of(ac));
+        when(intermediaryApi.findAutomationCompositions(List.of(), List.of(), List.of(ac.getStateChangeResult())))
+                .thenReturn(List.of(ac));
+        var result = simulatorService.getAutomationCompositions(null, null, null);
+        assertEquals(ac, result.getAutomationCompositionList().getFirst());
+
+        result = simulatorService.getAutomationCompositions(ac.getInstanceId().toString(), null, null);
+        assertEquals(ac, result.getAutomationCompositionList().getFirst());
+
+        result = simulatorService.getAutomationCompositions(UUID.randomUUID().toString(), null, null);
+        assertThat(result.getAutomationCompositionList()).isEmpty();
+
+        result = simulatorService.getAutomationCompositions(null, ac.getDeployState().toString(), null);
+        assertEquals(ac, result.getAutomationCompositionList().getFirst());
+
+        result = simulatorService
+                .getAutomationCompositions(UUID.randomUUID().toString(), DeployState.DEPLOYED.toString(), null);
+        assertThat(result.getAutomationCompositionList()).isEmpty();
+
+        result = simulatorService
+                .getAutomationCompositions(null, null, ac.getStateChangeResult().toString());
+        assertEquals(ac, result.getAutomationCompositionList().getFirst());
+
+        result = simulatorService.getAutomationCompositions(null, null, StateChangeResult.FAILED.toString());
+        assertThat(result.getAutomationCompositionList()).isEmpty();
     }
 
     @Test
@@ -90,7 +115,7 @@ class SimulatorServiceTest {
         var map = CommonTestData.getTestAutomationCompositionMap();
         when(intermediaryApi.getAutomationCompositions()).thenReturn(map);
         var result = simulatorService.getDataList();
-        var data = result.getList().get(0);
+        var data = result.getList().getFirst();
         var automationcomposition = map.values().iterator().next();
         assertEquals(automationcomposition.getInstanceId(), data.getAutomationCompositionId());
         var element = automationcomposition.getElements().values().iterator().next();
@@ -99,27 +124,19 @@ class SimulatorServiceTest {
 
     @Test
     void testGetCompositionDataList() {
-        var acElementDefinition = new AutomationCompositionElementDefinition();
-        var toscaConceptIdentifier = new ToscaConceptIdentifier("code", "1.0.0");
-        acElementDefinition.setAcElementDefinitionId(toscaConceptIdentifier);
-        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-        Map<String, Object> outProperties = Map.of("code", "value");
-        Map<String, Object> inProperties = Map.of("key", "value");
-        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(inProperties);
-        acElementDefinition.setOutProperties(outProperties);
-        var elementsDefinitions = Map.of(toscaConceptIdentifier, acElementDefinition);
-        var compositionId = UUID.randomUUID();
-        var map = Map.of(compositionId, elementsDefinitions);
+        var composition = CommonTestData.getTestCompositionDto();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        when(intermediaryApi.getAcElementsDefinitions()).thenReturn(map);
+        when(intermediaryApi.findCompositions()).thenReturn(List.of(composition));
         var simulatorService = new SimulatorService(intermediaryApi);
 
         var result = simulatorService.getCompositionDataList();
         assertThat(result.getList()).hasSize(1);
-        assertEquals(result.getList().get(0).getCompositionId(), compositionId);
-        assertEquals(result.getList().get(0).getCompositionDefinitionElementId(), toscaConceptIdentifier);
-        assertEquals(result.getList().get(0).getOutProperties(), outProperties);
-        assertEquals(result.getList().get(0).getIntProperties(), inProperties);
+        var element = result.getList().getFirst();
+        var key = composition.inPropertiesMap().keySet().iterator().next();
+        assertEquals(element.getCompositionId(), composition.compositionId());
+        assertEquals(element.getCompositionDefinitionElementId(), key);
+        assertEquals(element.getOutProperties(), composition.outPropertiesMap().get(key));
+        assertEquals(element.getIntProperties(), composition.inPropertiesMap().get(key));
     }
 
     @Test
