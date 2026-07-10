@@ -1,5 +1,5 @@
 #  ============LICENSE_START=======================================================
-#  Copyright (C) 2023 Nordix Foundation
+#  Copyright (C) 2023,2026 OpenInfra Foundation Europe. All rights reserved.
 #  ================================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -137,6 +137,24 @@ paths:
         details of all its automation composition instances
       operationId: getAutomationCompositions
       parameters:
+      - name: instanceIds
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter to get instances by instanceId (two or more to be comma-separated)
+      - name: deployState
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter to get instances by deployState (two or more to be comma-separated)
+      - name: stateChangeResult
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter to get instances by stateChangeResult (two or more to be comma-separated)
       - name: X-onap-RequestId
         in: header
         description: RequestID for http transaction
