@@ -56,8 +56,10 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
     }
 
     @Override
-    public ResponseEntity<AutomationCompositions> getAutomationCompositions(UUID xonapRequestId) {
-        return new ResponseEntity<>(simulatorService.getAutomationCompositions(), HttpStatus.OK);
+    public ResponseEntity<AutomationCompositions> getAutomationCompositions(String instanceIds, String deployStates,
+            String stateChangeResults, UUID xonapRequestId) {
+        return new ResponseEntity<>(simulatorService
+                .getAutomationCompositions(instanceIds, deployStates, stateChangeResults), HttpStatus.OK);
     }
 
     @Override
