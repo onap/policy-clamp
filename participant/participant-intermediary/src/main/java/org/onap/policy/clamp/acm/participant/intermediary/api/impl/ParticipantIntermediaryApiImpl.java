@@ -21,9 +21,12 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
@@ -31,6 +34,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -105,6 +109,22 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public Map<UUID, AutomationComposition> getAutomationCompositions() {
         return PfUtils.mapMap(cacheProvider.getAutomationCompositions(), AutomationComposition::new);
+    }
+
+    @Override
+    public List<AutomationComposition> findAutomationCompositions(List<UUID> instanceIds,
+            List<DeployState> deployStates, List<StateChangeResult> stateChangeResults) {
+        var result = cacheProvider.getAutomationCompositions().values().stream();
+        if (!instanceIds.isEmpty()) {
+            result = result.filter(el -> instanceIds.contains(el.getInstanceId()));
+        }
+        if (!stateChangeResults.isEmpty()) {
+            result = result.filter(el -> stateChangeResults.contains(el.getStateChangeResult()));
+        }
+        if (!deployStates.isEmpty()) {
+            result = result.filter(el -> deployStates.contains(el.getDeployState()));
+        }
+        return result.toList();
     }
 
     @Override
@@ -220,5 +240,29 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
                 ? new CompositionElementDto(compositionId, elementId, Map.of(), Map.of(), ElementState.NOT_PRESENT)
                 : new CompositionElementDto(compositionId, elementId,
                 element.getAutomationCompositionElementToscaNodeTemplate().getProperties(), element.getOutProperties());
+    }
+
+    @Override
+    public List<CompositionDto> findCompositions() {
+        return cacheProvider.getAcElementsDefinitions().values().stream().map(this::getCompositionDto).toList();
+    }
+
+    @Override
+    public CompositionDto getComposition(UUID compositionId) {
+        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        if (acDefinition == null) {
+            return null;
+        }
+        return getCompositionDto(acDefinition);
+    }
+
+    private CompositionDto getCompositionDto(AcDefinition acDefinition) {
+        var inPropertiesMap = acDefinition.getElements().values().stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                e -> e.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var outPropertiesMap = acDefinition.getElements().values().stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                AutomationCompositionElementDefinition::getOutProperties));
+        return new CompositionDto(acDefinition.getCompositionId(), inPropertiesMap, outPropertiesMap);
     }
 }
