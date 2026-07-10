@@ -21,8 +21,11 @@
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.locks.LockSupport;
 import lombok.Getter;
@@ -71,9 +74,30 @@ public class SimulatorService {
      *
      * @return the AutomationCompositions
      */
-    public AutomationCompositions getAutomationCompositions() {
+    public AutomationCompositions getAutomationCompositions(String instanceIds, String deployStates,
+            String stateChangeResults) {
+        LOGGER.info("Get automation compositions request received with filters");
+        List<UUID> acIds = new ArrayList<>();
+        if (instanceIds != null) {
+            Arrays.stream(instanceIds.split(","))
+                    .forEach(acId -> acIds.add(UUID.fromString(acId.trim())));
+        }
+
+        List<StateChangeResult> stateChangeResultList = new ArrayList<>();
+        if (stateChangeResults != null) {
+            Arrays.stream(stateChangeResults.split(","))
+                .forEach(stateChangeResult -> stateChangeResultList.add(StateChangeResult.valueOf(stateChangeResult)));
+        }
+
+        List<DeployState> deployStateList = new ArrayList<>();
+        if (deployStates != null) {
+            Arrays.stream(deployStates.split(","))
+                    .forEach(deployState -> deployStateList.add(DeployState.valueOf(deployState)));
+        }
+
         var result = new AutomationCompositions();
-        result.setAutomationCompositionList(new ArrayList<>(intermediaryApi.getAutomationCompositions().values()));
+        result.setAutomationCompositionList(intermediaryApi
+                .findAutomationCompositions(acIds, deployStateList, stateChangeResultList));
         return result;
     }
 
@@ -126,21 +150,24 @@ public class SimulatorService {
      * @return the InternalDatas
      */
     public InternalDatas getCompositionDataList() {
-        var acElementsDefinitions = intermediaryApi.getAcElementsDefinitions();
+        var compositions = intermediaryApi.findCompositions();
         var internalDatas = new InternalDatas();
-        for (var entry : acElementsDefinitions.entrySet()) {
-            for (var acElementsDefinition : entry.getValue().values()) {
+        for (var composition : compositions) {
+            Set<ToscaConceptIdentifier> set = new HashSet<>();
+            set.addAll(composition.inPropertiesMap().keySet());
+            set.addAll(composition.outPropertiesMap().keySet());
+            for (var key : set) {
                 var internalData = new InternalData();
-                internalData.setCompositionId(entry.getKey());
-                internalData.setCompositionDefinitionElementId(acElementsDefinition.getAcElementDefinitionId());
-                internalData.setIntProperties(
-                    acElementsDefinition.getAutomationCompositionElementToscaNodeTemplate().getProperties());
-                internalData.setOutProperties(acElementsDefinition.getOutProperties());
+                internalData.setCompositionId(composition.compositionId());
+                internalData.setCompositionDefinitionElementId(key);
+                internalData.setIntProperties(composition.inPropertiesMap().get(key));
+                internalData.setOutProperties(composition.outPropertiesMap().get(key));
                 internalDatas.getList().add(internalData);
             }
         }
         return internalDatas;
     }
+
 
     public void sendCompositionOutProperties(UUID compositionId, ToscaConceptIdentifier compositionDefinitionElementId,
                                             Map<String, Object> outProperties) {
