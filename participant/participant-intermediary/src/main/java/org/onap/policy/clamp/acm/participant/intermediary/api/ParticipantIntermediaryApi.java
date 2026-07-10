@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -100,6 +101,17 @@ public interface ParticipantIntermediaryApi {
     AutomationComposition getAutomationComposition(UUID instanceId);
 
     /**
+     * Get a copy of all AutomationComposition Instances.
+     *
+     * @param instanceIds the list of the instanceId to find
+     * @param deployStates the list of the DeployState to find
+     * @param stateChangeResults the list of the StateChangeResult to find
+     * @return the list of AutomationComposition Instance
+     */
+    List<AutomationComposition> findAutomationCompositions(List<UUID> instanceIds, List<DeployState> deployStates,
+            List<StateChangeResult> stateChangeResults);
+
+    /**
      * Get a copy of the AutomationCompositionElement by AutomationComposition instanceId and elementId.
      *
      * @param instanceId the ID of the AutomationComposition Instance to update the state on
@@ -149,6 +161,21 @@ public interface ParticipantIntermediaryApi {
      * @return the AutomationCompositionElementDefinition
      */
     CompositionElementDto getCompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementId);
+
+    /**
+     * Get a copy of all CompositionDto from all primed compositions.
+     *
+     * @return a list of all CompositionDto
+     */
+    List<CompositionDto> findCompositions();
+
+    /**
+     * Get a copy of a CompositionDto.
+     *
+     * @param compositionId the composition id
+     * @return the CompositionDto
+     */
+    CompositionDto getComposition(UUID compositionId);
 
     /**
      * Send AutomationComposition Instance Element update Info to AC-runtime.
