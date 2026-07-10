@@ -107,14 +107,15 @@ class AcSimRestTest {
         var automationCompositions = new AutomationCompositions();
         automationCompositions.getAutomationCompositionList().add(CommonTestData.getTestAutomationComposition());
 
-        doReturn(automationCompositions).when(simulatorService).getAutomationCompositions();
+        doReturn(automationCompositions).when(simulatorService)
+                .getAutomationCompositions(null, null, null);
 
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
         var body = result.getResponse().getContentAsString();
         var acsResult = CommonTestData.getObjectFromJson(body, AutomationCompositions.class);
-        assertEquals(automationCompositions.getAutomationCompositionList().get(0).getInstanceId(),
-                acsResult.getAutomationCompositionList().get(0).getInstanceId());
+        assertEquals(automationCompositions.getAutomationCompositionList().getFirst().getInstanceId(),
+                acsResult.getAutomationCompositionList().getFirst().getInstanceId());
     }
 
     @Test
@@ -150,7 +151,7 @@ class AcSimRestTest {
         var body = result.getResponse().getContentAsString();
         var acsResult = CommonTestData.getObjectFromJson(body, InternalDatas.class);
         assertEquals(internalData.getAutomationCompositionId(),
-                acsResult.getList().get(0).getAutomationCompositionId());
+                acsResult.getList().getFirst().getAutomationCompositionId());
     }
 
     @Test
@@ -176,7 +177,7 @@ class AcSimRestTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
         var body = result.getResponse().getContentAsString();
         var acsResult = CommonTestData.getObjectFromJson(body, InternalDatas.class);
-        assertEquals(internalData.getCompositionId(), acsResult.getList().get(0).getCompositionId());
+        assertEquals(internalData.getCompositionId(), acsResult.getList().getFirst().getCompositionId());
     }
 
     @Test

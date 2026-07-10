@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -215,6 +216,35 @@ class ParticipantIntermediaryApiImplTest {
     }
 
     @Test
+    void testFindAutomationCompositions() {
+        var automationComposition = new AutomationComposition();
+        automationComposition.setInstanceId(AUTOMATION_COMPOSITION_ID);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        var map = Map.of(AUTOMATION_COMPOSITION_ID, automationComposition);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationCompositions()).thenReturn(map);
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
+
+        var result = apiImpl.findAutomationCompositions(List.of(), List.of(), List.of());
+        assertEquals(automationComposition, result.getFirst());
+
+        result = apiImpl.findAutomationCompositions(List.of(automationComposition.getInstanceId()),
+                List.of(automationComposition.getDeployState()), List.of(automationComposition.getStateChangeResult()));
+        assertEquals(automationComposition, result.getFirst());
+
+        result = apiImpl.findAutomationCompositions(List.of(UUID.randomUUID()), List.of(), List.of());
+        assertThat(result).isEmpty();
+
+        result = apiImpl.findAutomationCompositions(List.of(), List.of(DeployState.UNDEPLOYED), List.of());
+        assertThat(result).isEmpty();
+
+        result = apiImpl.findAutomationCompositions(List.of(), List.of(), List.of(StateChangeResult.FAILED));
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     void testGetInstanceElementDto() {
         var automationComposition = new AutomationComposition();
         automationComposition.setInstanceId(AUTOMATION_COMPOSITION_ID);
@@ -291,6 +321,31 @@ class ParticipantIntermediaryApiImplTest {
                 element.inProperties());
         assertEquals(acElementDefinition.getOutProperties(), element.outProperties());
         assertEquals(ElementState.PRESENT, element.state());
+    }
+
+    @Test
+    void testFindCompositions() {
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(DEFINITION_ELEMENT_ID);
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
+        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(Map.of());
+        var acDefinition = new AcDefinition();
+        acDefinition.setCompositionId(COMPOSITION_ID);
+        acDefinition.getElements().put(DEFINITION_ELEMENT_ID, acElementDefinition);
+        var map = Map.of(COMPOSITION_ID, acDefinition);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAcElementsDefinitions()).thenReturn(map);
+        var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
+        var listResult = apiImpl.findCompositions();
+        assertThat(map).hasSameSizeAs(listResult);
+        assertEquals(COMPOSITION_ID, listResult.getFirst().compositionId());
+
+        var result = apiImpl.getComposition(UUID.randomUUID());
+        assertNull(result);
+
+        result = apiImpl.getComposition(COMPOSITION_ID);
+        assertEquals(listResult.getFirst(), result);
     }
 
     @Test
