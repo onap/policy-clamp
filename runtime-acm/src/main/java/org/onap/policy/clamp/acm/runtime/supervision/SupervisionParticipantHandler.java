@@ -99,7 +99,7 @@ public class SupervisionParticipantHandler {
         validation(participantRegisterMsg.getParticipantId(),
                 participantRegisterMsg.getParticipantSupportedElementType());
         saveIfNotPresent(participantRegisterMsg.getReplicaId(), participantRegisterMsg.getParticipantId(),
-                participantRegisterMsg.getParticipantSupportedElementType(), true);
+                participantRegisterMsg.getParticipantSupportedElementType());
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
                 participantRegisterMsg.getParticipantId(), participantRegisterMsg.getReplicaId());
@@ -144,21 +144,19 @@ public class SupervisionParticipantHandler {
             }
         }
         saveIfNotPresent(participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantId(),
-                participantStatusMsg.getParticipantSupportedElementType(), false);
+                participantStatusMsg.getParticipantSupportedElementType());
     }
 
     private void saveIfNotPresent(UUID replicaId, UUID participantId,
-            List<ParticipantSupportedElementType> participantSupportedElementType, boolean registration) {
+            List<ParticipantSupportedElementType> participantSupportedElementType) {
         var participant = getParticipant(participantId, listToMap(participantSupportedElementType));
-        var toRestart = registration;
         var replica = participant.getReplicas().get(replicaId);
         if (replica != null) {
             updateTimestamp(replica);
-            toRestart = false;
         } else {
             participant.getReplicas().put(replicaId, createReplica(replicaId));
-            toRestart = true;
         }
+        var toRestart = replica == null;
         if (!CollectionUtils.isEqualCollection(
                 participant.getParticipantSupportedElementTypes().values()
                         .stream().map(this::toToscaConceptIdentifier).toList(),
