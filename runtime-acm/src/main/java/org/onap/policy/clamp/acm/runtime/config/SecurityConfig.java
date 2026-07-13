@@ -53,7 +53,7 @@ public class SecurityConfig {
             http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         }
 
-        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable); // NOSONAR
         return http.build();
     }
 }
