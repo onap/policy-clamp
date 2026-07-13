@@ -18,7 +18,7 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-FROM onap/policy-jre-alpine:5.0.1-SNAPSHOT
+FROM onap/policy-jre-alpine:5.1.0-SNAPSHOT
 
 ENV LOGS="/app/log"
 ENV WORKSPACE="/app"
