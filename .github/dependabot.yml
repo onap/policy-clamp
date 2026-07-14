@@ -13,10 +13,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Group all updates together into a single pull request
+    groups:
+      github-actions-updates:
+        patterns:
+          - "*"
 
   - package-ecosystem: "maven"
     directory: "/clamp-parent/dependencies"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     ignore:
       - dependency-name: "io.opentelemetry.instrumentation:opentelemetry-kafka-clients-2.6"
+    # Group patch updates together into a single pull request
+    groups:
+      maven-patch-updates:
+        update-types:
+          - "patch"
