@@ -24,7 +24,11 @@ package org.onap.policy.models.tosca.authorative.concepts;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.base.PfConceptKey;
 
 /**
@@ -78,5 +82,15 @@ class ToscaConceptIdentifierTest extends ToscaIdentifierTestBase<ToscaConceptIde
     @Override
     void testCompareTo() throws Exception {
         super.testCompareTo();
+    }
+
+    @Test
+    void testFromString() throws JsonProcessingException {
+        var mapper = MapperFactory.createJsonMapper();
+        var obj = new ToscaConceptIdentifier(NAME, VERSION);
+        Map<ToscaConceptIdentifier, String> expected = Map.of(obj, NAME);
+        var value = mapper.writeValueAsString(expected);
+        var actual = mapper.readValue(value, new TypeReference<Map<ToscaConceptIdentifier, String>>() {});
+        assertEquals(expected, actual);
     }
 }
