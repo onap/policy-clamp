@@ -21,6 +21,7 @@
 
 package org.onap.policy.models.tosca.authorative.concepts;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.io.Serializable;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,13 @@ public class ToscaConceptIdentifier extends ToscaNameVersion
 
     public ToscaConceptIdentifier(ToscaConceptIdentifier source) {
         super(source);
+    }
+
+    //Jackson uses this for deserializing map keys from string values.
+    @JsonCreator
+    public static ToscaConceptIdentifier fromString(String value) {
+        var parts = value.split(" ", 2);
+        return new ToscaConceptIdentifier(parts[0], parts[1]);
     }
 
     @Override
