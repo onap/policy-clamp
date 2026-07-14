@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.persistence.repository;
+package org.onap.policy.clamp.models.acm.dto;
 
-import java.util.Collection;
-import java.util.List;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Map;
+import java.util.UUID;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-@Repository
-public interface AutomationCompositionDefinitionRepository
-        extends JpaRepository<JpaAutomationCompositionDefinition, String>,
-        JpaSpecificationExecutor<JpaAutomationCompositionDefinition> {
-
-    List<JpaAutomationCompositionDefinition> findByStateIn(Collection<AcTypeState> states);
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record CompositionDto(UUID compositionId,
+                             Map<ToscaConceptIdentifier, Map<String, Object>> inPropertiesMap,
+                             Map<ToscaConceptIdentifier, Map<String, Object>> outPropertiesMap) {
 }
