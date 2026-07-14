@@ -1,0 +1,70 @@
+{
+  "compositionId": "fb1902b2-d297-4e94-a224-47067761df18",
+  "inPropertiesMap": {
+    "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement 1.2.3": {
+      "provider": "ONAP",
+      "uninitializedToPassiveTimeout": 180,
+      "startPhase": 1,
+      "baseUrl": "https://dcae-pmsh:8443",
+      "httpHeaders": {
+        "Content-Type": "application/json"
+      },
+      "configurationEntities": [
+        {
+          "configurationEntityId": {
+            "name": "entity1",
+            "version": "1.0.1"
+          },
+          "restSequence": [
+            {
+              "restRequestId": {
+                "name": "request1",
+                "version": "1.0.1"
+              },
+              "httpMethod": "POST",
+              "path": "subscription",
+              "body": "{ \"subscription\":{ \"subscriptionName\":\"new_sub_01\", \"operationalPolicyName\":\"pmsh-operational-policy\", \"controlLoopName\":\"controlLoop-name\", \"nfFilter\":{ \"nfNames\":[ \"^pnf*\" ], \"modelInvariantIDs\":[ \"7129e420-d396-4efb-af02-6b83499b12f5\" ], \"modelVersionIDs\":[ \"e80a6ae3-cafd-4d24-850d-e14c084a5ca7\" ], \"modelNames\":[ \"pnf_134\" ] }, \"measurementGroups\":[ { \"measurementGroup\":{ \"measurementGroupName\":\"msgroup_01\", \"administrativeState\":\"UNLOCKED\", \"fileBasedGP\":15, \"fileLocation\":\"/pm/pm.xml\", \"measurementTypes\":[ { \"measurementType\":\"EutranCell.*\" }, { \"measurementType\":\"EutranCellRelation.pmCounter1\" }, { \"measurementType\":\"EutranCellRelation.pmCounter2\" } ], \"managedObjectDNsBasic\":[ { \"DN\":\"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1\" }, { \"DN\":\"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1, EUtranCellRelation=CityCenter2\" }, { \"DN\":\"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1, EUtranCellRelation=CityCenter3\" } ] } } ] } }",
+              "expectedResponse": 201
+            }
+          ]
+        }
+      ]
+    },
+    "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement 1.2.3": {
+      "provider": "Ericsson",
+      "policy_type_id": {
+        "name": "onap.policies.operational.pm-subscription-handler",
+        "version": "1.0.0"
+      },
+      "policy_id": {
+        "get_input": "pmsh_operational_policy"
+      }
+    },
+    "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement 1.2.3": {
+      "provider": "ONAP",
+      "chart": {
+        "chartId": {
+          "name": "dcae-pmsh",
+          "version": "10.0.0"
+        },
+        "namespace": "onap",
+        "releaseName": "dcae-pmsh",
+        "repository": {
+          "repoName": "chartmuseum",
+          "address": "http://chart-museum:80",
+          "userName": "onapinitializer",
+          "password": "demo123456!"
+        },
+        "overrideParams": {
+          "global.masterPassword": "test",
+          "global.centralizedLoggingEnabled": false
+        }
+      }
+    }
+  },
+  "outPropertiesMap": {
+    "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement 1.2.3": {},
+    "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement 1.2.3": {},
+    "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement 1.2.3": {}
+  }
+}
