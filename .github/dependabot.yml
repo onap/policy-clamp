@@ -13,6 +13,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Group all updates together into a single pull request
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: "maven"
     directory: "/clamp-parent/dependencies"
