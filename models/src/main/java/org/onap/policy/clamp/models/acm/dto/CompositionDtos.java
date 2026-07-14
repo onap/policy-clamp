@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.persistence.repository;
+package org.onap.policy.clamp.models.acm.dto;
 
-import java.util.Collection;
 import java.util.List;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface AutomationCompositionDefinitionRepository
-        extends JpaRepository<JpaAutomationCompositionDefinition, String>,
-        JpaSpecificationExecutor<JpaAutomationCompositionDefinition> {
-
-    List<JpaAutomationCompositionDefinition> findByStateIn(Collection<AcTypeState> states);
+public record CompositionDtos(List<CompositionDto> compositions) {
 }
