@@ -34,6 +34,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class AcDtoClassesTest {
 
     @Test
+    void testCompositionDtos() {
+        var compositionDtos = new CompositionDtos(List.of());
+        assertNotNull(compositionDtos.compositions());
+    }
+
+    @Test
     void testAcElementDtoCopyConstructor() {
         var compositionId = UUID.randomUUID();
         var instanceId = UUID.randomUUID();
@@ -87,7 +93,7 @@ class AcDtoClassesTest {
         var copy = new ParticipantDto(original);
         assertEquals(participantId, copy.getParticipantId());
         assertThat(copy.getElementDtos()).hasSize(1);
-        assertNotNull(copy.getElementDtos().get(0).getCompositionElement());
+        assertNotNull(copy.getElementDtos().getFirst().getCompositionElement());
     }
 
     @Test
