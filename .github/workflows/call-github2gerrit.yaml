@@ -97,7 +97,7 @@ jobs:
     timeout-minutes: 5
     steps:
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+      - uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           egress-policy: audit
 
@@ -109,7 +109,7 @@ jobs:
       - name: "Gather repository metadata"
         id: repo-metadata
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/repository-metadata-action@fa041b9502f8c81930b5afc9d30d1c8ecb22e790 # v0.2.1
+        uses: lfreleng-actions/repository-metadata-action@61e837ecf6a21ef991c14991b43560f592a50a24 # v0.2.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           github_summary: "true"
@@ -123,7 +123,7 @@ jobs:
     steps:
       # Harden the runner used by this workflow
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+      - uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           egress-policy: audit
 
@@ -154,7 +154,7 @@ jobs:
     steps:
       # Harden the runner used by this workflow
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+      - uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         name: "Harden runner"
         with:
           egress-policy: audit
@@ -168,7 +168,7 @@ jobs:
 
       - name: "Run GitHub2Gerrit"
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/github2gerrit-action@f44c168376b369be0f306b6bdc07c80f67cceb05 # v1.3.3
+        uses: lfreleng-actions/github2gerrit-action@9f32f3c5c93c53176d0fedf23622c897f1d739f5 # v1.4.2
         env:
           # Pass GERRIT_* inputs as environment variables when dispatched from Gerrit
           GERRIT_BRANCH: ${{ github.event.inputs.GERRIT_BRANCH || '' }}
@@ -200,12 +200,12 @@ jobs:
     steps:
       # Harden the runner used by this workflow
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+      - uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           egress-policy: audit
 
       - name: Get workflow conclusion
-        uses: im-open/workflow-conclusion@7b146947e59eaf7fc3328822357861ab1758c088 # v2.2.5
+        uses: im-open/workflow-conclusion@8eac7f17381a6917bc04fec3e2c92e70ebc37526 # v3.0.0
 
       - name: Report workflow conclusion
         # yamllint disable-line rule:line-length
