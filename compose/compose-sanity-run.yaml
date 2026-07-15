@@ -1,0 +1,62 @@
+#
+# ===========LICENSE_START====================================================
+#  Copyright 2026 OpenInfra Foundation Europe. All rights reserved.
+# ============================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=====================================================
+#
+
+services:
+
+  # Inherited from compose.yaml - no config needed
+  kafka:
+  init-kafka:
+  jaeger:
+  policy-clamp-runtime-acm:
+  policy-clamp-ac-http-ppnt:
+  policy-clamp-ac-k8s-ppnt:
+  policy-clamp-ac-pf-ppnt:
+  policy-clamp-ac-a1pms-ppnt:
+  policy-clamp-ac-kserve-ppnt:
+
+  # Inherited from compose.common.yml - no config needed
+  policy-clamp-ac-sim-ppnt-1:
+
+  # Sanity-only services
+  policy-clamp-ac-element-ppnt:
+    image: ${CONTAINER_LOCATION}onap/policy-clamp-acm-element-impl:${POLICY_CLAMP_PPNT_VERSION}
+    hostname: policy-clamp-ac-element-ppnt
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      REST_USER: acmUser
+      REST_PASSWORD: zb!XztG34
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
+    volumes:
+      - ../participant/participant-impl/participant-impl-acelement/src/main/resources/config/application.yaml:/opt/app/policy/clamp/etc/application.yaml:ro
+    entrypoint: java -jar /app/app.jar
+    healthcheck:
+      test: "curl --fail --silent --user 'acmUser:zb!XztG34' http://localhost:8084/onap/policy/clamp/acelement/v2/health | grep -q UP || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+  # Exclude test-only services not needed for sanity
+  csit-tests:
+    profiles: [ excluded ]
+  jmeter-tests:
+    profiles: [ excluded ]
