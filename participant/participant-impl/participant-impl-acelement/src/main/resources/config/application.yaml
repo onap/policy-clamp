@@ -4,10 +4,35 @@ spring:
       name: ${REST_USER:acmUser}
       password: ${REST_PASSWORD:zb!XztG34}
   autoconfigure:
-    exclude: >
-      org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,
-      org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,
-      org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER:kafka:9092}
+    admin:
+      auto-create: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
+      fail-fast: false # Whether to fail if the broker is not available on startup.
+    security:
+      protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+    properties:
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
+    listener:
+      observation-enabled: ${ALLOW_TRACING:false}
+      auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
+    template:
+      observation-enabled: ${ALLOW_TRACING:false}
+    consumer:
+      group-id: ${KAFKA_GROUP_ID:acm-element}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.onap.policy.clamp.acm.element.handler.serialization.ParticipantMessageDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.onap.policy.clamp.acm.element.handler.serialization.ParticipantMessageSerializer
 
 server:
   port: ${PORT:8084}
@@ -17,13 +42,33 @@ server:
     path: /error
 
 element:
+  listenerTopic: policy_update_msg
+  publisherTopic: ac_element_msg
   elementId:
     name: ${ELEMENT_ID:onap.policy.clamp.ac.element1}
     version: ${ELEMENT_VERSION:1.0.0}
-
 management:
   endpoints:
     web:
       base-path: /
       exposure:
         include: health, metrics, prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      show-components: always
+  otlp:
+    metrics:
+      export:
+        enabled: ${allowTracing:false}
+
+tracing:
+  enabled: ${allowTracing:false}
+  exporter:
+    endpoint: ${tracingExporterEndpoint:http://jaeger:4318/v1/traces}
+    protocol: ${tracingExporterProtocol:http}
+  sampler:
+    jaeger-remote:
+      endpoint: ${tracingSamplerEndpoint:http://jaeger:14250}

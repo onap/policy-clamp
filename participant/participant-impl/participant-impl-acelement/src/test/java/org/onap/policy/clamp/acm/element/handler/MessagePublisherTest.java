@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,34 +21,53 @@
 package org.onap.policy.clamp.acm.element.handler;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessageType;
-import org.onap.policy.common.message.bus.event.TopicSink;
-
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.springframework.kafka.core.KafkaTemplate;
 
 class MessagePublisherTest {
 
     @Test
     void testActiveEmpty() {
-        var messagePublisher = new MessagePublisher();
-        var list = List.<TopicSink>of();
-        assertThatThrownBy(() -> messagePublisher.active(list))
-                .isInstanceOf(IllegalArgumentException.class);
+        var messagePublisher = new MessagePublisher(mock());
+        var msg = new ElementMessage(ElementMessageType.ACK_MSG);
+        assertThatThrownBy(() -> messagePublisher.publishMsg(msg))
+                .isInstanceOf(AutomationCompositionRuntimeException.class);
+    }
+
+    @Test
+    void testPublishMsgError() {
+        var kafkaTemplate = mock(KafkaTemplate.class);
+        var messagePublisher = new MessagePublisher(kafkaTemplate);
+        messagePublisher.active();
+        var msg = new ElementMessage(ElementMessageType.ACK_MSG);
+        String topic = null;
+        when(kafkaTemplate.send(topic, msg)).thenThrow(new RuntimeException());
+        assertDoesNotThrow(() -> messagePublisher.publishMsg(msg));
     }
 
     @Test
     void testPublishMsg() {
-        var topic = mock(TopicSink.class);
-        var messagePublisher = new MessagePublisher();
-        messagePublisher.active(List.of(topic));
-        messagePublisher.publishMsg(new ElementMessage(ElementMessageType.STATUS));
+        var kafkaTemplate = mock(KafkaTemplate.class);
+        var messagePublisher = new MessagePublisher(kafkaTemplate);
+        messagePublisher.active();
+        var msg = new ElementMessage(ElementMessageType.ACK_MSG);
+        var cf = mock(CompletableFuture.class);
+        String topic = null;
+        when(kafkaTemplate.send(topic, msg)).thenReturn(cf);
+        messagePublisher.publishMsg(msg);
+        verify(cf).join();
+
         messagePublisher.stop();
-        verify(topic).send(any());
+        assertThatThrownBy(() -> messagePublisher.publishMsg(msg))
+                .isInstanceOf(AutomationCompositionRuntimeException.class);
     }
 }

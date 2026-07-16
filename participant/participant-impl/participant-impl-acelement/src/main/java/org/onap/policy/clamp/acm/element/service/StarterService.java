@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.onap.policy.clamp.acm.element.handler.MessagePublisher;
-import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
@@ -37,12 +37,12 @@ import org.springframework.stereotype.Service;
  * Starter Service.
  */
 @Service
-public class StarterService extends AbstractElementService implements AutoCloseable {
+public class StarterService extends AbstractElementService {
 
     private ScheduledThreadPoolExecutor timerPool;
     private ScheduledFuture<?> future;
     private ToscaConceptIdentifier receiver;
-    private ToscaConceptIdentifier elementId;
+    private final ToscaConceptIdentifier elementId;
 
     private final MessagePublisher messagePublisher;
 
@@ -68,14 +68,16 @@ public class StarterService extends AbstractElementService implements AutoClosea
             timerPool.shutdown();
             timerPool = null;
         }
+        messagePublisher.stop();
     }
 
     @Override
     public void active(ElementConfig elementConfig) {
         if (timerPool != null) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, "StarterService alredy actived!");
+            throw new PfModelRuntimeException(Response.Status.CONFLICT, "StarterService already active!");
         }
         receiver = elementConfig.getReceiverId();
+        messagePublisher.active();
 
         timerPool = new ScheduledThreadPoolExecutor(1);
         timerPool.setRemoveOnCancelPolicy(true);
@@ -84,27 +86,22 @@ public class StarterService extends AbstractElementService implements AutoClosea
     }
 
     private void sendMessage() {
-        var messasge = new ElementStatus();
-        messasge.setElementId(receiver);
+        var message = new ElementMessage();
+        message.setElementId(receiver);
         // Add Tracking
-        messasge.setMessage("starter: " + elementId);
-        messagePublisher.publishMsg(messasge);
+        message.setMessage("starter: " + elementId);
+        messagePublisher.publishMsg(message);
     }
 
     @Override
     public void update(ElementConfig elementConfig) {
         if (timerPool == null) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, "StarterService not actived!");
+            throw new PfModelRuntimeException(Response.Status.CONFLICT, "StarterService not active!");
         }
         if (future != null) {
             future.cancel(true);
         }
         future = timerPool.scheduleAtFixedRate(this::sendMessage, elementConfig.getTimerMs(),
                 elementConfig.getTimerMs(), TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public void close() throws Exception {
-        deactivate();
     }
 }

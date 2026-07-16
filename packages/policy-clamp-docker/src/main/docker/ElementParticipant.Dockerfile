@@ -47,13 +47,10 @@ RUN mkdir -p $POLICY_LOGS $POLICY_HOME && \
 COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY --chown=policy:policy element-participant.sh bin/
 COPY --chown=policy:policy /maven/policy-clamp-acm-element-impl.jar /app/app.jar
-
-RUN chmod 755 bin/*.sh
 
 EXPOSE 8084
 
 USER policy
-WORKDIR $POLICY_HOME/bin
-ENTRYPOINT [ "./element-participant.sh" ]
+WORKDIR $POLICY_HOME
+ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]
