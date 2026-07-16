@@ -20,33 +20,23 @@
 
 package org.onap.policy.clamp.acm.element.service;
 
-import jakarta.ws.rs.core.Response;
-import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.acm.element.handler.MessageActivator;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
-import org.onap.policy.clamp.acm.element.main.parameters.ElementTopicParameters;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
-import org.onap.policy.common.parameters.topic.TopicParameterGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ConfigService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
 
     @Getter
     private ElementConfig elementConfig = new ElementConfig();
 
     private final MessageHandler handler;
-    private final MessageActivator messageActivator;
 
     /**
      * Activate messages and service and create the element configuration.
@@ -54,30 +44,10 @@ public class ConfigService {
      * @param elementConfig the configuration
      */
     public void activateElement(@NonNull ElementConfig elementConfig) {
-        var listenerTopicParameters = new ElementTopicParameters(elementConfig.getTopicParameterGroup());
-
-        var publisherTopicParameters = new ElementTopicParameters(elementConfig.getTopicParameterGroup());
-        publisherTopicParameters.setTopic(elementConfig.getTopicParameterGroup().getPublisherTopic());
-
-        var parameters = new TopicParameterGroup();
-        parameters.setTopicSinks(List.of(publisherTopicParameters));
-        parameters.setTopicSources(List.of(listenerTopicParameters));
-
-        if (!BeanValidator.validate(parameters).isValid()) {
-            throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST,
-                    "Validation failed for topic parameter group. Kafka config not activated");
-        }
-
-        if (messageActivator.isAlive()) {
-            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT,
-                    "Service Manager already running, cannot add Topic endpoint management");
-        }
-
         handler.active(elementConfig);
-        messageActivator.activate(parameters);
         this.elementConfig = elementConfig;
 
-        LOGGER.info("Messages and service activated");
+        log.info("Messages and service activated");
     }
 
     /**
@@ -85,8 +55,7 @@ public class ConfigService {
      */
     public void deleteConfig() {
         handler.deactivateElement();
-        messageActivator.deactivate();
         elementConfig = new ElementConfig();
-        LOGGER.info("Messages and service deactivated");
+        log.info("Messages and service deactivated");
     }
 }

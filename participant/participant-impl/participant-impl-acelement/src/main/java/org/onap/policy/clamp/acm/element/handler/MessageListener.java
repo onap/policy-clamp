@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +20,35 @@
 
 package org.onap.policy.clamp.acm.element.handler;
 
-import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
-import org.onap.policy.common.endpoints.listeners.ScoListener;
-import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
-import org.onap.policy.common.utils.coder.StandardCoderObject;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaHandler;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
-public class MessageListener extends ScoListener<ElementStatus> {
+@KafkaListener(topics = "${element.listenerTopic}")
+@RequiredArgsConstructor
+public class MessageListener {
 
     private final MessageHandler handler;
 
-    public MessageListener(MessageHandler handler) {
-        super(ElementStatus.class);
-        this.handler = handler;
-    }
+    @Value("${element.listenerTopic}")
+    private String topic;
 
-    @Override
-    public void onTopicEvent(CommInfrastructure infra, String topic, StandardCoderObject sco, ElementStatus message) {
+    /**
+     * Handle ParticipantRegister messages.
+     *
+     * @param message the message
+     */
+    @KafkaHandler
+    public void onTopicEvent(final ElementMessage message) {
         if (handler.appliesTo(message.getElementId())) {
+            NetLoggerUtil.log(NetLoggerUtil.EventType.IN, "KAFKA", topic, message.toString());
             handler.handleMessage(message);
         }
     }

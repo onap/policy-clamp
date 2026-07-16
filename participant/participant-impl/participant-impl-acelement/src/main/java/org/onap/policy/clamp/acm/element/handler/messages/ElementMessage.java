@@ -58,4 +58,8 @@ public class ElementMessage {
     public ElementMessage(ElementMessageType messageType) {
         this.messageType = messageType;
     }
+
+    public ElementMessage() {
+        this.messageType = ElementMessageType.STATUS;
+    }
 }

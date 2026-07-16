@@ -21,51 +21,35 @@
 package org.onap.policy.clamp.acm.element.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
-import org.onap.policy.clamp.acm.element.main.concepts.KafkaConfig;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.common.parameters.topic.TopicParameterGroup;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ConfigServiceTest {
 
     @Test
     void test() {
         var elementConfig = new ElementConfig();
-        elementConfig.setTopicParameterGroup(new KafkaConfig());
-        elementConfig.getTopicParameterGroup().setTopicCommInfrastructure("NOOP");
-        elementConfig.getTopicParameterGroup().setListenerTopic("topic");
-        elementConfig.getTopicParameterGroup().setPublisherTopic("topic");
-        elementConfig.getTopicParameterGroup().setServer("localhost");
-        elementConfig.getTopicParameterGroup().setFetchTimeout(1000);
+        elementConfig.setElementType(ElementType.BRIDGE);
+        elementConfig.setReceiverId(new ToscaConceptIdentifier("name", "1.0.0"));
+        elementConfig.setTimerMs(100);
 
         var handler = mock(MessageHandler.class);
-        var messageActivator = mock(MessageActivator.class);
-        var configService = new ConfigService(handler, messageActivator);
+        var configService = new ConfigService(handler);
         configService.activateElement(elementConfig);
 
-        verify(messageActivator).activate(any(TopicParameterGroup.class));
         verify(handler).active(elementConfig);
 
         assertThat(configService.getElementConfig()).isEqualTo(elementConfig);
 
         configService.deleteConfig();
-        verify(messageActivator).deactivate();
         verify(handler).deactivateElement();
 
         assertThat(configService.getElementConfig()).isNotEqualTo(elementConfig);
-
-        // validation fails due to blank parameter
-        elementConfig.getTopicParameterGroup().setTopicCommInfrastructure("");
-        assertThatThrownBy(() -> configService.activateElement(elementConfig))
-                .isInstanceOf(AutomationCompositionRuntimeException.class)
-                .hasMessageContaining("Validation failed for topic parameter group");
     }
 }
