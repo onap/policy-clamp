@@ -36,28 +36,6 @@
             <fileMode>0555</fileMode>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/src/main/resources/etc
-            </directory>
-            <includes>
-                <include>*.xml</include>
-                <include>*.yaml</include>
-            </includes>
-            <outputDirectory>${file.separator}etc</outputDirectory>
-            <lineEnding>unix</lineEnding>
-            <excludes>
-                <exclude>*.formatted</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/etc/ssl
-            </directory>
-            <includes>
-                <include>policy*</include>
-            </includes>
-            <outputDirectory>${file.separator}etc${file.separator}ssl</outputDirectory>
-            <lineEnding>keep</lineEnding>
-        </fileSet>
-        <fileSet>
             <directory>${project.build.directory}/liquibase</directory>
             <includes>
                 <include>*.yaml</include>

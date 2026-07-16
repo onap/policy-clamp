@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.element.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -30,11 +29,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.MessagePublisher;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
-import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class BridgeServiceTest {
@@ -63,19 +60,7 @@ class BridgeServiceTest {
         elementConfig.setReceiverId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
         bridgeService.active(elementConfig);
 
-        bridgeService.handleMessage(new ElementStatus());
+        bridgeService.handleMessage(new ElementMessage());
         verify(messagePublisher).publishMsg(any(ElementMessage.class));
-    }
-
-    @Test
-    void testWrongConf() {
-        var acElement = new AcElement();
-        acElement.setElementId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element1", "1.0.0"));
-
-        var messagePublisher = new MessagePublisher();
-        var bridgeService = new BridgeService(messagePublisher, acElement);
-        var elementStatus = new ElementStatus();
-        assertThatThrownBy(() -> bridgeService.handleMessage(elementStatus))
-                .isInstanceOf(AutomationCompositionRuntimeException.class);
     }
 }

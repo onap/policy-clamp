@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.element.main.concepts;
+package org.onap.policy.clamp.acm.element.handler.serialization;
 
-import lombok.Data;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Data
-public class KafkaConfig {
-    private String server;
+import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
 
-    private String listenerTopic;
+class ParticipantMessageSerializerTest {
 
-    private String publisherTopic;
+    @Test
+    void testSerializeSuccess() {
+        var testObject = new ElementMessage();
+        try (var serializer = new ParticipantMessageSerializer()) {
+            var result = serializer.serialize("test-topic", testObject);
+            assertNotNull(result);
 
-    private Integer fetchTimeout;
-
-    private String topicCommInfrastructure;
-
-    private boolean useHttps;
-
+            var resultString = new String(result);
+            assertThat(resultString).startsWith("{").endsWith("}");
+        }
+    }
 }

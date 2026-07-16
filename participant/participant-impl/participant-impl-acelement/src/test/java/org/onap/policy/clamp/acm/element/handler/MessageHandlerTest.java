@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
@@ -40,7 +40,6 @@ class MessageHandlerTest {
 
     private static final String NAME = "name";
     private static final String VERSION = "1.0.0";
-    private static final String TOPIC = "topic";
 
     @Test
     void testAppliesTo() {
@@ -112,10 +111,10 @@ class MessageHandlerTest {
         messageHandler.update(elementConfig);
         verify(bridge).update(elementConfig);
 
-        var message = new ElementStatus();
+        var message = new ElementMessage();
         message.setElementId(new ToscaConceptIdentifier(NAME, VERSION));
         var listener = new MessageListener(messageHandler);
-        listener.onTopicEvent(null, TOPIC, null, message);
+        listener.onTopicEvent(message);
         verify(bridge).handleMessage(message);
         messageHandler.deactivateElement();
     }
@@ -133,10 +132,10 @@ class MessageHandlerTest {
         verify(sink).active(elementConfig);
         assertThat(messageHandler.getActiveService()).isEqualTo(sink);
 
-        var message = new ElementStatus();
+        var message = new ElementMessage();
         message.setElementId(new ToscaConceptIdentifier(NAME, VERSION));
         var listener = new MessageListener(messageHandler);
-        listener.onTopicEvent(null, TOPIC, null, message);
+        listener.onTopicEvent(message);
         verify(sink).handleMessage(message);
         messageHandler.deactivateElement();
     }

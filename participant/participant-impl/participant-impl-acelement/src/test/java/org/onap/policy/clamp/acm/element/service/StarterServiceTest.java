@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,27 +39,26 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class StarterServiceTest {
 
     @Test
-    void testActive() throws Exception {
+    void testActive() {
         var acElement = new AcElement();
         acElement.setElementId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element1", "1.0.0"));
 
         var messagePublisher = mock(MessagePublisher.class);
-        try (var starterService = new StarterService(messagePublisher, acElement)) {
+        var starterService = new StarterService(messagePublisher, acElement);
 
-            assertThat(starterService.getType()).isEqualTo(ElementType.STARTER);
+        assertThat(starterService.getType()).isEqualTo(ElementType.STARTER);
 
-            var elementConfig = new ElementConfig();
-            elementConfig.setTimerMs(100);
-            elementConfig.setReceiverId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
+        var elementConfig = new ElementConfig();
+        elementConfig.setTimerMs(100);
+        elementConfig.setReceiverId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
 
-            assertThatThrownBy(() -> starterService.update(elementConfig)).isInstanceOf(PfModelRuntimeException.class);
+        assertThatThrownBy(() -> starterService.update(elementConfig)).isInstanceOf(PfModelRuntimeException.class);
 
-            starterService.active(elementConfig);
-            verify(messagePublisher, timeout(500).atLeastOnce()).publishMsg(any(ElementMessage.class));
+        starterService.active(elementConfig);
+        verify(messagePublisher, timeout(500).atLeastOnce()).publishMsg(any(ElementMessage.class));
 
-            assertThatThrownBy(() -> starterService.active(elementConfig)).isInstanceOf(PfModelRuntimeException.class);
+        assertThatThrownBy(() -> starterService.active(elementConfig)).isInstanceOf(PfModelRuntimeException.class);
 
-            starterService.deactivate();
-        }
+        starterService.deactivate();
     }
 }

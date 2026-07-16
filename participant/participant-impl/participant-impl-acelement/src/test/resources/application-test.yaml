@@ -3,6 +3,16 @@ spring:
     user:
       name: acmUser
       password: zb!XztG34
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}  # requires @EmbeddedKafka on @SpringBootTest's
+    security:
+      protocol: PLAINTEXT  # no security for embedded test broker
+    admin:
+      auto-create: true  # auto-create topics is useful for tests
+      fail-fast: true  # fail if the broker is not available on startup
+    consumer:
+      group-id: acm-element-test-group  # same for all tests to prevent stale data consumption by subsequent tests
+      auto-offset-reset: earliest  # ensure tests consume all messages from the beginning
 
 server:
   port: 8084
@@ -12,6 +22,8 @@ server:
     path: /error
 
 element:
+  listenerTopic: policy_update_msg
+  publisherTopic: ac_element_msg
   elementId:
     name: onap.policy.clamp.ac.element1
     version: 1.0.0
