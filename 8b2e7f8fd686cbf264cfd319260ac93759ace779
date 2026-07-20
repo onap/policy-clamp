@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0138cb1_335c5a06",
+        "filename": "compose/compose-sanity-run.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-20T13:46:35Z",
+      "side": 1,
+      "message": "Hi Krupa, I wonder, if we can add a minimalistic override compose file with only the required services that needs to be deployed without their full configurations, (the full spec should be re-used from the existing compose.yamls). And we can pass both the compose files in the docker compose command. By this way, we can avoid duplicating the full spec for each container? Docker compose should be able to merge two compose files. \n\nhttps://docs.docker.com/compose/how-tos/multiple-compose-files/merge/ \n\nCan we check if this is possible?",
+      "range": {
+        "startLine": 35,
+        "startChar": 2,
+        "endLine": 35,
+        "endChar": 7
+      },
+      "revId": "8b2e7f8fd686cbf264cfd319260ac93759ace779",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
