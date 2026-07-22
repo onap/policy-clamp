@@ -19,6 +19,8 @@ spring:
 
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}  # requires @EmbeddedKafka on @SpringBootTest's
+    listener:
+      missing-topics-fatal: false
     security:
       protocol: PLAINTEXT  # no security for embedded test broker
     admin:
