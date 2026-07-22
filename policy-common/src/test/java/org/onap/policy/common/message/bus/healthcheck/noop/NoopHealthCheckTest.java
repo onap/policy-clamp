@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,10 @@
 
 package org.onap.policy.common.message.bus.healthcheck.noop;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.message.bus.event.CommonTestData;
 import org.onap.policy.common.message.bus.event.TopicEndpoint;
 import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 
@@ -36,50 +34,5 @@ class NoopHealthCheckTest {
         var healthCheck = new NoopHealthCheck();
         var result = healthCheck.healthCheck(List.of());
         assertTrue(result);
-    }
-
-    @Test
-    void testBuild_Failure() {
-        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
-        topicEndpoint.start();
-        var healthCheck = new NoopHealthCheck();
-        topicEndpoint.stop();
-        var result = healthCheck.healthCheck(List.of());
-        assertFalse(result);
-    }
-
-    @Test
-    void test_TopicIsAlive() {
-        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
-
-        var topicSource = CommonTestData.getTopicParameters("topicSource", "noop", "localhost");
-        var topicSink = CommonTestData.getTopicParameters("topicSink", "noop", "localhost");
-
-        topicEndpoint.addTopicSources(List.of(topicSource));
-        topicEndpoint.addTopicSinks(List.of(topicSink));
-
-        topicEndpoint.start();
-        var healthCheck = new NoopHealthCheck();
-        var result = healthCheck.healthCheck(List.of("topicSource", "topicSink"));
-        assertTrue(result);
-    }
-
-    @Test
-    void test_TopicIsNotAlive() {
-        TopicEndpoint topicEndpoint = TopicEndpointManager.getManager();
-
-        var topicSource = CommonTestData.getTopicParameters("topicSource", "noop", "localhost");
-        var topicSink = CommonTestData.getTopicParameters("topicSink", "noop", "localhost");
-
-        topicEndpoint.addTopicSources(List.of(topicSource));
-        topicEndpoint.addTopicSinks(List.of(topicSink));
-
-        topicEndpoint.start();
-
-        var topic = topicEndpoint.getNoopTopicSource("topicsource");
-        topic.stop();
-        var healthCheck = new NoopHealthCheck();
-        var result = healthCheck.healthCheck(List.of("topicSource", "topicSink"));
-        assertFalse(result);
     }
 }

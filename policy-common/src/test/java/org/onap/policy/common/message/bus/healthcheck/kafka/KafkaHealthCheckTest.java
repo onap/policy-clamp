@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.DescribeClusterResult;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.common.KafkaFuture;
@@ -41,14 +42,10 @@ class KafkaHealthCheckTest {
 
     @Test
     void testAdminClient() {
-        var param = new TopicParameters();
-        param.setServers(List.of("localhost"));
-        var healthCheck = new KafkaHealthCheck(param);
+        var map  = new HashMap<String, Object>();
+        map.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9292");
+        var healthCheck = new KafkaHealthCheck(map);
         var result = healthCheck.healthCheck(List.of());
-        assertFalse(result);
-
-        param.setAdditionalProps(Map.of("key", "value"));
-        result = healthCheck.healthCheck(List.of());
         assertFalse(result);
     }
 
@@ -112,7 +109,14 @@ class KafkaHealthCheckTest {
     }
 
     private TopicHealthCheck createKafkaHealthCheck(AdminClient adminClient, TopicParameters param) {
-        return new KafkaHealthCheck(param) {
+        var map = new HashMap<String, Object>();
+        if (param.getAdditionalProps() != null) {
+            map.putAll(param.getAdditionalProps());
+        }
+        if (param.getServers() != null && !param.getServers().isEmpty()) {
+            map.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, param.getServers().getFirst());
+        }
+        return new KafkaHealthCheck(map) {
             @Override
             protected AdminClient createAdminClient() {
                 return adminClient;

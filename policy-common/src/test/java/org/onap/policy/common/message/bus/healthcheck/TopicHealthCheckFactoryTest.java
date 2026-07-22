@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ package org.onap.policy.common.message.bus.healthcheck;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.common.message.bus.event.Topic;
 import org.onap.policy.common.parameters.topic.TopicParameters;
@@ -31,12 +33,20 @@ class TopicHealthCheckFactoryTest {
     void testGetTopicHealthCheck() {
         var topicHealthCheckFactory = new TopicHealthCheckFactory();
         var param = new TopicParameters();
+        param.setServers(List.of("localhost:9092"));
         param.setTopicCommInfrastructure(Topic.CommInfrastructure.NOOP.name());
         var topicHealthCheck = topicHealthCheckFactory.getTopicHealthCheck(param);
         assertNotNull(topicHealthCheck);
+
         param.setTopicCommInfrastructure(Topic.CommInfrastructure.KAFKA.name());
+        param.setAdditionalProps(null);
         topicHealthCheck = topicHealthCheckFactory.getTopicHealthCheck(param);
         assertNotNull(topicHealthCheck);
+
+        param.setAdditionalProps(Map.of());
+        topicHealthCheck = topicHealthCheckFactory.getTopicHealthCheck(param);
+        assertNotNull(topicHealthCheck);
+
         param.setTopicCommInfrastructure(Topic.CommInfrastructure.REST.name());
         topicHealthCheck = topicHealthCheckFactory.getTopicHealthCheck(param);
         assertNull(topicHealthCheck);

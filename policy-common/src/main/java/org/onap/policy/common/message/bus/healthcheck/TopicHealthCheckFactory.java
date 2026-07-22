@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 
 package org.onap.policy.common.message.bus.healthcheck;
 
+import java.util.HashMap;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.onap.policy.common.message.bus.event.Topic;
 import org.onap.policy.common.message.bus.healthcheck.kafka.KafkaHealthCheck;
 import org.onap.policy.common.message.bus.healthcheck.noop.NoopHealthCheck;
@@ -33,7 +35,14 @@ public class TopicHealthCheckFactory {
      */
     public TopicHealthCheck getTopicHealthCheck(TopicParameters param) {
         return switch (Topic.CommInfrastructure.valueOf(param.getTopicCommInfrastructure().toUpperCase())) {
-            case KAFKA -> new KafkaHealthCheck(param);
+            case KAFKA -> {
+                var map = new HashMap<String, Object>();
+                if (param.getAdditionalProps() != null) {
+                    map.putAll(param.getAdditionalProps());
+                }
+                map.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, param.getServers().getFirst());
+                yield new KafkaHealthCheck(map);
+            }
             case NOOP ->  new NoopHealthCheck();
             default -> null;
         };
