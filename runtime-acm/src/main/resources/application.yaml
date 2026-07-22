@@ -37,6 +37,7 @@ spring:
       sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     listener:
       observation-enabled: true
+      missing-topics-fatal: ${TOPIC_VALIDATION:true}
       auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
     template:
       observation-enabled: true
