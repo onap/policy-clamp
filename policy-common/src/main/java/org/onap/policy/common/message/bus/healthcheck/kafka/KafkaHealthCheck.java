@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,22 @@
 package org.onap.policy.common.message.bus.healthcheck.kafka;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.common.KafkaException;
 import org.onap.policy.common.message.bus.healthcheck.TopicHealthCheck;
-import org.onap.policy.common.parameters.topic.TopicParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
+@RequiredArgsConstructor
 public class KafkaHealthCheck implements TopicHealthCheck {
 
-    private static final Logger logger = LoggerFactory.getLogger(KafkaHealthCheck.class);
-    private final TopicParameters parameters;
-
-    public KafkaHealthCheck(TopicParameters parameters) {
-        this.parameters = parameters;
-    }
+    private final Map<String, Object> properties;
 
     /**
      * Check that Kafka is OnLine and topics are available.
@@ -45,26 +42,27 @@ public class KafkaHealthCheck implements TopicHealthCheck {
      * @return true if Kafka is OnLine
      */
     public boolean healthCheck(List<String> topics) {
-        if (parameters.getServers() == null || parameters.getServers().isEmpty()) {
-            logger.warn("Kafka Address not defined!");
+        var server = properties.get(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG);
+        if (server == null || server.toString().isEmpty()) {
+            log.warn("Kafka Address not defined!");
             return true;
         }
         try (var client = createAdminClient()) {
             if (!checkConnection(client)) {
-                logger.warn("Kafka not UP yet!");
+                log.warn("Kafka not UP yet!");
                 return false;
             }
             if (topics.isEmpty()) {
-                logger.warn("Kafka is UP");
+                log.warn("Kafka is UP");
                 return true;
             }
 
             return checkTopics(client, topics);
         } catch (KafkaException | ExecutionException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return false;
         } catch (InterruptedException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             Thread.currentThread().interrupt();
             return false;
         }
@@ -75,7 +73,7 @@ public class KafkaHealthCheck implements TopicHealthCheck {
         if (nodes == null || nodes.isEmpty()) {
             return false;
         }
-        nodes.forEach(node -> logger.debug("nodeId {}", node.id()));
+        nodes.forEach(node -> log.debug("nodeId {}", node.id()));
         return true;
     }
 
@@ -83,27 +81,23 @@ public class KafkaHealthCheck implements TopicHealthCheck {
             throws ExecutionException, InterruptedException {
         var listTopics = client.listTopics().names().get();
         if (listTopics == null || listTopics.isEmpty()) {
-            logger.warn("Kafka topics not available!");
+            log.warn("Kafka topics not available!");
             return false;
         }
         var setTopics = listTopics.stream().map(String::toLowerCase).collect(Collectors.toSet());
         for (var topic : topics) {
             if (!setTopics.contains(topic.toLowerCase())) {
-                logger.warn("Kafka topic {} not available!", topic);
+                log.warn("Kafka topic {} not available!", topic);
                 return false;
             }
         }
-        logger.info("Kafka is UP and topics available!");
+        log.info("Kafka is UP and topics available!");
         return true;
     }
 
     protected AdminClient createAdminClient() {
         var kafkaProps = new Properties();
-        kafkaProps.setProperty(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, parameters.getServers().get(0));
-
-        if (parameters.isAdditionalPropsValid()) {
-            kafkaProps.putAll(parameters.getAdditionalProps());
-        }
+        kafkaProps.putAll(properties);
         return AdminClient.create(kafkaProps);
     }
 }
