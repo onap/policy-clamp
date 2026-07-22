@@ -36,6 +36,7 @@ spring:
       sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
       sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     listener:
+      missing-topics-fatal: ${TOPIC_VALIDATION:true}
       observation-enabled: ${ALLOW_TRACING:false}
       auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
     template:
