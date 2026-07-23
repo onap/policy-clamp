@@ -23,7 +23,6 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -105,40 +104,6 @@ class JpaParticipantSupportedElementTypeTest {
 
         var testJpaSupportElement2 = new JpaParticipantSupportedElementType(testJpaSupportElement);
         assertEquals(testJpaSupportElement, testJpaSupportElement2);
-    }
-
-    @Test
-    void testJpaAutomationCompositionElementCompareTo() {
-        var testJpaSupportElement = createJpaParticipantSupportedElementType();
-
-        var otherJpaSupportElement =
-            new JpaParticipantSupportedElementType(testJpaSupportElement);
-        assertEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-        assertEquals(-1, testJpaSupportElement.compareTo(null));
-        assertEquals(0, testJpaSupportElement.compareTo(testJpaSupportElement));
-
-        testJpaSupportElement.setId("BadValue");
-        assertNotEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-        testJpaSupportElement.setId(ID);
-        assertEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-
-        testJpaSupportElement.setParticipantId("BadValue");
-        assertNotEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-        testJpaSupportElement.setParticipantId(PARTICIPANT_ID);
-        assertEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-
-        testJpaSupportElement.setTypeName("BadName");
-        assertNotEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-        testJpaSupportElement.setTypeName("type");
-        assertEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-
-        testJpaSupportElement.setTypeVersion("BadVersion");
-        assertNotEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-        testJpaSupportElement.setTypeVersion("1.0.0");
-        assertEquals(0, testJpaSupportElement.compareTo(otherJpaSupportElement));
-
-        assertEquals(testJpaSupportElement,
-            new JpaParticipantSupportedElementType(otherJpaSupportElement));
     }
 
     private JpaParticipantSupportedElementType createJpaParticipantSupportedElementType() {

@@ -35,10 +35,10 @@ import jakarta.validation.constraints.Pattern;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -57,13 +57,14 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Entity
 @Table(name = "AutomationCompositionElement")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
-public class JpaAutomationCompositionElement
-    implements PfAuthorative<AutomationCompositionElement>, Comparable<JpaAutomationCompositionElement> {
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class JpaAutomationCompositionElement implements PfAuthorative<AutomationCompositionElement> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
     private String elementId;
 
     @Column
@@ -121,8 +122,8 @@ public class JpaAutomationCompositionElement
     @Column(length = 100000)
     private Map<String, Object> properties;
 
-    @NotNull
     @Valid
+    @NotNull
     @Convert(converter = StringToMapConverter.class)
     @Column(length = 100000)
     private Map<String, Object> outProperties;
@@ -222,81 +223,5 @@ public class JpaAutomationCompositionElement
         this.useState = element.getUseState();
         this.stage = element.getStage();
         this.message = element.getMessage();
-    }
-
-    @Override
-    public int compareTo(final JpaAutomationCompositionElement other) {
-        if (other == null) {
-            return -1;
-        }
-        if (this == other) {
-            return 0;
-        }
-
-        var result = ObjectUtils.compare(elementId, other.elementId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(instanceId, other.instanceId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(definitionName, other.definitionName);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(definitionVersion, other.definitionVersion);
-        if (result != 0) {
-            return result;
-        }
-
-        result = participantId.compareTo(other.participantId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(deployState, other.deployState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(lockState, other.lockState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(subState, other.subState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(migrationState, other.migrationState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(useState, other.useState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(stage, other.stage);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(operationalState, other.operationalState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(message, other.message);
-        if (result != 0) {
-            return result;
-        }
-        return ObjectUtils.compare(description, other.description);
     }
 }

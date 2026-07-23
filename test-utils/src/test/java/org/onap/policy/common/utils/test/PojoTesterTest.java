@@ -32,6 +32,7 @@ class PojoTesterTest {
     @Test
     void testValidPojo() {
         assertDoesNotThrow(() -> PojoTester.testPojos(BASE_PACKAGE + ".pojo.valid"));
+        assertDoesNotThrow(() -> PojoTester.testJpas(BASE_PACKAGE + ".pojo.valid"));
     }
 
     @Test

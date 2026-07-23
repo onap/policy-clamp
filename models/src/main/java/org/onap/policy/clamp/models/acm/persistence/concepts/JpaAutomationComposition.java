@@ -39,11 +39,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -61,14 +61,15 @@ import org.onap.policy.models.base.PfUtils;
 @Entity
 @Table(name = "AutomationComposition", indexes = {@Index(name = "ac_compositionId", columnList = "compositionId")})
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
-public class JpaAutomationComposition
-        implements PfAuthorative<AutomationComposition>, Comparable<JpaAutomationComposition> {
+public class JpaAutomationComposition implements PfAuthorative<AutomationComposition> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
     private String instanceId;
 
     @NotNull
@@ -171,7 +172,7 @@ public class JpaAutomationComposition
         automationComposition.setDescription(description);
         automationComposition.setStateChangeResult(stateChangeResult);
         automationComposition.setRevisionId(UUID.fromString(this.revisionId));
-        automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
+        automationComposition.setElements(LinkedHashMap.newLinkedHashMap(this.elements.size()));
         for (var element : this.elements) {
             automationComposition.getElements().put(UUID.fromString(element.getElementId()), element.toAuthorative());
         }
@@ -203,80 +204,5 @@ public class JpaAutomationComposition
             jpaAutomationCompositionElement.fromAuthorative(elementEntry.getValue());
             this.elements.add(jpaAutomationCompositionElement);
         }
-    }
-
-    @Override
-    public int compareTo(final JpaAutomationComposition other) {
-        if (other == null) {
-            return -1;
-        }
-        if (this == other) {
-            return 0;
-        }
-
-        var result = ObjectUtils.compare(instanceId, other.instanceId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(name, other.name);
-        if (result != 0) {
-            return result;
-        }
-
-        result = lastMsg.compareTo(other.lastMsg);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(phase, other.phase);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(version, other.version);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(compositionId, other.compositionId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(compositionTargetId, other.compositionTargetId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(deployState, other.deployState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(lockState, other.lockState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(subState, other.subState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(description, other.description);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(stateChangeResult, other.stateChangeResult);
-        if (result != 0) {
-            return result;
-        }
-        result = ObjectUtils.compare(revisionId, other.revisionId);
-        if (result != 0) {
-            return result;
-        }
-        return PfUtils.compareObjects(elements, other.elements);
     }
 }

@@ -33,8 +33,9 @@ import jakarta.validation.constraints.Pattern;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
@@ -45,33 +46,36 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Entity
 @Table(name = "NodeTemplateState")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class JpaNodeTemplateState implements PfAuthorative<NodeTemplateState> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String nodeTemplateStateId;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private String compositionId;
 
     @Column
     private String participantId;
 
-    @Column(name = "nodeTemplate_name")
     @NotNull
+    @Column(nullable = false, name = "nodeTemplate_name")
     @Pattern(regexp = PfKey.NAME_REGEXP)
     private String nodeTemplateName;
 
-    @Column(name = "nodeTemplate_version")
     @NotNull
+    @Column(nullable = false, name = "nodeTemplate_version")
     @Pattern(regexp = PfKey.VERSION_REGEXP)
     private String nodeTemplateVersion;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private AcTypeState state;
 
     @Column
@@ -80,7 +84,7 @@ public class JpaNodeTemplateState implements PfAuthorative<NodeTemplateState> {
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
-    @Column(length = 100000)
+    @Column(nullable = false, length = 100000)
     private Map<String, Object> outProperties;
 
     /**

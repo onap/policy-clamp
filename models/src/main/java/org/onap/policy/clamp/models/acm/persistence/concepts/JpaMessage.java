@@ -31,8 +31,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.UUID;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
@@ -40,25 +42,29 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 @Entity
 @Table(name = "Message", indexes = {@Index(name = "m_identificationId", columnList = "identificationId")})
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class JpaMessage implements PfAuthorative<DocMessage> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String messageId = UUID.randomUUID().toString();
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     // instanceId or compositionId
     private String identificationId;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private Timestamp lastMsg = TimestampHelper.nowTimestamp();
 
-    @Column(length = 100000)
-    @Convert(converter = StringToDocMessageConverter.class)
     @NotNull
+    @Column(nullable = false, length = 100000)
+    @Convert(converter = StringToDocMessageConverter.class)
     private DocMessage docMessage;
 
     public JpaMessage() {

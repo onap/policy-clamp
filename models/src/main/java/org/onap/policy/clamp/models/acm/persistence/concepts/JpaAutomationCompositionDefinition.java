@@ -39,8 +39,10 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -55,48 +57,53 @@ import org.onap.policy.models.base.PfKey;
 @Entity
 @Table(name = "AutomationCompositionDefinition")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 public class JpaAutomationCompositionDefinition implements PfAuthorative<AutomationCompositionDefinition> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String compositionId;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     @Pattern(regexp = PfKey.NAME_REGEXP)
     private String name;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     @Pattern(regexp = PfKey.VERSION_REGEXP)
     private String version;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private AcTypeState state;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private StateChangeResult stateChangeResult;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private Timestamp lastMsg;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private String revisionId;
 
+    @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
     private Set<JpaNodeTemplateState> elements = new HashSet<>();
 
-    @Column(length = 200000)
-    @Convert(converter = StringToServiceTemplateConverter.class)
-    @NotNull
     @Valid
+    @NotNull
+    @Column(nullable = false, length = 200000)
+    @Convert(converter = StringToServiceTemplateConverter.class)
     private DocToscaServiceTemplate serviceTemplate;
 
     @Override
@@ -136,9 +143,5 @@ public class JpaAutomationCompositionDefinition implements PfAuthorative<Automat
 
     public JpaAutomationCompositionDefinition(final AutomationCompositionDefinition acmDefinition) {
         fromAuthorative(acmDefinition);
-    }
-
-    public JpaAutomationCompositionDefinition() {
-        super();
     }
 }

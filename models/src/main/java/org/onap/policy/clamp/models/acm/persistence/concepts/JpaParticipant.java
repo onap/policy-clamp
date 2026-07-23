@@ -37,10 +37,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 
@@ -52,12 +52,15 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
 @Entity
 @Table(name = "Participant")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
-public class JpaParticipant implements PfAuthorative<Participant>, Comparable<JpaParticipant> {
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class JpaParticipant implements PfAuthorative<Participant> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String participantId;
 
     @Column
@@ -155,22 +158,5 @@ public class JpaParticipant implements PfAuthorative<Participant>, Comparable<Jp
             jpaReplica.fromAuthorative(replicaEntry.getValue());
             this.replicas.add(jpaReplica);
         }
-    }
-
-    @Override
-    public int compareTo(final JpaParticipant other) {
-        if (other == null) {
-            return -1;
-        }
-        if (this == other) {
-            return 0;
-        }
-
-        var result = participantId.compareTo(other.participantId);
-        if (result != 0) {
-            return result;
-        }
-
-        return ObjectUtils.compare(description, other.description);
     }
 }

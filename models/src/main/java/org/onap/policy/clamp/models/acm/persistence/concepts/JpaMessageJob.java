@@ -29,27 +29,31 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.UUID;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 @Entity
 @Table(name = "MessageJob")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class JpaMessageJob {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String jobId = UUID.randomUUID().toString();
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     @NotNull
     private String identificationId;
 
-    @Column
+    @Column(nullable = false)
     @NotNull
     private Timestamp jobStarted = TimestampHelper.nowTimestamp();
 

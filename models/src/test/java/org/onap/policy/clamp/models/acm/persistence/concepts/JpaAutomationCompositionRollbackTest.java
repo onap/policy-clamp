@@ -73,19 +73,6 @@ class JpaAutomationCompositionRollbackTest {
         assertDoesNotThrow(() -> new JpaAutomationCompositionRollback(jpaAutomationCompositionRollback));
     }
 
-    @Test
-    void testJpaCompositionRollbackCompareTo() {
-        var jpaAutomationCompositionRollback =
-                new JpaAutomationCompositionRollback(createAutomationCompositionRollbackInstance());
-
-        var otherJpaAutomationComposition =
-                new JpaAutomationCompositionRollback(jpaAutomationCompositionRollback);
-
-        assertEquals(0, jpaAutomationCompositionRollback.compareTo(otherJpaAutomationComposition));
-        assertEquals(-1, jpaAutomationCompositionRollback.compareTo(null));
-        assertEquals(0, jpaAutomationCompositionRollback.compareTo(jpaAutomationCompositionRollback));
-    }
-
     private AutomationCompositionRollback createAutomationCompositionRollbackInstance() {
         var testAcmRollback = new AutomationCompositionRollback();
         testAcmRollback.setInstanceId(UUID.fromString(INSTANCE_ID));

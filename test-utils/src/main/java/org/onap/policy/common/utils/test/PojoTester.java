@@ -41,13 +41,15 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class PojoTester {
 
+    private static final String EXCLUDE_PATTERN = ".*(Test|Utils|Converter|Comparator).*$";
+
     /**
      * Tests all POJOs in the specified package using default exclusion pattern.
      *
      * @param packageName the package to scan for POJO classes
      */
     public static void testPojos(String packageName) {
-        testPojos(packageName, ".*(Test|Utils|Converter|Comparator).*$");
+        testPojos(packageName, EXCLUDE_PATTERN, true);
     }
 
     /**
@@ -56,7 +58,7 @@ public class PojoTester {
      * @param packageName the package to scan for POJO classes
      * @param excludePattern regex pattern for class names to exclude
      */
-    public static void testPojos(String packageName, String excludePattern) {
+    public static void testPojos(String packageName, String excludePattern, boolean validateToString) {
         var pojoClasses = PojoClassFactory.getPojoClassesRecursively(packageName, new FilterNonConcrete());
         pojoClasses.removeIf(clazz -> clazz.getName().matches(excludePattern));
         if (pojoClasses.isEmpty()) {
@@ -72,8 +74,17 @@ public class PojoTester {
                 .with(new NoPublicFieldsExceptStaticFinalRule())
                 .with(new SetterTester())
                 .with(new GetterTester())
-                .with(new ToStringTester())
+                .with(validateToString ? new ToStringTester() : null)
                 .build();
         validator.validate(pojoClasses);
+    }
+
+    /**
+     * Tests all POJOs in the specified package using default exclusion pattern.
+     *
+     * @param packageName the package to scan for POJO classes
+     */
+    public static void testJpas(String packageName) {
+        testPojos(packageName, EXCLUDE_PATTERN, false);
     }
 }
