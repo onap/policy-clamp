@@ -23,11 +23,11 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.slf4j.Logger;
