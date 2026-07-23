@@ -86,7 +86,7 @@ class SupervisionAcHandlerSpec extends Specification {
         helper.stateChangePublisher.send(*_) >> { latch.countDown() }
 
         when: "#operation is called"
-        helper.handler."$operation"(ac, SupervisionAcHandlerTestHelper.createDefinition())
+        action(helper.handler, ac)
 
         then: "the AC should be updated in the provider"
         1 * helper.acProvider.updateAutomationComposition(_)
@@ -95,10 +95,10 @@ class SupervisionAcHandlerSpec extends Specification {
         awaitLatch(latch)
 
         where:
-        operation  | suffix     | initialState
-        "deploy"   | "Deploy"   | DeployState.UNDEPLOYED
-        "undeploy" | "Undeploy" | DeployState.DEPLOYED
-        "delete"   | "Deploy"   | DeployState.UNDEPLOYED
+        operation  | suffix     | initialState            | action
+        "deploy"   | "Deploy"   | DeployState.UNDEPLOYED  | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.deploy(a, d) }
+        "undeploy" | "Undeploy" | DeployState.DEPLOYED    | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.undeploy(a, d, d) }
+        "delete"   | "Deploy"   | DeployState.UNDEPLOYED  | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.delete(a, d, d) }
     }
 
     def "given a FAILED #operation with multiple elements, retry should only update non-terminal elements"() {
@@ -115,7 +115,7 @@ class SupervisionAcHandlerSpec extends Specification {
         helper.stateChangePublisher.send(*_) >> { latch.countDown() }
 
         when: "#operation is called"
-        helper.handler."$operation"(ac, SupervisionAcHandlerTestHelper.createDefinition())
+        action(helper.handler, ac)
 
         then: "the AC should be updated in the provider"
         1 * helper.acProvider.updateAutomationComposition(_)
@@ -124,11 +124,11 @@ class SupervisionAcHandlerSpec extends Specification {
         awaitLatch(latch)
 
         where:
-        operation  | deployState            | lockState          | elementTerminalState    | elementTerminalLock
-        "deploy"   | DeployState.DEPLOYING  | LockState.NONE     | DeployState.DEPLOYED    | null
-        "undeploy" | DeployState.UNDEPLOYING | LockState.NONE    | DeployState.UNDEPLOYED  | null
-        "lock"     | DeployState.DEPLOYED   | LockState.LOCKING  | null                    | LockState.LOCKED
-        "unlock"   | DeployState.DEPLOYED   | LockState.UNLOCKING | null                   | LockState.UNLOCKED
+        operation  | deployState            | lockState          | elementTerminalState    | elementTerminalLock  | action
+        "deploy"   | DeployState.DEPLOYING  | LockState.NONE     | DeployState.DEPLOYED    | null                 | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.deploy(a, d) }
+        "undeploy" | DeployState.UNDEPLOYING | LockState.NONE    | DeployState.UNDEPLOYED  | null                 | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.undeploy(a, d, d) }
+        "lock"     | DeployState.DEPLOYED   | LockState.LOCKING  | null                    | LockState.LOCKED     | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.lock(a, d) }
+        "unlock"   | DeployState.DEPLOYED   | LockState.UNLOCKING | null                   | LockState.UNLOCKED   | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.unlock(a, d) }
     }
 
     def "given an AC with #migrationState migration state element, deploy should throw PfModelRuntimeException"() {
@@ -158,10 +158,10 @@ class SupervisionAcHandlerSpec extends Specification {
         ac.lockState = initialLockState
         ac.elements.values().each { it.lockState = initialLockState }
         def latch = new CountDownLatch(1)
-        helper.stateChangePublisher.send(_, _, _, _) >> { latch.countDown() }
+        helper.stateChangePublisher.send(_, _, _, _,_) >> { latch.countDown() }
 
         when: "#operation is called"
-        helper.handler."$operation"(ac, SupervisionAcHandlerTestHelper.createDefinition())
+        action(helper.handler, ac)
 
         then: "the AC should be updated in the provider"
         1 * helper.acProvider.updateAutomationComposition(_)
@@ -170,9 +170,9 @@ class SupervisionAcHandlerSpec extends Specification {
         awaitLatch(latch)
 
         where:
-        operation | suffix   | initialLockState
-        "lock"    | "Lock"   | LockState.UNLOCKED
-        "unlock"  | "UnLock" | LockState.LOCKED
+        operation | suffix   | initialLockState   | action
+        "lock"    | "Lock"   | LockState.UNLOCKED | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.lock(a, d) }
+        "unlock"  | "UnLock" | LockState.LOCKED   | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.unlock(a, d) }
     }
 
     // --- Update ---
@@ -181,10 +181,10 @@ class SupervisionAcHandlerSpec extends Specification {
         given: "an automation composition"
         def ac = helper.loadAc("Lock")
         def latch = new CountDownLatch(1)
-        helper.elementPublisher.send(_, _) >> { latch.countDown() }
+        helper.elementPublisher.send(_, _,_) >> { latch.countDown() }
 
         when: "update is called"
-        helper.handler.update(ac, UUID.randomUUID())
+        helper.handler.update(ac, SupervisionAcHandlerTestHelper.createDefinition())
 
         then: "the element properties message should be sent asynchronously"
         awaitLatch(latch)
@@ -197,18 +197,18 @@ class SupervisionAcHandlerSpec extends Specification {
         def ac = helper.loadAc("Migrate")
         acSetup(ac)
         def latch = new CountDownLatch(1)
-        helper.migrationPublisher.send(_, _, _, _, _) >> { latch.countDown() }
+        helper.migrationPublisher.send(_, _, _, _, _,_) >> { latch.countDown() }
 
         when: "#operation is called"
-        helper.handler."$operation"(ac, UUID.randomUUID(), UUID.randomUUID())
+        action(helper.handler, ac)
 
         then: "the migration message should be sent asynchronously"
         awaitLatch(latch)
 
         where:
-        operation        | acSetup
-        "migrate"        | { it.phase = 0 }
-        "migratePrecheck" | { }
+        operation         | acSetup                | action
+        "migrate"         | { it.phase = 0 }       | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.migrate(new AutomationCompositionRollback(), a, d, d) }
+        "migratePrecheck" | { }                    | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.migratePrecheck(new AutomationCompositionRollback(), a, d, d) }
     }
 
     // --- Prepare / Review ---

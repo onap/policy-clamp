@@ -44,6 +44,7 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
@@ -71,8 +72,8 @@ class SimpleScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, encryptionUtils);
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
         var result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertTrue(result.isUpdated());
         assertTrue(result.isToBeSync());
@@ -96,8 +97,8 @@ class SimpleScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, encryptionUtils);
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
 
         // wrong MessageType
         docMessage.setMessageType(ParticipantMessageType.PARTICIPANT_PRIME_ACK);
@@ -140,8 +141,8 @@ class SimpleScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, encryptionUtils);
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
         var result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertTrue(result.isUpdated());
         assertFalse(result.isToBeSync());
@@ -163,8 +164,8 @@ class SimpleScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, encryptionUtils);
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
         var result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertTrue(result.isUpdated());
         assertFalse(result.isToBeSync());
@@ -191,8 +192,8 @@ class SimpleScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, encryptionUtils);
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
         var result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertTrue(result.isUpdated());
         assertFalse(result.isToBeSync());
@@ -257,8 +258,8 @@ class SimpleScannerTest {
         var acProvider = mock(AutomationCompositionProvider.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, encryptionUtils);
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
         simpleScanner.simpleScan(automationComposition, new UpdateSync());
         verify(acProvider, times(0)).updateAutomationComposition(any());
 
@@ -280,8 +281,9 @@ class SimpleScannerTest {
         docMessage.setLockState(LockState.NONE);
         var acProvider = mock(AutomationCompositionProvider.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
-        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup));
+        var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
+                mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup,
+                new EncryptionUtils(acRuntimeParameterGroup));
         var result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertTrue(result.isUpdated());
         assertTrue(result.isToBeSync());

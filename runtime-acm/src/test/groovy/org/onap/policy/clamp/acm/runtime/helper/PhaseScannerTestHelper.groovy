@@ -91,6 +91,22 @@ class PhaseScannerTestHelper {
         return ac
     }
 
+    static buildUndeployingAcWithTarget(UUID compositionId, UUID instanceId) {
+        def ac = buildAc(compositionId, instanceId, DeployState.UNDEPLOYING, LockState.NONE)
+        ac.phase = 0
+        ac.compositionTargetId = UUID.randomUUID()
+        ac.elements.values().each { element ->
+            if (ELEMENT_NAME == element.definition.name) {
+                element.deployState = DeployState.UNDEPLOYING
+                element.lockState = LockState.NONE
+            } else {
+                element.deployState = DeployState.DEPLOYED
+                element.lockState = LockState.LOCKED
+            }
+        }
+        return ac
+    }
+
     static buildUnlockingAc(UUID compositionId, UUID instanceId) {
         def ac = buildAc(compositionId, instanceId, DeployState.DEPLOYED, LockState.UNLOCKING)
         ac.phase = 0

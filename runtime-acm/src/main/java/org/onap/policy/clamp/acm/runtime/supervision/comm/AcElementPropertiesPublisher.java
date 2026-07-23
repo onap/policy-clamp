@@ -25,7 +25,10 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.utils.DtoMapperService;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
@@ -42,27 +45,35 @@ public class AcElementPropertiesPublisher {
 
     private final ParticipantPublisher participantPublisher;
 
+    private final DtoMapperService dtoMapperService;
+
     /**
      * Send ACElementPropertiesUpdate to Participant.
      *
+     * @param acPriorUpdate AutomationComposition prior update
      * @param automationComposition the AutomationComposition
-     * @param revisionIdComposition the last Update from Composition
+     * @param acDefinition the AutomationCompositionDefinition
      */
     @Timed(value = "publisher.properties_update", description = "AC Element Properties Update published")
-    public void send(AutomationComposition automationComposition, UUID revisionIdComposition) {
+    public void send(AutomationCompositionRollback acPriorUpdate, AutomationComposition automationComposition,
+                     AutomationCompositionDefinition acDefinition) {
         var propertiesUpdate = new PropertiesUpdate();
         propertiesUpdate.setCompositionId(automationComposition.getCompositionId());
         propertiesUpdate.setAutomationCompositionId(automationComposition.getInstanceId());
         propertiesUpdate.setMessageId(UUID.randomUUID());
         propertiesUpdate.setTimestamp(Instant.now());
         propertiesUpdate.setRevisionIdInstance(automationComposition.getRevisionId());
-        propertiesUpdate.setRevisionIdComposition(revisionIdComposition);
+        propertiesUpdate.setRevisionIdComposition(acDefinition.getRevisionId());
         var rollback = DeployState.UPDATE_REVERTING.equals(automationComposition.getDeployState());
         propertiesUpdate.setRollback(rollback);
         var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE);
+        // ParticipantUpdateList will be deprecated in future releases
         propertiesUpdate.setParticipantUpdatesList(participantUpdatesList);
         propertiesUpdate.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
+
+        propertiesUpdate.setParticipantDtoList(dtoMapperService.createDtoList(acPriorUpdate,
+                automationComposition, acDefinition, null));
         participantPublisher.send(propertiesUpdate);
     }
 }
