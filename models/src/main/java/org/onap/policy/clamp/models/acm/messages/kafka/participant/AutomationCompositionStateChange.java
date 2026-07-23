@@ -20,9 +20,12 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDto;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 
@@ -38,6 +41,8 @@ public class AutomationCompositionStateChange extends ParticipantMessage {
     private LockOrder lockOrderedState = LockOrder.NONE;
     private Integer startPhase;
     private Boolean firstStartPhase = true;
+
+    private List<ParticipantDto> participantDtoList = new ArrayList<>();
 
     /**
      * Constructor for instantiating class with message name.

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDto;
 
 @Getter
 @Setter
@@ -37,6 +38,8 @@ public class AutomationCompositionMigration extends ParticipantMessage {
     private UUID revisionIdCompositionTarget;
     // A list of updates to AC element properties
     private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
+
+    private List<ParticipantDto> participantDtoList = new ArrayList<>();
 
     private Boolean precheck = false;
     private Boolean rollback = false;

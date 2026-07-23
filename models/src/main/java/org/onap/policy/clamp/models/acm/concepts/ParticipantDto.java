@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,27 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
+package org.onap.policy.clamp.models.acm.concepts;
 
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
-import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
-import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
-import org.onap.policy.models.base.PfModelException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.onap.policy.clamp.models.acm.dto.AcElementDto;
+import org.onap.policy.models.base.PfUtils;
 
-public interface AutomationCompositionElementListenerV3 extends AutomationCompositionElementListener {
+@NoArgsConstructor
+@Data
+@ToString
+public class ParticipantDto {
 
-    void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException;
+    private UUID participantId;
+    private List<AcElementDto> elementDtos = new ArrayList<>();
+
+    public ParticipantDto(final ParticipantDto participantDto) {
+        this.participantId = participantDto.participantId;
+        this.elementDtos = PfUtils.mapList(participantDto.elementDtos, AcElementDto::new);
+    }
 }

@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDto;
 
 @Getter
 @Setter
@@ -35,6 +36,8 @@ public class AutomationCompositionPrepare extends ParticipantMessage {
     private List<ParticipantDeploy> participantList = new ArrayList<>();
     private boolean preDeploy = true;
     private Integer stage = 0;
+
+    private List<ParticipantDto> participantDtoList = new ArrayList<>();
 
     /**
      * Constructor for instantiating class with message name.

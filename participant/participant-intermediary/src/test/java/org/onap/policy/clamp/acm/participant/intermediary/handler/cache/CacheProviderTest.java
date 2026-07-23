@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -42,6 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class CacheProviderTest {
