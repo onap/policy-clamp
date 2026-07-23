@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025-2026 Nordix OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025 Nordix OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublish
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
@@ -51,12 +52,13 @@ public class PhaseScanner extends AbstractScanner {
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public PhaseScanner(final AutomationCompositionProvider acProvider,
-            final ParticipantSyncPublisher participantSyncPublisher,
-            final AutomationCompositionStateChangePublisher acStateChangePublisher,
-            final AutomationCompositionDeployPublisher acDeployPublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup,
-            final EncryptionUtils encryptionUtils) {
-        super(acProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
+                        final AcDefinitionProvider acDefinitionProvider,
+                        final ParticipantSyncPublisher participantSyncPublisher,
+                        final AutomationCompositionStateChangePublisher acStateChangePublisher,
+                        final AutomationCompositionDeployPublisher acDeployPublisher,
+                        final AcRuntimeParameterGroup acRuntimeParameterGroup,
+                        final EncryptionUtils encryptionUtils) {
+        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
         this.acStateChangePublisher = acStateChangePublisher;
         this.acDeployPublisher = acDeployPublisher;
     }
@@ -121,12 +123,21 @@ public class PhaseScanner extends AbstractScanner {
 
         var acToSend = new AutomationComposition(automationComposition);
         decryptInstanceProperties(acToSend);
+        var compositionTargetId = automationComposition.getCompositionTargetId();
         if (DeployState.DEPLOYING.equals(acToSend.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionDeploy");
-            acDeployPublisher.send(acToSend, startPhase, false, acDefinition.getRevisionId());
+            acDeployPublisher.send(acToSend, startPhase, false, acDefinition);
+        } else if (isUndeployOrDelete(acToSend.getDeployState()) && compositionTargetId != null) {
+            LOGGER.debug("retry message AutomationCompositionStateChange");
+            acStateChangePublisher.send(acToSend, startPhase, false, acDefinition,
+                    acDefinitionProvider.getAcDefinition(compositionTargetId));
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(acToSend, startPhase, false, acDefinition.getRevisionId());
+            acStateChangePublisher.send(acToSend, startPhase, false, acDefinition, null);
         }
+    }
+
+    private boolean isUndeployOrDelete(DeployState deployState) {
+        return DeployState.UNDEPLOYING.equals(deployState) || DeployState.DELETING.equals(deployState);
     }
 }

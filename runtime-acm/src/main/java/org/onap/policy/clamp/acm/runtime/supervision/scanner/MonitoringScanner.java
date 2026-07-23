@@ -99,20 +99,17 @@ public class MonitoringScanner {
             var acDefinitionTarget = acDefinitionMap.computeIfAbsent(automationComposition.getCompositionTargetId(),
                     acDefinitionProvider::getAcDefinition);
             if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
-                scanAutomationComposition(automationComposition, acDefinitionTarget, updateSync,
-                        acDefinition.getRevisionId());
+                scanAutomationComposition(automationComposition, acDefinitionTarget, updateSync);
             } else {
-                scanAutomationComposition(automationComposition, acDefinition, updateSync,
-                        acDefinitionTarget.getRevisionId());
+                scanAutomationComposition(automationComposition, acDefinition, updateSync);
             }
         } else {
-            scanAutomationComposition(automationComposition, acDefinition, updateSync,
-                    acDefinition.getRevisionId());
+            scanAutomationComposition(automationComposition, acDefinition, updateSync);
         }
     }
 
     private void scanAutomationComposition(final AutomationComposition automationComposition,
-            AutomationCompositionDefinition acDefinition, UpdateSync updateSync, UUID revisionIdComposition) {
+            AutomationCompositionDefinition acDefinition, UpdateSync updateSync) {
         LOGGER.debug("scanning automation composition {} . . .", automationComposition.getInstanceId());
 
         if (!AcmStateUtils.isInTransitionalState(automationComposition.getDeployState(),
@@ -125,7 +122,7 @@ public class MonitoringScanner {
 
         if (AcmStateUtils.isMigrating(automationComposition.getDeployState())
                 || SubState.PREPARING.equals(automationComposition.getSubState())) {
-            stageScanner.scanStage(automationComposition, acDefinition, updateSync, revisionIdComposition);
+            stageScanner.scanStage(automationComposition, acDefinition, updateSync);
         } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())
                 || DeployState.UPDATE_REVERTING.equals(automationComposition.getDeployState())
                 || SubState.REVIEWING.equals(automationComposition.getSubState())

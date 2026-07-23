@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
@@ -38,6 +37,7 @@ import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -107,8 +107,8 @@ public class SupervisionAcHandler {
         executor.execute(
             () -> {
                 var acToSend = new AutomationComposition(automationComposition);
-                encryptionUtils.decryptInstanceProperties(acToSend);
-                automationCompositionDeployPublisher.send(acToSend, startPhase, true, acDefinition.getRevisionId());
+                encryptionUtils.decryptInstanceProperties(acToSend.getElements());
+                automationCompositionDeployPublisher.send(acToSend, startPhase, true, acDefinition);
             });
     }
 
@@ -118,7 +118,8 @@ public class SupervisionAcHandler {
      * @param automationComposition the AutomationComposition
      * @param acDefinition the AutomationCompositionDefinition
      */
-    public void undeploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+    public void undeploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition,
+                         AutomationCompositionDefinition acDefinitionTarget) {
         LOGGER.info("Undeployment request received for instanceID: {}", automationComposition.getInstanceId());
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && DeployState.UNDEPLOYING.equals(automationComposition.getDeployState())
@@ -138,7 +139,7 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> automationCompositionStateChangePublisher.send(automationComposition,
-                    startPhase, true, acDefinition.getRevisionId()));
+                    startPhase, true, acDefinition, acDefinitionTarget));
     }
 
     /**
@@ -167,7 +168,7 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
             () -> automationCompositionStateChangePublisher.send(automationComposition,
-                    startPhase, true, acDefinition.getRevisionId()));
+                    startPhase, true, acDefinition, null));
     }
 
     /**
@@ -186,8 +187,8 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> {
             var acToSend = new AutomationComposition(automationComposition);
-            encryptionUtils.decryptInstanceProperties(acToSend);
-            acPreparePublisher.sendPrepare(acToSend, stage, acDefinition.getRevisionId());
+            encryptionUtils.decryptInstanceProperties(acToSend.getElements());
+            acPreparePublisher.sendPrepare(acToSend, stage, acDefinition);
         });
     }
 
@@ -203,7 +204,7 @@ public class SupervisionAcHandler {
                 .setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> acPreparePublisher.sendReview(automationComposition, acDefinition.getRevisionId()));
+        executor.execute(() -> acPreparePublisher.sendReview(automationComposition, acDefinition));
     }
 
     /**
@@ -232,20 +233,23 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
             () -> automationCompositionStateChangePublisher.send(automationComposition,
-                    startPhase, true, acDefinition.getRevisionId()));
+                    startPhase, true, acDefinition, null));
     }
 
     /**
      * Handle Element property update on a deployed instance.
      *
      * @param automationComposition the AutomationComposition
-     * @param revisionIdComposition the last Update from Composition
+     * @param acDefinition the AutomationCompositionDefinition
      */
-    public void update(AutomationComposition automationComposition, UUID revisionIdComposition) {
+    public void update(AutomationComposition automationComposition,
+                       AutomationCompositionDefinition acDefinition) {
+        var acPriorUpdate = automationCompositionProvider
+                .getAutomationCompositionRollback(automationComposition.getInstanceId());
         executor.execute(
             () -> {
-                encryptionUtils.decryptInstanceProperties(automationComposition);
-                acElementPropertiesPublisher.send(automationComposition, revisionIdComposition);
+                encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
+                acElementPropertiesPublisher.send(acPriorUpdate, automationComposition, acDefinition);
             });
     }
 
@@ -255,7 +259,8 @@ public class SupervisionAcHandler {
      * @param automationComposition the AutomationComposition
      * @param acDefinition the AutomationCompositionDefinition
      */
-    public void delete(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+    public void delete(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition,
+                       AutomationCompositionDefinition acDefinitionTarget) {
         AcmStateUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
@@ -263,7 +268,7 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
             () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition.getRevisionId()));
+                    automationComposition, startPhase, true, acDefinition, acDefinitionTarget));
     }
 
     /**
@@ -351,29 +356,35 @@ public class SupervisionAcHandler {
     /**
      * Handle Migration of an AutomationComposition instance to other ACM Definition.
      *
+     * @param acPriorUpdate AutomationComposition before update
      * @param automationComposition the AutomationComposition
-     * @param revisionIdComposition the last Update from Composition
-     * @param revisionIdCompositionTarget the last Update from Composition Target
+     * @param acDefinition AutomationCompositionDefinition
+     * @param acDefinitionTarget target AutomationCompositionDefinition
      */
-    public void migrate(AutomationComposition automationComposition, UUID revisionIdComposition,
-                        UUID revisionIdCompositionTarget) {
+    public void migrate(AutomationCompositionRollback acPriorUpdate, AutomationComposition automationComposition,
+                        AutomationCompositionDefinition acDefinition,
+                        AutomationCompositionDefinition acDefinitionTarget) {
         executor.execute(() -> {
-            encryptionUtils.decryptInstanceProperties(automationComposition);
-            acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase(),
-                    revisionIdComposition, revisionIdCompositionTarget, true);
+            encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
+            encryptionUtils.decryptInstanceProperties(acPriorUpdate.getElements());
+            acCompositionMigrationPublisher.send(acPriorUpdate, automationComposition, automationComposition.getPhase(),
+                    acDefinition, acDefinitionTarget, true);
         });
     }
 
     /**
      * Handle Migration precheck of an AutomationComposition instance to other ACM Definition.
      *
+     * @param acPriorUpdate AutomationComposition before update
      * @param automationComposition the AutomationComposition
-     * @param revisionIdComposition the last Update from Composition
-     * @param revisionIdCompositionTarget the last Update from Composition Target
+     * @param acDefinition AutomationCompositionDefinition
+     * @param acDefinitionTarget AutomationCompositionDefinition Target
      */
-    public void migratePrecheck(AutomationComposition automationComposition, UUID revisionIdComposition,
-            UUID revisionIdCompositionTarget) {
-        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0,
-                revisionIdComposition, revisionIdCompositionTarget, true));
+    public void migratePrecheck(AutomationCompositionRollback acPriorUpdate,
+                                AutomationComposition automationComposition,
+                                AutomationCompositionDefinition acDefinition,
+                                AutomationCompositionDefinition acDefinitionTarget) {
+        executor.execute(() -> acCompositionMigrationPublisher.send(acPriorUpdate, automationComposition, 0,
+                acDefinition, acDefinitionTarget, true));
     }
 }

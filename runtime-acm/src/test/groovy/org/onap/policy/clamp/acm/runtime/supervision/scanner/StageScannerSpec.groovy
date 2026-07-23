@@ -19,6 +19,8 @@
  */
 package org.onap.policy.clamp.acm.runtime.supervision.scanner
 
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider
+
 import static org.onap.policy.clamp.acm.runtime.helper.StageScannerTestHelper.buildAcDefinition
 import static org.onap.policy.clamp.acm.runtime.helper.StageScannerTestHelper.buildMigratingAc
 import static org.onap.policy.clamp.acm.runtime.helper.StageScannerTestHelper.buildMigrationRevertingAc
@@ -49,7 +51,7 @@ class StageScannerSpec extends Specification {
         def acDefinition = buildAcDefinition()
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         0 * acProvider.updateAutomationComposition(_)
@@ -75,7 +77,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -99,7 +101,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -120,7 +122,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -142,7 +144,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -163,7 +165,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -179,7 +181,7 @@ class StageScannerSpec extends Specification {
         def acDefinition = buildAcDefinition()
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         0 * acProvider.updateAutomationComposition(_)
@@ -199,7 +201,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -217,7 +219,7 @@ class StageScannerSpec extends Specification {
         acProvider.updateAutomationComposition(_) >> ac
 
         when:
-        scanner.scanStage(ac, acDefinition, new UpdateSync(), UUID.randomUUID())
+        scanner.scanStage(ac, acDefinition, new UpdateSync())
 
         then:
         1 * acProvider.updateAutomationComposition(_ as AutomationComposition)
@@ -236,7 +238,7 @@ class StageScannerSpec extends Specification {
                           ParticipantSyncPublisher participantSyncPublisher = null) {
         def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
         def encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup)
-        return new StageScanner(acProvider,
+        return new StageScanner(acProvider, Mock(AcDefinitionProvider),
                 participantSyncPublisher ?: Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionMigrationPublisher), Mock(AcPreparePublisher),
                 acRuntimeParameterGroup, encryptionUtils)

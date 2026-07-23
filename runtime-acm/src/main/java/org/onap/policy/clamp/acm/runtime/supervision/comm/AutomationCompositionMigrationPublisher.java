@@ -24,7 +24,10 @@ import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.utils.DtoMapperService;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -38,23 +41,27 @@ public class AutomationCompositionMigrationPublisher {
 
     private final ParticipantPublisher participantPublisher;
 
+    private final DtoMapperService dtoMapperService;
+
     /**
      * Send AutomationCompositionMigration message to Participant.
      *
+     * @param acPriorUpdate AutomationComposition prior update
      * @param automationComposition the AutomationComposition
      * @param stage the stage to execute
-     * @param revisionIdComposition the last Update from Composition
-     * @param revisionIdCompositionTarget the last Update from Composition Target
+     * @param acDefinition AutomationCompositionDefinition
+     * @param acDefinitionTarget target AutomationCompositionDefinition
      */
     @Timed(
             value = "publisher.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
-    public void send(AutomationComposition automationComposition, int stage, UUID revisionIdComposition,
-                     UUID revisionIdCompositionTarget, boolean fisrtStage) {
+    public void send(AutomationCompositionRollback acPriorUpdate, AutomationComposition automationComposition,
+                     int stage, AutomationCompositionDefinition acDefinition,
+                     AutomationCompositionDefinition acDefinitionTarget, boolean firstStage) {
         var acMigration = new AutomationCompositionMigration();
         var rollback = DeployState.MIGRATION_REVERTING.equals(automationComposition.getDeployState());
         acMigration.setRollback(rollback);
-        acMigration.setFirstStage(fisrtStage);
+        acMigration.setFirstStage(firstStage);
         acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
         acMigration.setCompositionId(automationComposition.getCompositionId());
         acMigration.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -62,13 +69,19 @@ public class AutomationCompositionMigrationPublisher {
         acMigration.setCompositionTargetId(automationComposition.getCompositionTargetId());
         acMigration.setStage(stage);
         acMigration.setRevisionIdInstance(automationComposition.getRevisionId());
-        acMigration.setRevisionIdComposition(revisionIdComposition);
-        acMigration.setRevisionIdCompositionTarget(revisionIdCompositionTarget);
+        acMigration.setRevisionIdComposition(acDefinition.getRevisionId());
+        acMigration.setRevisionIdCompositionTarget(acDefinitionTarget.getRevisionId());
         var participantUpdatesList = AcmUtils.createParticipantDeployList(automationComposition,
                 rollback ? DeployOrder.MIGRATION_REVERT : DeployOrder.MIGRATE);
+
+        // participantUpdateList will be deprecated in future releases
         acMigration.setParticipantUpdatesList(participantUpdatesList);
         acMigration.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
+
+        var participantDtoList = dtoMapperService.createMigrationDto(acPriorUpdate, acDefinition,
+                automationComposition, acDefinitionTarget);
+        acMigration.setParticipantDtoList(participantDtoList);
 
         participantPublisher.send(acMigration);
     }

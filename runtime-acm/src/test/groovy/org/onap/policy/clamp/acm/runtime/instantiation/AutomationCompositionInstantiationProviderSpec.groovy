@@ -117,7 +117,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
 
         then:
         1 * helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
-        1 * helper.supervisionAcHandler.delete(_, _)
+        1 * helper.supervisionAcHandler.delete(_, _, _)
     }
 
     // --- Update deployed instance ---
@@ -237,7 +237,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         provider.deleteAutomationComposition(compositionId, ac.instanceId)
 
         then:
-        1 * helper.supervisionAcHandler.delete(_, _)
+        1 * helper.supervisionAcHandler.delete(_, _, _)
     }
 
     def "delete fails for invalid deploy states"() {
@@ -519,7 +519,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         provider.compositionInstanceState(compositionId, instanceId, update)
 
         then:
-        1 * helper.supervisionAcHandler."$expectedMethod"(_, _)
+        1 * helper.supervisionAcHandler."$expectedMethod"(*_)
 
         where:
         order     | acDeployState          | acLockState        | deployOrder         | lockOrder       | subOrder        || expectedMethod
@@ -529,6 +529,237 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         "LOCK"    | DeployState.DEPLOYED   | LockState.UNLOCKED | DeployOrder.NONE    | LockOrder.LOCK  | null            || "lock"
         "PREPARE" | DeployState.UNDEPLOYED | LockState.NONE     | DeployOrder.NONE    | LockOrder.NONE  | SubOrder.PREPARE|| "prepare"
         "REVIEW"  | DeployState.DEPLOYED   | LockState.LOCKED   | DeployOrder.NONE    | LockOrder.NONE  | SubOrder.REVIEW || "review"
+    }
+
+    // --- Migrate ---
+
+    def "migrate succeeds for deployed instance"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acMigrate", "Migrate", DeployState.DEPLOYED, compositionId)
+        ac.stateChangeResult = StateChangeResult.NO_ERROR
+        ac.precheck = false
+        def compositionTargetId = ac.compositionTargetId
+
+        def acFromDb = new AutomationComposition(ac)
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> acFromDb
+        helper.acProvider.updateAutomationComposition(_) >> acFromDb
+        helper.acProvider.copyAcElementsBeforeUpdate(_) >> new AutomationCompositionRollback(acFromDb)
+
+        def acDefTarget = CommonTestData.createAcDefinition(helper.serviceTemplateMigration, AcTypeState.PRIMED)
+        helper.acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefTarget
+
+        def provider = helper.createProvider(new AcRuntimeParameterGroup())
+
+        when:
+        def response = provider.updateAutomationComposition(compositionId, ac)
+
+        then:
+        response != null
+        1 * helper.supervisionAcHandler.migrate(_, _, _, _)
+    }
+
+    def "migrate fails when instance is not DEPLOYED"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acMigrate", "MigrateNotDeployed", DeployState.UNDEPLOYED, compositionId)
+        ac.stateChangeResult = StateChangeResult.NO_ERROR
+        ac.lockState = LockState.NONE
+        ac.precheck = false
+
+        def acFromDb = new AutomationComposition(ac)
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> acFromDb
+
+        def provider = helper.createProvider(new AcRuntimeParameterGroup())
+
+        when:
+        provider.updateAutomationComposition(compositionId, ac)
+
+        then:
+        thrown(PfModelRuntimeException)
+    }
+
+    def "migrate with new element succeeds"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        // acFromDb has only the subset of elements that exist before migration (c20 and c22)
+        // acMigrate introduces c29 as a new element alongside the existing ones
+        def acFromDb = helper.loadCustomAc("acMigrate", "MigrateNewElem", DeployState.DEPLOYED, compositionId)
+        acFromDb.stateChangeResult = StateChangeResult.NO_ERROR
+        // Remove one element from acFromDb to simulate it being new in the migration payload
+        def newElementId = UUID.fromString("709c62b3-8918-41b9-a747-d21eb79c6c29")
+        acFromDb.elements.remove(newElementId)
+        def compositionTargetId = acFromDb.compositionTargetId
+
+        def acMigrate = helper.loadCustomAc("acMigrate", "MigrateNewElem", DeployState.DEPLOYED, compositionId)
+        acMigrate.instanceId = acFromDb.instanceId
+        acMigrate.compositionTargetId = compositionTargetId
+        acMigrate.stateChangeResult = StateChangeResult.NO_ERROR
+        acMigrate.precheck = false
+
+        helper.acProvider.getAutomationComposition(acFromDb.instanceId) >> acFromDb
+        helper.acProvider.updateAutomationComposition(_) >> acFromDb
+        helper.acProvider.copyAcElementsBeforeUpdate(_) >> new AutomationCompositionRollback(acFromDb)
+
+        def acDefTarget = CommonTestData.createAcDefinition(helper.serviceTemplateMigration, AcTypeState.PRIMED)
+        helper.acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefTarget
+
+        def provider = helper.createProvider(new AcRuntimeParameterGroup())
+
+        when:
+        def response = provider.updateAutomationComposition(compositionId, acMigrate)
+
+        then:
+        response != null
+        1 * helper.supervisionAcHandler.migrate(_, _, _, _)
+    }
+
+    def "migrate precheck succeeds for deployed instance"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acMigrate", "MigratePrecheck", DeployState.DEPLOYED, compositionId)
+        ac.stateChangeResult = StateChangeResult.NO_ERROR
+        ac.precheck = true
+        def compositionTargetId = ac.compositionTargetId
+
+        def acFromDb = new AutomationComposition(ac)
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> acFromDb
+        helper.acProvider.updateAutomationComposition(_) >> acFromDb
+
+        def acDefTarget = CommonTestData.createAcDefinition(helper.serviceTemplateMigration, AcTypeState.PRIMED)
+        helper.acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefTarget
+
+        def provider = helper.createProvider(new AcRuntimeParameterGroup())
+
+        when:
+        def response = provider.updateAutomationComposition(compositionId, ac)
+
+        then:
+        response != null
+        1 * helper.supervisionAcHandler.migratePrecheck(_, _, _, _)
+    }
+
+    // --- Delete with compositionTargetId ---
+
+    def "delete succeeds when compositionTargetId is set"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acMigrate", "DeleteWithTarget", DeployState.UNDEPLOYED, compositionId)
+        ac.lockState = LockState.NONE
+        ac.stateChangeResult = StateChangeResult.NO_ERROR
+        def compositionTargetId = ac.compositionTargetId
+
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
+
+        def acDefTarget = CommonTestData.createAcDefinition(helper.serviceTemplateMigration, AcTypeState.PRIMED)
+        helper.acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefTarget
+
+        def provider = helper.createProvider()
+
+        when:
+        provider.deleteAutomationComposition(compositionId, ac.instanceId)
+
+        then:
+        1 * helper.supervisionAcHandler.delete(_, _, acDefTarget)
+    }
+
+    // --- UNDEPLOY with compositionTargetId ---
+
+    def "compositionInstanceState UNDEPLOY with compositionTargetId fetches target definition"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acMigrate", "UndeployWithTarget", DeployState.DEPLOYED, compositionId)
+        ac.lockState = LockState.LOCKED
+        ac.stateChangeResult = StateChangeResult.NO_ERROR
+        def compositionTargetId = ac.compositionTargetId
+
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
+
+        def acDefTarget = CommonTestData.createAcDefinition(helper.serviceTemplateMigration, AcTypeState.PRIMED)
+        helper.acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefTarget
+
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), null)
+        def update = new AcInstanceStateUpdate(deployOrder: DeployOrder.UNDEPLOY, lockOrder: LockOrder.NONE)
+
+        when:
+        provider.compositionInstanceState(compositionId, ac.instanceId, update)
+
+        then:
+        1 * helper.supervisionAcHandler.undeploy(_, _, acDefTarget)
+    }
+
+    // --- Encryption ---
+
+    def "create encrypts properties when encryption is enabled"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadAc("acCreate", "Encrypt")
+        ac.compositionId = compositionId
+        helper.acProvider.createAutomationComposition(ac) >> ac
+
+        def encryptionUtils = Mock(EncryptionUtils) {
+            encryptionEnabled() >> true
+        }
+        helper.acDefinitionProvider.findAcDefinition(compositionId) >> Optional.empty()
+
+        def provider = helper.createProvider(CommonTestData.getTestParamaterGroup(), encryptionUtils)
+
+        when:
+        def response = provider.createAutomationComposition(compositionId, ac)
+
+        then:
+        response != null
+        1 * encryptionUtils.encryptionEnabled() >> true
+    }
+
+    // --- mergePropertiesAndValidate validation failure ---
+
+    def "update deployed instance fails when merged properties are invalid"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acUpdate", "MergeInvalid", DeployState.DEPLOYED, compositionId)
+        ac.compositionTargetId = null
+        ac.stateChangeResult = StateChangeResult.NO_ERROR
+
+        def acFromDb = new AutomationComposition(ac)
+        // Remove all elements from DB so validation fails (element id not present)
+        def firstKey = acFromDb.elements.keySet().first()
+        acFromDb.elements.remove(firstKey)
+
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> acFromDb
+
+        def provider = helper.createProvider()
+
+        when:
+        provider.updateAutomationComposition(compositionId, ac)
+
+        then:
+        def ex = thrown(PfModelRuntimeException)
+        ex.message.startsWith(helper.getErrorMessage("elementIdNotPresent"))
+    }
+
+    // --- performRollback validation failure ---
+
+    def "rollback fails when rollback elements fail validation"() {
+        given:
+        def compositionId = setupPrimedDefinition()
+        def ac = helper.loadCustomAc("acUpdate", "RollbackInvalid", DeployState.UPDATING, compositionId)
+        ac.stateChangeResult = StateChangeResult.FAILED
+        ac.compositionTargetId = null
+
+        helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
+
+        // Return a rollback with no elements so validateAutomationComposition fails
+        def rollback = new AutomationCompositionRollback(instanceId: ac.instanceId, elements: [:])
+        helper.acProvider.getAutomationCompositionRollback(ac.instanceId) >> rollback
+
+        def provider = helper.createProvider(new AcRuntimeParameterGroup())
+
+        when:
+        provider.rollback(compositionId, ac.instanceId)
+
+        then:
+        thrown(PfModelRuntimeException)
     }
 
     // --- Delete helper ---
