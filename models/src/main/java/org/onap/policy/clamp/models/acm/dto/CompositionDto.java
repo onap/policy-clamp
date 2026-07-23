@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
- * ================================================================================
+ *  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
+  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,15 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
+package org.onap.policy.clamp.models.acm.dto;
 
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
-import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
-import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
-import org.onap.policy.models.base.PfModelException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Map;
+import java.util.UUID;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public interface AutomationCompositionElementListenerV3 extends AutomationCompositionElementListener {
-
-    void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record CompositionDto(UUID compositionId,
+    Map<ToscaConceptIdentifier, Map<String, Object>> inPropertiesMap,
+    Map<ToscaConceptIdentifier, Map<String, Object>> outPropertiesMap) {
 }
