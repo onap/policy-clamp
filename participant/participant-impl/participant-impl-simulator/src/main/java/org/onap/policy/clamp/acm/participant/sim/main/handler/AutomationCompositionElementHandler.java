@@ -22,12 +22,12 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
-import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
-import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
+import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
+import org.onap.policy.clamp.models.acm.dto.ElementState;
+import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

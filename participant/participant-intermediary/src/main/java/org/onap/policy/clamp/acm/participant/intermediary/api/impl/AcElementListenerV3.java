@@ -20,11 +20,11 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
-import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
+import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.models.base.PfModelException;
 
 /**

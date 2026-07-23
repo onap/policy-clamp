@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,11 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
+package org.onap.policy.clamp.models.acm.dto;
 
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
-import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
-import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
-import org.onap.policy.models.base.PfModelException;
-
-public interface AutomationCompositionElementListenerV3 extends AutomationCompositionElementListener {
-
-    void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException;
+public enum ElementState {
+    PRESENT,
+    NOT_PRESENT,
+    REMOVED,
+    NEW
 }
