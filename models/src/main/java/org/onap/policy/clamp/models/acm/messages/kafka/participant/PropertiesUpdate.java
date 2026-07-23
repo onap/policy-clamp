@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDto;
 
 /**
  * Class to represent the PROPERTIES_UPDATE message that the ACM runtime sends to a participant.
@@ -40,6 +41,8 @@ public class PropertiesUpdate extends ParticipantMessage {
     private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
 
     private boolean rollback = false;
+
+    private List<ParticipantDto> participantDtoList = new ArrayList<>();
 
     /**
      * Constructor for instantiating properties update class with message name.

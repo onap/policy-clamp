@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDto;
 
 /**
  * Class to represent the AUTOMATION_COMPOSITION_DEPLOY message that the automation composition runtime sends to a
@@ -42,6 +43,8 @@ public class AutomationCompositionDeploy extends ParticipantMessage {
     private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
     private Integer startPhase = 0;
     private boolean firstStartPhase = true;
+
+    private List<ParticipantDto> participantDtoList = new ArrayList<>();
 
     /**
      * Constructor for instantiating class with message name.

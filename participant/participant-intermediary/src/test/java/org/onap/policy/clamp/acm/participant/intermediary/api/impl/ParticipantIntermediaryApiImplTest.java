@@ -31,11 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
-import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
-import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -46,9 +43,11 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
+import org.onap.policy.clamp.models.acm.dto.ElementState;
+import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class ParticipantIntermediaryApiImplTest {
 
@@ -208,8 +207,7 @@ class ParticipantIntermediaryApiImplTest {
     @Test
     void testInstanceElementDto() {
         // test InstanceElementDto with toscaServiceTemplateFragment
-        var instanceElementDto = new InstanceElementDto(COMPOSITION_ID, ELEMENT_ID, new ToscaServiceTemplate(),
-                Map.of(), Map.of());
+        var instanceElementDto = new InstanceElementDto(COMPOSITION_ID, ELEMENT_ID, Map.of(), Map.of());
         assertEquals(COMPOSITION_ID, instanceElementDto.instanceId());
         assertEquals(ELEMENT_ID, instanceElementDto.elementId());
     }

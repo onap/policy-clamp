@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,20 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.api;
+package org.onap.policy.clamp.models.acm.concepts;
 
-public enum ElementState {
-    PRESENT,
-    NOT_PRESENT,
-    REMOVED,
-    NEW
+import java.util.UUID;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
+
+@NoArgsConstructor
+@Data
+@ToString
+public class ParticipantPrimeDto {
+
+    private UUID participantId;
+
+    private CompositionDto compositionDto;
 }

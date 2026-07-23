@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
   * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,34 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.api;
+package org.onap.policy.clamp.models.acm.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record InstanceElementDto(UUID instanceId, UUID elementId,
             Map<String, Object> inProperties, Map<String, Object> outProperties, ElementState state) {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceElementDto.class);
-
-    /**
-     * Constructor for backward compatibility.
-     *
-     * @param instanceId AC instanceid
-     * @param elementId AC element instanceid
-     * @param toscaServiceTemplateFragment backward compatibility
-     * @param inProperties AC element instance In properties
-     * @param outProperties AC element instance Out properties
-     */
-    public InstanceElementDto(UUID instanceId, UUID elementId, ToscaServiceTemplate toscaServiceTemplateFragment,
-            Map<String, Object> inProperties, Map<String, Object> outProperties) {
-        this(instanceId, elementId, inProperties, outProperties, ElementState.PRESENT);
-        LOGGER.debug("Obsolete InstanceElementDto constructor: toscaServiceTemplateFragment field {} is not used!",
-                toscaServiceTemplateFragment);
-    }
 
     public InstanceElementDto(UUID instanceId, UUID elementId,
             Map<String, Object> inProperties, Map<String, Object> outProperties) {
