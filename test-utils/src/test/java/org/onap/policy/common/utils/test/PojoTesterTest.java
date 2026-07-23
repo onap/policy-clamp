@@ -32,20 +32,24 @@ class PojoTesterTest {
     @Test
     void testValidPojo() {
         assertDoesNotThrow(() -> PojoTester.testPojos(BASE_PACKAGE + ".pojo.valid"));
+        assertDoesNotThrow(() -> PojoTester.testJpas(BASE_PACKAGE + ".pojo.valid"));
     }
 
     @Test
     void testInvalidPojo() {
         assertThrows(AssertionError.class, () -> PojoTester.testPojos(BASE_PACKAGE + ".pojo.invalid"));
+        assertThrows(AssertionError.class, () -> PojoTester.testJpas(BASE_PACKAGE + ".pojo.invalid"));
     }
 
     @Test
     void testEmptyPackage() {
         assertThrows(Exception.class, () -> PojoTester.testPojos(BASE_PACKAGE + ".pojo.empty"));
+        assertThrows(Exception.class, () -> PojoTester.testJpas(BASE_PACKAGE + ".pojo.empty"));
     }
 
     @Test
     void testNonExistingPackage() {
         assertThrows(Exception.class, () -> PojoTester.testPojos(BASE_PACKAGE + ".pojo.nonexistent"));
+        assertThrows(Exception.class, () -> PojoTester.testJpas(BASE_PACKAGE + ".pojo.nonexistent"));
     }
 }

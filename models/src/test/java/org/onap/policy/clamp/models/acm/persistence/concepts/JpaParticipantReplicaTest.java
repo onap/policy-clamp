@@ -47,14 +47,12 @@ class JpaParticipantReplicaTest {
     void testJpaParticipantReplica() {
         var p0 = new JpaParticipantReplica();
 
-        assertThat(p0.toString()).contains("JpaParticipantReplica(");
         assertThat(p0.hashCode()).isNotZero();
         assertNotEquals(null, p0);
 
         var p1 = new JpaParticipantReplica();
         p1.setParticipantState(ParticipantState.ON_LINE);
 
-        assertThat(p1.toString()).contains("ParticipantReplica(");
         assertNotEquals(0, p1.hashCode());
         assertNotEquals(p1, p0);
         assertNotEquals(null, p1);

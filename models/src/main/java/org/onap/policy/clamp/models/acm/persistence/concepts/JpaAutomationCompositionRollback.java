@@ -34,10 +34,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
@@ -46,23 +46,25 @@ import org.onap.policy.models.base.PfUtils;
 @Entity
 @Table(name = "AutomationCompositionRollback")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
-public class JpaAutomationCompositionRollback
-        implements PfAuthorative<AutomationCompositionRollback>, Comparable<JpaAutomationCompositionRollback> {
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class JpaAutomationCompositionRollback implements PfAuthorative<AutomationCompositionRollback> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String instanceId;
 
     @NotNull
-    @Column
+    @Column(nullable = false)
     private String compositionId;
 
-    @NotNull
     @Valid
+    @NotNull
     @Convert(converter = StringToMapConverter.class)
-    @Column(length = 100000)
+    @Column(nullable = false, length = 100000)
     private Map<String, Object> elements = new LinkedHashMap<>();
 
     /**
@@ -124,27 +126,4 @@ public class JpaAutomationCompositionRollback
         this.elements = acmRollback.getElements().values().stream()
                 .collect(Collectors.toMap(element -> element.getId().toString(), UnaryOperator.identity()));
     }
-
-    @Override
-    public int compareTo(final JpaAutomationCompositionRollback other) {
-        if (other == null) {
-            return -1;
-        }
-        if (this == other) {
-            return 0;
-        }
-
-        var result = ObjectUtils.compare(instanceId, other.instanceId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(compositionId, other.compositionId);
-        if (result != 0) {
-            return result;
-        }
-
-        return PfUtils.compareObjects(elements, other.elements);
-    }
-
 }

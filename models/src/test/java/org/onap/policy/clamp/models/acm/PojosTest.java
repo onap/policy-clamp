@@ -42,7 +42,7 @@ class PojosTest {
 
     @Test
     void testPersistencePojos() {
-        assertDoesNotThrow(() -> PojoTester.testPojos(getClass().getPackageName() + ".persistence.concepts"));
+        assertDoesNotThrow(() -> PojoTester.testJpas(getClass().getPackageName() + ".persistence.concepts"));
     }
 
     @Test

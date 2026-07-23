@@ -76,4 +76,39 @@ public class PojoTester {
                 .build();
         validator.validate(pojoClasses);
     }
+
+    /**
+     * Tests all POJOs in the specified package using default exclusion pattern.
+     *
+     * @param packageName the package to scan for POJO classes
+     */
+    public static void testJpas(String packageName) {
+        testJpas(packageName, ".*(Test|Utils|Converter|Comparator).*$");
+    }
+
+    /**
+     * Tests all POJOs in the specified package, excluding classes matching the pattern.
+     *
+     * @param packageName the package to scan for POJO classes
+     * @param excludePattern regex pattern for class names to exclude
+     */
+    public static void testJpas(String packageName, String excludePattern) {
+        var pojoClasses = PojoClassFactory.getPojoClassesRecursively(packageName, new FilterNonConcrete());
+        pojoClasses.removeIf(clazz -> clazz.getName().matches(excludePattern));
+        if (pojoClasses.isEmpty()) {
+            throw new IllegalArgumentException("No POJO classes found in package: " + packageName);
+        }
+        pojoClasses.forEach(clazz -> log.info("Testing class: {}", clazz.getName()));
+
+        final Validator validator = ValidatorBuilder
+                .create()
+                .with(new SetterMustExistRule())
+                .with(new GetterMustExistRule())
+                .with(new EqualsAndHashCodeMatchRule())
+                .with(new NoPublicFieldsExceptStaticFinalRule())
+                .with(new SetterTester())
+                .with(new GetterTester())
+                .build();
+        validator.validate(pojoClasses);
+    }
 }

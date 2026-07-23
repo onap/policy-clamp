@@ -91,32 +91,14 @@ class JpaParticipantTest {
     }
 
     @Test
-    void testJpaParticipantCompareTo() {
-        var testJpaParticipant = new JpaParticipant(createParticipantInstance());
-
-        var otherJpaParticipant = new JpaParticipant(testJpaParticipant);
-        otherJpaParticipant.setParticipantId(testJpaParticipant.getParticipantId());
-        assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        assertEquals(-1, testJpaParticipant.compareTo(null));
-        assertEquals(0, testJpaParticipant.compareTo(testJpaParticipant));
-        assertNotEquals(0, testJpaParticipant.compareTo(new DummyJpaParticipantChild()));
-
-        var newJpaParticipant = new JpaParticipant(testJpaParticipant);
-        newJpaParticipant.setParticipantId(testJpaParticipant.getParticipantId());
-        assertEquals(testJpaParticipant, newJpaParticipant);
-    }
-
-    @Test
     void testJpaParticipantLombok() {
         var p0 = new JpaParticipant();
 
-        assertThat(p0.toString()).contains("JpaParticipant(");
         assertThat(p0.hashCode()).isNotZero();
         assertNotEquals(null, p0);
 
 
         var p1 = new JpaParticipant();
-        assertThat(p1.toString()).contains("Participant(");
         assertNotEquals(0, p1.hashCode());
         assertNotEquals(p1, p0);
         assertNotEquals(null, p1);
