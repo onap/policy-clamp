@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
+import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
+import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.models.base.PfModelException;
 
 /**
