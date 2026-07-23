@@ -28,12 +28,14 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
+import org.onap.policy.clamp.acm.runtime.main.utils.DtoMapperService;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback
 import org.onap.policy.clamp.models.acm.concepts.DeployState
 import org.onap.policy.clamp.models.acm.concepts.LockState
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck
@@ -61,6 +63,9 @@ class SupervisionMessagesSpec extends Specification {
 
     def participantPublisher = Mock(ParticipantPublisher)
     def participantAckPublisher = Mock(ParticipantAckPublisher)
+    def dtoMapperService = Mock(DtoMapperService)
+    def automationCompositionDef = Mock(AutomationCompositionDefinition)
+    def automationCompositionRollback = Mock(AutomationCompositionRollback)
 
     def "send ParticipantRegisterAck"() {
         given:
@@ -86,7 +91,7 @@ class SupervisionMessagesSpec extends Specification {
 
     def "send AutomationCompositionStateChange"() {
         given:
-        def publisher = new AutomationCompositionStateChangePublisher(participantPublisher)
+        def publisher = new AutomationCompositionStateChangePublisher(participantPublisher, dtoMapperService);
         def ac = new AutomationComposition(
                 name: "NAME", version: "0.0.1",
                 deployState: DeployState.DEPLOYED,
@@ -94,7 +99,7 @@ class SupervisionMessagesSpec extends Specification {
                 elements: [:])
 
         when:
-        publisher.send(ac, 0, true, UUID.randomUUID())
+        publisher.send(ac, 0, true, automationCompositionDef, automationCompositionDef)
 
         then:
         1 * participantPublisher.send(_ as AutomationCompositionStateChange)
@@ -113,11 +118,11 @@ class SupervisionMessagesSpec extends Specification {
 
     def "send AcElementProperties"() {
         given:
-        def publisher = new AcElementPropertiesPublisher(participantPublisher)
+        def publisher = new AcElementPropertiesPublisher(participantPublisher as ParticipantPublisher, dtoMapperService as DtoMapperService)
         def ac = loadAcFromResource()
 
         when:
-        publisher.send(ac, UUID.randomUUID())
+        publisher.send(automationCompositionRollback, ac, automationCompositionDef)
 
         then:
         1 * participantPublisher.send(_ as PropertiesUpdate)
@@ -125,11 +130,11 @@ class SupervisionMessagesSpec extends Specification {
 
     def "send AutomationCompositionMigration"() {
         given:
-        def publisher = new AutomationCompositionMigrationPublisher(participantPublisher)
+        def publisher = new AutomationCompositionMigrationPublisher(participantPublisher as ParticipantPublisher, dtoMapperService as DtoMapperService)
         def ac = loadAcFromResource()
 
         when:
-        publisher.send(ac, 0, UUID.randomUUID(), UUID.randomUUID(), true)
+        publisher.send(automationCompositionRollback, ac, 0, automationCompositionDef, automationCompositionDef, true)
 
         then:
         1 * participantPublisher.send(_ as AutomationCompositionMigration)
@@ -137,7 +142,7 @@ class SupervisionMessagesSpec extends Specification {
 
     def "send AcPrepare - #scenario"() {
         given:
-        def publisher = new AcPreparePublisher(participantPublisher)
+        def publisher = new AcPreparePublisher(participantPublisher as ParticipantPublisher, dtoMapperService as DtoMapperService)
         def ac = loadAcFromResource()
 
         when:
@@ -148,8 +153,8 @@ class SupervisionMessagesSpec extends Specification {
 
         where:
         scenario  | sendAction
-        "prepare" | { p, a -> p.sendPrepare(a, 0, UUID.randomUUID()) }
-        "review"  | { p, a -> p.sendReview(a, UUID.randomUUID()) }
+        "prepare" | { p, a -> p.sendPrepare(a, 0, Mock(AutomationCompositionDefinition)) }
+        "review"  | { p, a -> p.sendReview(a, Mock(AutomationCompositionDefinition)) }
     }
 
     def "send ParticipantPrime for depriming"() {
@@ -158,7 +163,7 @@ class SupervisionMessagesSpec extends Specification {
                 Mock(ParticipantProvider), Mock(AcRuntimeParameterGroup), participantPublisher)
 
         when:
-        publisher.sendDepriming(UUID.randomUUID(), Set.of(UUID.randomUUID()), UUID.randomUUID())
+        publisher.sendDepriming(Map.of(), UUID.randomUUID(), UUID.randomUUID())
 
         then:
         1 * participantPublisher.send(_)
@@ -180,13 +185,14 @@ class SupervisionMessagesSpec extends Specification {
         serviceTemplate.version = "1.0.0"
         def acmDefinition = new AutomationCompositionDefinition(
                 compositionId: UUID.randomUUID(),
-                serviceTemplate: serviceTemplate)
+                serviceTemplate: serviceTemplate,
+                state: AcTypeState.COMMISSIONED)
         def acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate,
                 CommonTestData.TOSCA_ELEMENT_NAME)
         acmDefinition.elementStateMap = AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED)
         def publisher = new ParticipantPrimePublisher(participantProvider,
                 CommonTestData.getTestParamaterGroup(), participantPublisher)
-        def preparation = publisher.prepareParticipantPriming(acmDefinition)
+        def preparation = publisher.prepareParticipantPriming(acmDefinition as AutomationCompositionDefinition, AcTypeState.PRIMING)
 
         when:
         publisher.sendPriming(preparation, acmDefinition.compositionId, acmDefinition.revisionId)

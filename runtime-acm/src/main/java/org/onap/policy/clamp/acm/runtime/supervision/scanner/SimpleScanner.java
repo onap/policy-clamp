@@ -27,6 +27,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.slf4j.Logger;
@@ -46,10 +47,11 @@ public class SimpleScanner extends AbstractScanner {
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SimpleScanner(final AutomationCompositionProvider acProvider,
+                         final AcDefinitionProvider acDefinitionProvider,
                          final ParticipantSyncPublisher participantSyncPublisher,
                          final AcRuntimeParameterGroup acRuntimeParameterGroup,
                          final EncryptionUtils encryptionUtils) {
-        super(acProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
+        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
     }
 
     /**

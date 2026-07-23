@@ -289,7 +289,7 @@ public class SupervisionParticipantHandler {
 
     private AutomationComposition getAutomationCompositionForSync(UUID automationCompositionId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(automationCompositionId);
-        encryptionUtils.decryptInstanceProperties(automationComposition);
+        encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
             var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
             var stage = AcmStageUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());

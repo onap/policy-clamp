@@ -30,8 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.utils.DtoMapperService;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -47,18 +49,20 @@ public class AutomationCompositionDeployPublisher {
 
     private final ParticipantPublisher participantPublisher;
 
+    private final DtoMapperService dtoMapperService;
+
     /**
      * Send AutomationCompositionDeploy to Participant.
      *
      * @param automationComposition the AutomationComposition
      * @param startPhase the Start Phase
      * @param firstStartPhase true if the first StartPhase
-     * @param revisionIdComposition the last Update from Composition
+     * @param acDefinition the AutomationCompositionDefinition
      */
     @Timed(value = "publisher.automation_composition_deploy",
             description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
     public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase,
-            UUID revisionIdComposition) {
+            AutomationCompositionDefinition acDefinition) {
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = AcmUtils.createAcElementDeploy(element, DeployOrder.DEPLOY);
@@ -82,8 +86,10 @@ public class AutomationCompositionDeployPublisher {
         acDeployMsg.setMessageId(UUID.randomUUID());
         acDeployMsg.setTimestamp(Instant.now());
         acDeployMsg.setRevisionIdInstance(automationComposition.getRevisionId());
-        acDeployMsg.setRevisionIdComposition(revisionIdComposition);
+        acDeployMsg.setRevisionIdComposition(acDefinition.getRevisionId());
         acDeployMsg.setParticipantUpdatesList(participantDeploys);
+        acDeployMsg.setParticipantDtoList(dtoMapperService.createDtoList(null, automationComposition,
+                acDefinition, null));
 
         participantPublisher.send(acDeployMsg);
     }

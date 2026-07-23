@@ -280,7 +280,7 @@ class SupervisionScannerSpec extends Specification {
         scanner.run()
 
         then:
-        1 * stageScanner.scanStage(ac, _, _, _)
+        1 * stageScanner.scanStage(ac, _, _)
         1 * messageProvider.removeJob(JOB_ID)
     }
 
@@ -314,7 +314,7 @@ class SupervisionScannerSpec extends Specification {
         scanner.run()
 
         then:
-        1 * stageScanner.scanStage(ac, _, _, _)
+        1 * stageScanner.scanStage(ac, _, _)
         1 * messageProvider.removeJob(JOB_ID)
     }
 
@@ -333,6 +333,7 @@ class SupervisionScannerSpec extends Specification {
                 new AutomationCompositionDefinition(compositionId: COMPOSITION_ID)
         def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
         def stageScanner = new StageScanner(acProvider,
+                Mock(AcDefinitionProvider),
                 Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionMigrationPublisher),
                 Mock(AcPreparePublisher), acRuntimeParameterGroup,
@@ -434,7 +435,7 @@ class SupervisionScannerSpec extends Specification {
         scanner.run()
 
         then:
-        0 * stageScanner.scanStage(_, _, _, _)
+        0 * stageScanner.scanStage(_, _, _)
         0 * simpleScanner.simpleScan(_, _)
         0 * phaseScanner.scanWithPhase(_, _, _)
         1 * simpleScanner.saveAndSync(_, _)

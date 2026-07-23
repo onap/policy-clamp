@@ -105,11 +105,18 @@ class AcmUtilsTest {
                 "1.0.0"), participantId);
         map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.0"),
                 participantId);
-        var result = AcmUtils.prepareParticipantPriming(acElements, map, acDefinition);
-        assertThat(result).isNotEmpty().hasSize(1);
-        for (var participantDefList : result) {
+        var elementMap = AcmUtils.prepareParticipantPriming(acElements, map, acDefinition);
+        var participantDefinitions = AcmUtils.prepareParticipantDefinitions(elementMap);
+        var participantDtoList = AcmUtils.preparePrimeDtoList(elementMap, acDefinition.getCompositionId());
+        assertThat(participantDefinitions).isNotEmpty().hasSize(1);
+        assertThat(participantDtoList).isNotEmpty().hasSize(1);
+        for (var participantDefList : participantDefinitions) {
             assertTrue(participantDefList.getAutomationCompositionElementDefinitionList().stream()
                     .allMatch(element -> "testProperty".equals(element.getOutProperties().get("outProperty"))));
+        }
+        for (var participantDto : participantDtoList) {
+            assertTrue(participantDto.getCompositionDto().outPropertiesMap().values().stream()
+                    .allMatch(props -> "testProperty".equals(props.get("outProperty"))));
         }
     }
 

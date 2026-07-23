@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.runtime.commissioning;
 
 import io.opentelemetry.context.Context;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,14 +33,11 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublis
 import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -62,7 +58,6 @@ public class CommissioningProvider {
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
-    private final ParticipantProvider participantProvider;
     private final AcTypeStateResolver acTypeStateResolver;
     private final ParticipantPrimePublisher participantPrimePublisher;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
@@ -234,7 +229,7 @@ public class CommissioningProvider {
 
     private void prime(AutomationCompositionDefinition acmDefinition) {
         LOGGER.info("Prime request received for ID: {}", acmDefinition.getCompositionId());
-        var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
+        var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition, AcTypeState.PRIMING);
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
@@ -245,24 +240,12 @@ public class CommissioningProvider {
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
         LOGGER.info("Deprime request received for ID: {}", acmDefinition.getCompositionId());
-        acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var participantIds = new HashSet<UUID>();
-        for (var elementState : acmDefinition.getElementStateMap().values()) {
-            var participantId = elementState.getParticipantId();
-            if (participantId != null) {
-                elementState.setState(AcTypeState.DEPRIMING);
-                participantIds.add(participantId);
-            }
-        }
-        if (!participantIds.isEmpty()) {
-            participantProvider.verifyParticipantState(participantIds);
-        }
-        acmDefinition.setState(AcTypeState.DEPRIMING);
-        acmDefinition.setLastMsg(TimestampHelper.now());
+        var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition, AcTypeState.DEPRIMING);
+
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
         executor.execute(() -> participantPrimePublisher.sendDepriming(
-                acmDefinition.getCompositionId(), participantIds, acmDefinition.getRevisionId()));
+                preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId()));
     }
 }

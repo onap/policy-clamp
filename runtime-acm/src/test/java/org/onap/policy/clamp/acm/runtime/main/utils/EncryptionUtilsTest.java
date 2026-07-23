@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ class EncryptionUtilsTest {
         assertThat(after).startsWith("ENCRYPTED:");
 
         // now decrypt via public API
-        encryptionUtilsEnabled.decryptInstanceProperties(ac);
+        encryptionUtilsEnabled.decryptInstanceProperties(ac.getElements());
         var decrypted = (String) ac.getElements().get(id).getProperties().get("password");
         assertThat(decrypted).isEqualTo("topSecret");
     }
@@ -205,7 +205,7 @@ class EncryptionUtilsTest {
         assertThat(storedVal).startsWith("ENCRYPTED:");
 
         // decrypt
-        encryptionUtilsEnabled.decryptInstanceProperties(ac);
+        encryptionUtilsEnabled.decryptInstanceProperties(ac.getElements());
         var after = (Map<?, ?>) ((List<?>) ac.getElements().get(element.getId())
             .getProperties().get("someList")).get(0);
         assertEquals("listSecret", after.get("token"));
@@ -227,7 +227,8 @@ class EncryptionUtilsTest {
         ac.setElements(elements);
 
         // expect exception when decrypt called (Base64 decode -> fail -> AutomationCompositionRuntimeException)
-        assertThatThrownBy(() -> encryptionUtilsEnabled.decryptInstanceProperties(ac))
+        var acElements = ac.getElements();
+        assertThatThrownBy(() -> encryptionUtilsEnabled.decryptInstanceProperties(acElements))
             .isInstanceOf(AutomationCompositionRuntimeException.class)
             .hasMessageContaining("Failed to decrypt instance field");
     }
@@ -338,7 +339,7 @@ class EncryptionUtilsTest {
         ac.setElements(elements);
 
         // Should decrypt successfully to original plaintext
-        encryptionUtilsEnabled.decryptInstanceProperties(ac);
+        encryptionUtilsEnabled.decryptInstanceProperties(ac.getElements());
         assertEquals("plainText", ac.getElements().get(elementId).getProperties().get("x"));
     }
 }
