@@ -26,18 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 /**
@@ -98,90 +92,10 @@ class JpaAutomationCompositionTest {
     }
 
     @Test
-    void testJpaAutomationCompositionCompareTo1() {
-        var jpaAutomationComposition = new JpaAutomationComposition(createAutomationCompositionInstance());
-
-        var otherJpaAutomationComposition = new JpaAutomationComposition(jpaAutomationComposition);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        assertEquals(-1, jpaAutomationComposition.compareTo(null));
-        assertEquals(0, jpaAutomationComposition.compareTo(jpaAutomationComposition));
-        assertNotEquals(0, jpaAutomationComposition.compareTo(new DummyJpaAutomationCompositionChild()));
-
-        jpaAutomationComposition.setInstanceId("BadValue");
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setInstanceId(INSTANCE_ID);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setCompositionId(UUID.randomUUID().toString());
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setCompositionId(COMPOSITION_ID);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setCompositionTargetId(UUID.randomUUID().toString());
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setCompositionTargetId(null);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setName("BadValue");
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setName("automation-composition");
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setVersion("0.0.0");
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setVersion("0.0.1");
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setLastMsg(Timestamp.from(Instant.EPOCH));
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setLastMsg(otherJpaAutomationComposition.getLastMsg());
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setPhase(0);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setPhase(null);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-    }
-
-    @Test
-    void testJpaAutomationCompositionCompareTo2() {
-        var jpaAutomationComposition = new JpaAutomationComposition(createAutomationCompositionInstance());
-        var otherJpaAutomationComposition = new JpaAutomationComposition(jpaAutomationComposition);
-
-        jpaAutomationComposition.setDeployState(DeployState.DEPLOYED);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setDeployState(DeployState.UNDEPLOYED);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setLockState(LockState.UNLOCKED);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setLockState(LockState.NONE);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setSubState(SubState.PREPARING);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setSubState(SubState.NONE);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setDescription("A description");
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setDescription(null);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        jpaAutomationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setStateChangeResult(null);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        assertEquals(jpaAutomationComposition, new JpaAutomationComposition(jpaAutomationComposition));
-    }
-
-    @Test
     void testJpaAutomationCompositionLombok() {
         var ac0 = new JpaAutomationComposition();
         ac0.setCompositionId(COMPOSITION_ID);
 
-        assertThat(ac0.toString()).contains("JpaAutomationComposition(");
         assertThat(ac0.hashCode()).isNotZero();
         assertNotEquals(null, ac0);
 
@@ -192,7 +106,6 @@ class JpaAutomationCompositionTest {
         ac1.setElements(new ArrayList<>());
         ac1.setInstanceId(INSTANCE_ID);
 
-        assertThat(ac1.toString()).contains("AutomationComposition(");
         assertNotEquals(0, ac1.hashCode());
         assertNotEquals(ac1, ac0);
         assertNotEquals(null, ac1);

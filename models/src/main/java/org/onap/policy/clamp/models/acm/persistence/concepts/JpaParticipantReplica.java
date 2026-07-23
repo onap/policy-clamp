@@ -29,9 +29,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.UUID;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -40,24 +41,27 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 @Entity
 @Table(name = "ParticipantReplica")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class JpaParticipantReplica implements PfAuthorative<ParticipantReplica> {
 
     @Id
     @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String replicaId;
 
     @NotNull
-    @Column
+    @Column(nullable = false)
     private String participantId;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private ParticipantState participantState;
 
-    @Column
     @NotNull
+    @Column(nullable = false)
     private Timestamp lastMsg;
 
     public JpaParticipantReplica() {

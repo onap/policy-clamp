@@ -28,36 +28,37 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 
 @Entity
 @Table(name = "ParticipantSupportedAcElements")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-@EqualsAndHashCode
-public class JpaParticipantSupportedElementType
-    implements PfAuthorative<ParticipantSupportedElementType>, Comparable<JpaParticipantSupportedElementType> {
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class JpaParticipantSupportedElementType implements PfAuthorative<ParticipantSupportedElementType> {
 
-    @NotNull
-    @Column
     @Id
+    @NotNull
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String id;
 
     @NotNull
-    @Column
+    @Column(nullable = false)
     private String participantId;
 
     @NotNull
-    @Column
+    @Column(nullable = false)
     private String typeName;
 
     @NotNull
-    @Column
+    @Column(nullable = false)
     private String typeVersion;
 
     /**
@@ -115,47 +116,6 @@ public class JpaParticipantSupportedElementType
         this.participantId = copyConcept.participantId;
         this.typeName = copyConcept.typeName;
         this.typeVersion = copyConcept.typeVersion;
-    }
-
-    /**
-     * Authorative constructor.
-     *
-     * @param authorativeConcept the authorative concept to copy from
-     */
-    public JpaParticipantSupportedElementType(@NonNull final ParticipantSupportedElementType authorativeConcept) {
-        this.fromAuthorative(authorativeConcept);
-    }
-
-    @Override
-    public int compareTo(final JpaParticipantSupportedElementType other) {
-        if (other == null) {
-            return -1;
-        }
-        if (this == other) {
-            return 0;
-        }
-
-        var result = ObjectUtils.compare(participantId, other.participantId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(typeName, other.typeName);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(id, other.id);
-        if (result != 0) {
-            return result;
-        }
-
-        result = typeVersion.compareTo(other.typeVersion);
-        if (result != 0) {
-            return result;
-        }
-
-        return 0;
     }
 
     @Override

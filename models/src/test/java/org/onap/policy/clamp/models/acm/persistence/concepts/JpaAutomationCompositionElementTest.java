@@ -32,10 +32,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.base.validation.BeanValidator;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.MigrationState;
-import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -50,7 +46,6 @@ class JpaAutomationCompositionElementTest {
     private static final String ELEMENT_ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
     private static final String INSTANCE_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
     private static final String KEY = "key";
-    private static final String BAD_VALUE = "BadValue";
 
     @Test
     void testJpaAutomationCompositionElementConstructor() {
@@ -114,110 +109,20 @@ class JpaAutomationCompositionElementTest {
     }
 
     @Test
-    void testJpaAcElementCompareTo() {
-        var testJpaAcElement = createJpaAutomationCompositionElementInstance();
-
-        var otherJpaAcElement =
-                new JpaAutomationCompositionElement(testJpaAcElement);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        assertEquals(-1, testJpaAcElement.compareTo(null));
-        assertEquals(0, testJpaAcElement.compareTo(testJpaAcElement));
-        assertNotEquals(0,
-                testJpaAcElement.compareTo(new DummyJpaAutomationCompositionElementChild()));
-
-        assertEquals(testJpaAcElement, new JpaAutomationCompositionElement(testJpaAcElement));
-    }
-
-    @Test
-    void testJpaAutomationCompositionElementCompareTo() {
-        var testJpaAcElement = createJpaAutomationCompositionElementInstance();
-
-        var otherJpaAcElement =
-                new JpaAutomationCompositionElement(testJpaAcElement);
-
-        testJpaAcElement.setElementId(BAD_VALUE);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setElementId(ELEMENT_ID);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setInstanceId(BAD_VALUE);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setInstanceId(INSTANCE_ID);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setDefinitionName(BAD_VALUE);
-        testJpaAcElement.setDefinitionVersion("0.0.1");
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setDefinitionName("aceDef");
-        testJpaAcElement.setDefinitionVersion("0.0.1");
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setDescription("Description");
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setDescription(null);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setDeployState(DeployState.DEPLOYED);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setDeployState(DeployState.UNDEPLOYED);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setLockState(LockState.UNLOCKED);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setLockState(LockState.LOCKED);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setSubState(SubState.PREPARING);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setSubState(SubState.NONE);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setMigrationState(MigrationState.REMOVED);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setMigrationState(MigrationState.DEFAULT);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setUseState(BAD_VALUE);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setUseState("IDLE");
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setOperationalState(BAD_VALUE);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setOperationalState("DEFAULT");
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setStage(1);
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setStage(null);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setMessage("Message");
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-        testJpaAcElement.setMessage(null);
-        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-        testJpaAcElement.setParticipantId(UUID.randomUUID().toString());
-        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
-
-    }
-
-    @Test
     void testJpaAutomationCompositionElementLombok() {
         var ace0 = new JpaAutomationCompositionElement();
 
-        assertThat(ace0.toString()).contains("JpaAutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
         assertNotEquals(null, ace0);
 
         var ace1 = new JpaAutomationCompositionElement(ace0.getElementId(), ace0.getInstanceId());
 
+        ace1.setElementId(UUID.randomUUID().toString());
         ace1.setDefinitionName("defName");
         ace1.setDefinitionVersion("0.0.1");
         ace1.setDescription("Description");
         ace1.setParticipantId(CommonTestData.getJpaParticipantId());
 
-        assertThat(ace1.toString()).contains("AutomationCompositionElement(");
         assertNotEquals(0, ace1.hashCode());
         assertNotEquals(ace1, ace0);
         assertNotEquals(null, ace1);
