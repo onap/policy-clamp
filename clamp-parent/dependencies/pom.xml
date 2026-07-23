@@ -45,6 +45,8 @@
         <version.swagger.core.v3>2.2.52</version.swagger.core.v3>
         <spock.version>2.4-groovy-5.0</spock.version>
         <gmavenplus-plugin.version>5.0.0</gmavenplus-plugin.version>
+        <version.mapstruct>1.6.3</version.mapstruct>
+        <version.lombok-mapstruct-binding>0.2.0</version.lombok-mapstruct-binding>
         <surefireArgLine>
             --add-opens java.base/java.time=ALL-UNNAMED
             --add-opens java.base/java.util=ALL-UNNAMED
@@ -128,6 +130,12 @@
                 <groupId>io.kubernetes</groupId>
                 <artifactId>client-java</artifactId>
                 <version>26.0.0</version>
+            </dependency>
+            <!-- MapStruct -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${version.mapstruct}</version>
             </dependency>
             <!-- Utilities -->
             <dependency>
@@ -466,6 +474,16 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${version.lombok-mapstruct-binding}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${version.mapstruct}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

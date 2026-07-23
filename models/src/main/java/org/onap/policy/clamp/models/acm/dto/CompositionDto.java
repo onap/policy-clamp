@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
   * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.api;
+package org.onap.policy.clamp.models.acm.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public record CompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementDefinitionId,
-                                    Map<String, Object> inProperties, Map<String, Object> outProperties,
-                                    ElementState state) {
-
-    public CompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementDefinitionId,
-                                 Map<String, Object> inProperties, Map<String, Object> outProperties) {
-        this(compositionId, elementDefinitionId, inProperties, outProperties, ElementState.PRESENT);
-
-    }
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record CompositionDto(UUID compositionId,
+    Map<ToscaConceptIdentifier, Map<String, Object>> inPropertiesMap,
+    Map<ToscaConceptIdentifier, Map<String, Object>> outPropertiesMap) {
 }

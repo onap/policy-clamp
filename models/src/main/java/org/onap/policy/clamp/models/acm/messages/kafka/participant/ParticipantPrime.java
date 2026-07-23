@@ -27,6 +27,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantPrimeDto;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 
 /**
  * Class to represent the PARTICIPANT_PRIME message that the ACM runtime sends to a participant.
@@ -39,6 +41,10 @@ public class ParticipantPrime extends ParticipantMessage {
 
     // A list of updates to ParticipantDefinitions
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
+
+    private List<ParticipantPrimeDto> primeDtoList = new ArrayList<>();
+
+    private PrimeOrder primeOrder;
 
     /**
      * Constructor for instantiating ParticipantPrime class with message name.
