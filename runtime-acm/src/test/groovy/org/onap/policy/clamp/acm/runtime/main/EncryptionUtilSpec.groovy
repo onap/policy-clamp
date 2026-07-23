@@ -60,7 +60,7 @@ class EncryptionUtilSpec extends Specification {
         when: "sensitive data is encrypted and then decrypted"
         encryption.findAndEncryptSensitiveData(acDefinition, ac)
         def encryptedVal = ac.elements.values().first().properties[property]
-        encryption.decryptInstanceProperties(ac)
+        encryption.decryptInstanceProperties(ac.getElements())
         def decryptedVal = ac.elements.values().first().properties[property]
 
         then: "encrypted value starts with prefix and decrypted value matches original"
@@ -96,7 +96,7 @@ class EncryptionUtilSpec extends Specification {
         createEncryption().findAndEncryptSensitiveData(acDefinition, ac)
 
         when: "decryption is attempted with the faulty cipher"
-        faultyEncryption.decryptInstanceProperties(ac)
+        faultyEncryption.decryptInstanceProperties(ac.getElements())
 
         then: "an AutomationCompositionRuntimeException should be thrown with a decrypt failure message"
         def ex = thrown(AutomationCompositionRuntimeException)

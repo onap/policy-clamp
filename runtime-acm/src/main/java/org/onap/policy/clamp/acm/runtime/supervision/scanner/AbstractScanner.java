@@ -29,6 +29,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmTimeoutUtils;
@@ -43,13 +44,15 @@ public abstract class AbstractScanner {
     protected final long maxOperationWaitMs;
 
     protected final AutomationCompositionProvider acProvider;
+    protected final AcDefinitionProvider acDefinitionProvider;
     protected final ParticipantSyncPublisher participantSyncPublisher;
     private final EncryptionUtils encryptionUtils;
 
     protected AbstractScanner(final AutomationCompositionProvider acProvider,
-            final ParticipantSyncPublisher participantSyncPublisher,
+            final AcDefinitionProvider acDefinitionProvider, final ParticipantSyncPublisher participantSyncPublisher,
             final AcRuntimeParameterGroup acRuntimeParameterGroup, final EncryptionUtils encryptionUtils) {
         this.acProvider = acProvider;
+        this.acDefinitionProvider = acDefinitionProvider;
         this.participantSyncPublisher = participantSyncPublisher;
         this.maxOperationWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxOperationWaitMs();
         this.encryptionUtils = encryptionUtils;
@@ -149,6 +152,6 @@ public abstract class AbstractScanner {
     }
 
     protected void decryptInstanceProperties(AutomationComposition automationComposition) {
-        encryptionUtils.decryptInstanceProperties(automationComposition);
+        encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
     }
 }

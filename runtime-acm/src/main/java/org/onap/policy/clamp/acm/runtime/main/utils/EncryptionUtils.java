@@ -142,8 +142,8 @@ public class EncryptionUtils {
         }
     }
 
-    private void findAndDecryptSensitiveData(AutomationComposition automationComposition) {
-        for (var acInstanceElement: automationComposition.getElements().values()) {
+    private void findAndDecryptSensitiveData(Map<UUID, AutomationCompositionElement> acElements) {
+        for (var acInstanceElement: acElements.values()) {
             for (var property : acInstanceElement.getProperties().entrySet()) {
                 var propertyVal = property.getValue();
                 if (propertyVal instanceof String propertyValStr && propertyValStr.startsWith(MARKER)) {
@@ -308,11 +308,11 @@ public class EncryptionUtils {
     /**
      * Find and decrypt sensitive fields in an AC instance.
      *
-     * @param automationComposition acInstance
+     * @param acElements element map
      */
-    public void decryptInstanceProperties(AutomationComposition automationComposition) {
+    public void decryptInstanceProperties(Map<UUID, AutomationCompositionElement> acElements) {
         if (encryptionEnabled()) {
-            findAndDecryptSensitiveData(automationComposition);
+            findAndDecryptSensitiveData(acElements);
         }
     }
 
@@ -323,7 +323,7 @@ public class EncryptionUtils {
      */
     public void decryptInstanceProperties(List<AutomationComposition> automationCompositionList) {
         if (encryptionEnabled()) {
-            automationCompositionList.forEach(this::findAndDecryptSensitiveData);
+            automationCompositionList.forEach(ac -> findAndDecryptSensitiveData(ac.getElements()));
         }
     }
 }

@@ -24,7 +24,9 @@ import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.utils.DtoMapperService;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.utils.AcmStateUtils;
@@ -39,18 +41,20 @@ public class AutomationCompositionStateChangePublisher {
 
     private final ParticipantPublisher participantPublisher;
 
+    private final DtoMapperService dtoMapperService;
+
     /**
      * Send AutomationCompositionStateChange message to Participant.
      *
      * @param automationComposition the AutomationComposition
      * @param startPhase the startPhase
-     * @param revisionIdComposition the last Update from Composition
+     * @param acDefinition the AutomationCompositionDefinition
      */
     @Timed(
             value = "publisher.automation_composition_state_change",
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages published")
     public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase,
-            UUID revisionIdComposition) {
+            AutomationCompositionDefinition acDefinition, AutomationCompositionDefinition acDefinitionTarget) {
         var acsc = new AutomationCompositionStateChange();
         acsc.setCompositionId(automationComposition.getCompositionId());
         acsc.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -60,9 +64,11 @@ public class AutomationCompositionStateChangePublisher {
         acsc.setStartPhase(startPhase);
         acsc.setFirstStartPhase(firstStartPhase);
         acsc.setRevisionIdInstance(automationComposition.getRevisionId());
-        acsc.setRevisionIdComposition(revisionIdComposition);
+        acsc.setRevisionIdComposition(acDefinition.getRevisionId());
         acsc.setParticipantIdList(automationComposition.getElements().values().stream()
                 .map(AutomationCompositionElement::getParticipantId).collect(Collectors.toSet()));
+        acsc.setParticipantDtoList(dtoMapperService.createDtoList(null, automationComposition,
+                acDefinition, acDefinitionTarget));
 
         participantPublisher.send(acsc);
     }

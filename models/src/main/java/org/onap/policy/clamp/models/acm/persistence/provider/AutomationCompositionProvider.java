@@ -274,11 +274,12 @@ public class AutomationCompositionProvider {
      *
      * @param automationComposition the composition to be copied
      */
-    public void copyAcElementsBeforeUpdate(AutomationComposition automationComposition) {
+    public AutomationCompositionRollback copyAcElementsBeforeUpdate(AutomationComposition automationComposition) {
         var copy = new AutomationCompositionRollback(automationComposition);
         var jpaCopy = new JpaAutomationCompositionRollback(copy);
         acRollbackRepository.save(jpaCopy);
         acRollbackRepository.flush();
+        return copy;
     }
 
     /**

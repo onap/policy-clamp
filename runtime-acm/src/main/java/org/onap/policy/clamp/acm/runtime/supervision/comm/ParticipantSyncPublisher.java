@@ -64,9 +64,9 @@ public class ParticipantSyncPublisher {
         message.setState(acmDefinition.getState());
         message.setStateChangeResult(acmDefinition.getStateChangeResult());
         message.setRevisionIdComposition(acmDefinition.getRevisionId());
-        message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
-                acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
-
+        var elementMap = AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
+        message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantDefinitions(elementMap));
         for (var automationComposition : automationCompositions) {
             var syncAc = AcmUtils.createAcRestart(automationComposition, participantId);
             message.getAutomationcompositionList().add(syncAc);
@@ -96,8 +96,9 @@ public class ParticipantSyncPublisher {
         if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
             message.setDelete(true);
         } else {
-            message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(null, acDefinition,
-                    acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
+            var elementMap = AcmUtils.prepareParticipantRestarting(null, acDefinition,
+                    acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
+            message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantDefinitions(elementMap));
             message.getParticipantDefinitionUpdates().forEach(participantDefinition
                     -> message.getParticipantIdList().add(participantDefinition.getParticipantId()));
         }

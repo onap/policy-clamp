@@ -117,7 +117,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
 
         then:
         1 * helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
-        1 * helper.supervisionAcHandler.delete(_, _)
+        1 * helper.supervisionAcHandler.delete(_, _, _)
     }
 
     // --- Update deployed instance ---
@@ -237,7 +237,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         provider.deleteAutomationComposition(compositionId, ac.instanceId)
 
         then:
-        1 * helper.supervisionAcHandler.delete(_, _)
+        1 * helper.supervisionAcHandler.delete(_, _, _)
     }
 
     def "delete fails for invalid deploy states"() {
@@ -519,7 +519,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         provider.compositionInstanceState(compositionId, instanceId, update)
 
         then:
-        1 * helper.supervisionAcHandler."$expectedMethod"(_, _)
+        1 * helper.supervisionAcHandler."$expectedMethod"(*_)
 
         where:
         order     | acDeployState          | acLockState        | deployOrder         | lockOrder       | subOrder        || expectedMethod

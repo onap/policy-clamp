@@ -56,6 +56,8 @@ import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
+import org.onap.policy.clamp.models.acm.dto.ParticipantPrimeDto;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.persistence.concepts.StringToMapConverter;
 import org.onap.policy.models.base.PfModelRuntimeException;
@@ -114,7 +116,7 @@ public final class AcmUtils {
      * @param acElements the extracted AcElements from ServiceTemplate
      * @param supportedElementMap supported Element Map
      */
-    public static List<ParticipantDefinition> prepareParticipantPriming(
+    public static Map<UUID, List<AutomationCompositionElementDefinition>> prepareParticipantPriming(
             List<Entry<String, ToscaNodeTemplate>> acElements, Map<ToscaConceptIdentifier, UUID> supportedElementMap,
             AutomationCompositionDefinition acmDefinition) {
 
@@ -137,16 +139,16 @@ public final class AcmUtils {
             map.putIfAbsent(participantId, new ArrayList<>());
             map.get(participantId).add(acElementDefinition);
         }
-        return prepareParticipantPriming(map);
+        return map;
     }
 
     /**
-     * Prepare ParticipantPriming.
+     * Prepare ParticipantDefinitions.
      *
      * @param map of AutomationCompositionElementDefinition with participantId as key
      * @return list of ParticipantDefinition
      */
-    public static List<ParticipantDefinition> prepareParticipantPriming(
+    public static List<ParticipantDefinition> prepareParticipantDefinitions(
             Map<UUID, List<AutomationCompositionElementDefinition>> map) {
         List<ParticipantDefinition> result = new ArrayList<>();
         for (var entry : map.entrySet()) {
@@ -156,6 +158,48 @@ public final class AcmUtils {
             result.add(participantDefinition);
         }
         return result;
+    }
+
+    /**
+     * Prepare PrimeDtoList.
+     *
+     * @param map of AutomationCompositionElementDefinition with participantId as key
+     * @param compositionId UUID of the composition
+     * @return list of ParticipantPrimeDto
+     */
+    public static List<ParticipantPrimeDto> preparePrimeDtoList(
+            Map<UUID, List<AutomationCompositionElementDefinition>> map,
+            UUID compositionId) {
+
+        List<ParticipantPrimeDto> primeDtoList =  new ArrayList<>();
+        for (var entry : map.entrySet()) {
+            var compositionDto = createCompositionDto(compositionId, entry.getValue());
+            var primeDto = new ParticipantPrimeDto();
+            primeDto.setParticipantId(entry.getKey());
+            primeDto.setCompositionDto(compositionDto);
+            primeDtoList.add(primeDto);
+        }
+        return primeDtoList;
+    }
+
+
+
+    /**
+     * Create a CompositionDto from a list of AutomationCompositionElementDefinition.
+     *
+     * @param compositionId the compositionId
+     * @param definitions the list of element definitions
+     * @return the CompositionDto
+     */
+    public static CompositionDto createCompositionDto(UUID compositionId,
+                                                      List<AutomationCompositionElementDefinition> definitions) {
+        var inPropertiesMap = definitions.stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var outPropertiesMap = definitions.stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                AutomationCompositionElementDefinition::getOutProperties));
+        return new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap);
     }
 
     /**
@@ -380,10 +424,10 @@ public final class AcmUtils {
      * @param participantId the participantId
      * @param acmDefinition the AutomationCompositionDefinition
      * @param toscaElementName the ElementName
-     * @return List of ParticipantDefinition
+     * @return Map of ParticipantId and associated elements
      */
-    public static List<ParticipantDefinition> prepareParticipantRestarting(UUID participantId,
-            AutomationCompositionDefinition acmDefinition, String toscaElementName) {
+    public static Map<UUID, List<AutomationCompositionElementDefinition>> prepareParticipantRestarting(
+            UUID participantId, AutomationCompositionDefinition acmDefinition, String toscaElementName) {
         var acElements = extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
                 toscaElementName);
 

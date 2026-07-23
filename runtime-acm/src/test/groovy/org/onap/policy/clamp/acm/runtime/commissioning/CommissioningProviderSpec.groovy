@@ -211,17 +211,14 @@ class CommissioningProviderSpec extends Specification {
                 .map({ it.participantId }).collect(Collectors.toSet())
 
         def latch = new CountDownLatch(1)
-        participantPrimePublisher.sendDepriming(compositionId, participantIds, _ as UUID) >> { latch.countDown() }
+        participantPrimePublisher.sendDepriming(_, _, _ as UUID) >> { latch.countDown() }
 
         def commissioningProvider = createProvider(CommonTestData.getTestParamaterGroup())
 
         when: "compositionDefinitionPriming is called with PrimeOrder.DEPRIME"
         commissioningProvider.compositionDefinitionPriming(compositionId, new AcTypeStateUpdate(primeOrder: PrimeOrder.DEPRIME))
 
-        then: "participant state should be verified"
-        1 * participantProvider.verifyParticipantState(participantIds)
-
-        and: "sendDepriming should be invoked asynchronously"
+        then: "sendDepriming should be invoked asynchronously"
         latch.await(LATCH_TIMEOUT_SECONDS, TimeUnit.SECONDS)
     }
 
@@ -355,7 +352,7 @@ class CommissioningProviderSpec extends Specification {
     }
 
     def createProvider(params = null) {
-        return new CommissioningProvider(acDefinitionProvider, acProvider, participantProvider,
-                new AcTypeStateResolver(), participantPrimePublisher, params)
+        return new CommissioningProvider(acDefinitionProvider, acProvider, new AcTypeStateResolver(),
+                participantPrimePublisher, params)
     }
 }
