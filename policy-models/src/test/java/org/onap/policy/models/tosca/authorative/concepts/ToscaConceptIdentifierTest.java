@@ -79,4 +79,17 @@ class ToscaConceptIdentifierTest extends ToscaIdentifierTestBase<ToscaConceptIde
     void testCompareTo() throws Exception {
         super.testCompareTo();
     }
+
+    @Test
+    void testFromString() {
+        var identifier = ToscaConceptIdentifier.fromString("policy.element.Starter 1.2.3");
+        assertEquals("policy.element.Starter", identifier.getName());
+        assertEquals("1.2.3", identifier.getVersion());
+    }
+
+    @Test
+    void testFromStringInvalidFormat() {
+        assertThatThrownBy(() -> ToscaConceptIdentifier.fromString("noSpaceNoVersion"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
