@@ -94,25 +94,13 @@ spec:
             - name: JAEGER_SAMPLING_PROBABILITY
               value: {{ .Values.jaeger.sampling.probability | quote }}
             - name: TRACING_EXPORTER_ENDPOINT
-              value: {{ .Values.jaeger.collector.host }}:{{ include "policy-clamp-runtime-acm.exporter-port" . }}
+              value: {{ include "policy-clamp-runtime-acm.otlp-endpoint" . }}
             - name: TRACING_EXPORTER_PROTOCOL
               value: {{ .Values.jaeger.collector.protocol }}
             - name: TRACING_SAMPLER_ENDPOINT
               value: "{{ .Values.jaeger.collector.host }}:{{ .Values.jaeger.collector.portJaegerGrpc }}"
-            - name: OTEL_SERVICE_NAME
+            - name: SPRING_APPLICATION_NAME
               value: {{ .Values.applicationName }}
-            - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: {{ include "policy-clamp-runtime-acm.jaeger-protocol" . }}
-            - name: OTEL_EXPORTER_OTLP_TRACES_PROTOCOL
-              value: {{ include "policy-clamp-runtime-acm.jaeger-protocol" . }}
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: {{ printf "%s:%s" (.Values.jaeger.collector.host) (include "policy-clamp-runtime-acm.exporter-port" .) }}
-            - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
-              value: "true"
-            - name: MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED
-              value: "false"
-            - name: OTEL_METRICS_EXPORTER
-              value: "none"
           {{- end }}
           ports:
             - containerPort: {{ .Values.service.ports.port }}
