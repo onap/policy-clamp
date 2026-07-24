@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,48 +20,40 @@
 
 package org.onap.policy.clamp.acm.runtime.config;
 
-import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
-import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.extension.trace.jaeger.sampler.JaegerRemoteSampler;
 import io.opentelemetry.sdk.trace.samplers.Sampler;
 import java.time.Duration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.micrometer.tracing.autoconfigure.ConditionalOnEnabledTracingExport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
-public class OpenTelConfiguration {
+@ConditionalOnEnabledTracingExport
+public class OpenTelemetryConfig {
 
+    /**
+     * Optional configuration for Jaeger Remote Sampling.
+     *
+     * <p>When {@code management.opentelemetry.tracing.jaeger-remote-sampler.endpoint} is set,
+     * a JaegerRemoteSampler is created that polls the given endpoint for dynamic sampling strategies.
+     * When not set, Spring Boot's default sampler is used (configured via
+     * {@code management.opentelemetry.tracing.sampler}).
+     */
     @Bean
-    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true")
-    @ConditionalOnExpression("'http'.equals('${tracing.exporter.protocol}')")
-    OtlpHttpSpanExporter otlpHttpSpanExporter(@Value("${tracing.exporter.endpoint:http://jaeger:4318/v1/traces}") String url) {
-        return OtlpHttpSpanExporter.builder()
-                .setEndpoint(url)
-                .build();
-    }
-
-    @Bean
-    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true")
-    @ConditionalOnExpression("'grpc'.equals('${tracing.exporter.protocol}')")
-    OtlpGrpcSpanExporter otlpGrpcSpanExporter(@Value("${tracing.exporter.endpoint:http://jaeger:4317}") String url) {
-        return OtlpGrpcSpanExporter.builder()
-                .setEndpoint(url)
-                .build();
-    }
-
-    @Bean
-    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true")
+    @ConditionalOnExpression("!'${management.opentelemetry.tracing.jaeger-remote-sampler.endpoint:}'.isBlank()")
     JaegerRemoteSampler jaegerRemoteSampler(
-            @Value("${tracing.sampler.jaeger-remote.endpoint:http://jaeger:14250}") String url,
-            @Value("${SERVICE_ID:unknown_service}") String serviceId) {
+            @Value("${management.opentelemetry.tracing.jaeger-remote-sampler.endpoint}") String endpoint,
+            @Value("${spring.application.name}") String serviceName) {
+        log.info("Jaeger Remote Sampling enabled for service '{}', polling endpoint: {}", serviceName, endpoint);
         return JaegerRemoteSampler.builder()
-                .setEndpoint(url)
+                .setEndpoint(endpoint)
                 .setPollingInterval(Duration.ofSeconds(30))
                 .setInitialSampler(Sampler.alwaysOff())
-                .setServiceName(serviceId)
+                .setServiceName(serviceName)
                 .build();
     }
 }

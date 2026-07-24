@@ -70,12 +70,9 @@ services:
       KAFKA_ALLOW_AUTO_CREATE_TOPICS: false
       ALLOW_TRACING: true
       PROMETHEUS_PORT: 6969
-      OTEL_SERVICE_NAME: acm-r
-      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
-      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
-      OTEL_METRICS_EXPORTER: none
+      TRACING_EXPORTER_ENDPOINT: http://jaeger:4318/v1/traces
+      # To enable Jaeger Remote Sampling, uncomment:
+      # TRACING_SAMPLER_ENDPOINT: http://jaeger:14250
       JAVA_TOOL_OPTIONS: >-
         -Dcom.sun.management.jmxremote.rmi.port=9090
         -Dcom.sun.management.jmxremote=true
@@ -83,7 +80,6 @@ services:
         -Dcom.sun.management.jmxremote.ssl=false
         -Dcom.sun.management.jmxremote.authenticate=false
         -Dcom.sun.management.jmxremote.local.only=false
-        -Dotel.java.global-autoconfigure.enabled=true
       SPRING_PROFILES_ACTIVE: ${CLAMP_PROFILE:-default}
       SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
       LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml

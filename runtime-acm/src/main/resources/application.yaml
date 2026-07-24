@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: acm-r
   profiles:
     active: default
   security:
@@ -73,10 +75,20 @@ management:
     port: ${PROMETHEUS_PORT:6970}
     base-path: ${PROMETHEUS_PATH:/onap/policy/clamp/acm}
   tracing:
+    export:
+      enabled: ${ALLOW_TRACING:false}
     propagation:
-      produce: ${JAEGER_PRODUCER_TYPE:W3C}
+      produce: ${TRACING_PROPAGATION_TYPE:W3C}
     sampling:
-      probability: ${JAEGER_SAMPLING_PROBABILITY:1.0}
+      probability: 1.0
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${TRACING_EXPORTER_ENDPOINT:}
+          transport: ${TRACING_EXPORTER_PROTOCOL:http}
+      jaeger-remote-sampler:
+        endpoint: ${TRACING_SAMPLER_ENDPOINT:}
   otlp:
     metrics:
       export:
@@ -95,14 +107,5 @@ management:
   health:
     db:
       enabled: false
-
-tracing:
-  enabled: ${ALLOW_TRACING:false}
-  exporter:
-    endpoint: ${TRACING_EXPORTER_ENDPOINT:http://jaeger:4318/v1/traces}
-    protocol: ${TRACING_EXPORTER_PROTOCOL:http}
-  sampler:
-    jaeger-remote:
-      endpoint: ${TRACING_SAMPLER_ENDPOINT:http://jaeger:14250}
 
 basicAuth: ${BASIC_AUTH:true}
