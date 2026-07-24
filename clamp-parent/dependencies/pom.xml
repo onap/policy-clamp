@@ -485,9 +485,6 @@
                         <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-*</ignoredUnusedDeclaredDependency>
                         <!-- Modules used during swagger auto-generation -->
                         <ignoredUnusedDeclaredDependency>org.openapitools:jackson-databind-nullable</ignoredUnusedDeclaredDependency>
-                        <!-- Observability/Monitoring -->
-                        <ignoredUnusedDeclaredDependency>io.opentelemetry:opentelemetry-exporter-otlp</ignoredUnusedDeclaredDependency>
-                        <ignoredUnusedDeclaredDependency>io.opentelemetry:opentelemetry-sdk-extension-jaeger-remote-sampler</ignoredUnusedDeclaredDependency>
                     </ignoredUnusedDeclaredDependencies>
                 </configuration>
                 <executions>

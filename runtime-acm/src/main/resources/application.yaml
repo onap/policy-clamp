@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: acm-r
   profiles:
     active: default
   security:
@@ -34,10 +36,10 @@ spring:
       sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
       sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     listener:
-      observation-enabled: ${ALLOW_TRACING:false}
+      observation-enabled: ${TRACING_ENABLED:false}
       auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
     template:
-      observation-enabled: ${ALLOW_TRACING:false}
+      observation-enabled: ${TRACING_ENABLED:false}
     consumer:
       group-id: ${KAFKA_GROUP_ID:acm-runtime}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -73,10 +75,20 @@ management:
     port: ${PROMETHEUS_PORT:6970}
     base-path: ${PROMETHEUS_PATH:/onap/policy/clamp/acm}
   tracing:
+    export:
+      enabled: ${TRACING_ENABLED:false}
     propagation:
-      produce: ${JAEGER_PRODUCER_TYPE:W3C}
+      produce: ${TRACING_PROPAGATION_TYPE:W3C}
     sampling:
-      probability: ${JAEGER_SAMPLING_PROBABILITY:1.0}
+      probability: 1.0
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${TRACING_EXPORTER_ENDPOINT:}
+          transport: ${TRACING_EXPORTER_PROTOCOL:http}
+      jaeger-remote-sampler:
+        endpoint: ${TRACING_SAMPLER_ENDPOINT:}
   otlp:
     metrics:
       export:
@@ -95,14 +107,5 @@ management:
   health:
     db:
       enabled: false
-
-tracing:
-  enabled: ${ALLOW_TRACING:false}
-  exporter:
-    endpoint: ${TRACING_EXPORTER_ENDPOINT:http://jaeger:4318/v1/traces}
-    protocol: ${TRACING_EXPORTER_PROTOCOL:http}
-  sampler:
-    jaeger-remote:
-      endpoint: ${TRACING_SAMPLER_ENDPOINT:http://jaeger:14250}
 
 basicAuth: ${BASIC_AUTH:true}
