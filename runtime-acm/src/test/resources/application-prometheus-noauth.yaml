@@ -14,13 +14,4 @@ spring:
       ddl-auto: none
     open-in-view: false
 
-tracing:
-  enabled: true
-  exporter:
-    endpoint: http://jaeger:4318
-    protocol: http
-  sampler:
-    jaeger-remote:
-      endpoint: http://jaeger:14250
-
 basicAuth: false
