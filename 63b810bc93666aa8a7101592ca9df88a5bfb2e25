@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a236bbd_5f2b7f3c",
+        "filename": "test-utils/src/main/java/org/onap/policy/common/utils/test/PojoTester.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-27T09:03:00Z",
+      "side": 1,
+      "message": "Could we just add a new validateToString parameter instead of duplicating the method? e.g.\n\n    .with(validateToString ? new ToStringTester() : null)\n\nIt seems `null` validators get skipped. We\u0027d also need to override the other method too:\n\n    public static void testPojos(String packageName, boolean validateToString)",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "63b810bc93666aa8a7101592ca9df88a5bfb2e25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
