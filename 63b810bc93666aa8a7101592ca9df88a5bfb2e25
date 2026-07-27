@@ -22,6 +22,30 @@
       },
       "revId": "63b810bc93666aa8a7101592ca9df88a5bfb2e25",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58f7f500_54d6f28b",
+        "filename": "test-utils/src/main/java/org/onap/policy/common/utils/test/PojoTester.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-07-27T11:21:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a236bbd_5f2b7f3c",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "63b810bc93666aa8a7101592ca9df88a5bfb2e25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
