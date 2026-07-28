@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7e650f8_2f2dc5d5",
+        "filename": "helm/policy/components/policy-clamp-runtime-acm/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-28T10:51:10Z",
+      "side": 1,
+      "message": "This should really be defined outside of the $jaegerEnabled block",
+      "range": {
+        "startLine": 102,
+        "startChar": 20,
+        "endLine": 102,
+        "endChar": 43
+      },
+      "revId": "f7e47f305adbc4bf3195e33dbe26695f4da1a974",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
