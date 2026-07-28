@@ -74,7 +74,7 @@ management:
     base-path: ${PROMETHEUS_PATH:/onap/policy/clamp/acm}
   tracing:
     propagation:
-      produce: ${JAEGER_PRODUCER_TYPE:B3}
+      produce: ${JAEGER_PRODUCER_TYPE:W3C}
     sampling:
       probability: ${JAEGER_SAMPLING_PROBABILITY:1.0}
   otlp:

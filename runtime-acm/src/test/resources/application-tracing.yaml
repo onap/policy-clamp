@@ -13,7 +13,7 @@ spring:
 management:
   tracing:
     propagation:
-      produce: b3
+      produce: W3C
     sampling:
       probability: 1.0
 

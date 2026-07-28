@@ -81,7 +81,7 @@ participant:
 management:
   tracing:
     propagation:
-      produce: ${jaegerProducerType:B3}
+      produce: ${jaegerProducerType:W3C}
     sampling:
       probability: ${jaegerSamplingProbability:1.0}
   otlp:
