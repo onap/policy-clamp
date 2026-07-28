@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8819bf54_72042a20",
+        "filename": "policy-common/src/main/java/org/onap/policy/common/message/bus/healthcheck/kafka/KafkaHealthCheck.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-28T10:12:49Z",
+      "side": 1,
+      "message": "Can we hold off this commit until Spring Kafka intermediary is merged? The message-bus will be deleted after Spring Kafka.",
+      "revId": "4fcfac35602cb260de048906af392435074f3172",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
