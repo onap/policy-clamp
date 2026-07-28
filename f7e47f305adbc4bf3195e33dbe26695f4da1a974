@@ -22,6 +22,30 @@
       },
       "revId": "f7e47f305adbc4bf3195e33dbe26695f4da1a974",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0251dc2e_1e380af7",
+        "filename": "helm/policy/components/policy-clamp-runtime-acm/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-28T10:57:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7e650f8_2f2dc5d5",
+      "range": {
+        "startLine": 102,
+        "startChar": 20,
+        "endLine": 102,
+        "endChar": 43
+      },
+      "revId": "f7e47f305adbc4bf3195e33dbe26695f4da1a974",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
