@@ -557,20 +557,20 @@ public final class AcmUtils {
      * @param map the Map
      * @return a Sanitized Map
      */
-    public static Map<String, Object> sanitizeMap(Map<String, Object> map) {
+    @SuppressWarnings("unchecked")
+    public static <K> Map<K, Object> sanitizeMap(Map<K, ?> map) {
         if (map == null || map.isEmpty()) {
             return new HashMap<>();
         }
-        Map<String, Object> copyMap = HashMap.newHashMap(map.size());
+        Map<K, Object> copyMap = HashMap.newHashMap(map.size());
         for (var entry : map.entrySet()) {
             if (entry.getValue() instanceof Map) {
-                copyMap.put(entry.getKey(), sanitizeMap((Map<String, Object>) entry.getValue()));
+                copyMap.put(entry.getKey(), sanitizeMap((Map<?, ?>) entry.getValue()));
             } else if (entry.getValue() instanceof List) {
                 copyMap.put(entry.getKey(), sanitizeList((List<Object>) entry.getValue()));
             } else {
                 copyMap.put(entry.getKey(), SANITY_VALUE);
             }
-
         }
         return copyMap;
     }

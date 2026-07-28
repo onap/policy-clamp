@@ -171,4 +171,43 @@ class AcDtoClassesTest {
                 ElementState.PRESENT, ElementState.NOT_PRESENT,
                 ElementState.REMOVED, ElementState.NEW);
     }
+
+    @Test
+    void testCompositionElementDtoToStringSanitizesProperties() {
+        var compositionId = UUID.randomUUID();
+        var elementDefId = new ToscaConceptIdentifier("element", "1.0.0");
+        var dto = new CompositionElementDto(compositionId, elementDefId,
+                Map.of("inKey", "inValue"), Map.of("outKey", "outValue"), ElementState.PRESENT);
+
+        assertThat(dto.toString())
+                .contains(compositionId.toString(), elementDefId.toString(), ElementState.PRESENT.toString(),
+                        "inKey", "outKey")
+                .doesNotContain("inValue", "outValue");
+    }
+
+    @Test
+    void testInstanceElementDtoToStringSanitizesProperties() {
+        var instanceId = UUID.randomUUID();
+        var elementId = UUID.randomUUID();
+        var dto = new InstanceElementDto(instanceId, elementId,
+                Map.of("inKey", "inValue"), Map.of("outKey", "outValue"), ElementState.PRESENT);
+
+        assertThat(dto.toString())
+                .contains(instanceId.toString(), elementId.toString(), ElementState.PRESENT.toString(),
+                        "inKey", "outKey")
+                .doesNotContain("inValue", "outValue");
+    }
+
+    @Test
+    void testCompositionDtoToStringSanitizesProperties() {
+        var compositionId = UUID.randomUUID();
+        var elementId = new ToscaConceptIdentifier("el", "1.0.0");
+        var dto = new CompositionDto(compositionId,
+                Map.of(elementId, Map.of("inKey", "inValue")),
+                Map.of(elementId, Map.of("outKey", "outValue")));
+
+        assertThat(dto.toString())
+                .contains(compositionId.toString(), "inKey", "outKey")
+                .doesNotContain("inValue", "outValue");
+    }
 }
