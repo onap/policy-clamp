@@ -21,8 +21,10 @@
 package org.onap.policy.clamp.models.acm.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.UUID;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -33,6 +35,16 @@ public record CompositionElementDto(UUID compositionId, ToscaConceptIdentifier e
     public CompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementDefinitionId,
                                  Map<String, Object> inProperties, Map<String, Object> outProperties) {
         this(compositionId, elementDefinitionId, inProperties, outProperties, ElementState.PRESENT);
+    }
 
+    @Override
+    @Nonnull
+    public String toString() {
+        return "CompositionElementDto{"
+                + "compositionId=" + compositionId
+                + ", elementDefinitionId=" + elementDefinitionId
+                + ", inProperties=" + AcmUtils.sanitizeMap(inProperties)
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties)
+                + ", state=" + state + '}';
     }
 }
