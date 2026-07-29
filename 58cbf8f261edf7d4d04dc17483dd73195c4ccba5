@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee760c37_55893293",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantDto.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-29T14:33:36Z",
+      "side": 1,
+      "message": "Any reason this one is not in the \u0027dto\u0027 package?",
+      "range": {
+        "startLine": 21,
+        "startChar": 41,
+        "endLine": 21,
+        "endChar": 49
+      },
+      "revId": "58cbf8f261edf7d4d04dc17483dd73195c4ccba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f49698b1_00a97bb9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantDto.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-29T14:33:36Z",
+      "side": 1,
+      "message": "Redundant as @Data includes @ToString\nSame for other Dto classes",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 2
+      },
+      "revId": "58cbf8f261edf7d4d04dc17483dd73195c4ccba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b327a5a_4e7049ca",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/utils/AcElementDtoMapper.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-29T14:33:36Z",
+      "side": 1,
+      "message": "I am doubting if mapstruct was a good idea here - it\u0027s not adding much - in fact it\u0027s MORE lines of code than plain java:\n\n    public static InstanceElementDto toInstanceElementDto(UUID instanceId,\n          AutomationCompositionElement element, ElementState state) {\n        return new InstanceElementDto(instanceId, element.getId(),\n              element.getProperties(), element.getOutProperties(), state);\n    }\n\nThe other methods below are manual implementations, not mapstruct.\n\nSince it\u0027s only used for this one single method, is it worth adding 3 new dependencies for it? (mapstruct, mapstruct-processor, lombok-mapstruct-binding)",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 119
+      },
+      "revId": "58cbf8f261edf7d4d04dc17483dd73195c4ccba5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
