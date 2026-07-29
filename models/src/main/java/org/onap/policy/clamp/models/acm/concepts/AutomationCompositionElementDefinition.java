@@ -27,6 +27,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -37,7 +38,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 @Getter
 @NoArgsConstructor
 @Data
-@ToString
 public class AutomationCompositionElementDefinition {
 
     private ToscaConceptIdentifier acElementDefinitionId;
@@ -57,5 +57,13 @@ public class AutomationCompositionElementDefinition {
         this.automationCompositionElementToscaNodeTemplate =
                 new ToscaNodeTemplate(acElementDefinition.automationCompositionElementToscaNodeTemplate);
         this.outProperties = PfUtils.mapMap(acElementDefinition.outProperties, UnaryOperator.identity());
+    }
+
+    @Override
+    public String toString() {
+        return "AutomationCompositionElementDefinition{"
+                + "acElementDefinitionId=" + acElementDefinitionId
+                + ", automationCompositionElementToscaNodeTemplate=" + automationCompositionElementToscaNodeTemplate
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties) + '}';
     }
 }

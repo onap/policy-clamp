@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -88,7 +89,8 @@ public class AcElementRestart {
                 + ", migrationState=" + migrationState
                 + ", operationalState='" + operationalState + '\''
                 + ", useState='" + useState + '\''
-                + ", outProperties=" + outProperties
+                + ", properties=" + AcmUtils.sanitizeMap(properties)
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties)
                 + '}';
     }
 }

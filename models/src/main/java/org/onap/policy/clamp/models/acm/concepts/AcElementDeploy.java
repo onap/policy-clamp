@@ -28,6 +28,7 @@ import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -74,6 +75,7 @@ public class AcElementDeploy {
                 + "id=" + id
                 + ", definition=" + definition
                 + ", orderedState=" + orderedState
-                + ", migrationState=" + migrationState + '}';
+                + ", migrationState=" + migrationState
+                + ", properties=" + AcmUtils.sanitizeMap(properties) + '}';
     }
 }

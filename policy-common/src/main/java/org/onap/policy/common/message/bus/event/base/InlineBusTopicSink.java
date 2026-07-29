@@ -24,8 +24,6 @@ package org.onap.policy.common.message.bus.event.base;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.message.bus.utils.NetLoggerUtil;
-import org.onap.policy.common.message.bus.utils.NetLoggerUtil.EventType;
 import org.onap.policy.common.parameters.topic.BusTopicParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,8 +137,6 @@ public abstract class InlineBusTopicSink extends BusTopicBase implements BusTopi
             synchronized (this) {
                 this.recentEvents.add(message);
             }
-
-            NetLoggerUtil.log(EventType.OUT, this.getTopicCommInfrastructure(), this.topic, message);
 
             publisher.send(this.partitionKey, message);
             broadcast(message);

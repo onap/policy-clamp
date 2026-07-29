@@ -504,4 +504,53 @@ public final class AcmUtils {
             LockSupport.parkNanos(10_000_000L);
         }
     }
+
+    protected static final String SANITY_VALUE = "*";
+
+    /**
+     * Sanitize a Map for logging.
+     *
+     * @param map the Map
+     * @return a Sanitized Map
+     */
+    public static Map<String, Object> sanitizeMap(Map<String, Object> map) {
+        if (map == null || map.isEmpty()) {
+            return new HashMap<>();
+        }
+        Map<String, Object> copyMap = HashMap.newHashMap(map.size());
+        for (var entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                copyMap.put(entry.getKey(), sanitizeMap((Map<String, Object>) entry.getValue()));
+            } else if (entry.getValue() instanceof List) {
+                copyMap.put(entry.getKey(), sanitizeList((List<Object>) entry.getValue()));
+            } else {
+                copyMap.put(entry.getKey(), SANITY_VALUE);
+            }
+
+        }
+        return copyMap;
+    }
+
+    /**
+     * Sanitize a List for logging.
+     *
+     * @param list the List
+     * @return a Sanitized List
+     */
+    public static List<Object> sanitizeList(List<Object> list) {
+        if (list == null || list.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Object> copyList = new ArrayList<>(list.size());
+        for (var value : list) {
+            if (value instanceof Map) {
+                copyList.add(sanitizeMap((Map<String, Object>) value));
+            } else if (value instanceof List) {
+                copyList.add(sanitizeList((List<Object>) value));
+            } else {
+                copyList.add(SANITY_VALUE);
+            }
+        }
+        return copyList;
+    }
 }
