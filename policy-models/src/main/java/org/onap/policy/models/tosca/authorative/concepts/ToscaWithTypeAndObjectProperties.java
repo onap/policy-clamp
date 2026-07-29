@@ -37,7 +37,6 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@ToString
 public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
     private String type;
 
@@ -60,5 +59,12 @@ public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
         if (copyObject.properties != null) {
             properties = new LinkedHashMap<>(copyObject.properties);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ToscaWithTypeAndObjectProperties{"
+                + "type='" + type + '\''
+                + ", typeVersion='" + typeVersion + '\'' + '}';
     }
 }

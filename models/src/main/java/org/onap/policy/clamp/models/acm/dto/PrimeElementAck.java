@@ -21,7 +21,13 @@
 package org.onap.policy.clamp.models.acm.dto;
 
 import java.util.Map;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public record PrimeElementAck(ToscaConceptIdentifier elementDefinitionId, Map<String, Object> outProperties) {
+    @Override
+    public String toString() {
+        return "PrimeElementAck{" + "elementDefinitionId=" + elementDefinitionId
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties) + '}';
+    }
 }

@@ -27,12 +27,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class AcElementDeployAck {
 
     // State of the AutomationCompositionElement
@@ -52,4 +52,15 @@ public class AcElementDeployAck {
 
     // Message indicating reason for failure
     private String message;
+
+    @Override
+    public String toString() {
+        return "AcElementDeployAck{" + "deployState="
+                + deployState + ", lockState="
+                + lockState + ", operationalState='" + operationalState + '\''
+                + ", useState='" + useState + '\''
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties)
+                + ", result=" + result
+                + ", message='" + message + '\'' + '}';
+    }
 }
