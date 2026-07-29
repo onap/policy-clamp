@@ -25,9 +25,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -35,7 +37,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  * Class to represent a automation composition instance to send for deploy.
  */
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class AcElementDeploy {
 
     @NotNull
@@ -69,11 +72,11 @@ public class AcElementDeploy {
 
     @Override
     public String toString() {
-        // Exclude instance properties
         return "AcElementDeploy{"
                 + "id=" + id
                 + ", definition=" + definition
                 + ", orderedState=" + orderedState
-                + ", migrationState=" + migrationState + '}';
+                + ", migrationState=" + migrationState
+                + ", properties=" + AcmUtils.sanitizeMap(properties) + '}';
     }
 }

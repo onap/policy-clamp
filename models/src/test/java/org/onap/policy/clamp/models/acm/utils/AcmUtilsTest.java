@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -391,4 +392,34 @@ class AcmUtilsTest {
     void testPause() {
         assertDoesNotThrow(() -> AcmUtils.pause(1));
     }
+
+
+    @Test
+    void testSanitizeNull() {
+        assertEquals(new HashMap<>(), AcmUtils.sanitizeMap(null));
+        assertEquals(new HashMap<>(), AcmUtils.sanitizeMap(Map.of()));
+        assertEquals(new ArrayList<>(), AcmUtils.sanitizeList(null));
+        assertEquals(new ArrayList<>(), AcmUtils.sanitizeList(List.of()));
+    }
+
+    @Test
+    void testSanitizeMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key1", "value1");
+        map.put("key2", Map.of("key3", "value3"));
+        map.put("key4", List.of(Map.of("key5", "value5"), "key6", "value6"));
+        var result = AcmUtils.sanitizeMap(map);
+
+        assertEquals(AcmUtils.SANITY_VALUE, result.get("key1"));
+
+        var result1 = (Map<String, Object>) result.get("key2");
+        assertEquals(AcmUtils.SANITY_VALUE, result1.get("key3"));
+
+        var result2 = (List<Object>) result.get("key4");
+        assertEquals(AcmUtils.SANITY_VALUE, result2.get(1));
+
+        var result3 = (Map<String, Object>) result2.getFirst();
+        assertEquals(AcmUtils.SANITY_VALUE, result3.get("key5"));
+    }
+
 }

@@ -24,17 +24,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent a automation composition element info instance.
  */
 @NoArgsConstructor
-@Data
-@ToString
+@Getter
+@Setter
 public class AutomationCompositionElementInfo {
 
     private UUID automationCompositionElementId;
@@ -61,5 +62,16 @@ public class AutomationCompositionElementInfo {
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
         this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
+    }
+
+    @Override
+    public String toString() {
+        return "AutomationCompositionElementInfo{"
+                + "automationCompositionElementId=" + automationCompositionElementId
+                + ", deployState=" + deployState
+                + ", lockState=" + lockState
+                + ", operationalState='" + operationalState + '\''
+                + ", useState='" + useState + '\''
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties) + '}';
     }
 }

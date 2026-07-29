@@ -25,13 +25,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class AcElementRestart {
 
     @NotNull
@@ -78,7 +81,6 @@ public class AcElementRestart {
 
     @Override
     public String toString() {
-        // Exclude instance properties
         return "AcElementRestart{"
                 + "id=" + id
                 + ", definition=" + definition
@@ -88,7 +90,8 @@ public class AcElementRestart {
                 + ", migrationState=" + migrationState
                 + ", operationalState='" + operationalState + '\''
                 + ", useState='" + useState + '\''
-                + ", outProperties=" + outProperties
+                + ", properties=" + AcmUtils.sanitizeMap(properties)
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties)
                 + '}';
     }
 }
