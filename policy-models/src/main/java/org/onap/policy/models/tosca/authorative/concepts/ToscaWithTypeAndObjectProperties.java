@@ -24,20 +24,20 @@ package org.onap.policy.models.tosca.authorative.concepts;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
+import lombok.Setter;
 
 /**
  * Class to represent TOSCA classes containing property maps whose values are generic
  * Objects.
  */
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@ToString
 public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
     private String type;
 
@@ -60,5 +60,12 @@ public class ToscaWithTypeAndObjectProperties extends ToscaEntity {
         if (copyObject.properties != null) {
             properties = new LinkedHashMap<>(copyObject.properties);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ToscaWithTypeAndObjectProperties{"
+                + "type='" + type + '\''
+                + ", typeVersion='" + typeVersion + '\'' + '}';
     }
 }

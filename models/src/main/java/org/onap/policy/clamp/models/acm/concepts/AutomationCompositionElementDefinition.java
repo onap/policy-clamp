@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2023,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,11 @@ package org.onap.policy.clamp.models.acm.concepts;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -34,10 +35,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 /**
  * Class to represent an automation composition element definition instance.
  */
-@Getter
 @NoArgsConstructor
-@Data
-@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
 public class AutomationCompositionElementDefinition {
 
     private ToscaConceptIdentifier acElementDefinitionId;
@@ -57,5 +58,13 @@ public class AutomationCompositionElementDefinition {
         this.automationCompositionElementToscaNodeTemplate =
                 new ToscaNodeTemplate(acElementDefinition.automationCompositionElementToscaNodeTemplate);
         this.outProperties = PfUtils.mapMap(acElementDefinition.outProperties, UnaryOperator.identity());
+    }
+
+    @Override
+    public String toString() {
+        return "AutomationCompositionElementDefinition{"
+                + "acElementDefinitionId=" + acElementDefinitionId
+                + ", automationCompositionElementToscaNodeTemplate=" + automationCompositionElementToscaNodeTemplate
+                + ", outProperties=" + AcmUtils.sanitizeMap(outProperties) + '}';
     }
 }
