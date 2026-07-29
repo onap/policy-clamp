@@ -22,6 +22,23 @@
       },
       "revId": "96d98dfe1dfd57c1c19c4cc5df9edcdc7a77758d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29830458_0f4c2f52",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-07-29T09:43:13Z",
+      "side": 1,
+      "message": "missing:\nimport org.onap.policy.clamp.models.acm.dto.CompositionDto;",
+      "revId": "96d98dfe1dfd57c1c19c4cc5df9edcdc7a77758d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
