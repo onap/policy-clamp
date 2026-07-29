@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53552b4e_52d478c4",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/utils/AcElementDtoMapperTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-29T11:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fb56f32_49f1dda4",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 40
+      },
+      "revId": "96d98dfe1dfd57c1c19c4cc5df9edcdc7a77758d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29830458_0f4c2f52",
@@ -37,6 +61,24 @@
       "writtenOn": "2026-07-29T09:43:13Z",
       "side": 1,
       "message": "missing:\nimport org.onap.policy.clamp.models.acm.dto.CompositionDto;",
+      "revId": "96d98dfe1dfd57c1c19c4cc5df9edcdc7a77758d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea69b8c2_80ee3726",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-29T11:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29830458_0f4c2f52",
       "revId": "96d98dfe1dfd57c1c19c4cc5df9edcdc7a77758d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
