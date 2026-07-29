@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024,2026 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public abstract class ScoListener<T> {
             msg = coder.fromStandard(sco, clazz);
 
         } catch (CoderException e) {
-            logger.warn("unable to decode {}: {}", clazz.getName(), sco, e);
+            logger.warn("unable to decode {} on topic [{}]", clazz.getName(), topic, e);
             return;
         }
 
