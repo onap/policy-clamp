@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fb56f32_49f1dda4",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/utils/AcElementDtoMapperTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-07-29T09:30:27Z",
+      "side": 1,
+      "message": "var mapper \u003d MapperFactory.createJsonMapper();",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 40
+      },
+      "revId": "96d98dfe1dfd57c1c19c4cc5df9edcdc7a77758d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
