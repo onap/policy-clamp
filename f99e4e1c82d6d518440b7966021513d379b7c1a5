@@ -63,6 +63,24 @@
       "message": "Is it needed to completely remove the message logging? We rely heavily on these log messages for trouble-shooting.",
       "revId": "f99e4e1c82d6d518440b7966021513d379b7c1a5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52b3c631_e831bee7",
+        "filename": "policy-common/src/main/java/org/onap/policy/common/message/bus/event/base/InlineBusTopicSink.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-07-30T14:20:38Z",
+      "side": 0,
+      "message": "it is a duplication, there is similar log in org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantListener and org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher",
+      "parentUuid": "afc43850_b306db7a",
+      "revId": "f99e4e1c82d6d518440b7966021513d379b7c1a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
