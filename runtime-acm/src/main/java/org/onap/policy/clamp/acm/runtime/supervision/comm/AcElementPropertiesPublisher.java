@@ -31,8 +31,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,8 +39,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AcElementPropertiesPublisher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AcElementPropertiesPublisher.class);
 
     private final ParticipantPublisher participantPublisher;
 
@@ -67,7 +63,6 @@ public class AcElementPropertiesPublisher {
         propertiesUpdate.setParticipantUpdatesList(participantUpdatesList);
         propertiesUpdate.setParticipantIdList(participantUpdatesList.stream()
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
-        LOGGER.debug("AC Element properties update sent {}", propertiesUpdate.getMessageId());
         participantPublisher.send(propertiesUpdate);
     }
 }

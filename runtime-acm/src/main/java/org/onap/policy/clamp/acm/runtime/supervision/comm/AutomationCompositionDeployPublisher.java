@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021,2023-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -36,8 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,8 +44,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AutomationCompositionDeployPublisher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionDeployPublisher.class);
 
     private final ParticipantPublisher participantPublisher;
 
@@ -89,7 +85,6 @@ public class AutomationCompositionDeployPublisher {
         acDeployMsg.setRevisionIdComposition(revisionIdComposition);
         acDeployMsg.setParticipantUpdatesList(participantDeploys);
 
-        LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg.getMessageId());
         participantPublisher.send(acDeployMsg);
     }
 }

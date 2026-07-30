@@ -34,10 +34,6 @@
         <appender-ref ref="AsyncStdOut" />
     </logger>
 
-    <logger name="network" level="OFF" additivity="false">
-        <appender-ref ref="AsyncStdOut" />
-    </logger>
-
     <root level="INFO">
         <appender-ref ref="AsyncStdOut" />
     </root>

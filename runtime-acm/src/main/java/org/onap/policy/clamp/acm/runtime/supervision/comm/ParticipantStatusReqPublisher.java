@@ -25,15 +25,11 @@ import java.time.Instant;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ParticipantStatusReqPublisher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusReqPublisher.class);
 
     private final ParticipantPublisher participantPublisher;
 
@@ -51,8 +47,6 @@ public class ParticipantStatusReqPublisher {
         }
 
         message.setTimestamp(Instant.now());
-
-        LOGGER.debug("Participant StatusReq sent {}", message.getMessageId());
         participantPublisher.sendToSyncTopic(message);
     }
 }

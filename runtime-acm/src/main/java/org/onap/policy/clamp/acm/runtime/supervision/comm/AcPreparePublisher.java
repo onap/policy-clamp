@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,11 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class AcPreparePublisher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AcPreparePublisher.class);
 
     private final ParticipantPublisher participantPublisher;
 
@@ -61,7 +57,6 @@ public class AcPreparePublisher {
                 .map(ParticipantDeploy::getParticipantId).collect(Collectors.toSet()));
         acPrepare.setRevisionIdInstance(automationComposition.getRevisionId());
         acPrepare.setRevisionIdComposition(revisionIdComposition);
-        LOGGER.debug("AC Prepare sent {}", acPrepare);
         participantPublisher.send(acPrepare);
     }
 
@@ -80,7 +75,6 @@ public class AcPreparePublisher {
                 .map(AutomationCompositionElement::getParticipantId).collect(Collectors.toSet()));
         acPrepare.setRevisionIdComposition(revisionIdComposition);
         acPrepare.setRevisionIdInstance(automationComposition.getRevisionId());
-        LOGGER.debug("AC Review sent {}", acPrepare);
         participantPublisher.send(acPrepare);
     }
 

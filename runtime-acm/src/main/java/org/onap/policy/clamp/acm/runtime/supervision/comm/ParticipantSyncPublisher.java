@@ -33,17 +33,12 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ParticipantSyncPublisher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantSyncPublisher.class);
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
-
     private final ParticipantPublisher participantPublisher;
 
     /**
@@ -77,7 +72,6 @@ public class ParticipantSyncPublisher {
             message.getAutomationcompositionList().add(syncAc);
         }
 
-        LOGGER.debug("Participant Restarting Sync sent {}", message);
         participantPublisher.sendToSyncTopic(message);
     }
 
@@ -107,7 +101,6 @@ public class ParticipantSyncPublisher {
             message.getParticipantDefinitionUpdates().forEach(participantDefinition
                     -> message.getParticipantIdList().add(participantDefinition.getParticipantId()));
         }
-        LOGGER.debug("Participant AutomationCompositionDefinition Sync sent {}", message);
         participantPublisher.sendToSyncTopic(message);
     }
 
@@ -137,8 +130,6 @@ public class ParticipantSyncPublisher {
             }
         }
         message.getAutomationcompositionList().add(syncAc);
-
-        LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
         participantPublisher.sendToSyncTopic(message);
     }
 
@@ -161,7 +152,6 @@ public class ParticipantSyncPublisher {
         message.getParticipantIdList().add(participantId);
         message.getAutomationcompositionList().add(syncAc);
 
-        LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
         participantPublisher.sendToSyncTopic(message);
     }
 
