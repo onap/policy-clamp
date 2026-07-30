@@ -46,6 +46,30 @@
       },
       "revId": "cfe67a282fb9e0c9c4cbef7dcf8cd70dfe0d398f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4524a09d_2eeec5a9",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/KafkaStartup.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-30T15:16:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "52df7c63_229a678c",
+      "range": {
+        "startLine": 80,
+        "startChar": 21,
+        "endLine": 80,
+        "endChar": 26
+      },
+      "revId": "cfe67a282fb9e0c9c4cbef7dcf8cd70dfe0d398f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
