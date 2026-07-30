@@ -42,8 +42,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,8 +50,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ParticipantPrimePublisher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantPrimePublisher.class);
 
     private final ParticipantProvider participantProvider;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
@@ -78,7 +74,6 @@ public class ParticipantPrimePublisher {
         message.setTimestamp(Instant.now());
         message.setRevisionIdComposition(revisionId);
         message.setParticipantDefinitionUpdates(participantDefinitions);
-        LOGGER.debug("Participant Update sent {}", message.getMessageId());
         participantPublisher.send(message);
     }
 
@@ -134,7 +129,6 @@ public class ParticipantPrimePublisher {
         message.setTimestamp(Instant.now());
         message.setRevisionIdComposition(revisionId);
 
-        LOGGER.debug("Participant Update sent {}", message.getMessageId());
         participantPublisher.send(message);
     }
 }

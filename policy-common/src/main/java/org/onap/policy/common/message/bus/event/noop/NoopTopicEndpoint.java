@@ -5,7 +5,7 @@
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Samsung Electronics Co., Ltd.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
- * Modifications Copyright (C) 2024 Nordix Foundation.
+ * Modifications Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ package org.onap.policy.common.message.bus.event.noop;
 
 import java.util.List;
 import org.onap.policy.common.message.bus.event.base.TopicBase;
-import org.onap.policy.common.message.bus.utils.NetLoggerUtil;
 import org.onap.policy.common.message.bus.utils.NetLoggerUtil.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +67,6 @@ public abstract class NoopTopicEndpoint extends TopicBase {
             synchronized (this) {
                 this.recentEvents.add(message);
             }
-
-            NetLoggerUtil.log(type, this.getTopicCommInfrastructure(), this.topic, message);
 
             broadcast(message);
         } catch (Exception e) {
