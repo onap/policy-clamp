@@ -33,6 +33,24 @@
       "message": "missing @Component annotation",
       "revId": "b9715283fa68e2f24dc1219429e18134081f92c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "561edae3_423ddb9a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/utils/AcElementDtoMapper.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-31T12:48:41Z",
+      "side": 1,
+      "message": "Or the methods could be made static",
+      "parentUuid": "13b76a23_30a917d2",
+      "revId": "b9715283fa68e2f24dc1219429e18134081f92c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
