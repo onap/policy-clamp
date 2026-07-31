@@ -105,6 +105,9 @@ management:
         enabled: true
       show-components: always
   health:
+    group:
+      readiness:
+        include: kafkaReadiness
     db:
       enabled: false
 
