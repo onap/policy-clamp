@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d757136_2ba49da9",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/KafkaStartup.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-07-31T09:29:10Z",
+      "side": 1,
+      "message": "Can we rename this field as it is contradicting with topic health check",
+      "range": {
+        "startLine": 57,
+        "startChar": 13,
+        "endLine": 57,
+        "endChar": 30
+      },
+      "revId": "f5c86aa607b9b3c71338bd42cefb3ab5b6172c4e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
