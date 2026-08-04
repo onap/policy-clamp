@@ -101,7 +101,6 @@ public class SimpleScanner extends AbstractScanner {
             element.setOperationalState(message.getOperationalState());
             element.setUseState(message.getUseState());
             result.setUpdated(true);
-            result.setToBeSync(true);
         }
         return result;
     }

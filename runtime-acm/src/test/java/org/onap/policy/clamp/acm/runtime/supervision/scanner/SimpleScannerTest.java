@@ -144,7 +144,7 @@ class SimpleScannerTest {
                 acRuntimeParameterGroup, encryptionUtils);
         var result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertTrue(result.isUpdated());
-        assertTrue(result.isToBeSync());
+        assertFalse(result.isToBeSync());
         assertEquals(docMessage.getOutProperties(),
                 automationComposition.getElements().get(elementId).getOutProperties());
     }
