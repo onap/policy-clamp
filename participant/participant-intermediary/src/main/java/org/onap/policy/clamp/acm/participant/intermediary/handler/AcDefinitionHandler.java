@@ -132,6 +132,7 @@ public class AcDefinitionHandler {
                 cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list,
                         participantSyncMsg.getRevisionIdComposition());
             }
+            checkComposition(participantSyncMsg);
         } else if (participantSyncMsg.isRestarting()) {
             checkComposition(participantSyncMsg);
         }
@@ -144,6 +145,7 @@ public class AcDefinitionHandler {
                     listener.cleanExecution(element.getId(), participantSyncMsg.getMessageId());
                 }
             }
+            checkAutomationComposition(automationcomposition.getAutomationCompositionId());
         }
     }
 
@@ -156,6 +158,14 @@ public class AcDefinitionHandler {
             }
             if (participantSyncMsg.getCompositionId().equals(msg.getCompositionId())) {
                 msg.setCompositionId(null);
+            }
+        }
+    }
+
+    private void checkAutomationComposition(UUID instanceId) {
+        for (var msg : cacheProvider.getMessagesOnHold().values()) {
+            if (instanceId.equals(msg.getInstanceId())) {
+                msg.setInstanceId(null);
             }
         }
     }
