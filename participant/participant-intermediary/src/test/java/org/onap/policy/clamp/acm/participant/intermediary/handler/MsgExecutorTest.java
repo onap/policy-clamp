@@ -28,6 +28,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -35,8 +36,10 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 
 class MsgExecutorTest {
 
@@ -74,12 +77,20 @@ class MsgExecutorTest {
         assertThat(cacheProvider.getMessagesOnHold()).hasSize(1);
 
         var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
+                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().getFirst();
         automationComposition.setInstanceId(UUID.randomUUID());
         automationComposition.setCompositionId(compositionId);
+        var participantSyncMsg = new ParticipantSync();
+        participantSyncMsg.setCompositionId(compositionId);
+        var participantDefinition = new ParticipantDefinition();
+        participantDefinition.setParticipantId(parameters.getIntermediaryParameters().getParticipantId());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(compositionId, definitions, revisionIdComposition);
+        participantDefinition.setAutomationCompositionElementDefinitionList(definitions);
+        participantSyncMsg.setParticipantDefinitionUpdates(List.of(participantDefinition));
+        var acDefinitionHandler = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
+                mock(ThreadHandler.class));
+        acDefinitionHandler.handleParticipantSync(participantSyncMsg);
         msgExecutor.check();
         verify(automationCompositionHandler, timeout(200)).handleAutomationCompositionDeploy(updateMsg);
         await().atMost(200, TimeUnit.MILLISECONDS).until(() -> cacheProvider.getMessagesOnHold().isEmpty());
@@ -100,15 +111,12 @@ class MsgExecutorTest {
         acMsg.setRevisionIdInstance(UUID.randomUUID());
 
         var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
+                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().getFirst();
         automationComposition.setInstanceId(instanceId);
         automationComposition.setCompositionId(compositionId);
-        var definitions =
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
         var parameters = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameters);
         assertThat(cacheProvider.getMessagesOnHold()).isEmpty();
-        cacheProvider.addElementDefinition(compositionId, definitions, revisionIdComposition);
 
         var publisher = mock(ParticipantMessagePublisher.class);
         var msgExecutor = new MsgExecutor(cacheProvider, publisher);
@@ -117,10 +125,21 @@ class MsgExecutorTest {
         verify(publisher).sendParticipantReqSync(any());
         assertThat(cacheProvider.getMessagesOnHold()).hasSize(1);
 
-        var participantDeploy =
-                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
-        cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
-                participantDeploy, acMsg.getRevisionIdInstance());
+        var participantSyncMsg = new ParticipantSync();
+        participantSyncMsg.setCompositionId(compositionId);
+        var participantDefinition = new ParticipantDefinition();
+        participantDefinition.setParticipantId(parameters.getIntermediaryParameters().getParticipantId());
+        var definitions =
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
+        participantDefinition.setAutomationCompositionElementDefinitionList(definitions);
+        participantSyncMsg.setParticipantDefinitionUpdates(List.of(participantDefinition));
+        var participantRestartAc = CommonTestData.createParticipantRestartAc();
+        participantRestartAc.setAutomationCompositionId(automationComposition.getInstanceId());
+        participantSyncMsg.setAutomationcompositionList(List.of(participantRestartAc));
+        var acDefinitionHandler = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
+                mock(ThreadHandler.class));
+        acDefinitionHandler.handleParticipantSync(participantSyncMsg);
+
         msgExecutor.check();
         verify(automationCompositionHandler, timeout(200)).handleAutomationCompositionStateChange(stateChangeMsg);
         await().atMost(200, TimeUnit.MILLISECONDS).until(() -> cacheProvider.getMessagesOnHold().isEmpty());
