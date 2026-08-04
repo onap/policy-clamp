@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,6 @@ public class SimpleScanner extends AbstractScanner {
             element.setOperationalState(message.getOperationalState());
             element.setUseState(message.getUseState());
             result.setUpdated(true);
-            result.setToBeSync(true);
         }
         return result;
     }
