@@ -52,7 +52,7 @@ participant:
           topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
           fetchTimeout: 15000
           useHttps: ${kafkaUseHttps:false}
-          allowTracing: ${allowTracing:false}
+          allowTracing: ${ALLOW_TRACING:false}
           additionalProps:
             group.id: policy-clamp-ac-k8s-ppnt
             allow.auto.create.topics: ${allowAutoCreateTopics:true}
@@ -65,7 +65,7 @@ participant:
           topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
           fetchTimeout: 15000
           useHttps: ${kafkaUseHttps:false}
-          allowTracing: ${allowTracing:false}
+          allowTracing: ${ALLOW_TRACING:false}
           additionalProps:
             allow.auto.create.topics: ${allowAutoCreateTopics:true}
             security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
@@ -77,7 +77,7 @@ participant:
             - ${kafkaServer:kafka:9092}
           topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
           useHttps: ${kafkaUseHttps:false}
-          allowTracing: ${allowTracing:false}
+          allowTracing: ${ALLOW_TRACING:false}
           additionalProps:
             allow.auto.create.topics: ${allowAutoCreateTopics:true}
             security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
@@ -90,10 +90,18 @@ participant:
 
 management:
   tracing:
+    export:
+      enabled: ${ALLOW_TRACING:false}
     propagation:
-      produce: ${jaegerProducerType:W3C}
+      produce: ${TRACING_PROPAGATION_TYPE:W3C}
     sampling:
-      probability: ${jaegerSamplingProbability:1.0}
+      probability: 1.0
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${TRACING_EXPORTER_ENDPOINT:}
+          transport: ${TRACING_EXPORTER_PROTOCOL:http}
   otlp:
     metrics:
       export:
@@ -138,11 +146,3 @@ helm:
   repos: [{"repoName": "kong", "address": "https://charts.konghq.com"},{"repoName": "bitnami", "address": "https://charts.bitnami.com/bitnami"}]
   protocols: http,https
 
-tracing:
-  enabled: ${allowTracing:false}
-  exporter:
-    endpoint: ${tracingExporterEndpoint:http://jaeger:4318/v1/traces}
-    protocol: ${tracingExporterProtocol:http}
-  sampler:
-    jaeger-remote:
-      endpoint: ${tracingSamplerEndpoint:http://jaeger:14250}
