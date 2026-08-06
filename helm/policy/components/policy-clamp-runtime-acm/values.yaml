@@ -105,6 +105,8 @@ jaeger:
   service:
     name: jaeger
   enabled: true
+  sampling:
+    probability: "1.0"
   producer:
     type: "[B3,W3C,B3_MULTI]"
   collector:

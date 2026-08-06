@@ -29,8 +29,6 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.common.parameters.topic.TopicParameterGroup;
-import org.onap.policy.common.parameters.topic.TopicParameters;
 
 /**
  * Class to hold all parameters needed for participant component.
@@ -58,7 +56,7 @@ public class ParticipantIntermediaryParameters {
 
     @NotNull
     @Valid
-    private TopicParameterGroup clampAutomationCompositionTopics;
+    private KafkaParameters kafka = new KafkaParameters();
 
     @NotNull
     @Valid
@@ -67,8 +65,4 @@ public class ParticipantIntermediaryParameters {
     @NotNull
     @Valid
     private Topics topics = new Topics();
-
-    private Boolean topicValidation = false;
-
-    private TopicParameters clampAdminTopics;
 }

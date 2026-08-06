@@ -9,21 +9,12 @@ participant:
     description: Participant Description
     reportingTimeInterval: 120000
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c02
-    clampAutomationCompositionTopics:
-      topicSources:
-        -
-          topic: policy-acruntime-participant
-          fetchTimeout: 15000
-          servers:
-            - kafka:9092
-          topicCommInfrastructure: NOOP
-      topicSinks:
-        -
-          topic: policy-acruntime-participant
-          servers:
-            - kafka:9092
-          topicCommInfrastructure: NOOP
-      name: AutomationComposition Topics
+    kafka:
+      bootstrapServers: ${spring.embedded.kafka.brokers}
+      consumer:
+        groupId: test-k8s-ppnt
+        properties:
+          auto.offset.reset: earliest
     participantSupportedElementTypes:
       -
         typeName: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement

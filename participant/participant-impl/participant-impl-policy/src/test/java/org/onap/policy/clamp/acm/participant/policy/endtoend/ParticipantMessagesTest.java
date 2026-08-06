@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,18 +22,12 @@
 package org.onap.policy.clamp.acm.participant.policy.endtoend;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.Mockito.when;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantDeregisterAckListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantPrimeListener;
-import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantRegisterAckListener;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.policy.main.utils.TestListenerUtils;
@@ -42,25 +36,24 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
-import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
-import org.onap.policy.common.message.bus.event.TopicSink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "default"})
+@EmbeddedKafka
 class ParticipantMessagesTest {
-
-    private static final Object lockit = new Object();
-    private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
-    private static final String TOPIC = "my-topic";
 
     @Autowired
     private ParticipantHandler participantHandler;
+
+    @Autowired
+    private ParticipantMessagePublisher participantMessagePublisher;
 
     @Test
     void testSendParticipantRegisterMessage() {
@@ -68,14 +61,8 @@ class ParticipantMessagesTest {
         participantRegisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantRegisterMsg.setTimestamp(Instant.now());
 
-        synchronized (lockit) {
-            var participantMessagePublisher = new ParticipantMessagePublisher();
-            var topicSink = Mockito.mock(TopicSink.class);
-            when(topicSink.getTopicCommInfrastructure()).thenReturn(CommInfrastructure.NOOP);
-            participantMessagePublisher.active(Collections.singletonList(topicSink));
-            assertThatCode(() -> participantMessagePublisher.sendParticipantRegister(participantRegisterMsg))
-                .doesNotThrowAnyException();
-        }
+        assertThatCode(() -> participantMessagePublisher.sendParticipantRegister(participantRegisterMsg))
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -84,11 +71,8 @@ class ParticipantMessagesTest {
         participantRegisterAckMsg.setMessage("ParticipantRegisterAck message");
         participantRegisterAckMsg.setResponseTo(UUID.randomUUID());
 
-        synchronized (lockit) {
-            var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
-            assertThatCode(() -> participantRegisterAckListener.onTopicEvent(INFRA, TOPIC, null,
-                participantRegisterAckMsg)).doesNotThrowAnyException();
-        }
+        assertThatCode(() -> participantHandler.handleParticipantRegisterAck(participantRegisterAckMsg))
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -97,14 +81,8 @@ class ParticipantMessagesTest {
         participantDeregisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantDeregisterMsg.setTimestamp(Instant.now());
 
-        synchronized (lockit) {
-            var participantMessagePublisher = new ParticipantMessagePublisher();
-            var topicSink = Mockito.mock(TopicSink.class);
-            when(topicSink.getTopicCommInfrastructure()).thenReturn(CommInfrastructure.NOOP);
-            participantMessagePublisher.active(Collections.singletonList(topicSink));
-            assertThatCode(() -> participantMessagePublisher.sendParticipantDeregister(participantDeregisterMsg))
-                .doesNotThrowAnyException();
-        }
+        assertThatCode(() -> participantMessagePublisher.sendParticipantDeregister(participantDeregisterMsg))
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -113,22 +91,16 @@ class ParticipantMessagesTest {
         participantDeregisterAckMsg.setMessage("ParticipantDeregisterAck message");
         participantDeregisterAckMsg.setResponseTo(UUID.randomUUID());
 
-        synchronized (lockit) {
-            var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
-            assertThatCode(() -> participantDeregisterAckListener.onTopicEvent(INFRA, TOPIC, null,
-                participantDeregisterAckMsg)).doesNotThrowAnyException();
-        }
+        assertThatCode(() -> participantHandler.handleParticipantDeregisterAck(participantDeregisterAckMsg))
+            .doesNotThrowAnyException();
     }
 
     @Test
     void testReceiveParticipantUpdateMessage() {
         var participantPrimeMsg = TestListenerUtils.createParticipantPrimeMsg();
 
-        synchronized (lockit) {
-            var participantPrimeListener = new ParticipantPrimeListener(participantHandler);
-            assertThatCode(() -> participantPrimeListener.onTopicEvent(INFRA, TOPIC, null, participantPrimeMsg))
-                    .doesNotThrowAnyException();
-        }
+        assertThatCode(() -> participantHandler.handleParticipantPrime(participantPrimeMsg))
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -137,13 +109,7 @@ class ParticipantMessagesTest {
         participantPrimeAckMsg.setMessage("ParticipantPrimeAck message");
         participantPrimeAckMsg.setResponseTo(UUID.randomUUID());
 
-        synchronized (lockit) {
-            var participantMessagePublisher = new ParticipantMessagePublisher();
-            var topicSink = Mockito.mock(TopicSink.class);
-            when(topicSink.getTopicCommInfrastructure()).thenReturn(CommInfrastructure.NOOP);
-            participantMessagePublisher.active(Collections.singletonList(topicSink));
-            assertThatCode(() -> participantMessagePublisher.sendParticipantPrimeAck(participantPrimeAckMsg))
-                .doesNotThrowAnyException();
-        }
+        assertThatCode(() -> participantMessagePublisher.sendParticipantPrimeAck(participantPrimeAckMsg))
+            .doesNotThrowAnyException();
     }
 }

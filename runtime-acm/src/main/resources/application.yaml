@@ -45,10 +45,10 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
-        spring.deserializer.value.delegate.class: org.onap.policy.clamp.acm.runtime.supervision.comm.serialization.ParticipantMessageDeserializer
+        spring.deserializer.value.delegate.class: org.onap.policy.clamp.models.acm.utils.serialization.ParticipantMessageDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.onap.policy.clamp.acm.runtime.supervision.comm.serialization.ParticipantMessageSerializer
+      value-serializer: org.onap.policy.clamp.models.acm.utils.serialization.ParticipantMessageSerializer
 
 server:
   port: 6969
@@ -80,7 +80,7 @@ management:
     propagation:
       produce: ${TRACING_PROPAGATION_TYPE:W3C}
     sampling:
-      probability: 1.0
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
   opentelemetry:
     tracing:
       export:

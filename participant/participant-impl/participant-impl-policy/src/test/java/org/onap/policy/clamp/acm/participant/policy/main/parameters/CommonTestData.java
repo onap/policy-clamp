@@ -27,12 +27,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
-import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -44,8 +42,6 @@ public class CommonTestData {
     public static final String PARTICIPANT_GROUP_NAME = "AutomationCompositionParticipantGroup";
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> SINK_TOPIC_PARAMS = List.of(getSinkTopicParams());
-    public static final List<TopicParameters> SOURCE_TOPIC_PARAMS = List.of(getSinkTopicParams(), getSyncTopicParams());
 
     private static final ObjectMapper YAML_MAPPER = MapperFactory.createYamlMapper();
     private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
@@ -127,7 +123,7 @@ public class CommonTestData {
             map.put("reportingTimeIntervalMs", TIME_INTERVAL);
             map.put("description", DESCRIPTION);
             map.put("participantId", getParticipantId());
-            map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
+            map.put("kafka", getKafkaParametersMap());
             map.put("participantSupportedElementTypes", new ArrayList<>());
             map.put("topics", new Topics("policy-acruntime-participant", "acm-ppnt-sync"));
         }
@@ -136,44 +132,17 @@ public class CommonTestData {
     }
 
     /**
-     * Returns a property map for a TopicParameters map for test cases.
+     * Returns a property map for kafka parameters for test cases.
      *
-     * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
      */
-    public static Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
+    public static Map<String, Object> getKafkaParametersMap() {
         final Map<String, Object> map = new TreeMap<>();
-        if (!isEmpty) {
-            map.put("topicSources", SOURCE_TOPIC_PARAMS);
-            map.put("topicSinks", SINK_TOPIC_PARAMS);
-        }
+        map.put("bootstrapServers", "localhost:9092");
+        var consumerMap = new TreeMap<String, Object>();
+        consumerMap.put("groupId", "test-policy-ppnt");
+        map.put("consumer", consumerMap);
         return map;
-    }
-
-    /**
-     * Returns topic parameters for test cases.
-     *
-     * @return topic parameters
-     */
-    public static TopicParameters getSinkTopicParams() {
-        final TopicParameters topicParams = new TopicParameters();
-        topicParams.setTopic("policy-acruntime-participant");
-        topicParams.setTopicCommInfrastructure("NOOP");
-        topicParams.setServers(List.of("localhost"));
-        return topicParams;
-    }
-
-    /**
-     * Returns sync topic parameters for test cases.
-     *
-     * @return topic parameters
-     */
-    public static TopicParameters getSyncTopicParams() {
-        final TopicParameters topicParams = new TopicParameters();
-        topicParams.setTopic("acm-ppnt-sync");
-        topicParams.setTopicCommInfrastructure("NOOP");
-        topicParams.setServers(List.of("localhost"));
-        return topicParams;
     }
 
     /**
