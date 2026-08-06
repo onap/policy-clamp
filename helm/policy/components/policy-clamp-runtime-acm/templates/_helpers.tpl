@@ -50,7 +50,7 @@ This helper defines whether Jaeger is enabled or not.
 This helper defines the full OTLP endpoint URL based on protocol.
 For HTTP, appends /v1/traces. For gRPC, uses the base URL.
 */}}
-{{- define "policy-clamp-runtime-acm.otlp-endpoint" }}
+{{- define "policy-clamp-runtime-acm.exporter-endpoint" }}
   {{- $port := include "policy-clamp-runtime-acm.exporter-port" . -}}
   {{- if eq .Values.jaeger.collector.protocol "http" -}}
     {{- printf "%s:%s/v1/traces" .Values.jaeger.collector.host $port -}}

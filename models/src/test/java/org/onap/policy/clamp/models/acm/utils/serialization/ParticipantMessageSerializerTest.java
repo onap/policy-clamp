@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2024 Nordix Foundation.
- *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,29 +18,26 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.intermediary.handler;
+package org.onap.policy.clamp.models.acm.utils.serialization;
 
-import org.onap.policy.common.endpoints.listeners.ScoListener;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public interface Listener<T> {
+import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
 
-    /**
-     * Get the type of message of interest to the listener.
-     *
-     * @return type of message of interest to the listener
-     */
-    String getType();
+class ParticipantMessageSerializerTest {
 
-    /**
-     * Get listener to register.
-     *
-     * @return listener to register
-     */
-    ScoListener<T> getScoListener();
+    private final ParticipantMessageSerializer serializer = new ParticipantMessageSerializer();
 
-    /**
-     * Check if default topic.
-     * @return true if default topic
-     */
-    boolean isDefaultTopic();
+    @Test
+    void testSerializeSuccess() {
+        var testObject = new ParticipantRegisterAck();
+
+        byte[] result = serializer.serialize("test-topic", testObject);
+        assertNotNull(result);
+
+        String resultString = new String(result);
+        assertThat(resultString).startsWith("{").endsWith("}");
+    }
 }
