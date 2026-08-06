@@ -65,6 +65,12 @@
             <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <!-- consumers provide their own version-aligned kafka-clients via spring-kafka -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.onap.policy.clamp</groupId>
             <artifactId>test-utils</artifactId>
             <version>${project.version}</version>

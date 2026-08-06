@@ -20,10 +20,10 @@ spring:
       sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
       sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     listener:
-      observation-enabled: ${ALLOW_TRACING:false}
+      observation-enabled: true
       auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
     template:
-      observation-enabled: ${ALLOW_TRACING:false}
+      observation-enabled: true
     consumer:
       group-id: ${KAFKA_GROUP_ID:acm-element}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -62,13 +62,17 @@ management:
   otlp:
     metrics:
       export:
-        enabled: ${allowTracing:false}
-
-tracing:
-  enabled: ${allowTracing:false}
-  exporter:
-    endpoint: ${tracingExporterEndpoint:http://jaeger:4318/v1/traces}
-    protocol: ${tracingExporterProtocol:http}
-  sampler:
-    jaeger-remote:
-      endpoint: ${tracingSamplerEndpoint:http://jaeger:14250}
+        enabled: false
+  tracing:
+    export:
+      enabled: ${ALLOW_TRACING:false}
+    propagation:
+      produce: ${TRACING_PROPAGATION_TYPE:W3C}
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${TRACING_EXPORTER_ENDPOINT:}
+          transport: ${TRACING_EXPORTER_PROTOCOL:http}
