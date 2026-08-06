@@ -53,6 +53,8 @@ spec:
           image: {{ .Values.global.repository }}/{{ .Values.global.image.simparticipant }}
           imagePullPolicy: {{ .Values.global.pullPolicy | default .Values.pullPolicy }}
           env:
+            - name: SPRING_APPLICATION_NAME
+              value: {{ .Values.applicationName }}
             - name: HTTP_USER
               valueFrom:
                 secretKeyRef:
@@ -65,48 +67,26 @@ spec:
                   key: password
             - name: SERVER_PORT
               value: "6969"
-            - name: topicCommInfrastructure
-              value: kafka
-            - name: kafkaServer
+            - name: KAFKA_SERVER
               value: "{{ .Values.global.kafkaServer }}:9092"
-            - name: TOPIC_VALIDATION
-              value: "true"
             - name: participantId
               value: {{ .Values.participantId }}
-            - name: applicationName
-              value: {{ .Values.applicationName }}
-            - name: groupId
+            - name: KAFKA_GROUP_ID
               value: {{ .Values.groupId }}
             - name: supportedElementTypeName
               value: {{ .Values.supportedElementTypeName }}
           {{- $jaegerEnabled := tpl "policy-clamp-ac-sim-ppnt.jaeger-enabled" . | trimSuffix "\n" -}}
           {{- if $jaegerEnabled }}
-            - name: allowTracing
+            - name: ALLOW_TRACING
               value: "true"
-            - name: jaegerProducerType
+            - name: TRACING_PROPAGATION_TYPE
               value: {{ .Values.jaeger.producer.type | quote }}
-            - name: jaegerSamplingProbability
+            - name: TRACING_SAMPLING_PROBABILITY
               value: {{ .Values.jaeger.sampling.probability | quote }}
-            - name: tracingExporterEndpoint
-              value: "{{ .Values.jaeger.collector.host }}:{{ include "policy-clamp-ac-sim-ppnt.exporter-port" . }}"
-            - name: tracingExporterProtocol
+            - name: TRACING_EXPORTER_ENDPOINT
+              value: {{ include "policy-clamp-ac-sim-ppnt.exporter-endpoint" . }}
+            - name: TRACING_EXPORTER_PROTOCOL
               value: {{ .Values.jaeger.collector.protocol }}
-            - name: tracingSamplerEndpoint
-              value: "{{ .Values.jaeger.collector.host }}:{{ .Values.jaeger.collector.portJaegerGrpc }}"
-            - name: OTEL_SERVICE_NAME
-              value: {{ .Values.applicationName }}
-            - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: {{ include "policy-clamp-ac-sim-ppnt.jaeger-protocol" . }}
-            - name: OTEL_EXPORTER_OTLP_TRACES_PROTOCOL
-              value: {{ include "policy-clamp-ac-sim-ppnt.jaeger-protocol" . }}
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: {{ printf "%s:%s" (.Values.jaeger.collector.host) (include "policy-clamp-ac-sim-ppnt.exporter-port" .) }}
-            - name: OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED
-              value: "true"
-            - name: MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED
-              value: "false"
-            - name: OTEL_METRICS_EXPORTER
-              value: "none"
           {{- end }}
           ports:
             - containerPort: 6969
