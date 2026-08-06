@@ -35,14 +35,9 @@ services:
     environment: &policy-clamp-ac-sim-ppnt-env
       HTTP_USER: participantUser
       HTTP_PASSWORD: zb!XztG34
-      topicCommInfrastructure: kafka
-      TOPIC_VALIDATION: true
-      allowTracing: true
-      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: http/protobuf
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
-      OTEL_JAVA_GLOBAL_AUTOCONFIGURE_ENABLED: true
-      OTEL_METRICS_EXPORTER: none
+      ALLOW_TRACING: true
+      TRACING_EXPORTER_ENDPOINT: http://jaeger:4318/v1/traces
+      TRACING_EXPORTER_PROTOCOL: http
       SPRING_PROFILES_ACTIVE: ${PPNT_PROFILE:-default}
       SPRING_CONFIG_LOCATION: /opt/app/policy/clamp/etc/application.yaml
       LOGGING_CONFIG: /opt/app/policy/clamp/etc/logback.xml
@@ -63,10 +58,9 @@ services:
     hostname: policy-clamp-ac-sim-ppnt-1
     environment:
       <<: *policy-clamp-ac-sim-ppnt-env
-      OTEL_SERVICE_NAME: sim-ppnt-1
+      SPRING_APPLICATION_NAME: sim-ppnt-1
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c90
-      applicationName: sim-ppnt-1
-      groupId: policy-clamp-ac-sim-ppnt-1
+      KAFKA_GROUP_ID: policy-clamp-ac-sim-ppnt-1
       supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement
     ports:
       - ${SIM_PARTICIPANT1_PORT}:6969
@@ -77,10 +71,9 @@ services:
     hostname: policy-clamp-ac-sim-ppnt-2
     environment:
       <<: *policy-clamp-ac-sim-ppnt-env
-      OTEL_SERVICE_NAME: sim-ppnt-2
+      SPRING_APPLICATION_NAME: sim-ppnt-2
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c91
-      applicationName: sim-ppnt-2
-      groupId: policy-clamp-ac-sim-ppnt-2
+      KAFKA_GROUP_ID: policy-clamp-ac-sim-ppnt-2
       supportedElementTypeName: org.onap.policy.clamp.acm.SimAutomationCompositionElement2
     ports:
       - ${SIM_PARTICIPANT2_PORT}:6969
@@ -91,10 +84,9 @@ services:
     hostname: policy-clamp-ac-sim-ppnt-3
     environment:
       <<: *policy-clamp-ac-sim-ppnt-env
-      OTEL_SERVICE_NAME: sim-ppnt-3
+      SPRING_APPLICATION_NAME: sim-ppnt-3
       participantId: 101c62b3-8918-41b9-a747-d21eb79c6c92
-      applicationName: sim-ppnt-3
-      groupId: policy-clamp-ac-sim-ppnt-3
+      KAFKA_GROUP_ID: policy-clamp-ac-sim-ppnt-3
       PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_0_TYPENAME: org.onap.policy.clamp.acm.SimAutomationCompositionElement3
       PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_0_TYPEVERSION: 1.0.0
       PARTICIPANT_INTERMEDIARYPARAMETERS_PARTICIPANTSUPPORTEDELEMENTTYPES_1_TYPENAME: org.onap.policy.clamp.acm.SimAutomationCompositionElement4

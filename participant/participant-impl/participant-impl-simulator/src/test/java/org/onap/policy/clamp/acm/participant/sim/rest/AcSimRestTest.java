@@ -46,6 +46,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -71,6 +73,12 @@ class AcSimRestTest {
 
     @MockitoBean
     private SimulatorService simulatorService;
+
+    @MockitoBean
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
+    @MockitoBean
+    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @Autowired
     private WebApplicationContext context;

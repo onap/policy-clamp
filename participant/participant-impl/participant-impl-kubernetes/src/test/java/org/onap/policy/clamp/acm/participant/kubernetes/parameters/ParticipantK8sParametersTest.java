@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022,2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,20 +37,6 @@ class ParticipantK8sParametersTest {
     void testParticipantPolicyParameters() {
         final var participantParameters = CommonTestData.getParticipantK8sParameters();
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNullOrEmpty();
-    }
-
-    @Test
-    void testParticipantK8sParameters_NullTopicSinks() {
-        final var participantParameters = CommonTestData.getParticipantK8sParameters();
-        participantParameters.getIntermediaryParameters().getClampAutomationCompositionTopics().setTopicSinks(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
-    void testParticipantK8sParameters_NullTopicSources() {
-        final var participantParameters = CommonTestData.getParticipantK8sParameters();
-        participantParameters.getIntermediaryParameters().getClampAutomationCompositionTopics().setTopicSources(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 
     @Test

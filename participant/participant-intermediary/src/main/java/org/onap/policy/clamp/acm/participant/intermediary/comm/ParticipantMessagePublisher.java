@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,46 +22,36 @@
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import io.micrometer.core.annotation.Timed;
-import jakarta.ws.rs.core.Response.Status;
-import java.util.List;
-import lombok.Getter;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
-import org.onap.policy.common.message.bus.event.TopicSink;
-import org.onap.policy.common.message.bus.event.client.TopicSinkClient;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send Participant Status messages to clamp using TopicSinkClient.
- *
+ * Unified participant message publisher using ParticipantKafkaMessage interface.
  */
 @Component
-public class ParticipantMessagePublisher implements Publisher {
-    private static final String NOT_ACTIVE_TEXT = "Not Active!";
+@Slf4j
+public class ParticipantMessagePublisher {
 
-    @Getter
-    private boolean active = false;
-    private TopicSinkClient topicSinkClient;
+    @Value("${participant.intermediaryParameters.topics.operationTopic}")
+    private String operationTopic;
 
-    /**
-     * Constructor for instantiating ParticipantMessagePublisher.
-     *
-     * @param topicSinks the topic sinks
-     */
-    @Override
-    public void active(List<TopicSink> topicSinks) {
-        if (topicSinks.size() != 1) {
-            throw new IllegalArgumentException("Configuration unsupported, Topic sinks greater than 1");
-        }
-        this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
-        active = true;
+    private final KafkaTemplate<String, ParticipantKafkaMessage> kafkaTemplate;
+
+    public ParticipantMessagePublisher(
+            @Qualifier("acmKafkaTemplate") KafkaTemplate<String, ParticipantKafkaMessage> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     /**
@@ -71,12 +61,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     @Timed(value = "publisher.participant_req_sync", description = "PARTICIPANT_REQ_SYNC_MSG messages published")
     public void sendParticipantReqSync(final ParticipantReqSync participantReqSync) {
-        validate();
-        topicSinkClient.send(participantReqSync);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
-                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
-                topicSinkClient.getTopic(), "Sent Participant Request Sync to CLAMP - "
-                        + participantReqSync.toString());
+        send(participantReqSync, "Sent Participant Request Sync to CLAMP");
     }
 
     /**
@@ -86,42 +71,27 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     @Timed(value = "publisher.participant_status", description = "PARTICIPANT_STATUS messages published")
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
-        validate();
-        topicSinkClient.send(participantStatus);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
-                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
-                topicSinkClient.getTopic(), "Sent Participant Status message to CLAMP - "
-                        + participantStatus.toString());
+        send(participantStatus, "Sent Participant Status message to CLAMP");
     }
 
     /**
-     * Method to send Participant Status message to clamp on demand.
+     * Method to send Participant Register message to clamp.
      *
-     * @param participantRegister the Participant Status
+     * @param participantRegister the Participant Register
      */
     @Timed(value = "publisher.participant_register", description = "PARTICIPANT_REGISTER messages published")
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
-        validate();
-        topicSinkClient.send(participantRegister);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
-                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
-                topicSinkClient.getTopic(), "Sent Participant Register message to CLAMP - "
-                        + participantRegister.toString());
+        send(participantRegister, "Sent Participant Register message to CLAMP");
     }
 
     /**
-     * Method to send Participant Status message to clamp on demand.
+     * Method to send Participant Deregister message to clamp.
      *
-     * @param participantDeregister the Participant Status
+     * @param participantDeregister the Participant Deregister
      */
     @Timed(value = "publisher.participant_deregister", description = "PARTICIPANT_DEREGISTER messages published")
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
-        validate();
-        topicSinkClient.send(participantDeregister);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
-                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
-                topicSinkClient.getTopic(), "Sent Participant Deregister message to CLAMP - "
-                        + participantDeregister.toString());
+        send(participantDeregister, "Sent Participant Deregister message to CLAMP");
     }
 
     /**
@@ -131,12 +101,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     @Timed(value = "publisher.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages published")
     public void sendParticipantPrimeAck(final ParticipantPrimeAck participantPrimeAck) {
-        validate();
-        topicSinkClient.send(participantPrimeAck);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
-                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
-                topicSinkClient.getTopic(), "Sent Participant Prime Ack message to CLAMP - "
-                        + participantPrimeAck.toString());
+        send(participantPrimeAck, "Sent Participant Prime Ack message to CLAMP");
     }
 
     /**
@@ -147,22 +112,20 @@ public class ParticipantMessagePublisher implements Publisher {
     @Timed(value = "publisher.automation_composition_update_ack",
             description = "AUTOMATION_COMPOSITION_UPDATE_ACK/AUTOMATION_COMPOSITION_STATECHANGE_ACK messages published")
     public void sendAutomationCompositionAck(final AutomationCompositionDeployAck automationCompositionAck) {
-        validate();
-        topicSinkClient.send(automationCompositionAck);
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT,
-                topicSinkClient.getSink().getTopicCommInfrastructure().toString(),
-                topicSinkClient.getTopic(), "Sent AutomationComposition Update/StateChange Ack to runtime - "
-                        + automationCompositionAck.toString());
+        send(automationCompositionAck, "Sent AutomationComposition Update/StateChange Ack to runtime");
     }
 
-    private void validate() {
-        if (!active) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
+    private void send(final ParticipantKafkaMessage message, final String logMessage) {
+        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "KAFKA", operationTopic,
+                logMessage + " - " + message.toString());
+        try {
+            if (message.getPartitionKey() == null) {
+                kafkaTemplate.send(operationTopic, message).join();
+            } else {
+                kafkaTemplate.send(operationTopic, message.getPartitionKey(), message).join();
+            }
+        } catch (final Exception e) {
+            log.error("send to {} failed because of {}", operationTopic, e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void stop() {
-        active = false;
     }
 }

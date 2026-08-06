@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ${applicationName:sim-ppnt}
+    name: sim-ppnt
   security:
     user:
       name: ${HTTP_USER:participantUser}
@@ -23,56 +23,15 @@ participant:
     description: Participant Simulator
     participantId: ${participantId:101c62b3-8918-41b9-a747-d21eb79c6c90}
     threadPoolSize: 10
-    topicValidation: ${TOPIC_VALIDATION:false}
-    clampAdminTopics:
-      servers:
-        - ${kafkaServer:kafka:9092}
-      topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
-      fetchTimeout: 15000
-      useHttps: ${kafkaUseHttps:false}
-      additionalProps:
-        security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
-        sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
-        sasl.jaas.config: ${kafkaSaslJaasConfig:}
-    clampAutomationCompositionTopics:
-      topicSources:
-        - topic: ${participant.intermediaryParameters.topics.operationTopic}
-          servers:
-            - ${kafkaServer:kafka:9092}
-          topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
-          fetchTimeout: 15000
-          useHttps: ${kafkaUseHttps:false}
-          allowTracing: ${allowTracing:false}
-          additionalProps:
-            group.id: ${groupId}
-            allow.auto.create.topics: ${allowAutoCreateTopics:true}
-            security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
-            sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
-            sasl.jaas.config: ${kafkaSaslJaasConfig:}
-        - topic: ${participant.intermediaryParameters.topics.syncTopic}
-          servers:
-            - ${kafkaServer:kafka:9092}
-          topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
-          fetchTimeout: 15000
-          useHttps: ${kafkaUseHttps:false}
-          allowTracing: ${allowTracing:false}
-          additionalProps:
-            allow.auto.create.topics: ${allowAutoCreateTopics:true}
-            security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
-            sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
-            sasl.jaas.config: ${kafkaSaslJaasConfig:}
-      topicSinks:
-        - topic: ${participant.intermediaryParameters.topics.operationTopic}
-          servers:
-            - ${kafkaServer:kafka:9092}
-          topicCommInfrastructure: ${topicCommInfrastructure:NOOP}
-          useHttps: ${kafkaUseHttps:false}
-          allowTracing: ${allowTracing:false}
-          additionalProps:
-            allow.auto.create.topics: ${allowAutoCreateTopics:true}
-            security.protocol: ${kafkaSecurityProtocol:PLAINTEXT}
-            sasl.mechanism: ${kafkaSaslMechanism:GSSAPI}
-            sasl.jaas.config: ${kafkaSaslJaasConfig:}
+    kafka:
+      bootstrapServers: ${KAFKA_SERVER:kafka:9092}
+      authExceptionRetryInterval: 5s
+      consumer:
+        groupId: ${KAFKA_GROUP_ID:policy-clamp-ac-sim-ppnt}
+      properties:
+        security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+        sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
+        sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
     participantSupportedElementTypes:
       -
         typeName: ${supportedElementTypeName:org.onap.policy.clamp.acm.SimAutomationCompositionElement}
@@ -80,11 +39,17 @@ participant:
 
 management:
   tracing:
+    # NOTE: On Spring Boot 4, rename to management.tracing.export.enabled
+    enabled: ${ALLOW_TRACING:false}
     propagation:
-      produce: ${jaegerProducerType:W3C}
+      produce: ${TRACING_PROPAGATION_TYPE:W3C}
     sampling:
-      probability: ${jaegerSamplingProbability:1.0}
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
   otlp:
+    # NOTE: On Spring Boot 4, these move to management.opentelemetry.tracing.export.otlp.*
+    tracing:
+      endpoint: ${TRACING_EXPORTER_ENDPOINT:}
+      transport: ${TRACING_EXPORTER_PROTOCOL:http}
     metrics:
       export:
         enabled: false
@@ -107,12 +72,3 @@ server:
     enabled: false
   servlet:
     context-path: /onap/policy/simparticipant
-
-tracing:
-  enabled: ${allowTracing:false}
-  exporter:
-    endpoint: ${tracingExporterEndpoint:http://jaeger:4318/v1/traces}
-    protocol: ${tracingExporterProtocol:http}
-  sampler:
-    jaeger-remote:
-      endpoint: ${tracingSamplerEndpoint:http://jaeger:14250}
