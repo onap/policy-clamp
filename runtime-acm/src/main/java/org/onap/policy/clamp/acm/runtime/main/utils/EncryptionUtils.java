@@ -252,6 +252,9 @@ public class EncryptionUtils {
 
     private boolean isDataTypeRef(ToscaProperty property, ToscaDataType dataType) {
         var dataTypeName = PfUtils.getDefinedName(dataType);
+        if (dataTypeName == null) {
+            return false;
+        }
         var propertyEntity = Optional.ofNullable(property.getEntrySchema()).map(ToscaSchemaDefinition::getType);
         return dataTypeName.equals(property.getType()) || dataTypeName.equals(propertyEntity.orElse(null));
     }

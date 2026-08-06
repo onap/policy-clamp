@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,9 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -59,8 +58,8 @@ class EncryptionUtilsTest {
 
     @BeforeEach
     void setup() {
-        AcRuntimeParameterGroup acRuntimeParameterGroup = mock(AcRuntimeParameterGroup.class);
-        AcmParameters acmParameters = mock(AcmParameters.class);
+        var acRuntimeParameterGroup = mock(AcRuntimeParameterGroup.class);
+        var acmParameters = mock(AcmParameters.class);
         when(acRuntimeParameterGroup.getAcmParameters()).thenReturn(acmParameters);
 
         when(acmParameters.isEnableEncryption()).thenReturn(true);
@@ -79,56 +78,45 @@ class EncryptionUtilsTest {
     @Test
     void testEncryptDecrypt_topLevelProperty() {
         // Build a definition with a nodeTemplate and a nodeType whose property is marked sensitive
-        ToscaProperty sensitiveProp = new ToscaProperty();
+        var sensitiveProp = new ToscaProperty();
         sensitiveProp.setName("password");
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("sensitive", "true");
-        sensitiveProp.setMetadata(metadata);
-        Map<String, ToscaProperty> props = new HashMap<>();
-        props.put("password", sensitiveProp);
+        sensitiveProp.setMetadata(Map.of("sensitive", "true"));
 
-        ToscaNodeType nodeType = new ToscaNodeType();
+        var nodeType = new ToscaNodeType();
         nodeType.setName("MyType");
-        nodeType.setProperties(props);
+        nodeType.setProperties(Map.of("password", sensitiveProp));
 
-        ToscaNodeTemplate nodeTemplate = new ToscaNodeTemplate();
+        var nodeTemplate = new ToscaNodeTemplate();
         nodeTemplate.setName("MyNode");
         nodeTemplate.setType("MyType");
 
         // build service template containers
-        Map<String, ToscaNodeType> nodeTypes = new HashMap<>();
-        nodeTypes.put("MyType", nodeType);
-        Map<String, ToscaNodeTemplate> nodeTemplates = new HashMap<>();
-        nodeTemplates.put("MyNode", nodeTemplate);
+        var nodeTypes = Map.of("MyType", nodeType);
 
         // service template wrapper classes used by your implementation
-        ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+        var serviceTemplate = new ToscaServiceTemplate();
         serviceTemplate.setNodeTypes(nodeTypes);
         serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
-        serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
+        serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(Map.of("MyNode", nodeTemplate));
 
-        AutomationCompositionDefinition acDefinition = new AutomationCompositionDefinition();
+        var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setServiceTemplate(serviceTemplate);
 
         // automation composition instance with one element that refers to the node template name MyNode
-        AutomationCompositionElementDefinition def = new AutomationCompositionElementDefinition();
+        var def = new AutomationCompositionElementDefinition();
         var toscaDefinition = new ToscaConceptIdentifier("MyNode", "1.0.0");
         def.setAcElementDefinitionId(toscaDefinition);
 
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var element = new AutomationCompositionElement();
         var id = UUID.randomUUID();
         element.setId(id);
         element.setDefinition(toscaDefinition);
-        Map<String, Object> elementProps = new HashMap<>();
-        elementProps.put("password", "topSecret");
-        element.setProperties(elementProps);
+        element.getProperties().put("password", "topSecret");
 
         def.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
 
-        AutomationComposition ac = new AutomationComposition();
-        Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
-        elements.put(element.getId(), element);
-        ac.setElements(elements);
+        var ac = new AutomationComposition();
+        ac.setElements(Map.of(element.getId(), element));
 
         // run encryption
         encryptionUtilsEnabled.findAndEncryptSensitiveData(acDefinition, ac);
@@ -146,68 +134,53 @@ class EncryptionUtilsTest {
     @Test
     void testEncryptDecrypt_nestedMapList() {
         // Prepare similar types but place the sensitive property nested in a list of maps
-        ToscaProperty sensitiveProp = new ToscaProperty();
+        var sensitiveProp = new ToscaProperty();
         sensitiveProp.setName("token");
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("sensitive", "true");
-        sensitiveProp.setMetadata(metadata);
-        Map<String, ToscaProperty> props = new HashMap<>();
-        props.put("token", sensitiveProp);
+        sensitiveProp.setMetadata(Map.of("sensitive", "true"));
 
-        ToscaNodeType nodeType = new ToscaNodeType();
+        var nodeType = new ToscaNodeType();
         nodeType.setName("Type2");
-        nodeType.setProperties(props);
+        nodeType.setProperties(Map.of("token", sensitiveProp));
 
-        ToscaNodeTemplate nodeTemplate = new ToscaNodeTemplate();
+        var nodeTemplate = new ToscaNodeTemplate();
         nodeTemplate.setName("Node2");
         nodeTemplate.setType(nodeType.getName());
 
-        Map<String, ToscaNodeType> nodeTypes = new HashMap<>();
-        nodeTypes.put(nodeType.getName(), nodeType);
-        Map<String, ToscaNodeTemplate> nodeTemplates = new HashMap<>();
-        nodeTemplates.put(nodeTemplate.getName(), nodeTemplate);
-
-        ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+        var serviceTemplate = new ToscaServiceTemplate();
         serviceTemplate.setName("ServiceTemplate2");
-        serviceTemplate.setNodeTypes(nodeTypes);
+        serviceTemplate.setNodeTypes(Map.of(nodeType.getName(), nodeType));
         serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
-        serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
+        serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(Map.of(nodeTemplate.getName(), nodeTemplate));
 
-        AutomationComposition ac = new AutomationComposition();
+        var ac = new AutomationComposition();
         ac.setCompositionId(UUID.randomUUID());
 
-        AutomationCompositionDefinition acDefinition = new AutomationCompositionDefinition();
+        var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setServiceTemplate(serviceTemplate);
         acDefinition.setCompositionId(ac.getCompositionId());
 
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var element = new AutomationCompositionElement();
         element.setId(UUID.randomUUID());
         element.setDefinition(new ToscaConceptIdentifier("Node2", "1.0.0"));
 
         // nested structure: properties -> list -> map -> token
         Map<String, Object> innerMap = new HashMap<>();
         innerMap.put("token", "listSecret");
-        List<Map<String, Object>> list = new ArrayList<>();
-        list.add(innerMap);
-        Map<String, Object> propsInstance = new HashMap<>();
-        propsInstance.put("someList", list);
-        Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
-        element.setProperties(propsInstance);
-        elements.put(element.getId(), element);
-        ac.setElements(elements);
+        element.getProperties().put("someList", List.of(innerMap));
+        ac.setElements(Map.of(element.getId(), element));
 
         encryptionUtilsEnabled.findAndEncryptSensitiveData(acDefinition, ac);
 
         // confirm if the nested value was encrypted
         var storedList = (List<?>) ac.getElements().get(element.getId()).getProperties().get("someList");
-        var storedMap = (Map<?, ?>) storedList.get(0);
+        var storedMap = (Map<?, ?>) storedList.getFirst();
         var storedVal = (String) storedMap.get("token");
         assertThat(storedVal).startsWith("ENCRYPTED:");
 
         // decrypt
         encryptionUtilsEnabled.decryptInstanceProperties(ac);
         var after = (Map<?, ?>) ((List<?>) ac.getElements().get(element.getId())
-            .getProperties().get("someList")).get(0);
+            .getProperties().get("someList")).getFirst();
         assertEquals("listSecret", after.get("token"));
     }
 
@@ -215,16 +188,12 @@ class EncryptionUtilsTest {
     void testDecrypt_invalidCipher_throwsRuntimeException() {
         // create a composition with a property that has a malformed ENCRYPTED: value
         var elementId = UUID.randomUUID();
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var element = new AutomationCompositionElement();
         element.setId(elementId);
-        Map<String, Object> props = new HashMap<>();
-        props.put("bad", "ENCRYPTED:invalidbase64!!");
-        element.setProperties(props);
+        element.getProperties().put("bad", "ENCRYPTED:invalidbase64!!");
 
-        AutomationComposition ac = new AutomationComposition();
-        Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
-        elements.put(element.getId(), element);
-        ac.setElements(elements);
+        var ac = new AutomationComposition();
+        ac.setElements(Map.of(element.getId(), element));
 
         // expect exception when decrypt called (Base64 decode -> fail -> AutomationCompositionRuntimeException)
         assertThatThrownBy(() -> encryptionUtilsEnabled.decryptInstanceProperties(ac))
@@ -236,20 +205,14 @@ class EncryptionUtilsTest {
     void testDecryptInstanceProperties_listVersion_and_disabled() {
         // Disabled should not attempt to decrypt (no exception thrown)
         var elementId = UUID.randomUUID();
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var element = new AutomationCompositionElement();
         element.setId(elementId);
-        Map<String, Object> props = new HashMap<>();
-        props.put("field", "ENCRYPTED:whatever");
-        element.setProperties(props);
+        element.getProperties().put("field", "ENCRYPTED:whatever");
 
-        AutomationComposition ac = new AutomationComposition();
-        Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
-        elements.put(element.getId(), element);
-        ac.setElements(elements);
+        var ac = new AutomationComposition();
+        ac.setElements(Map.of(element.getId(), element));
 
-        List<AutomationComposition> list = new ArrayList<>();
-        list.add(ac);
-
+        var list = List.of(ac);
         // should not throw when encryption disabled
         assertDoesNotThrow(() -> encryptionUtilsDisabled.decryptInstanceProperties(list));
     }
@@ -257,85 +220,79 @@ class EncryptionUtilsTest {
     @Test
     void testFilterSensitiveProperties_datatypeRef() {
         // create a property that references a data type by name and data type contains sensitive property
-        ToscaProperty propRef = new ToscaProperty();
+        var propRef = new ToscaProperty();
         propRef.setName("p1");
         propRef.setType("MyDataTypeName");
 
-        Map<String, ToscaProperty> nodeProps = new HashMap<>();
-        nodeProps.put("p1", propRef);
 
-        ToscaNodeType nodeType = new ToscaNodeType();
+        var nodeType = new ToscaNodeType();
         nodeType.setName("NodeTypeA");
-        nodeType.setProperties(nodeProps);
+        nodeType.setProperties(Map.of("p1", propRef));
 
-        ToscaDataType dataType = new ToscaDataType();
+        var dataType = new ToscaDataType();
         dataType.setName("MyDataTypeName");
-        ToscaProperty nested = new ToscaProperty();
+        var nested = new ToscaProperty();
         nested.setName("secretNested");
-        Map<String, String> meta = new HashMap<>();
-        meta.put("sensitive", "true");
-        nested.setMetadata(meta);
-        Map<String, ToscaProperty> dtProps = new HashMap<>();
-        dtProps.put("secretNested", nested);
-        dataType.setProperties(dtProps);
+        nested.setMetadata(Map.of("sensitive", "true"));
+        dataType.setProperties(Map.of("secretNested", nested));
 
-        ToscaNodeTemplate nodeTemplate = new ToscaNodeTemplate();
+        var nodeTemplate = new ToscaNodeTemplate();
         nodeTemplate.setName("NodeInstance");
         nodeTemplate.setType("NodeTypeA");
 
-        ToscaServiceTemplate ser = new ToscaServiceTemplate();
-        ser.setDataTypes(Collections.singletonMap(dataType.getName(), dataType));
-        ser.setNodeTypes(Collections.singletonMap(nodeType.getName(), nodeType));
+        var ser = new ToscaServiceTemplate();
+        ser.setDataTypes(Map.of(dataType.getName(), dataType));
+        ser.setNodeTypes(Map.of(nodeType.getName(), nodeType));
         ser.setToscaTopologyTemplate(new ToscaTopologyTemplate());
-        ser.getToscaTopologyTemplate().setNodeTemplates(Collections.singletonMap(nodeTemplate.getName(), nodeTemplate));
+        ser.getToscaTopologyTemplate().setNodeTemplates(Map.of(nodeTemplate.getName(), nodeTemplate));
 
-        AutomationComposition composition = new AutomationComposition();
+        var composition = new AutomationComposition();
         composition.setCompositionId(UUID.randomUUID());
-        AutomationCompositionDefinition acDefinition = new AutomationCompositionDefinition();
+        var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setServiceTemplate(ser);
         acDefinition.setCompositionId(composition.getCompositionId());
-        AutomationCompositionElement acElement = new AutomationCompositionElement();
+        var acElement = new AutomationCompositionElement();
         acElement.setId(UUID.randomUUID());
         acElement.setDefinition(new ToscaConceptIdentifier("NodeInstance", "1.0.0"));
-        composition.setElements(Collections.singletonMap(acElement.getId(), acElement));
+        composition.setElements(Map.of(acElement.getId(), acElement));
 
-        List<ToscaNodeType> nodeTypes = Collections.singletonList(nodeType);
-        List<ToscaDataType> dataTypes = Collections.singletonList(dataType);
-        List<ToscaNodeTemplate> nodeTemplates = Collections.singletonList(nodeTemplate);
+        var nodeTypes = List.of(nodeType);
+        var dataTypes = List.of(dataType);
+        var nodeTemplates = List.of(nodeTemplate);
 
         var found = encryptionUtilsEnabled.filterSensitiveProperties(acElement, nodeTypes, dataTypes, nodeTemplates);
         assertThat(found).isNotEmpty();
-        assertThat(found.get(0).getName()).isEqualTo("secretNested");
+        assertThat(found.getFirst().getName()).isEqualTo("secretNested");
+
+        dataType.setName(PfKey.NULL_KEY_NAME);
+        found = encryptionUtilsEnabled.filterSensitiveProperties(acElement, nodeTypes, dataTypes, nodeTemplates);
+        assertThat(found).isEmpty();
     }
 
     @Test
     void testGetCipher_Roundtrip() throws Exception {
         // ensure getCipher can be used to encrypt/decrypt bytes with same iv and key
-        byte[] iv = new byte[12];
+        var iv = new byte[12];
         // create encrypt cipher
-        Cipher encryptCipher = encryptionUtilsEnabled.getCipher(iv, Cipher.ENCRYPT_MODE);
-        byte[] plain = "plainText".getBytes();
-        byte[] cipherBytes = encryptCipher.doFinal(plain);
+        var encryptCipher = encryptionUtilsEnabled.getCipher(iv, Cipher.ENCRYPT_MODE);
+        var plain = "plainText".getBytes();
+        var cipherBytes = encryptCipher.doFinal(plain);
 
         // combine iv + cipherBytes as the class does
-        ByteBuffer buf = ByteBuffer.allocate(iv.length + cipherBytes.length);
+        var buf = ByteBuffer.allocate(iv.length + cipherBytes.length);
         buf.put(iv);
         buf.put(cipherBytes);
-        byte[] combined = buf.array();
+        var combined = buf.array();
         var encoded = "ENCRYPTED:" + Base64.getEncoder().encodeToString(combined);
 
         // decrypt using the class' decrypt method by invoking decryptInstanceProperties flow:
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var element = new AutomationCompositionElement();
         var elementId = UUID.randomUUID();
         element.setId(elementId);
-        Map<String, Object> props = new HashMap<>();
-        props.put("x", encoded);
-        element.setProperties(props);
+        element.getProperties().put("x", encoded);
 
-        AutomationComposition ac = new AutomationComposition();
-        Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
-        elements.put(element.getId(), element);
-        ac.setElements(elements);
+        var ac = new AutomationComposition();
+        ac.setElements(Map.of(element.getId(), element));
 
         // Should decrypt successfully to original plaintext
         encryptionUtilsEnabled.decryptInstanceProperties(ac);

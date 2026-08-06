@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Ericsson. All rights reserved.
- *  Modifications Copyright (C) 2020, 2023 Nordix Foundation.
+ *  Modifications Copyright (C) 2020, 2023,2026 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import com.google.re2j.Pattern;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -166,10 +167,10 @@ public final class ResourceUtils {
     public static URL getLocalFile(final String resourceName) {
         try {
             // Input might already be in URL format
-            final var ret = new URL(resourceName);
-            final var f = new File(ret.toURI());
+            final var ret = new URI(resourceName);
+            final var f = new File(ret);
             if (f.exists()) {
-                return ret;
+                return ret.toURL();
             }
         } catch (final Exception ignore) {
             // We ignore exceptions here and catch them below
