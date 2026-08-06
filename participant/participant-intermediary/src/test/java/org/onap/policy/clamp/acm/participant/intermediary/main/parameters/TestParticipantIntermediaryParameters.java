@@ -40,28 +40,4 @@ class TestParticipantIntermediaryParameters {
                 CommonTestData.getParticipantIntermediaryParameters();
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isEmpty();
     }
-
-    @Test
-    void testParticipantIntermediaryParameterGroup_EmptyParameter() {
-        final ParticipantIntermediaryParameters participantParameters =
-                CommonTestData.getParticipantIntermediaryParameters();
-        participantParameters.setClampAutomationCompositionTopics(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
-    void testParticipantIntermediaryParameters_NullTopicSinks() {
-        final ParticipantIntermediaryParameters participantParameters =
-                CommonTestData.getParticipantIntermediaryParameters();
-        participantParameters.getClampAutomationCompositionTopics().setTopicSinks(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
-    void testParticipantIntermediaryParameters_NullTopicSources() {
-        final ParticipantIntermediaryParameters participantParameters =
-                CommonTestData.getParticipantIntermediaryParameters();
-        participantParameters.getClampAutomationCompositionTopics().setTopicSources(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
 }

@@ -93,8 +93,10 @@ spec:
               value: "true"
             - name: TRACING_PROPAGATION_TYPE
               value: {{ .Values.jaeger.producer.type | quote }}
+            - name: TRACING_SAMPLING_PROBABILITY
+              value: {{ .Values.jaeger.sampling.probability | quote }}
             - name: TRACING_EXPORTER_ENDPOINT
-              value: {{ include "policy-clamp-runtime-acm.otlp-endpoint" . }}
+              value: {{ include "policy-clamp-runtime-acm.exporter-endpoint" . }}
             - name: TRACING_EXPORTER_PROTOCOL
               value: {{ .Values.jaeger.collector.protocol }}
             - name: TRACING_SAMPLER_ENDPOINT

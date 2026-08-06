@@ -69,7 +69,6 @@ class ParticipantHandlerTest {
     @Test
     void handleParticipantStatusReqTest() {
         var publisher = mock(ParticipantMessagePublisher.class);
-        when(publisher.isActive()).thenReturn(true);
         var cacheProvider = mock(CacheProvider.class);
         var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
@@ -445,7 +444,6 @@ class ParticipantHandlerTest {
         when(cacheProvider.isRegistered()).thenReturn(false);
         when(cacheProvider.getAutomationCompositions()).thenReturn(CommonTestData.getTestAutomationCompositionMap());
         var publisher = mock(ParticipantMessagePublisher.class);
-        when(publisher.isActive()).thenReturn(true);
         var acHandler = mock(AcDefinitionHandler.class);
         var msgExecutor = mock(MsgExecutor.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),

@@ -319,12 +319,10 @@ public class ParticipantHandler {
      * Dispatch a heartbeat for this participant.
      */
     public void sendHeartbeat() {
-        if (publisher.isActive()) {
-            if (!cacheProvider.isRegistered()) {
-                sendParticipantRegister();
-            } else {
-                publisher.sendParticipantStatus(makeHeartbeat());
-            }
+        if (!cacheProvider.isRegistered()) {
+            sendParticipantRegister();
+        } else {
+            publisher.sendParticipantStatus(makeHeartbeat());
         }
     }
 

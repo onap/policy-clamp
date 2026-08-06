@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,20 +34,6 @@ class ParticipantPolicyParametersTest {
     void testParticipantPolicyParameters() {
         final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isEmpty();
-    }
-
-    @Test
-    void testParticipantPolicyParameters_NullTopicSinks() {
-        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
-        participantParameters.getIntermediaryParameters().getClampAutomationCompositionTopics().setTopicSinks(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
-    void testParticipantPolicyParameters_NullTopicSources() {
-        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
-        participantParameters.getIntermediaryParameters().getClampAutomationCompositionTopics().setTopicSources(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 
     @Test
