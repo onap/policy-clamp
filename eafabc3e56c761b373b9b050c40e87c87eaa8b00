@@ -16,6 +16,29 @@
       "message": "recheck",
       "revId": "eafabc3e56c761b373b9b050c40e87c87eaa8b00",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17c100b9_d4d2e837",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/KafkaHealthCheck.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-07T11:59:06Z",
+      "side": 1,
+      "message": "I don\u0027t think we need a dedicated topic check as spring kafka listener has a property `spring.kafka.listener.missing-topics-fatal`. If `true`, then this would act as a topic check during `container.start()` in the other class. See my other comment below.",
+      "range": {
+        "startLine": 79,
+        "startChar": 20,
+        "endLine": 79,
+        "endChar": 31
+      },
+      "revId": "eafabc3e56c761b373b9b050c40e87c87eaa8b00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
