@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd8cf46a_e51f8585",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/dto/CompositionDto.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-07T11:14:40Z",
+      "side": 1,
+      "message": "Not sure if non-null annotation is really needed, it looks like the code always returns a string. Could we try without @Nonnull and see if it passes SonarQube?",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "fd2d60e8bd92e51fc2614661723e5ea197a359d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
