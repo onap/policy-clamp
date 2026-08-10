@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b3a5733_b66e243a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/dto/CompositionDto.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-10T11:58:14Z",
+      "side": 1,
+      "message": "I wonder if this new method is really needed? The existing _AcmUtils.sanitizeMap_ method is recursive, so should work if we just change to the signature to allow ToscaConceptIdentifier key, e.g. `sanitizeMap(Map\u003cObject, Object\u003e map)` or `\u003cK\u003e sanitizeMap(Map\u003cK, Object\u003e map)`",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "a5071f0a5acf566a621db4090891bc0241781e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
