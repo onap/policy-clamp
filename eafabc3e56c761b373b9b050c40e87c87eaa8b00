@@ -39,6 +39,30 @@
       },
       "revId": "eafabc3e56c761b373b9b050c40e87c87eaa8b00",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1353b84_d4f3ba97",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/KafkaHealthCheck.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-10T12:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17c100b9_d4d2e837",
+      "range": {
+        "startLine": 79,
+        "startChar": 20,
+        "endLine": 79,
+        "endChar": 31
+      },
+      "revId": "eafabc3e56c761b373b9b050c40e87c87eaa8b00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }

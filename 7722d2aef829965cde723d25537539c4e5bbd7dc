@@ -16,6 +16,24 @@
       "message": "I think this whole solution could be reduced to a few lines by making use of Spring Kafka topic check and Spring RetryTemplate. Basically I am proposing that we just keeping trying to start the listeners until they stop throwing exceptions. Something like this:\n\n    @Component\n    @RequiredArgsConstructor\n    public class KafkaStartup {\n        private final KafkaListenerEndpointRegistry registry;\n\n        @Async\n        @EventListener(ApplicationReadyEvent.class)\n        public void startListenersWhenReady() {\n            var retry \u003d new RetryTemplate(RetryPolicy.builder().backOff(new FixedBackOff()).build());\n            retry.invoke(() -\u003e registry.getListenerContainers().stream()\n                    .filter(container -\u003e !container.isRunning())\n                    .forEach(MessageListenerContainer::start));\n        }\n    }\nTo enable topic validation, just change application.yaml:\n\n    spring:\n      kafka:\n        listener:\n          missing-topics-fatal: ${TOPIC_VALIDATION:false}\n\n\nNote there are other variants like `ExponentialBackOff`; custom logging can be added with `RetryListener`, though I would guess spring kafka would already log failures.",
       "revId": "7722d2aef829965cde723d25537539c4e5bbd7dc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90626447_ee514900",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/KafkaStartup.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-10T12:59:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "620cc438_dd906ea3",
+      "revId": "7722d2aef829965cde723d25537539c4e5bbd7dc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
