@@ -22,6 +22,30 @@
       },
       "revId": "e791a38fcc6a641cace135047720746bd89d02b8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f265734b_3b313e03",
+        "filename": "runtime-acm/src/main/resources/application.yaml",
+        "patchSetId": 17
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-10T14:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a126b0de_5d81da0d",
+      "range": {
+        "startLine": 39,
+        "startChar": 47,
+        "endLine": 39,
+        "endChar": 52
+      },
+      "revId": "e791a38fcc6a641cace135047720746bd89d02b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
