@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09f739ed_dc129d8f",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantLifecycleHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-10T14:32:43Z",
+      "side": 1,
+      "message": "This works since application will only be ready after Spring Kafka is initialized. If implementing custom healthchecks, e.g. disabling listener container auto-start, this code will need to be updated.",
+      "revId": "6defb1f3bea45d160ca8953219ca3ec3c8ed61f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}

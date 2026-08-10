@@ -22,6 +22,30 @@
       },
       "revId": "59d6bf9c358b1d9951443dba4948e5d73987c428",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61f55ab3_8d462a7e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-10T14:32:43Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cd4baff0_0bffa5f2",
+      "range": {
+        "startLine": 67,
+        "startChar": 11,
+        "endLine": 67,
+        "endChar": 29
+      },
+      "revId": "59d6bf9c358b1d9951443dba4948e5d73987c428",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
