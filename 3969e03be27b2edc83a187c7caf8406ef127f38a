@@ -16,6 +16,75 @@
       "message": "recheck",
       "revId": "3969e03be27b2edc83a187c7caf8406ef127f38a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a3c7321_e129a8af",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AcLockHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-11T12:29:17Z",
+      "side": 1,
+      "message": "can be removed",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 22
+      },
+      "revId": "3969e03be27b2edc83a187c7caf8406ef127f38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9afc5a7_678ab5ce",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AcLockHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-11T12:29:17Z",
+      "side": 1,
+      "message": "can be removed",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 85
+      },
+      "revId": "3969e03be27b2edc83a187c7caf8406ef127f38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caea0fc4_434dfe8e",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AcLockHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-11T12:29:17Z",
+      "side": 1,
+      "message": "can be removed",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 88
+      },
+      "revId": "3969e03be27b2edc83a187c7caf8406ef127f38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
