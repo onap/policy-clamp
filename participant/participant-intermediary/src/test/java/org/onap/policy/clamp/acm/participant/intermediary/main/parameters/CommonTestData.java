@@ -210,6 +210,7 @@ public class CommonTestData {
             DeployOrder deployOrder, LockOrder lockOrder) {
         var stateChange = new AutomationCompositionStateChange();
         stateChange.setStartPhase(0);
+        stateChange.setCompositionId(UUID.randomUUID());
         stateChange.setAutomationCompositionId(instanceId);
         stateChange.setParticipantId(participantId);
         stateChange.setMessageId(UUID.randomUUID());
@@ -329,6 +330,8 @@ public class CommonTestData {
                     automationComposition.getInstanceId(), element.getId(),
                     element.getProperties() != null ? element.getProperties() : Map.of(),
                     element.getOutProperties() != null ? element.getOutProperties() : Map.of()));
+            acElementDto.setDeployState(element.getDeployState());
+            acElementDto.setLockState(element.getLockState());
             participantDto.getElementDtos().add(acElementDto);
         }
         return List.of(participantDto);

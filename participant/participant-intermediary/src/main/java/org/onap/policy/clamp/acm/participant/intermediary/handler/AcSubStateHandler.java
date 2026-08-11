@@ -20,27 +20,23 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
-import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.clamp.models.acm.dto.ParticipantDto;
+import org.onap.policy.clamp.models.acm.dto.AcElementDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AcSubStateHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AcSubStateHandler.class);
-
     private final CacheProvider cacheProvider;
     private final ThreadHandler listener;
 
@@ -55,29 +51,17 @@ public class AcSubStateHandler {
         if (elementDtoMap.isEmpty()) {
             return;
         }
-        var automationComposition = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
-        if (automationComposition == null) {
-            automationComposition = cacheProvider.createAcInstance(migrationMsg.getCompositionId(),
-                    migrationMsg.getCompositionTargetId(), migrationMsg.getAutomationCompositionId(),
-                    elementDtoMap, DeployState.MIGRATING, SubState.MIGRATION_PRECHECKING,
-                    migrationMsg.getRevisionIdInstance());
-            LOGGER.info("New participant with new element type added for Migration Precheck");
-        }
-        callParticipantMigratePrecheck(migrationMsg.getMessageId(),
-                automationComposition, migrationMsg.getParticipantDtoList());
+        cacheProvider.fillCacheComposition(migrationMsg.getParticipantDtoList());
+
+        cacheProvider.createAcInstance(migrationMsg.getCompositionId(), migrationMsg.getAutomationCompositionId(),
+                elementDtoMap, DeployState.DEPLOYED, SubState.MIGRATION_PRECHECKING,
+                migrationMsg.getRevisionIdInstance());
+        log.info("New participant with new element type added for Migration Precheck");
+        callParticipantMigratePrecheck(migrationMsg.getMessageId(), elementDtoMap);
     }
 
-    private void callParticipantMigratePrecheck(UUID messageId,
-            AutomationComposition automationComposition, List<ParticipantDto> participantDtoList) {
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
-
+    private void callParticipantMigratePrecheck(UUID messageId, Map<UUID, AcElementDto> elementDtoMap) {
         for (var dto : elementDtoMap.values()) {
-            var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
-            var element = automationComposition.getElements()
-                    .get(instanceElement.elementId());
-            if (element != null) {
-                element.setSubState(SubState.MIGRATION_PRECHECKING);
-            }
             listener.migratePrecheck(messageId, dto.getCompositionElement(), dto.getCompositionElementTarget(),
                     dto.getInstanceElement(), dto.getInstanceElementTarget());
         }
@@ -89,28 +73,22 @@ public class AcSubStateHandler {
      * @param acPrepareMsg the AutomationCompositionPrepare message
      */
     public void handleAcPrepare(AutomationCompositionPrepare acPrepareMsg) {
+        cacheProvider.fillCacheComposition(acPrepareMsg.getParticipantDtoList());
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
+                acPrepareMsg.getParticipantDtoList(), cacheProvider.getParticipantId());
+        var deployState = acPrepareMsg.isPreDeploy() ? DeployState.UNDEPLOYED : DeployState.DEPLOYED;
+        var subState = acPrepareMsg.isPreDeploy() ? SubState.PREPARING : SubState.REVIEWING;
+        cacheProvider.createAcInstance(acPrepareMsg.getCompositionId(), acPrepareMsg.getAutomationCompositionId(),
+                elementDtoMap, deployState, subState, acPrepareMsg.getRevisionIdInstance());
         if (acPrepareMsg.isPreDeploy()) {
-            var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
-                    acPrepareMsg.getParticipantDtoList(), cacheProvider.getParticipantId());
-            cacheProvider.createAcInstance(acPrepareMsg.getCompositionId(), null,
-                    acPrepareMsg.getAutomationCompositionId(), elementDtoMap, DeployState.UNDEPLOYED,
-                    SubState.PREPARING, acPrepareMsg.getRevisionIdInstance());
-            callParticipantPrepare(acPrepareMsg.getMessageId(),
-                    acPrepareMsg.getStage(), acPrepareMsg.getParticipantDtoList());
+            callParticipantPrepare(acPrepareMsg.getMessageId(), acPrepareMsg.getStage(), elementDtoMap);
         } else {
-            var automationComposition =
-                cacheProvider.getAutomationComposition(acPrepareMsg.getAutomationCompositionId());
-            automationComposition.setSubState(SubState.REVIEWING);
-            callParticipantReview(acPrepareMsg.getMessageId(), automationComposition,
-                    acPrepareMsg.getParticipantDtoList());
+            callParticipantReview(acPrepareMsg.getMessageId(), elementDtoMap);
         }
     }
 
     private void callParticipantPrepare(UUID messageId, Integer stageMsg,
-            List<ParticipantDto> participantDtoList) {
-
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
-
+            Map<UUID, AcElementDto> elementDtoMap) {
         for (var dto : elementDtoMap.values()) {
             var stageSet = AcmStageUtils.findStageSetPrepare(dto.getCompositionElement().inProperties());
             if (stageSet.contains(stageMsg)) {
@@ -120,15 +98,9 @@ public class AcSubStateHandler {
         }
     }
 
-    private void callParticipantReview(UUID messageId, AutomationComposition automationComposition,
-            List<ParticipantDto> participantDtoList) {
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
-
+    private void callParticipantReview(UUID messageId, Map<UUID, AcElementDto> elementDtoMap) {
         for (var dto : elementDtoMap.values()) {
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
-            var element = automationComposition.getElements()
-                    .get(instanceElement.elementId());
-            element.setSubState(SubState.REVIEWING);
             listener.review(messageId, dto.getCompositionElement(), instanceElement);
         }
     }

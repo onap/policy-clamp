@@ -27,11 +27,7 @@ import java.io.IOException;
 import java.util.Properties;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
@@ -39,7 +35,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
@@ -66,7 +61,6 @@ public class ParticipantHandler {
     private final AcDefinitionHandler acDefinitionHandler;
     private final ParticipantMessagePublisher publisher;
     private final CacheProvider cacheProvider;
-    private final MsgExecutor msgExecutor;
 
     /**
      * Method which handles a participant health check event from clamp.
@@ -87,10 +81,7 @@ public class ParticipantHandler {
             value = "listener.automation_composition_update",
             description = "AUTOMATION_COMPOSITION_UPDATE messages received")
     public void handleAutomationCompositionDeploy(AutomationCompositionDeploy updateMsg) {
-        var acMsg = new AutomationCompositionMsg<>(
-                automationCompositionHandler::handleAutomationCompositionDeploy, updateMsg);
-        setCompositionUpdate(updateMsg, acMsg);
-        msgExecutor.execute(acMsg);
+        automationCompositionHandler.handleAutomationCompositionDeploy(updateMsg);
     }
 
     /**
@@ -102,16 +93,11 @@ public class ParticipantHandler {
             value = "listener.automation_composition_state_change",
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages received")
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
-        var acMsg = DeployOrder.NONE.equals(stateChangeMsg.getDeployOrderedState())
-                ? new AutomationCompositionMsg<>(
-                acLockHandler::handleAutomationCompositionStateChange, stateChangeMsg)
-                : new AutomationCompositionMsg<>(
-                automationCompositionHandler::handleAutomationCompositionStateChange, stateChangeMsg);
-        setCompositionUpdate(stateChangeMsg, acMsg);
-        if (!DeployOrder.DELETE.equals(stateChangeMsg.getDeployOrderedState())) {
-            setInstanceUpdate(stateChangeMsg, acMsg);
+        if (DeployOrder.NONE.equals(stateChangeMsg.getDeployOrderedState())) {
+            acLockHandler.handleAutomationCompositionStateChange(stateChangeMsg);
+        } else {
+            automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg);
         }
-        msgExecutor.execute(acMsg);
     }
 
     /**
@@ -123,56 +109,11 @@ public class ParticipantHandler {
             value = "listener.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages received")
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
-        var stateNew = false;
-        var stateDefault = false;
-        var stateRemoved = false;
-        for (var ac : migrationMsg.getParticipantUpdatesList()) {
-            if (cacheProvider.getParticipantId().equals(ac.getParticipantId())) {
-                for (var element : ac.getAcElementList()) {
-                    switch (element.getMigrationState()) {
-                        case NEW -> stateNew = true;
-                        case REMOVED -> stateRemoved = true;
-                        default -> stateDefault = true;
-                    }
-                }
-            }
-        }
-        var acMsg = Boolean.TRUE.equals(migrationMsg.getPrecheck())
-                ? new AutomationCompositionMsg<>(acSubStateHandler::handleAcMigrationPrecheck, migrationMsg)
-                : new AutomationCompositionMsg<>(
-                automationCompositionHandler::handleAutomationCompositionMigration, migrationMsg);
-        setUpdate(migrationMsg, acMsg, stateNew, stateDefault, stateRemoved);
-        msgExecutor.execute(acMsg);
-    }
-
-    private void setUpdate(AutomationCompositionMigration migrationMsg,
-            AutomationCompositionMsg<AutomationCompositionMigration> acMsg, boolean stateNew, boolean stateDefault,
-            boolean stateRemoved) {
-        if (stateDefault || stateRemoved) {
-            setCompositionUpdate(migrationMsg, acMsg);
-            setInstanceUpdate(migrationMsg, acMsg);
+        if (Boolean.TRUE.equals(migrationMsg.getPrecheck())) {
+            acSubStateHandler.handleAcMigrationPrecheck(migrationMsg);
         } else {
-            checkAutomationComposition(migrationMsg);
+            automationCompositionHandler.handleAutomationCompositionMigration(migrationMsg);
         }
-        if (stateDefault || stateNew) {
-            acMsg.setCompositionTargetId(migrationMsg.getCompositionTargetId());
-            acMsg.setRevisionIdCompositionTarget(migrationMsg.getRevisionIdCompositionTarget());
-        }
-    }
-
-    private void checkAutomationComposition(AutomationCompositionMigration migrationMsg) {
-        var ac = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
-        if (ac != null && migrationMsg.getRevisionIdInstance().equals(ac.getRevisionId())) {
-            return;
-        }
-        var restart = new ParticipantRestartAc();
-        restart.setCompositionTargetId(migrationMsg.getCompositionTargetId());
-        restart.setAutomationCompositionId(migrationMsg.getAutomationCompositionId());
-        restart.setRevisionId(migrationMsg.getRevisionIdInstance());
-        restart.setDeployState(Boolean.TRUE.equals(migrationMsg.getRollback())
-                ? DeployState.MIGRATION_REVERTING : DeployState.MIGRATING);
-        restart.setLockState(LockState.LOCKED);
-        cacheProvider.initializeAutomationComposition(migrationMsg.getCompositionId(), restart);
     }
 
     /**
@@ -182,11 +123,7 @@ public class ParticipantHandler {
      */
     @Timed(value = "listener.properties_update", description = "PROPERTIES_UPDATE message received")
     public void handleAcPropertyUpdate(PropertiesUpdate propertyUpdateMsg) {
-        var acMsg = new AutomationCompositionMsg<>(
-                automationCompositionHandler::handleAcPropertyUpdate, propertyUpdateMsg);
-        setCompositionUpdate(propertyUpdateMsg, acMsg);
-        setInstanceUpdate(propertyUpdateMsg, acMsg);
-        msgExecutor.execute(acMsg);
+        automationCompositionHandler.handleAcPropertyUpdate(propertyUpdateMsg);
     }
 
     /**
@@ -196,23 +133,7 @@ public class ParticipantHandler {
      */
     @Timed(value = "listener.prepare", description = "AUTOMATION_COMPOSITION_PREPARE message received")
     public void handleAutomationCompositionPrepare(AutomationCompositionPrepare acPrepareMsg) {
-        var acMsg = new AutomationCompositionMsg<>(
-                acSubStateHandler::handleAcPrepare, acPrepareMsg);
-        setCompositionUpdate(acPrepareMsg, acMsg);
-        if (!acPrepareMsg.isPreDeploy()) {
-            setInstanceUpdate(acPrepareMsg, acMsg);
-        }
-        msgExecutor.execute(acMsg);
-    }
-
-    private void setCompositionUpdate(ParticipantMessage participantMsg, AutomationCompositionMsg<?> acMsg) {
-        acMsg.setCompositionId(participantMsg.getCompositionId());
-        acMsg.setRevisionIdComposition(participantMsg.getRevisionIdComposition());
-    }
-
-    private void setInstanceUpdate(ParticipantMessage participantMsg, AutomationCompositionMsg<?> acMsg) {
-        acMsg.setInstanceId(participantMsg.getAutomationCompositionId());
-        acMsg.setRevisionIdInstance(participantMsg.getRevisionIdInstance());
+        acSubStateHandler.handleAcPrepare(acPrepareMsg);
     }
 
     /**
@@ -312,7 +233,6 @@ public class ParticipantHandler {
             return;
         }
         acDefinitionHandler.handleParticipantSync(participantSyncMsg);
-        msgExecutor.check();
     }
 
     /**

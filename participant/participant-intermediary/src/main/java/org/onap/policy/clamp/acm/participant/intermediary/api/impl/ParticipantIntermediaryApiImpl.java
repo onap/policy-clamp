@@ -24,13 +24,12 @@ package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantDtoUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -208,61 +207,48 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> getAcElementsDefinitions() {
-        return PfUtils.mapMap(cacheProvider.getAcElementsDefinitions(),
-            acDefinition -> PfUtils.mapMap(acDefinition.getElements(), AutomationCompositionElementDefinition::new));
+        return PfUtils.mapMap(cacheProvider.getCompositionDtos(),
+                ParticipantDtoUtils::getAutomationCompositionElementDefinitionMap);
     }
 
     @Override
     public Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> getAcElementsDefinitions(
             UUID compositionId) {
-        var acElementDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acElementDefinitions == null) {
+        var compositionDto = cacheProvider.getCompositionDtos().get(compositionId);
+        if (compositionDto == null) {
             return Map.of();
         }
-        return PfUtils.mapMap(acElementDefinitions.getElements(), AutomationCompositionElementDefinition::new);
+        return ParticipantDtoUtils.getAutomationCompositionElementDefinitionMap(compositionDto);
     }
 
     @Override
     public AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId,
             ToscaConceptIdentifier elementId) {
-        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acDefinition == null) {
+        var compositionDto = cacheProvider.getCompositionDtos().get(compositionId);
+        if (compositionDto == null) {
             return null;
         }
-        var acElementDefinition = acDefinition.getElements().get(elementId);
-        return acElementDefinition != null ? new AutomationCompositionElementDefinition(acElementDefinition) : null;
+        return ParticipantDtoUtils.getAutomationCompositionElementDefinition(compositionDto, elementId);
     }
 
     @Override
     public CompositionElementDto getCompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementId) {
-        var element = getAcElementDefinition(compositionId, elementId);
-        return element == null
-                ? new CompositionElementDto(compositionId, elementId, Map.of(), Map.of(), ElementState.NOT_PRESENT)
-                : new CompositionElementDto(compositionId, elementId,
-                element.getAutomationCompositionElementToscaNodeTemplate().getProperties(), element.getOutProperties());
+        var compositionDto = cacheProvider.getCompositionDtos().get(compositionId);
+        if (compositionDto == null || !compositionDto.inPropertiesMap().containsKey(elementId)) {
+            return new CompositionElementDto(compositionId, elementId, Map.of(), Map.of(), ElementState.NOT_PRESENT);
+        }
+        return new CompositionElementDto(compositionId, elementId,
+                compositionDto.inPropertiesMap().get(elementId), compositionDto.outPropertiesMap().get(elementId),
+                ElementState.PRESENT);
     }
 
     @Override
     public List<CompositionDto> findCompositions() {
-        return cacheProvider.getAcElementsDefinitions().values().stream().map(this::getCompositionDto).toList();
+        return cacheProvider.getCompositionDtos().values().stream().toList();
     }
 
     @Override
     public CompositionDto getComposition(UUID compositionId) {
-        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acDefinition == null) {
-            return null;
-        }
-        return getCompositionDto(acDefinition);
-    }
-
-    private CompositionDto getCompositionDto(AcDefinition acDefinition) {
-        var inPropertiesMap = acDefinition.getElements().values().stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                e -> e.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = acDefinition.getElements().values().stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                AutomationCompositionElementDefinition::getOutProperties));
-        return new CompositionDto(acDefinition.getCompositionId(), inPropertiesMap, outPropertiesMap);
+        return cacheProvider.getCompositionDtos().get(compositionId);
     }
 }
