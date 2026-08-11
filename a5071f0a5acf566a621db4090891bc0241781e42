@@ -46,6 +46,30 @@
       },
       "revId": "a5071f0a5acf566a621db4090891bc0241781e42",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af868903_59639c3a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/dto/CompositionDto.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-11T10:24:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "63b0b725_db2d7434",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "a5071f0a5acf566a621db4090891bc0241781e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
