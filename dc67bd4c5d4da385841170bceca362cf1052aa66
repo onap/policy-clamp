@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f522b0bd_95e7e0ad",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/cache/CacheProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-11T15:10:04Z",
+      "side": 1,
+      "message": "In the next phase, we can use dtos in the cache provider directly and this additional conversion overhead can be eliminated.",
+      "range": {
+        "startLine": 160,
+        "startChar": 16,
+        "endLine": 160,
+        "endChar": 36
+      },
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
