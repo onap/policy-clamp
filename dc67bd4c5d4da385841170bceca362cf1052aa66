@@ -22,6 +22,69 @@
       },
       "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b251d70d_84d731f2",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/cache/CacheProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-11T16:14:25Z",
+      "side": 1,
+      "message": "This and below method are only referenced in CacheProviderTest now - should it be deleted? Same for others like createCompositionElementDto and getCompositionElementDtoMap. Assuming CacheProvider is an internal class that participants can\u0027t access, we should be able to delete them all.",
+      "range": {
+        "startLine": 191,
+        "startChar": 31,
+        "endLine": 191,
+        "endChar": 50
+      },
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac13453f_1eaaa26a",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/cache/CacheProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-11T16:14:25Z",
+      "side": 1,
+      "message": "This and below appear to have zero usages now, could be deleted.",
+      "range": {
+        "startLine": 500,
+        "startChar": 37,
+        "endLine": 500,
+        "endChar": 53
+      },
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7807eae_331e3ea7",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandlerTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-11T16:14:25Z",
+      "side": 1,
+      "message": "Could the setup code for scenario with stages [1,2] above and [0,2] below be removed now if the info comes from DTO and not cache? More broadly, does this whole test need some redesign? If DTO has same stages for all elements, is the test even verifying anything?\n\nOr is there a separate task to deal with all the stage logic?",
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
