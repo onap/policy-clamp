@@ -40,10 +40,6 @@ public class AutomationCompositionMsg<T extends ParticipantMessage> {
 
     private UUID instanceId;
     private UUID revisionIdInstance;
-    private UUID compositionId;
-    private UUID revisionIdComposition;
-    private UUID compositionTargetId;
-    private UUID revisionIdCompositionTarget;
 
     public AutomationCompositionMsg(Consumer<T> consumer, T message) {
         this.consumer = consumer;

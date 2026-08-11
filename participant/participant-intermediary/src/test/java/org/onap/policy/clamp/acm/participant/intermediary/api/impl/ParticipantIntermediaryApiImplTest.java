@@ -35,20 +35,19 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantDtoUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
 import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 class ParticipantIntermediaryApiImplTest {
 
@@ -173,27 +172,26 @@ class ParticipantIntermediaryApiImplTest {
 
     @Test
     void testGetAcElementsDefinitions() {
-        var acElementDefinition = new AutomationCompositionElementDefinition();
-        acElementDefinition.setAcElementDefinitionId(DEFINITION_ELEMENT_ID);
-        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(COMPOSITION_ID);
-        acDefinition.getElements().put(DEFINITION_ELEMENT_ID, acElementDefinition);
-        var map = Map.of(COMPOSITION_ID, acDefinition);
+        var compositionDto = new CompositionDto(COMPOSITION_ID,
+                Map.of(DEFINITION_ELEMENT_ID, Map.of()), Map.of(DEFINITION_ELEMENT_ID, Map.of()));
+        var map = Map.of(COMPOSITION_ID, compositionDto);
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(map);
+        when(cacheProvider.getCompositionDtos()).thenReturn(map);
         var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
         var mapResult = apiImpl.getAcElementsDefinitions();
         assertThat(map).hasSameSizeAs(mapResult);
         assertThat(mapResult.get(COMPOSITION_ID)).isNotEmpty();
-        assertEquals(mapResult.get(COMPOSITION_ID), acDefinition.getElements());
+
+
+        var elementMap = ParticipantDtoUtils.getAutomationCompositionElementDefinitionMap(compositionDto);
+        assertEquals(mapResult.get(COMPOSITION_ID), elementMap);
 
         var result = apiImpl.getAcElementsDefinitions(UUID.randomUUID());
         assertThat(result).isEmpty();
 
         result = apiImpl.getAcElementsDefinitions(COMPOSITION_ID);
-        assertEquals(acDefinition.getElements(), result);
+        assertEquals(elementMap, result);
 
         var element = apiImpl.getAcElementDefinition(UUID.randomUUID(), WRONG_DEF_ELEMENT_ID);
         assertThat(element).isNull();
@@ -202,7 +200,7 @@ class ParticipantIntermediaryApiImplTest {
         assertThat(element).isNull();
 
         element = apiImpl.getAcElementDefinition(COMPOSITION_ID, DEFINITION_ELEMENT_ID);
-        assertEquals(acElementDefinition, element);
+        assertEquals(elementMap.get(DEFINITION_ELEMENT_ID), element);
     }
 
     @Test
@@ -285,16 +283,10 @@ class ParticipantIntermediaryApiImplTest {
 
     @Test
     void testGetCompositionElementDto() {
-        var acElementDefinition = new AutomationCompositionElementDefinition();
-        acElementDefinition.setAcElementDefinitionId(DEFINITION_ELEMENT_ID);
-        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(MAP);
-        acElementDefinition.setOutProperties(MAP);
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(COMPOSITION_ID);
-        acDefinition.getElements().put(DEFINITION_ELEMENT_ID, acElementDefinition);
+        var compositionDto = new CompositionDto(COMPOSITION_ID,
+                Map.of(DEFINITION_ELEMENT_ID, MAP), Map.of(DEFINITION_ELEMENT_ID, MAP));
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(COMPOSITION_ID, acDefinition));
+        when(cacheProvider.getCompositionDtos()).thenReturn(Map.of(COMPOSITION_ID, compositionDto));
         var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
 
@@ -315,24 +307,18 @@ class ParticipantIntermediaryApiImplTest {
         assertThat(element).isNotNull();
         assertEquals(COMPOSITION_ID, element.compositionId());
         assertEquals(DEFINITION_ELEMENT_ID, element.elementDefinitionId());
-        assertEquals(acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
-                element.inProperties());
-        assertEquals(acElementDefinition.getOutProperties(), element.outProperties());
+        assertEquals(MAP, element.inProperties());
+        assertEquals(MAP, element.outProperties());
         assertEquals(ElementState.PRESENT, element.state());
     }
 
     @Test
     void testFindCompositions() {
-        var acElementDefinition = new AutomationCompositionElementDefinition();
-        acElementDefinition.setAcElementDefinitionId(DEFINITION_ELEMENT_ID);
-        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(Map.of());
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(COMPOSITION_ID);
-        acDefinition.getElements().put(DEFINITION_ELEMENT_ID, acElementDefinition);
-        var map = Map.of(COMPOSITION_ID, acDefinition);
+        var compositionDto = new CompositionDto(COMPOSITION_ID,
+                Map.of(DEFINITION_ELEMENT_ID, Map.of()), Map.of(DEFINITION_ELEMENT_ID, Map.of()));
+        var map = Map.of(COMPOSITION_ID, compositionDto);
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(map);
+        when(cacheProvider.getCompositionDtos()).thenReturn(map);
         var automationCompositionHandler = mock(AutomationCompositionOutHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationCompositionHandler, cacheProvider);
         var listResult = apiImpl.findCompositions();

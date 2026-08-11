@@ -57,9 +57,7 @@ public class MsgExecutor {
             var participantReqSync = new ParticipantReqSync();
             participantReqSync.setParticipantId(cacheProvider.getParticipantId());
             participantReqSync.setReplicaId(cacheProvider.getReplicaId());
-            participantReqSync.setCompositionId(message.getCompositionId());
             participantReqSync.setAutomationCompositionId(message.getInstanceId());
-            participantReqSync.setCompositionTargetId(message.getCompositionTargetId());
             publisher.sendParticipantReqSync(participantReqSync);
         }
     }
@@ -80,28 +78,6 @@ public class MsgExecutor {
 
     private boolean validExecution(AutomationCompositionMsg<?> message) {
         var result = true;
-        if (message.getCompositionId() != null) {
-            var valid = cacheProvider.isCompositionDefinitionUpdated(message.getCompositionId(),
-                    message.getRevisionIdComposition());
-            if (valid) {
-                message.setCompositionId(null);
-                message.setRevisionIdComposition(null);
-            } else {
-                LOGGER.info("Composition {} missing or outdated", message.getCompositionId());
-                result = false;
-            }
-        }
-        if (message.getCompositionTargetId() != null) {
-            var valid = cacheProvider.isCompositionDefinitionUpdated(message.getCompositionTargetId(),
-                    message.getRevisionIdCompositionTarget());
-            if (valid) {
-                message.setCompositionTargetId(null);
-                message.setRevisionIdCompositionTarget(null);
-            } else {
-                LOGGER.info("Composition Target {} missing or outdated", message.getCompositionTargetId());
-                result = false;
-            }
-        }
         if (message.getInstanceId() != null) {
             var valid = cacheProvider.isInstanceUpdated(message.getInstanceId(), message.getRevisionIdInstance());
             if (valid) {
