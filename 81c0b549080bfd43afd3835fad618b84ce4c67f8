@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7ad58ee6_2b93a3f3",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AcDefinitionHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-11T11:51:13Z",
+      "side": 1,
+      "message": "the compositionDto can be used to create a new AcDefinition, so it can be saved in cacheProvider.acElementsDefinitions",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 86
+      },
+      "revId": "81c0b549080bfd43afd3835fad618b84ce4c67f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "588a257e_bae7a93b",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AcSubStateHandler.java",
         "patchSetId": 2
