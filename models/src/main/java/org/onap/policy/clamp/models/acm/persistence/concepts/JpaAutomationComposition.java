@@ -117,6 +117,10 @@ public class JpaAutomationComposition implements PfAuthorative<AutomationComposi
     @NotNull
     private String revisionId;
 
+    @Column
+    @NotNull
+    private Boolean deletable;
+
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "instanceId", foreignKey = @ForeignKey(name = "ac_element_fk"))
@@ -141,6 +145,7 @@ public class JpaAutomationComposition implements PfAuthorative<AutomationComposi
         this.description = copyConcept.description;
         this.stateChangeResult = copyConcept.stateChangeResult;
         this.revisionId = copyConcept.revisionId;
+        this.deletable = copyConcept.deletable;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
     }
 
@@ -172,6 +177,7 @@ public class JpaAutomationComposition implements PfAuthorative<AutomationComposi
         automationComposition.setDescription(description);
         automationComposition.setStateChangeResult(stateChangeResult);
         automationComposition.setRevisionId(UUID.fromString(this.revisionId));
+        automationComposition.setDeletable(deletable);
         automationComposition.setElements(LinkedHashMap.newLinkedHashMap(this.elements.size()));
         for (var element : this.elements) {
             automationComposition.getElements().put(UUID.fromString(element.getElementId()), element.toAuthorative());
@@ -197,6 +203,7 @@ public class JpaAutomationComposition implements PfAuthorative<AutomationComposi
         this.description = automationComposition.getDescription();
         this.stateChangeResult = automationComposition.getStateChangeResult();
         this.revisionId = automationComposition.getRevisionId().toString();
+        this.deletable = automationComposition.getDeletable();
         this.elements = new ArrayList<>(automationComposition.getElements().size());
         for (var elementEntry : automationComposition.getElements().entrySet()) {
             var jpaAutomationCompositionElement =

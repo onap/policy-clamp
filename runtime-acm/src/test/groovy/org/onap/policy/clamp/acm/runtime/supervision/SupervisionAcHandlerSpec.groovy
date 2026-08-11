@@ -129,6 +129,7 @@ class SupervisionAcHandlerSpec extends Specification {
         "undeploy" | DeployState.UNDEPLOYING | LockState.NONE    | DeployState.UNDEPLOYED  | null                 | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.undeploy(a, d, d) }
         "lock"     | DeployState.DEPLOYED   | LockState.LOCKING  | null                    | LockState.LOCKED     | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.lock(a, d) }
         "unlock"   | DeployState.DEPLOYED   | LockState.UNLOCKING | null                   | LockState.UNLOCKED   | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.unlock(a, d) }
+        "deleting" | DeployState.DELETING   | LockState.NONE     | DeployState.DELETED     | LockState.NONE       | { h, a -> def d = SupervisionAcHandlerTestHelper.createDefinition(); h.delete(a, d, d) }
     }
 
     def "given an AC with #migrationState migration state element, deploy should throw PfModelRuntimeException"() {
@@ -158,7 +159,7 @@ class SupervisionAcHandlerSpec extends Specification {
         ac.lockState = initialLockState
         ac.elements.values().each { it.lockState = initialLockState }
         def latch = new CountDownLatch(1)
-        helper.stateChangePublisher.send(_, _, _, _,_) >> { latch.countDown() }
+        helper.stateChangePublisher.send(_, _, _,_) >> { latch.countDown() }
 
         when: "#operation is called"
         action(helper.handler, ac)

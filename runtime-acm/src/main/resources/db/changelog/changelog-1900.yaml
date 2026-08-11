@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+# Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,21 +18,30 @@
 
 databaseChangeLog:
   - objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
-  - include:
-      file: db/changelog/changelog-1400.yaml
-  - include:
-      file: db/changelog/changelog-1500.yaml
-  - include:
-      file: db/changelog/changelog-1600.yaml
-  - include:
-      file: db/changelog/changelog-1700.yaml
-  - include:
-      file: db/changelog/changelog-1701.yaml
-  - include:
-      file: db/changelog/changelog-1702.yaml
-  - include:
-      file: db/changelog/changelog-1800.yaml
-  - include:
-      file: db/changelog/changelog-1801.yaml
-  - include:
-      file: db/changelog/changelog-1900.yaml
+
+  - changeSet:
+      author: policy
+      id: 1900-1
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: AutomationComposition
+                columnName: deletable
+      changes:
+        - addColumn:
+            tableName: AutomationComposition
+            columns:
+              - column:
+                  name: deletable
+                  type: BOOLEAN
+                  defaultValue: FALSE
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 1900-tag
+      author: policy
+      changes:
+        - tagDatabase:
+            tag: 1900
