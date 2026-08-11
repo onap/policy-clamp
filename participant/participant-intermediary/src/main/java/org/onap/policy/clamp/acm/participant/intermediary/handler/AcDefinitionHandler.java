@@ -22,7 +22,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -62,8 +61,7 @@ public class AcDefinitionHandler {
     private void prime(ParticipantPrime participantPrimeMsg) {
         var compositionDto = getCompositionDto(participantPrimeMsg.getPrimeDtoList());
         if (compositionDto != null) {
-            cacheProvider.addElementDefinition(compositionDto,
-                    participantPrimeMsg.getRevisionIdComposition());
+            cacheProvider.addCompositionDto(compositionDto);
             listener.prime(participantPrimeMsg.getMessageId(), compositionDto);
         }
     }
@@ -127,12 +125,8 @@ public class AcDefinitionHandler {
 
             var list = collectAcElementDefinition(participantSyncMsg.getParticipantDefinitionUpdates());
             if (!list.isEmpty()) {
-                cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list,
-                        participantSyncMsg.getRevisionIdComposition());
+                cacheProvider.addCompositionDto(participantSyncMsg.getCompositionId(), list);
             }
-            checkComposition(participantSyncMsg);
-        } else if (participantSyncMsg.isRestarting()) {
-            checkComposition(participantSyncMsg);
         }
 
         for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
@@ -143,34 +137,12 @@ public class AcDefinitionHandler {
                     listener.cleanExecution(element.getId(), participantSyncMsg.getMessageId());
                 }
             }
-            checkAutomationComposition(automationcomposition.getAutomationCompositionId());
-        }
-    }
-
-    private void checkComposition(ParticipantSync participantSyncMsg) {
-        // edge case scenario in migration with remove/add elements,
-        // when composition or target composition doesn't contain elements from this participant
-        for (var msg : cacheProvider.getMessagesOnHold().values()) {
-            if (participantSyncMsg.getCompositionId().equals(msg.getCompositionTargetId())) {
-                msg.setCompositionTargetId(null);
-            }
-            if (participantSyncMsg.getCompositionId().equals(msg.getCompositionId())) {
-                msg.setCompositionId(null);
-            }
-        }
-    }
-
-    private void checkAutomationComposition(UUID instanceId) {
-        for (var msg : cacheProvider.getMessagesOnHold().values()) {
-            if (instanceId.equals(msg.getInstanceId())) {
-                msg.setInstanceId(null);
-            }
         }
     }
 
     private void deleteScenario(ParticipantSync participantSyncMsg) {
         if (AcTypeState.COMMISSIONED.equals(participantSyncMsg.getState())) {
-            cacheProvider.removeElementDefinition(participantSyncMsg.getCompositionId());
+            cacheProvider.removeCompositionDto(participantSyncMsg.getCompositionId());
         }
         for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
             cacheProvider.removeAutomationComposition(automationcomposition.getAutomationCompositionId());
