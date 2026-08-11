@@ -52,8 +52,8 @@ class CacheProviderTest {
         var parameter = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameter);
         assertEquals(parameter.getIntermediaryParameters().getParticipantId(), cacheProvider.getParticipantId());
-        assertEquals(parameter.getIntermediaryParameters().getParticipantSupportedElementTypes().get(0),
-                cacheProvider.getSupportedAcElementTypes().get(0));
+        assertEquals(parameter.getIntermediaryParameters().getParticipantSupportedElementTypes().getFirst(),
+                cacheProvider.getSupportedAcElementTypes().getFirst());
     }
 
     @Test
@@ -169,29 +169,6 @@ class CacheProviderTest {
     }
 
     @Test
-    void testIsInstanceUpdated() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var instanceId = UUID.randomUUID();
-        assertTrue(cacheProvider.isInstanceUpdated(instanceId, null));
-        var revisionId = UUID.randomUUID();
-        assertFalse(cacheProvider.isInstanceUpdated(instanceId, revisionId));
-
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
-        automationComposition.setInstanceId(instanceId);
-
-        var participantDeploy =
-                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
-        cacheProvider.initializeAutomationComposition(UUID.randomUUID(), automationComposition.getInstanceId(),
-                participantDeploy, revisionId);
-        assertTrue(cacheProvider.isInstanceUpdated(instanceId, revisionId));
-
-        revisionId = UUID.randomUUID();
-        assertFalse(cacheProvider.isInstanceUpdated(instanceId, revisionId));
-    }
-
-    @Test
     void test_addCompositionDto() {
         var acElementDefinition = new AutomationCompositionElementDefinition();
         acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("name", "1.0.0"));
@@ -302,12 +279,10 @@ class CacheProviderTest {
 
     @Test
     void test_createAcInstanceFromDtoMap() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var compositionId = UUID.randomUUID();
-        var compositionTargetId = UUID.randomUUID();
         var automationComposition = CommonTestData.getTestAutomationCompositions()
-                .getAutomationCompositionList().get(0);
+                .getAutomationCompositionList().getFirst();
         var instanceId = automationComposition.getInstanceId() != null
                 ? automationComposition.getInstanceId() : UUID.randomUUID();
 
@@ -316,12 +291,11 @@ class CacheProviderTest {
         var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
                 participantDtoList, cacheProvider.getParticipantId());
 
-        var acInstance = cacheProvider.createAcInstance(compositionId, compositionTargetId, instanceId,
+        var acInstance = cacheProvider.createAcInstance(compositionId, instanceId,
                 elementDtoMap, DeployState.DEPLOYING, SubState.NONE, UUID.randomUUID());
         assertNotNull(acInstance);
         assertEquals(instanceId, acInstance.getInstanceId());
         assertEquals(compositionId, acInstance.getCompositionId());
-        assertEquals(compositionTargetId, acInstance.getCompositionTargetId());
         assertFalse(acInstance.getElements().isEmpty());
     }
 }
