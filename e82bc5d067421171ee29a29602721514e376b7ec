@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ea61b66_47352c82",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 20
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-11T14:41:42Z",
+      "side": 1,
+      "message": "This file does not exist and not added by this commit I think?",
+      "range": {
+        "startLine": 583,
+        "startChar": 32,
+        "endLine": 583,
+        "endChar": 165
+      },
+      "revId": "e82bc5d067421171ee29a29602721514e376b7ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
