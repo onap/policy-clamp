@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.onap.policy.models.base.PfUtils;
 
 @NoArgsConstructor
 @Data
