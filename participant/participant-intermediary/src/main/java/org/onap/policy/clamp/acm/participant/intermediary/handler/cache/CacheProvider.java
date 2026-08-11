@@ -78,9 +78,6 @@ public class CacheProvider {
     @Getter
     private final Map<UUID, UUID> msgIdentification = new ConcurrentHashMap<>();
 
-    @Getter
-    private final Map<UUID, AutomationCompositionMsg<?>> messagesOnHold = new HashMap<>();
-
     /**
      * Constructor.
      *
@@ -284,7 +281,6 @@ public class CacheProvider {
      * Create AutomationComposition instance from DTOs.
      *
      * @param compositionId the composition Id
-     * @param compositionTargetId the composition target Id
      * @param instanceId the instance Id
      * @param elementDtoMap map of element Id to AcElementDto
      * @param deployState the DeployState
@@ -292,11 +288,10 @@ public class CacheProvider {
      * @param revisionId the identification of the last update
      * @return the AutomationComposition
      */
-    public AutomationComposition createAcInstance(@NonNull UUID compositionId, UUID compositionTargetId,
-            @NonNull UUID instanceId, Map<UUID, AcElementDto> elementDtoMap,
-            DeployState deployState, SubState subState, UUID revisionId) {
-        var acLast = automationCompositions.get(instanceId);
+    public AutomationComposition createAcInstance(@NonNull UUID compositionId, @NonNull UUID instanceId,
+            Map<UUID, AcElementDto> elementDtoMap, DeployState deployState, SubState subState, UUID revisionId) {
         Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
+        UUID compositionTargetId = null;
         for (var dto : elementDtoMap.values()) {
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
             var elementId = instanceElement.elementId();
@@ -305,31 +300,25 @@ public class CacheProvider {
             acElement.setDefinition(dto.getCompositionElement().elementDefinitionId());
             acElement.setProperties(new HashMap<>(instanceElement.inProperties()));
             acElement.setParticipantId(getParticipantId());
-            acElement.setDeployState(deployState);
-            acElement.setSubState(subState);
-            acElement.setLockState(LockState.LOCKED);
-            var acElementLast = acLast != null ? acLast.getElements().get(elementId) : null;
-            if (acElementLast != null) {
-                acElement.setOutProperties(acElementLast.getOutProperties());
-                acElement.setOperationalState(acElementLast.getOperationalState());
-                acElement.setUseState(acElementLast.getUseState());
-            }
+            acElement.setDeployState(dto.getDeployState());
+            acElement.setSubState(dto.getSubState());
+            acElement.setLockState(dto.getLockState());
+            acElement.setOutProperties(new HashMap<>(instanceElement.outProperties()));
+            acElement.setOperationalState(dto.getOperationalState());
+            acElement.setUseState(dto.getUseState());
             acElementMap.put(elementId, acElement);
+            if (dto.getCompositionElementTarget() != null) {
+                compositionTargetId = dto.getCompositionElementTarget().compositionId();
+            }
         }
-        var automationComposition = acLast != null ? acLast : new AutomationComposition();
+        var automationComposition = new AutomationComposition();
+        automationComposition.setElements(acElementMap);
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(instanceId);
-        if (acLast != null) {
-            automationComposition.getElements().putAll(acElementMap);
-        } else {
-            automationComposition.setElements(acElementMap);
-        }
         automationComposition.setDeployState(deployState);
         automationComposition.setSubState(subState);
         automationComposition.setRevisionId(revisionId);
-        if (compositionTargetId != null) {
-            automationComposition.setCompositionTargetId(compositionTargetId);
-        }
+        automationComposition.setCompositionTargetId(compositionTargetId);
 
         automationCompositions.put(instanceId, automationComposition);
         return automationComposition;
@@ -350,25 +339,6 @@ public class CacheProvider {
         acElement.setLockState(LockState.LOCKED);
         acElement.setMigrationState(element.getMigrationState());
         return acElement;
-    }
-
-    /**
-     * Check instance is present and compare the last update.
-     *
-     * @param instanceId the instanceId
-     * @param revisionId the last Update
-     * @return true if the instance is updated
-     */
-    public boolean isInstanceUpdated(UUID instanceId, UUID revisionId) {
-        if (revisionId == null) {
-            // old ACM-r
-            return true;
-        }
-        var automationComposition = automationCompositions.get(instanceId);
-        if (automationComposition == null) {
-            return false;
-        }
-        return revisionId.equals(automationComposition.getRevisionId());
     }
 
     /**

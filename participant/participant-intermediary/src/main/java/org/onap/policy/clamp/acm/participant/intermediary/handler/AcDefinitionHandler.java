@@ -22,7 +22,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -137,15 +136,6 @@ public class AcDefinitionHandler {
                 for (var element : automationcomposition.getAcElementList()) {
                     listener.cleanExecution(element.getId(), participantSyncMsg.getMessageId());
                 }
-            }
-            checkAutomationComposition(automationcomposition.getAutomationCompositionId());
-        }
-    }
-
-    private void checkAutomationComposition(UUID instanceId) {
-        for (var msg : cacheProvider.getMessagesOnHold().values()) {
-            if (instanceId.equals(msg.getInstanceId())) {
-                msg.setInstanceId(null);
             }
         }
     }

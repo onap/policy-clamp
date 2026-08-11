@@ -28,6 +28,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
@@ -70,7 +71,7 @@ public class DtoMapperService {
                     element.getDefinition());
 
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, null,
-                    instanceElementDtoTarget);
+                    instanceElementDtoTarget, element);
 
             var participantId = element.getParticipantId();
             participantDtoMap.computeIfAbsent(participantId, k -> new ArrayList<>()).add(acElementDto);
@@ -145,7 +146,7 @@ public class DtoMapperService {
 
             }
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, compositionElementTarget,
-                    instanceElementTarget);
+                    instanceElementTarget, element);
 
             var participantId = element.getParticipantId();
             participantDtoMap.computeIfAbsent(participantId, k -> new ArrayList<>()).add(acElementDto);
@@ -207,7 +208,7 @@ public class DtoMapperService {
 
             }
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, compositionElementTarget,
-                    instanceElementTarget);
+                    instanceElementTarget, element);
 
             var participantId = element.getParticipantId();
             participantDtoMap.computeIfAbsent(participantId, k -> new ArrayList<>()).add(acElementDto);
@@ -225,15 +226,21 @@ public class DtoMapperService {
         }).toList();
     }
 
-    private AcElementDto buildAcElementDto(CompositionElementDto compositionElementDto,
-                                           InstanceElementDto instanceElementDto,
-                                           CompositionElementDto compositionElementTarget,
-                                           InstanceElementDto instanceElementTarget) {
+    private AcElementDto buildAcElementDto(
+            CompositionElementDto compositionElementDto, InstanceElementDto instanceElementDto,
+            CompositionElementDto compositionElementTarget, InstanceElementDto instanceElementTarget,
+            AutomationCompositionElement element) {
         var acElementDto = new AcElementDto();
         acElementDto.setCompositionElement(compositionElementDto);
         acElementDto.setInstanceElement(instanceElementDto);
         acElementDto.setCompositionElementTarget(compositionElementTarget);
         acElementDto.setInstanceElementTarget(instanceElementTarget);
+        acElementDto.setDeployState(element.getDeployState());
+        acElementDto.setLockState(element.getLockState());
+        acElementDto.setSubState(element.getSubState());
+        acElementDto.setMigrationState(element.getMigrationState());
+        acElementDto.setOperationalState(element.getOperationalState());
+        acElementDto.setUseState(element.getUseState());
 
         return acElementDto;
     }
