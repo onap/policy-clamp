@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97394535_ed6b8b63",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/dto/AcDtoClassesTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-11T10:26:53Z",
+      "side": 1,
+      "message": "Sonar is complaining about these 3 new tests:\n\u003e Join these multiple assertions subject to one assertion chain.\n\nI guess something like this\n\n    assertThat(result).contains(compositionId.toString())\n            .contains(elementDefId.toString())\n            ...",
+      "range": {
+        "startLine": 182,
+        "startChar": 36,
+        "endLine": 189,
+        "endChar": 54
+      },
+      "revId": "895286ded83f45c99079c0a882b0d6346b0dbd6a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
