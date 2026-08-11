@@ -29,7 +29,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
@@ -103,17 +102,6 @@ class ParticipantMessagePublisherSpec extends Specification {
 
         then:
         1 * kafkaTemplate.send(TOPIC, COMPOSITION_ID.toString(), message) >> completedFuture()
-    }
-
-    def "send ParticipantReqSync with participantId as partition key"() {
-        given:
-        def message = new ParticipantReqSync(participantId: PARTICIPANT_ID)
-
-        when:
-        publisher.sendParticipantReqSync(message)
-
-        then:
-        1 * kafkaTemplate.send(TOPIC, PARTICIPANT_ID.toString(), message) >> completedFuture()
     }
 
     def "send without partition key when message has no IDs (should never happen)"() {
