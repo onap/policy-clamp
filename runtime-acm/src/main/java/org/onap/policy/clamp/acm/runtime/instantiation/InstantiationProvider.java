@@ -378,6 +378,10 @@ public class InstantiationProvider {
             supervisionAcHandler.delete(automationComposition, acDefinition,
                     acDefinitionProvider.getAcDefinition(compositionTargetId));
         } else {
+            if (Boolean.TRUE.equals(automationComposition.getDeletable())) {
+                automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
+                return createInstantiationResponse(automationComposition);
+            }
             supervisionAcHandler.delete(automationComposition, acDefinition, null);
         }
 

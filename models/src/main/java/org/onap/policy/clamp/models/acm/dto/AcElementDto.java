@@ -23,6 +23,10 @@ package org.onap.policy.clamp.models.acm.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.MigrationState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 
 /**
  * Base Dto for participant operations.
@@ -39,15 +43,10 @@ public class AcElementDto {
     private CompositionElementDto compositionElementTarget;
     private InstanceElementDto instanceElementTarget;
 
-    /**
-     * Copy constructor for AcELementDto.
-     * @param acElementDto acElementDto object
-     */
-    public AcElementDto(AcElementDto acElementDto) {
-        this.compositionElement = acElementDto.compositionElement;
-        this.instanceElement = acElementDto.instanceElement;
-        this.compositionElementTarget = acElementDto.compositionElementTarget;
-        this.instanceElementTarget = acElementDto.instanceElementTarget;
-    }
-
+    private DeployState deployState;
+    private LockState lockState;
+    private SubState subState;
+    private MigrationState migrationState;
+    private String operationalState;
+    private String useState;
 }

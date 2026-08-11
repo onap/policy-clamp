@@ -34,6 +34,7 @@ import org.onap.policy.models.base.PfUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.kafka.test.context.EmbeddedKafka
@@ -266,10 +267,9 @@ class InstantiationControllerSpec extends Specification {
         resp.body.affectedAutomationComposition == PfUtils.getKey(ac).asIdentifier()
 
         and:
-        def key = PfUtils.getKey(ac)
-        def fromDb = instantiationProvider.getAutomationCompositions(compositionId,
-                key.name, key.version, Pageable.unpaged())
-        fromDb.automationCompositionList[0].deployState == DeployState.DELETING
+        def fromDb = instantiationProvider
+                .getAcInstancesByFilter(null, ac.instanceId.toString(), null, null,  Pageable.unpaged())
+        fromDb.automationCompositionList.isEmpty()
     }
 
     def "delete returns 404 for unknown instance"() {

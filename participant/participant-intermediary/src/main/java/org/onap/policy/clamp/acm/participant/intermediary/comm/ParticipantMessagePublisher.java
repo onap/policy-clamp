@@ -28,7 +28,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantReqSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,16 +48,6 @@ public class ParticipantMessagePublisher {
     public ParticipantMessagePublisher(
             @Qualifier("acmKafkaTemplate") KafkaTemplate<String, ParticipantKafkaMessage> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
-    }
-
-    /**
-     * Method to send Participant Request Sync message to clamp.
-     *
-     * @param participantReqSync the Participant Request Sync
-     */
-    @Timed(value = "publisher.participant_req_sync", description = "PARTICIPANT_REQ_SYNC_MSG messages published")
-    public void sendParticipantReqSync(final ParticipantReqSync participantReqSync) {
-        send(participantReqSync);
     }
 
     /**
