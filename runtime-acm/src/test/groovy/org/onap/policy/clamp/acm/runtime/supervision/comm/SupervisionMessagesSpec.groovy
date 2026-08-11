@@ -99,7 +99,7 @@ class SupervisionMessagesSpec extends Specification {
                 elements: [:])
 
         when:
-        publisher.send(ac, 0, true, automationCompositionDef, automationCompositionDef)
+        publisher.send(ac, true, automationCompositionDef, automationCompositionDef)
 
         then:
         1 * participantPublisher.send(_ as AutomationCompositionStateChange)

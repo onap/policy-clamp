@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.onap.policy.models.base.PfUtils;
 
 @NoArgsConstructor
 @Data
@@ -33,9 +32,4 @@ public class ParticipantDto {
 
     private UUID participantId;
     private List<AcElementDto> elementDtos = new ArrayList<>();
-
-    public ParticipantDto(final ParticipantDto participantDto) {
-        this.participantId = participantDto.participantId;
-        this.elementDtos = PfUtils.mapList(participantDto.elementDtos, AcElementDto::new);
-    }
 }

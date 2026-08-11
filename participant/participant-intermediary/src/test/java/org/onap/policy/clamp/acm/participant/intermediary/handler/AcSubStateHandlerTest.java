@@ -70,9 +70,9 @@ class AcSubStateHandlerTest {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions, UUID.randomUUID());
-        cacheProvider.addElementDefinition(
-                automationComposition.getCompositionTargetId(), definitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(automationComposition.getCompositionId(), definitions);
+        cacheProvider.addCompositionDto(
+                automationComposition.getCompositionTargetId(), definitions);
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
@@ -101,7 +101,7 @@ class AcSubStateHandlerTest {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(automationComposition.getCompositionId(), definitions);
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
@@ -117,7 +117,7 @@ class AcSubStateHandlerTest {
 
         var migrateDefinitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(acMigrate);
-        cacheProvider.addElementDefinition(acMigrate.getCompositionTargetId(), migrateDefinitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(acMigrate.getCompositionTargetId(), migrateDefinitions);
 
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(0);
@@ -158,20 +158,16 @@ class AcSubStateHandlerTest {
 
     @Test
     void handleReviewTest() {
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-
-        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-
         var acPrepareMsg = new AutomationCompositionPrepare();
+        acPrepareMsg.setCompositionId(UUID.randomUUID());
         acPrepareMsg.setPreDeploy(false);
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         acPrepareMsg.setAutomationCompositionId(automationComposition.getInstanceId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-            .thenReturn(automationComposition);
         acPrepareMsg.setParticipantDtoList(
                 CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
 
         var listener = mock(ThreadHandler.class);
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var ach = new AcSubStateHandler(cacheProvider, listener);
         ach.handleAcPrepare(acPrepareMsg);
         verify(listener, times(automationComposition.getElements().size())).review(any(), any(), any());
