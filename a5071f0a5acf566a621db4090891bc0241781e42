@@ -22,6 +22,30 @@
       },
       "revId": "a5071f0a5acf566a621db4090891bc0241781e42",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63b0b725_db2d7434",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/dto/CompositionDto.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-08-11T09:44:07Z",
+      "side": 1,
+      "message": "As sanitizeMap(Map\u003cString, Object\u003e) is not generic enough to accept Map\u003cToscaConceptIdentifier, Map\u003cString, Object\u003e\u003e. Changing the signature to \u003cK\u003e sanitizeMap(Map\u003cK, Object\u003e) or sanitizeMap(Map\u003cObject, Object\u003e) still doesn\u0027t work due to invariance. Using Map\u003cK, ?\u003e wildcard for the value type resolves this, allowing the method to accept any value type.",
+      "parentUuid": "5b3a5733_b66e243a",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "a5071f0a5acf566a621db4090891bc0241781e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
