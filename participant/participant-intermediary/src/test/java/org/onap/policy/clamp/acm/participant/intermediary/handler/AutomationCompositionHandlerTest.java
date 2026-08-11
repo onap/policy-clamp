@@ -58,12 +58,9 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeNullTest() {
         var automationCompositionStateChange = new AutomationCompositionStateChange();
-        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        automationCompositionStateChange.setAutomationCompositionId(automationComposition.getInstanceId());
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
-        automationCompositionStateChange.setDeployOrderedState(DeployOrder.UPDATE);
+        automationCompositionStateChange.setAutomationCompositionId(UUID.randomUUID());
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
+        automationCompositionStateChange.setDeployOrderedState(DeployOrder.UNDEPLOY);
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var ach =
                 new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, mock(ThreadHandler.class));
@@ -76,6 +73,9 @@ class AutomationCompositionHandlerTest {
         automationComposition.setCompositionId(UUID.randomUUID());
         automationComposition.setInstanceId(UUID.randomUUID());
         automationComposition.setCompositionTargetId(UUID.randomUUID());
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.UNDEPLOYING);
+        }
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(CommonTestData.getParticipantId(), automationComposition);
 
@@ -87,7 +87,6 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
         automationCompositionStateChange.setParticipantDtoList(
                 CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
-        automationCompositionStateChange.setCompositionId(automationComposition.getCompositionId());
 
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
@@ -103,10 +102,11 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeUndeployTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.UNDEPLOYING);
+        }
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
+        cacheProvider.getAutomationCompositions().put(automationComposition.getInstanceId(), automationComposition);
 
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
             automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
@@ -118,6 +118,7 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).undeploy(any(), any(), any());
+        automationComposition = cacheProvider.getAutomationCompositions().get(automationComposition.getInstanceId());
         for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.UNDEPLOYING, element.getDeployState());
         }
@@ -131,10 +132,11 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeDeleteTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DELETING);
+        }
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
+        cacheProvider.getAutomationCompositions().put(automationComposition.getInstanceId(), automationComposition);
 
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
             automationComposition.getInstanceId(), DeployOrder.DELETE, LockOrder.NONE);
@@ -146,6 +148,7 @@ class AutomationCompositionHandlerTest {
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         var timesDelete = automationComposition.getElements().size();
         verify(listener, times(timesDelete)).delete(any(), any(), any());
+        automationComposition = cacheProvider.getAutomationCompositions().get(automationComposition.getInstanceId());
         for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.DELETING, element.getDeployState());
         }
@@ -167,8 +170,7 @@ class AutomationCompositionHandlerTest {
 
     @Test
     void handleAcPropertyUpdateTest() {
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var listener = mock(ThreadHandler.class);
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
@@ -177,19 +179,23 @@ class AutomationCompositionHandlerTest {
         assertDoesNotThrow(() -> ach.handleAcPropertyUpdate(updateMsg));
 
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        automationComposition.setDeployState(DeployState.UPDATING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.UPDATING);
+        }
         updateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        updateMsg.setCompositionId(automationComposition.getCompositionId());
         updateMsg.setParticipantDtoList(
                 CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
-
         ach.handleAcPropertyUpdate(updateMsg);
         verify(listener, times(automationComposition.getElements().size())).update(any(), any(), any(), any());
+        automationComposition = cacheProvider.getAutomationCompositions().get(automationComposition.getInstanceId());
         assertEquals(DeployState.UPDATING, automationComposition.getDeployState());
 
         // Update rollback scenario
         updateMsg.setRollback(true);
         ach.handleAcPropertyUpdate(updateMsg);
+        automationComposition = cacheProvider.getAutomationCompositions().get(automationComposition.getInstanceId());
         assertEquals(DeployState.UPDATE_REVERTING, automationComposition.getDeployState());
     }
 
@@ -332,7 +338,6 @@ class AutomationCompositionHandlerTest {
         migrationMsg.setCompositionId(acMigrate.getCompositionId());
         migrationMsg.setAutomationCompositionId(acMigrate.getInstanceId());
         migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
-        migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
         var participantMigrate = CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), acMigrate);
         migrationMsg.setParticipantUpdatesList(List.of(participantMigrate));
         migrationMsg.setParticipantDtoList(rollback
@@ -398,8 +403,7 @@ class AutomationCompositionHandlerTest {
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(CommonTestData.getParticipantId(), automationComposition);
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
-        cacheProvider.addCompositionDto(
-                automationComposition.getCompositionTargetId(), acDefinitions);
+        cacheProvider.addCompositionDto(automationComposition.getCompositionTargetId(), acDefinitions);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
                 automationComposition.getInstanceId(), participantDeploy, UUID.randomUUID());
         cacheProvider.addCompositionDto(automationComposition.getCompositionId(), acRollbackDefinitions);

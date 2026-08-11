@@ -27,7 +27,6 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
@@ -57,11 +56,11 @@ class AcLockHandlerTest {
     void handleAcStateChangeLockTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.UNLOCKED);
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        automationComposition.setLockState(LockState.LOCKING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setLockState(LockState.LOCKING);
+        }
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
 
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
@@ -70,6 +69,7 @@ class AcLockHandlerTest {
         var listener = mock(ThreadHandler.class);
         var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        automationComposition = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
         verify(listener, times(automationComposition.getElements().size())).lock(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
             assertEquals(LockState.LOCKING, element.getLockState());
@@ -85,11 +85,11 @@ class AcLockHandlerTest {
     void handleAcStateChangeUnlockTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         automationComposition.setDeployState(DeployState.DEPLOYED);
-        automationComposition.setLockState(LockState.LOCKED);
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        automationComposition.setLockState(LockState.UNLOCKING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setLockState(LockState.UNLOCKING);
+        }
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
 
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
@@ -98,6 +98,7 @@ class AcLockHandlerTest {
         var listener = mock(ThreadHandler.class);
         var ach = new AcLockHandler(cacheProvider, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        automationComposition = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
         verify(listener, times(automationComposition.getElements().size())).unlock(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
             assertEquals(LockState.UNLOCKING, element.getLockState());
@@ -114,9 +115,7 @@ class AcLockHandlerTest {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.LOCKED);
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
                 automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.NONE);
         var listener = mock(ThreadHandler.class);

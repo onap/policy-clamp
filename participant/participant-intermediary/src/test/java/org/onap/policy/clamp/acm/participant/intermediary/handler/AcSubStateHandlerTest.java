@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,8 @@ class AcSubStateHandlerTest {
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
         cacheProvider.addCompositionDto(automationComposition.getCompositionId(), definitions);
-        cacheProvider.addCompositionDto(automationComposition.getCompositionTargetId(), definitions);
+        cacheProvider.addCompositionDto(
+                automationComposition.getCompositionTargetId(), definitions);
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
@@ -157,20 +158,16 @@ class AcSubStateHandlerTest {
 
     @Test
     void handleReviewTest() {
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-
-        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-
         var acPrepareMsg = new AutomationCompositionPrepare();
+        acPrepareMsg.setCompositionId(UUID.randomUUID());
         acPrepareMsg.setPreDeploy(false);
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         acPrepareMsg.setAutomationCompositionId(automationComposition.getInstanceId());
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-            .thenReturn(automationComposition);
         acPrepareMsg.setParticipantDtoList(
                 CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
 
         var listener = mock(ThreadHandler.class);
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var ach = new AcSubStateHandler(cacheProvider, listener);
         ach.handleAcPrepare(acPrepareMsg);
         verify(listener, times(automationComposition.getElements().size())).review(any(), any(), any());
