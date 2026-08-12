@@ -47,6 +47,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d7d1c4f_3b24cf60",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/cache/CacheProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2026-08-12T12:22:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b251d70d_84d731f2",
+      "range": {
+        "startLine": 191,
+        "startChar": 31,
+        "endLine": 191,
+        "endChar": 50
+      },
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac13453f_1eaaa26a",
@@ -70,6 +94,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b65f48d_35b89796",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/cache/CacheProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2026-08-12T12:22:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac13453f_1eaaa26a",
+      "range": {
+        "startLine": 500,
+        "startChar": 37,
+        "endLine": 500,
+        "endChar": 53
+      },
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f7807eae_331e3ea7",
@@ -83,6 +131,24 @@
       "writtenOn": "2026-08-11T16:14:25Z",
       "side": 1,
       "message": "Could the setup code for scenario with stages [1,2] above and [0,2] below be removed now if the info comes from DTO and not cache? More broadly, does this whole test need some redesign? If DTO has same stages for all elements, is the test even verifying anything?\n\nOr is there a separate task to deal with all the stage logic?",
+      "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86760803_9dff28ed",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandlerTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2026-08-12T12:22:46Z",
+      "side": 1,
+      "message": "I will move this to a separate task",
+      "parentUuid": "f7807eae_331e3ea7",
       "revId": "dc67bd4c5d4da385841170bceca362cf1052aa66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
