@@ -34,6 +34,21 @@ class OpenTelemetryConfigSpec extends Specification {
     def contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(OpenTelemetryConfig))
 
+    def "jdbcTelemetryPostProcessor bean is registered when tracing export is enabled"() {
+        expect:
+        contextRunner.run { context ->
+            assert context.containsBean('jdbcTelemetryPostProcessor')
+            assert context.getBean('jdbcTelemetryPostProcessor') instanceof org.springframework.beans.factory.config.BeanPostProcessor
+        }
+    }
+
+    def "jdbcTelemetryPostProcessor bean is not registered when tracing export is disabled"() {
+        expect:
+        contextRunner.withPropertyValues(TRACING_EXPORT_OFF).run { context ->
+            assert !context.containsBean('jdbcTelemetryPostProcessor')
+        }
+    }
+
     def "JaegerRemoteSampler bean #scenario"() {
         given: "an application context with properties: #properties"
         def runner = contextRunner.withPropertyValues(properties as String[])

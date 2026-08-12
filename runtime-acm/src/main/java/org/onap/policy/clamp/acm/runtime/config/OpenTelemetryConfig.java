@@ -25,6 +25,7 @@ import io.opentelemetry.sdk.trace.samplers.Sampler;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.micrometer.tracing.autoconfigure.ConditionalOnEnabledTracingExport;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnEnabledTracingExport
 public class OpenTelemetryConfig {
+
+    /**
+     * Registers a {@link BeanPostProcessor} that wraps the {@code HikariDataSource} with
+     * OpenTelemetry JDBC instrumentation, enabling database query tracing in Jaeger.
+     *
+     * <p>Declared {@code static} so Spring can register it early in the context lifecycle
+     * without instantiating {@code OpenTelemetryConfig} first, avoiding
+     * {@code BeanPostProcessorChecker} warnings. The {@code OpenTelemetry} instance is
+     * fetched lazily from the {@code ApplicationContext} on first use.
+     *
+     * <p>Active only when {@code management.tracing.export.enabled=true}.
+     */
+    @Bean
+    static BeanPostProcessor jdbcTelemetryPostProcessor() {
+        return new JdbcTelemetryBeanPostProcessor();
+    }
 
     /**
      * Optional configuration for Jaeger Remote Sampling.
