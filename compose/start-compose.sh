@@ -72,6 +72,7 @@ if [ -n "$component" ]; then
     docker compose up -d "${component}" grafana init-kafka --wait
     echo "Prometheus server: http://localhost:${PROMETHEUS_PORT}"
     echo "Grafana server: http://localhost:${GRAFANA_PORT}"
+    echo "Jaeger server: http://localhost:${JAEGER_PORT}"
   else
     docker compose up -d "${component}" init-kafka --wait
   fi
