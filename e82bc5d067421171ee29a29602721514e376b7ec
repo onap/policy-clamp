@@ -22,6 +22,30 @@
       },
       "revId": "e82bc5d067421171ee29a29602721514e376b7ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa8a1e15_69013d16",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 20
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-12T10:48:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ea61b66_47352c82",
+      "range": {
+        "startLine": 583,
+        "startChar": 32,
+        "endLine": 583,
+        "endChar": 165
+      },
+      "revId": "e82bc5d067421171ee29a29602721514e376b7ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
