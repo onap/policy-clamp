@@ -134,6 +134,11 @@
                 <artifactId>re2j</artifactId>
                 <version>1.8</version>
             </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-jdbc</artifactId>
+                <version>2.16.0-alpha</version>
+            </dependency>
 
             <!-- =================================================
                  Test Dependencies
