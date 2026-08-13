@@ -21,21 +21,22 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
-import org.onap.policy.clamp.models.acm.dto.ParticipantDto;
+import org.onap.policy.clamp.models.acm.dto.AcElementDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AcLockHandler {
@@ -51,32 +52,29 @@ public class AcLockHandler {
      * @param stateChangeMsg the state change message
      */
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
-        if (stateChangeMsg.getAutomationCompositionId() == null) {
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
+                stateChangeMsg.getParticipantDtoList(), cacheProvider.getParticipantId());
+        if (elementDtoMap.isEmpty()) {
+            log.warn("AutomationCompositionStateChange is null or empty");
             return;
         }
+
+        cacheProvider.fillCacheComposition(stateChangeMsg.getParticipantDtoList());
 
         var automationComposition = cacheProvider.getAutomationComposition(stateChangeMsg.getAutomationCompositionId());
 
-        if (automationComposition == null) {
-            LOGGER.debug("Automation composition {} does not use this participant",
-                    stateChangeMsg.getAutomationCompositionId());
-            return;
-        }
-
         switch (stateChangeMsg.getLockOrderedState()) {
             case LOCK -> handleLockState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
+                    stateChangeMsg.getStartPhase(), elementDtoMap);
             case UNLOCK -> handleUnlockState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
+                    stateChangeMsg.getStartPhase(), elementDtoMap);
             default -> LOGGER.error("StateChange message has no lock order {}", automationComposition.getInstanceId());
         }
     }
 
     private void handleLockState(UUID messageId, final AutomationComposition automationComposition,
-                                 Integer startPhaseMsg, List<ParticipantDto> participantDtoList) {
+                                 Integer startPhaseMsg, Map<UUID, AcElementDto> elementDtoMap) {
         automationComposition.setLockState(LockState.LOCKING);
-
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
 
         for (var dto : elementDtoMap.values()) {
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
@@ -93,10 +91,8 @@ public class AcLockHandler {
     }
 
     private void handleUnlockState(UUID messageId, final AutomationComposition automationComposition,
-                                   Integer startPhaseMsg, List<ParticipantDto> participantDtoList) {
+                                   Integer startPhaseMsg, Map<UUID, AcElementDto> elementDtoMap) {
         automationComposition.setLockState(LockState.UNLOCKING);
-
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
 
         for (var dto : elementDtoMap.values()) {
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
