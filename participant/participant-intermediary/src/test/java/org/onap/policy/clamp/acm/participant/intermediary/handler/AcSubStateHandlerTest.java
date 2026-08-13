@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,9 +70,8 @@ class AcSubStateHandlerTest {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions, UUID.randomUUID());
-        cacheProvider.addElementDefinition(
-                automationComposition.getCompositionTargetId(), definitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(automationComposition.getCompositionId(), definitions);
+        cacheProvider.addCompositionDto(automationComposition.getCompositionTargetId(), definitions);
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
@@ -101,7 +100,7 @@ class AcSubStateHandlerTest {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         var definitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(automationComposition.getCompositionId(), definitions);
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
@@ -117,7 +116,7 @@ class AcSubStateHandlerTest {
 
         var migrateDefinitions =
                 CommonTestData.createAutomationCompositionElementDefinitionList(acMigrate);
-        cacheProvider.addElementDefinition(acMigrate.getCompositionTargetId(), migrateDefinitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(acMigrate.getCompositionTargetId(), migrateDefinitions);
 
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(0);
