@@ -106,8 +106,6 @@ class ParticipantHandlerTest {
         acStateChange.setCompositionId(UUID.randomUUID());
         acStateChange.setRevisionIdComposition(UUID.randomUUID());
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.isCompositionDefinitionUpdated(acStateChange.getCompositionId(),
-                acStateChange.getRevisionIdComposition())).thenReturn(true);
 
         acStateChange.setDeployOrderedState(DeployOrder.DEPLOY);
         acStateChange.setLockOrderedState(LockOrder.NONE);
@@ -136,8 +134,6 @@ class ParticipantHandlerTest {
         migrationMsg.setCompositionTargetId(UUID.randomUUID());
         migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionTargetId(),
-                migrationMsg.getRevisionIdCompositionTarget())).thenReturn(true);
 
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var participantDeploy = new ParticipantDeploy();
@@ -182,8 +178,6 @@ class ParticipantHandlerTest {
         migrationMsg.setCompositionId(UUID.randomUUID());
         migrationMsg.setRevisionIdComposition(UUID.randomUUID());
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionId(),
-                migrationMsg.getRevisionIdComposition())).thenReturn(true);
 
         migrationMsg.setAutomationCompositionId(UUID.randomUUID());
         migrationMsg.setRevisionIdInstance(UUID.randomUUID());
@@ -213,22 +207,18 @@ class ParticipantHandlerTest {
 
     @Test
     void handleAutomationCompositionMigrationTest() {
-        var cacheProvider = mock(CacheProvider.class);
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setCompositionId(UUID.randomUUID());
         migrationMsg.setRevisionIdComposition(UUID.randomUUID());
-        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionId(),
-                migrationMsg.getRevisionIdComposition())).thenReturn(true);
 
         migrationMsg.setAutomationCompositionId(UUID.randomUUID());
         migrationMsg.setRevisionIdInstance(UUID.randomUUID());
+        var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.isInstanceUpdated(migrationMsg.getAutomationCompositionId(),
                 migrationMsg.getRevisionIdInstance())).thenReturn(true);
 
         migrationMsg.setCompositionTargetId(UUID.randomUUID());
         migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
-        when(cacheProvider.isCompositionDefinitionUpdated(migrationMsg.getCompositionTargetId(),
-                migrationMsg.getRevisionIdCompositionTarget())).thenReturn(true);
 
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var participantDeploy = new ParticipantDeploy();
@@ -260,8 +250,6 @@ class ParticipantHandlerTest {
         propertyUpdateMsg.setCompositionId(UUID.randomUUID());
         propertyUpdateMsg.setRevisionIdComposition(UUID.randomUUID());
         var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.isCompositionDefinitionUpdated(propertyUpdateMsg.getCompositionId(),
-                propertyUpdateMsg.getRevisionIdComposition())).thenReturn(true);
 
         propertyUpdateMsg.setAutomationCompositionId(UUID.randomUUID());
         propertyUpdateMsg.setRevisionIdInstance(UUID.randomUUID());
