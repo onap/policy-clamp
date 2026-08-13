@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -42,6 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.dto.PrimeElementAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
@@ -336,7 +336,7 @@ public class AutomationCompositionOutHandler {
         publisher.sendParticipantPrimeAck(participantPrimeAck);
         cacheProvider.getMsgIdentification().remove(compositionId);
         if (AcTypeState.COMMISSIONED.equals(state) && StateChangeResult.NO_ERROR.equals(stateChangeResult)) {
-            cacheProvider.removeElementDefinition(compositionId);
+            cacheProvider.removeCompositionDto(compositionId);
         }
     }
 
@@ -355,18 +355,18 @@ public class AutomationCompositionOutHandler {
         }
         var statusMsg = createParticipantStatus();
         statusMsg.setCompositionId(compositionId);
-        var acElementDefsMap = cacheProvider.getAcElementsDefinitions();
-        var acDefinition = acElementDefsMap.get(compositionId);
-        if (acDefinition == null) {
+        var acElementDefsMap = cacheProvider.getCompositionDtos();
+        var compositionDto = acElementDefsMap.get(compositionId);
+        if (compositionDto == null) {
             LOGGER.error("Cannot send Composition outProperties, id {} is null", compositionId);
             return;
         }
-        var acElementDefinition = getAutomationCompositionElementDefinition(acDefinition, elementId);
+        var acElementDefinition = getAutomationCompositionElementDefinition(compositionDto, elementId);
         if (acElementDefinition == null) {
             LOGGER.error("Cannot send Composition outProperties, elementId {} not present", elementId);
             return;
         }
-        acElementDefinition.setOutProperties(outProperties);
+        compositionDto.outPropertiesMap().put(acElementDefinition.getAcElementDefinitionId(), outProperties);
         var participantDefinition = new ParticipantDefinition();
         participantDefinition.setParticipantId(cacheProvider.getParticipantId());
         participantDefinition.setAutomationCompositionElementDefinitionList(List.of(acElementDefinition));
@@ -375,16 +375,17 @@ public class AutomationCompositionOutHandler {
     }
 
     private AutomationCompositionElementDefinition getAutomationCompositionElementDefinition(
-            AcDefinition acElementsDefinition,
+            CompositionDto compositionDto,
             ToscaConceptIdentifier elementId) {
 
         if (elementId == null) {
-            if (acElementsDefinition.getElements().size() == 1) {
-                return acElementsDefinition.getElements().values().iterator().next();
+            if (compositionDto.inPropertiesMap().size() == 1) {
+                elementId = compositionDto.inPropertiesMap().entrySet().iterator().next().getKey();
+                return ParticipantDtoUtils.getAutomationCompositionElementDefinition(compositionDto, elementId);
             }
             return null;
         }
-        return acElementsDefinition.getElements().get(elementId);
+        return ParticipantDtoUtils.getAutomationCompositionElementDefinition(compositionDto, elementId);
     }
 
     private ParticipantStatus createParticipantStatus() {
