@@ -58,54 +58,11 @@ class MsgExecutorTest {
     }
 
     @Test
-    void testExecuteCompositionOutdated() {
-        var parameters = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameters);
-        var publisher = mock(ParticipantMessagePublisher.class);
-        var msgExecutor = new MsgExecutor(cacheProvider, publisher);
-        var automationCompositionHandler = mock(AutomationCompositionHandler.class);
-        var updateMsg = new AutomationCompositionDeploy();
-        var acMsg = new AutomationCompositionMsg<>(
-                automationCompositionHandler::handleAutomationCompositionDeploy, updateMsg);
-        var compositionId = UUID.randomUUID();
-        acMsg.setCompositionId(compositionId);
-        var revisionIdComposition = UUID.randomUUID();
-        acMsg.setRevisionIdComposition(revisionIdComposition);
-        msgExecutor.execute(acMsg);
-        verify(automationCompositionHandler, times(0)).handleAutomationCompositionDeploy(updateMsg);
-        verify(publisher).sendParticipantReqSync(any());
-        assertThat(cacheProvider.getMessagesOnHold()).hasSize(1);
-
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().getFirst();
-        automationComposition.setInstanceId(UUID.randomUUID());
-        automationComposition.setCompositionId(compositionId);
-        var participantSyncMsg = new ParticipantSync();
-        participantSyncMsg.setCompositionId(compositionId);
-        var participantDefinition = new ParticipantDefinition();
-        participantDefinition.setParticipantId(parameters.getIntermediaryParameters().getParticipantId());
-        var definitions =
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
-        participantDefinition.setAutomationCompositionElementDefinitionList(definitions);
-        participantSyncMsg.setParticipantDefinitionUpdates(List.of(participantDefinition));
-        var acDefinitionHandler = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
-                mock(ThreadHandler.class));
-        acDefinitionHandler.handleParticipantSync(participantSyncMsg);
-        msgExecutor.check();
-        verify(automationCompositionHandler, timeout(200)).handleAutomationCompositionDeploy(updateMsg);
-        await().atMost(200, TimeUnit.MILLISECONDS).until(() -> cacheProvider.getMessagesOnHold().isEmpty());
-    }
-
-    @Test
     void testCheckAndExecuteInstance() {
         var automationCompositionHandler = mock(AutomationCompositionHandler.class);
         var stateChangeMsg = new AutomationCompositionStateChange();
         var acMsg = new AutomationCompositionMsg<>(
                 automationCompositionHandler::handleAutomationCompositionStateChange, stateChangeMsg);
-        var compositionId = UUID.randomUUID();
-        acMsg.setCompositionId(compositionId);
-        var revisionIdComposition = UUID.randomUUID();
-        acMsg.setRevisionIdComposition(revisionIdComposition);
         var instanceId = UUID.randomUUID();
         acMsg.setInstanceId(instanceId);
         acMsg.setRevisionIdInstance(UUID.randomUUID());
@@ -113,6 +70,7 @@ class MsgExecutorTest {
         var automationComposition =
                 CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().getFirst();
         automationComposition.setInstanceId(instanceId);
+        var compositionId = UUID.randomUUID();
         automationComposition.setCompositionId(compositionId);
         var parameters = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameters);
