@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler.cache;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -44,6 +43,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 class CacheProviderTest {
 
@@ -98,9 +98,9 @@ class CacheProviderTest {
         var cacheProvider = new CacheProvider(parameter);
         var instanceId = UUID.randomUUID();
 
-        assertThatThrownBy(() -> cacheProvider.addElementDefinition(null, null, null))
+        assertThatThrownBy(() -> cacheProvider.addCompositionDto(null, null))
                 .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.addElementDefinition(instanceId, null, null))
+        assertThatThrownBy(() -> cacheProvider.addCompositionDto(instanceId, null))
                 .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.getAutomationComposition(null)).isInstanceOf(NullPointerException.class);
@@ -108,7 +108,7 @@ class CacheProviderTest {
         assertThatThrownBy(() -> cacheProvider.removeAutomationComposition(null))
                 .isInstanceOf(NullPointerException.class);
 
-        assertThatThrownBy(() -> cacheProvider.removeElementDefinition(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.removeCompositionDto(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -169,28 +169,6 @@ class CacheProviderTest {
     }
 
     @Test
-    void testIsCompositionDefinitionUpdated() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var compositionId = UUID.randomUUID();
-        assertTrue(cacheProvider.isCompositionDefinitionUpdated(compositionId, null));
-
-        var revisionId = UUID.randomUUID();
-        assertFalse(cacheProvider.isCompositionDefinitionUpdated(compositionId, revisionId));
-
-        var automationComposition =
-                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
-        automationComposition.setCompositionId(compositionId);
-        cacheProvider.addElementDefinition(compositionId,
-                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition),
-                revisionId);
-        assertTrue(cacheProvider.isCompositionDefinitionUpdated(compositionId, revisionId));
-
-        revisionId = UUID.randomUUID();
-        assertFalse(cacheProvider.isCompositionDefinitionUpdated(compositionId, revisionId));
-    }
-
-    @Test
     void testIsInstanceUpdated() {
         var parameter = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameter);
@@ -214,55 +192,51 @@ class CacheProviderTest {
     }
 
     @Test
-    void test_addElementDefinition() {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var compositionId = UUID.randomUUID();
-        var revisionId = UUID.randomUUID();
-
+    void test_addCompositionDto() {
         var acElementDefinition = new AutomationCompositionElementDefinition();
         acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("name", "1.0.0"));
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
+        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(Map.of());
         var list = new ArrayList<AutomationCompositionElementDefinition>();
         list.add(acElementDefinition);
 
-        cacheProvider.addElementDefinition(compositionId, list, revisionId);
-        assertEquals(1, cacheProvider.getAcElementsDefinitions().size());
-        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        assertNotNull(acDefinition);
-        assertEquals(compositionId, acDefinition.getCompositionId());
-        assertEquals(revisionId, acDefinition.getRevisionId());
-
-        var element = acDefinition.getElements().get(acElementDefinition.getAcElementDefinitionId());
-        assertEquals(acElementDefinition, element);
-        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
-        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate().getProperties());
-    }
-
-    @Test
-    void test_addElementDefinitionFromCompositionDto() {
         var parameter = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameter);
         var compositionId = UUID.randomUUID();
-        var revisionId = UUID.randomUUID();
+        cacheProvider.addCompositionDto(compositionId, list);
+        assertEquals(1, cacheProvider.getCompositionDtos().size());
+        var compositionDto = cacheProvider.getCompositionDtos().get(compositionId);
+        assertNotNull(compositionDto);
+        assertEquals(compositionId, compositionDto.compositionId());
+
+        var properties = compositionDto.inPropertiesMap().get(acElementDefinition.getAcElementDefinitionId());
+        assertEquals(acElementDefinition
+                .getAutomationCompositionElementToscaNodeTemplate().getProperties(), properties);
+    }
+
+    @Test
+    void test_addCompositionDtoFromCompositionDto() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
         var elementId = new ToscaConceptIdentifier("name", "1.0.0");
 
         var inProperties = Map.of(elementId, Map.<String, Object>of("startPhase", 0));
         var outProperties = Map.of(elementId, Map.<String, Object>of("key", "value"));
         var compositionDto = new CompositionDto(compositionId, inProperties, outProperties);
 
-        cacheProvider.addElementDefinition(compositionDto, revisionId);
-        assertEquals(1, cacheProvider.getAcElementsDefinitions().size());
-        var acDefinition = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        assertNotNull(acDefinition);
-        assertEquals(compositionId, acDefinition.getCompositionId());
-        assertEquals(revisionId, acDefinition.getRevisionId());
+        cacheProvider.addCompositionDto(compositionDto);
+        assertEquals(1, cacheProvider.getCompositionDtos().size());
+        var result = cacheProvider.getCompositionDtos().get(compositionId);
+        assertNotNull(result);
+        assertEquals(compositionId, result.compositionId());
 
-        var element = acDefinition.getElements().get(elementId);
-        assertNotNull(element);
-        assertEquals(elementId, element.getAcElementDefinitionId());
-        assertNotNull(element.getAutomationCompositionElementToscaNodeTemplate());
-        assertEquals(0, element.getAutomationCompositionElementToscaNodeTemplate().getProperties().get("startPhase"));
-        assertEquals("value", element.getOutProperties().get("key"));
+        var properties = result.inPropertiesMap().get(elementId);
+        assertNotNull(properties);
+        assertEquals(0, properties.get("startPhase"));
+
+        properties = result.outPropertiesMap().get(elementId);
+        assertEquals("value", properties.get("key"));
     }
 
     @Test

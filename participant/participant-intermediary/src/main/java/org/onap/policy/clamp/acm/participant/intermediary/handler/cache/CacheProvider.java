@@ -43,10 +43,11 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.dto.AcElementDto;
 import org.onap.policy.clamp.models.acm.dto.CompositionDto;
+import org.onap.policy.clamp.models.acm.dto.ParticipantDto;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.utils.validation.Assertions;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -72,7 +73,7 @@ public class CacheProvider {
     private final Map<UUID, AutomationComposition> automationCompositions = new ConcurrentHashMap<>();
 
     @Getter
-    private final Map<UUID, AcDefinition> acElementsDefinitions = new ConcurrentHashMap<>();
+    private final Map<UUID, CompositionDto> compositionDtos = new ConcurrentHashMap<>();
 
     @Getter
     private final Map<UUID, UUID> msgIdentification = new ConcurrentHashMap<>();
@@ -123,58 +124,28 @@ public class CacheProvider {
     }
 
     /**
-     * Add ElementDefinition.
+     * Add CompositionDto.
      *
      * @param compositionId the composition Id
      * @param list the list of AutomationCompositionElementDefinition to add
-     * @param revisionId the last Update
      */
-    public void addElementDefinition(@NonNull UUID compositionId, List<AutomationCompositionElementDefinition> list,
-            UUID revisionId) {
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(compositionId);
-        acDefinition.setRevisionId(revisionId);
-        for (var acElementDefinition : list) {
-            if (acElementDefinition.getAutomationCompositionElementToscaNodeTemplate() == null) {
-                acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
-            }
-            if (acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().getProperties() == null) {
-                acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(new HashMap<>());
-            }
-            acDefinition.getElements().put(acElementDefinition.getAcElementDefinitionId(), acElementDefinition);
-        }
-        acElementsDefinitions.put(compositionId, acDefinition);
+    public void addCompositionDto(@NonNull UUID compositionId, List<AutomationCompositionElementDefinition> list) {
+        compositionDtos.put(compositionId, AcmUtils.createCompositionDto(compositionId, list));
         LOGGER.info("Updated cache for the composition id {}", compositionId);
     }
 
     /**
-     * Add element definition from a CompositionDto.
+     * Add CompositionDto.
      *
      * @param compositionDto the CompositionDto from the prime message
-     * @param revisionId last revision
      */
-    public void addElementDefinition(@NonNull CompositionDto compositionDto, UUID revisionId) {
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(compositionDto.compositionId());
-        acDefinition.setRevisionId(revisionId);
-        for (var entry : compositionDto.inPropertiesMap().entrySet()) {
-            var acElementDefinition = new AutomationCompositionElementDefinition();
-            acElementDefinition.setAcElementDefinitionId(entry.getKey());
-            var nodeTemplate = new ToscaNodeTemplate();
-            nodeTemplate.setProperties(new HashMap<>(entry.getValue()));
-            acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
-            var outProps = compositionDto.outPropertiesMap().get(entry.getKey());
-            if (outProps != null) {
-                acElementDefinition.setOutProperties(new LinkedHashMap<>(outProps));
-            }
-            acDefinition.getElements().put(entry.getKey(), acElementDefinition);
-        }
-        acElementsDefinitions.put(compositionDto.compositionId(), acDefinition);
+    public void addCompositionDto(@NonNull CompositionDto compositionDto) {
+        compositionDtos.put(compositionDto.compositionId(), compositionDto);
         LOGGER.info("Updated cache for the composition id {}", compositionDto.compositionId());
     }
 
-    public void removeElementDefinition(@NonNull UUID compositionId) {
-        acElementsDefinitions.remove(compositionId);
+    public void removeCompositionDto(@NonNull UUID compositionId) {
+        compositionDtos.remove(compositionId);
     }
 
     /**
@@ -375,25 +346,6 @@ public class CacheProvider {
     }
 
     /**
-     * Check composition is present and compare the last update.
-     *
-     * @param compositionId the instanceId
-     * @param revisionId the last Update
-     * @return true if the composition is updated
-     */
-    public boolean isCompositionDefinitionUpdated(UUID compositionId, UUID revisionId) {
-        if (revisionId == null) {
-            // old ACM-r
-            return true;
-        }
-        var acDefinition = acElementsDefinitions.get(compositionId);
-        if (acDefinition == null) {
-            return false;
-        }
-        return revisionId.equals(acDefinition.getRevisionId());
-    }
-
-    /**
      * Check instance is present and compare the last update.
      *
      * @param instanceId the instanceId
@@ -410,5 +362,21 @@ public class CacheProvider {
             return false;
         }
         return revisionId.equals(automationComposition.getRevisionId());
+    }
+
+    /**
+     * Fill Cache Composition and Composition target.
+     *
+     * @param participantDtoList the list of ParticipantDto from the Kafka message
+     */
+    public void fillCacheComposition(List<ParticipantDto> participantDtoList) {
+        var compositionDto = ParticipantDtoUtils.getCompositionDto(participantDtoList, getParticipantId());
+        if (compositionDto != null) {
+            addCompositionDto(compositionDto);
+        }
+        var compositionTargetDto = ParticipantDtoUtils.getCompositionTargetDto(participantDtoList, getParticipantId());
+        if (compositionTargetDto != null) {
+            addCompositionDto(compositionTargetDto);
+        }
     }
 }

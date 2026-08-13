@@ -87,10 +87,7 @@ public class ParticipantHandler {
             value = "listener.automation_composition_update",
             description = "AUTOMATION_COMPOSITION_UPDATE messages received")
     public void handleAutomationCompositionDeploy(AutomationCompositionDeploy updateMsg) {
-        var acMsg = new AutomationCompositionMsg<>(
-                automationCompositionHandler::handleAutomationCompositionDeploy, updateMsg);
-        setCompositionUpdate(updateMsg, acMsg);
-        msgExecutor.execute(acMsg);
+        automationCompositionHandler.handleAutomationCompositionDeploy(updateMsg);
     }
 
     /**
@@ -107,7 +104,6 @@ public class ParticipantHandler {
                 acLockHandler::handleAutomationCompositionStateChange, stateChangeMsg)
                 : new AutomationCompositionMsg<>(
                 automationCompositionHandler::handleAutomationCompositionStateChange, stateChangeMsg);
-        setCompositionUpdate(stateChangeMsg, acMsg);
         if (!DeployOrder.DELETE.equals(stateChangeMsg.getDeployOrderedState())) {
             setInstanceUpdate(stateChangeMsg, acMsg);
         }
@@ -123,16 +119,17 @@ public class ParticipantHandler {
             value = "listener.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages received")
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
-        var stateNew = false;
         var stateDefault = false;
         var stateRemoved = false;
         for (var ac : migrationMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(ac.getParticipantId())) {
                 for (var element : ac.getAcElementList()) {
                     switch (element.getMigrationState()) {
-                        case NEW -> stateNew = true;
+                        case DEFAULT -> stateDefault = true;
                         case REMOVED -> stateRemoved = true;
-                        default -> stateDefault = true;
+                        default -> {
+                            // do nothing
+                        }
                     }
                 }
             }
@@ -141,22 +138,17 @@ public class ParticipantHandler {
                 ? new AutomationCompositionMsg<>(acSubStateHandler::handleAcMigrationPrecheck, migrationMsg)
                 : new AutomationCompositionMsg<>(
                 automationCompositionHandler::handleAutomationCompositionMigration, migrationMsg);
-        setUpdate(migrationMsg, acMsg, stateNew, stateDefault, stateRemoved);
+        setUpdate(migrationMsg, acMsg, stateDefault, stateRemoved);
         msgExecutor.execute(acMsg);
     }
 
     private void setUpdate(AutomationCompositionMigration migrationMsg,
-            AutomationCompositionMsg<AutomationCompositionMigration> acMsg, boolean stateNew, boolean stateDefault,
+            AutomationCompositionMsg<AutomationCompositionMigration> acMsg, boolean stateDefault,
             boolean stateRemoved) {
         if (stateDefault || stateRemoved) {
-            setCompositionUpdate(migrationMsg, acMsg);
             setInstanceUpdate(migrationMsg, acMsg);
         } else {
             checkAutomationComposition(migrationMsg);
-        }
-        if (stateDefault || stateNew) {
-            acMsg.setCompositionTargetId(migrationMsg.getCompositionTargetId());
-            acMsg.setRevisionIdCompositionTarget(migrationMsg.getRevisionIdCompositionTarget());
         }
     }
 
@@ -184,7 +176,6 @@ public class ParticipantHandler {
     public void handleAcPropertyUpdate(PropertiesUpdate propertyUpdateMsg) {
         var acMsg = new AutomationCompositionMsg<>(
                 automationCompositionHandler::handleAcPropertyUpdate, propertyUpdateMsg);
-        setCompositionUpdate(propertyUpdateMsg, acMsg);
         setInstanceUpdate(propertyUpdateMsg, acMsg);
         msgExecutor.execute(acMsg);
     }
@@ -198,16 +189,10 @@ public class ParticipantHandler {
     public void handleAutomationCompositionPrepare(AutomationCompositionPrepare acPrepareMsg) {
         var acMsg = new AutomationCompositionMsg<>(
                 acSubStateHandler::handleAcPrepare, acPrepareMsg);
-        setCompositionUpdate(acPrepareMsg, acMsg);
         if (!acPrepareMsg.isPreDeploy()) {
             setInstanceUpdate(acPrepareMsg, acMsg);
         }
         msgExecutor.execute(acMsg);
-    }
-
-    private void setCompositionUpdate(ParticipantMessage participantMsg, AutomationCompositionMsg<?> acMsg) {
-        acMsg.setCompositionId(participantMsg.getCompositionId());
-        acMsg.setRevisionIdComposition(participantMsg.getRevisionIdComposition());
     }
 
     private void setInstanceUpdate(ParticipantMessage participantMsg, AutomationCompositionMsg<?> acMsg) {
