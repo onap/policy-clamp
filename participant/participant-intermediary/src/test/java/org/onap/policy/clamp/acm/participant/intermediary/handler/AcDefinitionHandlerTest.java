@@ -30,8 +30,6 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AutomationCompositionMsg;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -60,7 +58,7 @@ class AcDefinitionHandlerTest {
         var listener = mock(ThreadHandler.class);
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handlePrime(participantPrimeMsg);
-        verify(cacheProvider).addElementDefinition(any(CompositionDto.class), any(UUID.class));
+        verify(cacheProvider).addCompositionDto(any(CompositionDto.class));
         verify(listener).prime(any(UUID.class), any(CompositionDto.class));
     }
 
@@ -86,16 +84,14 @@ class AcDefinitionHandlerTest {
 
     @Test
     void handleCompositionDeprimeTest() {
-        var acElementDefinition = CommonTestData.createAutomationCompositionElementDefinition(
-                new ToscaConceptIdentifier("key", "1.0.0"));
-        var acDefinition = new AcDefinition();
         var compositionId = UUID.randomUUID();
-        acDefinition.setCompositionId(compositionId);
-        acDefinition.getElements().put(acElementDefinition.getAcElementDefinitionId(), acElementDefinition);
+        var elementId = new ToscaConceptIdentifier("key", "1.0.0");
+        var compositionDto = new CompositionDto(compositionId,
+                Map.of(elementId, Map.of()), Map.of(elementId, Map.of()));
 
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionId, acDefinition));
+        when(cacheProvider.getCompositionDtos()).thenReturn(Map.of(compositionId, compositionDto));
         var participantPrimeMsg = new ParticipantPrime();
         participantPrimeMsg.setCompositionId(compositionId);
         participantPrimeMsg.setPrimeOrder(PrimeOrder.DEPRIME);
@@ -137,7 +133,7 @@ class AcDefinitionHandlerTest {
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handleParticipantSync(participantSyncMsg);
         verify(cacheProvider).initializeAutomationComposition(any(UUID.class), any());
-        verify(cacheProvider).addElementDefinition(any(UUID.class), any(), any(UUID.class));
+        verify(cacheProvider).addCompositionDto(any(UUID.class), any());
     }
 
     @Test
@@ -159,9 +155,9 @@ class AcDefinitionHandlerTest {
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handleParticipantSync(participantSyncMsg);
         verify(cacheProvider).initializeAutomationComposition(any(UUID.class), any());
-        verify(cacheProvider).addElementDefinition(any(UUID.class), any(), any(UUID.class));
+        verify(cacheProvider).addCompositionDto(any(UUID.class), any());
         verify(listener).cleanExecution(participantSyncMsg.getCompositionId(), participantSyncMsg.getMessageId());
-        var elementId = participantRestartAc.getAcElementList().get(0).getId();
+        var elementId = participantRestartAc.getAcElementList().getFirst().getId();
         verify(listener).cleanExecution(elementId, participantSyncMsg.getMessageId());
     }
 
@@ -179,32 +175,7 @@ class AcDefinitionHandlerTest {
         var listener = mock(ThreadHandler.class);
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handleParticipantSync(participantSyncMsg);
-        verify(cacheProvider).removeElementDefinition(participantSyncMsg.getCompositionId());
+        verify(cacheProvider).removeCompositionDto(participantSyncMsg.getCompositionId());
         verify(cacheProvider).removeAutomationComposition(restartAc.getAutomationCompositionId());
-    }
-
-    @Test
-    void syncDeleteInMigrationTest() {
-        var participantSyncMsg = new ParticipantSync();
-        participantSyncMsg.setState(AcTypeState.PRIMED);
-        participantSyncMsg.setRestarting(true);
-        var compositionId = UUID.randomUUID();
-        participantSyncMsg.setCompositionId(compositionId);
-
-        AutomationCompositionMsg<?> acMsgComposition = mock(AutomationCompositionMsg.class);
-        when(acMsgComposition.getCompositionId()).thenReturn(compositionId);
-
-        AutomationCompositionMsg<?> acMsgCompositionTarget = mock(AutomationCompositionMsg.class);
-        acMsgCompositionTarget.setCompositionId(UUID.randomUUID());
-        when(acMsgCompositionTarget.getCompositionTargetId()).thenReturn(compositionId);
-
-        var cacheProvider = mock(CacheProvider.class);
-        when(cacheProvider.getMessagesOnHold())
-                .thenReturn(Map.of(UUID.randomUUID(), acMsgComposition, UUID.randomUUID(), acMsgCompositionTarget));
-        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
-                mock(ThreadHandler.class));
-        ach.handleParticipantSync(participantSyncMsg);
-        verify(acMsgComposition).setCompositionId(null);
-        verify(acMsgCompositionTarget).setCompositionTargetId(null);
     }
 }
