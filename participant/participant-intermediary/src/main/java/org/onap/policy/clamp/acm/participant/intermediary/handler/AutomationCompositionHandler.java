@@ -21,7 +21,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +38,6 @@ import org.onap.policy.clamp.models.acm.dto.AcElementDto;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
 import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
-import org.onap.policy.clamp.models.acm.dto.ParticipantDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -90,12 +88,15 @@ public class AutomationCompositionHandler {
             }
             return;
         }
+        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
+                stateChangeMsg.getParticipantDtoList(), cacheProvider.getParticipantId());
+        cacheProvider.fillCacheComposition(stateChangeMsg.getParticipantDtoList());
 
         switch (stateChangeMsg.getDeployOrderedState()) {
             case UNDEPLOY -> handleUndeployState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
+                    stateChangeMsg.getStartPhase(), elementDtoMap);
             case DELETE -> handleDeleteState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
+                    stateChangeMsg.getStartPhase(), elementDtoMap);
             default -> LOGGER.error(
                     "StateChange message has no state, state is null {}", automationComposition.getInstanceId());
         }
@@ -124,6 +125,7 @@ public class AutomationCompositionHandler {
 
         var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
                 updateMsg.getParticipantDtoList(), cacheProvider.getParticipantId());
+        cacheProvider.fillCacheComposition(updateMsg.getParticipantDtoList());
         updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(),
                 elementDtoMap, updateMsg.isRollback());
         callParticipantUpdateProperty(updateMsg.getMessageId(), elementDtoMap);
@@ -143,6 +145,7 @@ public class AutomationCompositionHandler {
 
         var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(
                 deployMsg.getParticipantDtoList(), cacheProvider.getParticipantId());
+        cacheProvider.fillCacheComposition(deployMsg.getParticipantDtoList());
 
         if (deployMsg.isFirstStartPhase()) {
             cacheProvider.createAcInstance(deployMsg.getCompositionId(), null,
@@ -151,15 +154,13 @@ public class AutomationCompositionHandler {
         }
 
         callParticipantDeploy(deployMsg.getMessageId(), deployMsg.getStartPhase(),
-                deployMsg.getAutomationCompositionId(), deployMsg.getParticipantDtoList());
+                deployMsg.getAutomationCompositionId(), elementDtoMap);
     }
 
     private void callParticipantDeploy(UUID messageId, Integer startPhaseMsg,
-            UUID instanceId, List<ParticipantDto> participantDtoList) {
+            UUID instanceId, Map<UUID, AcElementDto> elementDtoMap) {
         var automationComposition = cacheProvider.getAutomationComposition(instanceId);
         automationComposition.setDeployState(DeployState.DEPLOYING);
-
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
 
         for (var dto : elementDtoMap.values()) {
             int startPhase = AcmStageUtils.findStartPhase(dto.getCompositionElement().inProperties());
@@ -260,10 +261,8 @@ public class AutomationCompositionHandler {
      * @param automationComposition participant response
      */
     private void handleUndeployState(UUID messageId, final AutomationComposition automationComposition,
-            Integer startPhaseMsg, List<ParticipantDto> participantDtoList) {
+            Integer startPhaseMsg, Map<UUID, AcElementDto> elementDtoMap) {
         automationComposition.setDeployState(DeployState.UNDEPLOYING);
-
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
 
         for (var dto : elementDtoMap.values()) {
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
@@ -283,10 +282,8 @@ public class AutomationCompositionHandler {
     }
 
     private void handleDeleteState(UUID messageId, final AutomationComposition automationComposition,
-            Integer startPhaseMsg, List<ParticipantDto> participantDtoList) {
+            Integer startPhaseMsg, Map<UUID, AcElementDto> elementDtoMap) {
         automationComposition.setDeployState(DeployState.DELETING);
-
-        var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
 
         for (var dto : elementDtoMap.values()) {
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
@@ -310,6 +307,8 @@ public class AutomationCompositionHandler {
      */
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
         var automationComposition = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
+        cacheProvider.fillCacheComposition(migrationMsg.getParticipantDtoList());
+
         if (Boolean.FALSE.equals(migrationMsg.getRollback())) {
             handleMigration(automationComposition, migrationMsg);
         } else {
@@ -359,6 +358,7 @@ public class AutomationCompositionHandler {
     private void callParticipantRollback(AutomationCompositionMigration migrationMsg) {
         var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(migrationMsg.getParticipantDtoList(),
                 cacheProvider.getParticipantId());
+
         var defaultValue = Boolean.TRUE.equals(migrationMsg.getFirstStage())
                 ? migrationMsg.getStage() : migrationMsg.getStage() + 1;
 

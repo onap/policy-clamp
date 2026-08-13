@@ -30,21 +30,21 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStageDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementStateDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.AcDefinition;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.cache.CacheProvider;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
@@ -305,7 +305,7 @@ class AutomationCompositionOutHandlerTest {
         acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Primed", null);
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
-        verify(cacheProvider, times(0)).removeElementDefinition(compositionId);
+        verify(cacheProvider, times(0)).removeCompositionDto(compositionId);
 
         clearInvocations(publisher);
         acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
@@ -323,7 +323,7 @@ class AutomationCompositionOutHandlerTest {
         acOutHandler.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
                 "Deprimed", null);
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
-        verify(cacheProvider).removeElementDefinition(compositionId);
+        verify(cacheProvider).removeCompositionDto(compositionId);
     }
 
     @Test
@@ -331,10 +331,10 @@ class AutomationCompositionOutHandlerTest {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
         var compositionId = UUID.randomUUID();
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(compositionId);
-        acDefinition.getElements().put(ELEMENT_ID, new AutomationCompositionElementDefinition());
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionId, acDefinition));
+        var compositionDto = new CompositionDto(compositionId, new HashMap<>(), new HashMap<>());
+        compositionDto.inPropertiesMap().put(ELEMENT_ID, Map.of());
+        compositionDto.outPropertiesMap().put(ELEMENT_ID, Map.of());
+        when(cacheProvider.getCompositionDtos()).thenReturn(Map.of(compositionId, compositionDto));
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
@@ -356,10 +356,10 @@ class AutomationCompositionOutHandlerTest {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
         var compositionId = UUID.randomUUID();
-        var acDefinition = new AcDefinition();
-        acDefinition.setCompositionId(compositionId);
-        acDefinition.getElements().put(ELEMENT_ID, new AutomationCompositionElementDefinition());
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionId, acDefinition));
+        var compositionDto = new CompositionDto(compositionId, new HashMap<>(), new HashMap<>());
+        compositionDto.inPropertiesMap().put(ELEMENT_ID, Map.of());
+        compositionDto.outPropertiesMap().put(ELEMENT_ID, Map.of());
+        when(cacheProvider.getCompositionDtos()).thenReturn(Map.of(compositionId, compositionDto));
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
@@ -382,7 +382,8 @@ class AutomationCompositionOutHandlerTest {
         var compositionTarget = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTarget);
         automationComposition.setDeployState(DeployState.DEPLOYED);
-        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionTarget, new AcDefinition()));
+        var compositionDto = new CompositionDto(compositionTarget, Map.of(), Map.of());
+        when(cacheProvider.getCompositionDtos()).thenReturn(Map.of(compositionTarget, compositionDto));
 
         for (var element : automationComposition.getElements().values()) {
             acOutHandler.updateAutomationCompositionElementState(new ElementStateDto(
