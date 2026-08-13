@@ -123,14 +123,13 @@ public class DtoMapperService {
                         ElementState.NOT_PRESENT);
                 compositionElementDto = new CompositionElementDto(automationComposition.getCompositionId(),
                         element.getDefinition(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
-                instanceElementTarget = AcElementDtoMapper.toInstanceElementDto(instanceId,
-                        automationComposition.getElements().get(element.getId()), ElementState.NEW);
+                instanceElementTarget = AcElementDtoMapper.toInstanceElementDto(instanceId, element, ElementState.NEW);
                 compositionElementTarget = AcElementDtoMapper.toCompositionElementDto(acDefinitionTarget,
                         element.getDefinition(), ElementState.NEW);
             } else if (MigrationState.REMOVED.equals(element.getMigrationState())) {
                 compositionElementTarget = new CompositionElementDto(automationComposition.getCompositionTargetId(),
                         element.getDefinition(), Map.of(), Map.of(), ElementState.REMOVED);
-                instanceElementTarget = new InstanceElementDto(automationComposition.getCompositionId(),
+                instanceElementTarget = new InstanceElementDto(instanceId,
                         element.getId(), Map.of(), Map.of(), ElementState.REMOVED);
                 instanceElementDto = AcElementDtoMapper.toInstanceElementDto(instanceId, element);
                 compositionElementDto = AcElementDtoMapper.toCompositionElementDto(acDefinition,
@@ -139,10 +138,10 @@ public class DtoMapperService {
                 compositionElementTarget = AcElementDtoMapper.toCompositionElementDto(acDefinitionTarget,
                         element.getDefinition());
                 instanceElementTarget = AcElementDtoMapper.toInstanceElementDto(instanceId, element);
-                instanceElementDto = AcElementDtoMapper.toInstanceElementDto(instanceId,
-                        acPriorUpdate.getElements().get(element.getId()));
+                var elementPrior = acPriorUpdate.getElements().get(element.getId());
+                instanceElementDto = AcElementDtoMapper.toInstanceElementDto(instanceId, elementPrior);
                 compositionElementDto = AcElementDtoMapper.toCompositionElementDto(acDefinition,
-                        element.getDefinition());
+                        elementPrior.getDefinition());
 
             }
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, compositionElementTarget,
@@ -201,10 +200,10 @@ public class DtoMapperService {
                 compositionElementTarget = AcElementDtoMapper.toCompositionElementDto(acDefinition,
                         element.getDefinition());
                 instanceElementTarget = AcElementDtoMapper.toInstanceElementDto(instanceId, element);
-                instanceElementDto = AcElementDtoMapper.toInstanceElementDto(instanceId,
-                        acPriorUpdate.getElements().get(element.getId()));
+                var elementPrior = acPriorUpdate.getElements().get(element.getId());
+                instanceElementDto = AcElementDtoMapper.toInstanceElementDto(instanceId, elementPrior);
                 compositionElementDto = AcElementDtoMapper.toCompositionElementDto(acDefinitionTarget,
-                        element.getDefinition());
+                        elementPrior.getDefinition());
 
             }
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, compositionElementTarget,
