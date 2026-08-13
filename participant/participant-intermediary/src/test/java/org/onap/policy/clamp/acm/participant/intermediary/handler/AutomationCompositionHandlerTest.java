@@ -96,6 +96,7 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
         automationCompositionStateChange.setParticipantDtoList(
                 CommonTestData.createParticipantDtoList(CommonTestData.getParticipantId(), automationComposition));
+        automationCompositionStateChange.setCompositionId(automationComposition.getCompositionId());
 
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
@@ -316,9 +317,9 @@ class AutomationCompositionHandlerTest {
             UUID compositionId, UUID instanceId, List<AutomationCompositionElementDefinition> definitions,
             UUID compositionTargetId, List<AutomationCompositionElementDefinition> migrateDefinitions) {
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
-        cacheProvider.addElementDefinition(compositionId, definitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(compositionId, definitions);
         cacheProvider.initializeAutomationComposition(compositionId, instanceId, participantDeploy, UUID.randomUUID());
-        cacheProvider.addElementDefinition(compositionTargetId, migrateDefinitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(compositionTargetId, migrateDefinitions);
         return cacheProvider;
     }
 
@@ -330,6 +331,7 @@ class AutomationCompositionHandlerTest {
         migrationMsg.setCompositionId(acMigrate.getCompositionId());
         migrationMsg.setAutomationCompositionId(acMigrate.getInstanceId());
         migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
+        migrationMsg.setRevisionIdCompositionTarget(UUID.randomUUID());
         var participantMigrate = CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), acMigrate);
         migrationMsg.setParticipantUpdatesList(List.of(participantMigrate));
         migrationMsg.setParticipantDtoList(rollback
@@ -395,12 +397,11 @@ class AutomationCompositionHandlerTest {
         var participantDeploy =
                 CommonTestData.createparticipantDeploy(CommonTestData.getParticipantId(), automationComposition);
         var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
-        cacheProvider.addElementDefinition(
-                automationComposition.getCompositionTargetId(), acDefinitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(
+                automationComposition.getCompositionTargetId(), acDefinitions);
         cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
                 automationComposition.getInstanceId(), participantDeploy, UUID.randomUUID());
-        cacheProvider.addElementDefinition(
-                automationComposition.getCompositionId(), acRollbackDefinitions, UUID.randomUUID());
+        cacheProvider.addCompositionDto(automationComposition.getCompositionId(), acRollbackDefinitions);
 
         // expected default elements
         testMigration(cacheProvider, acRollback, 1, 4, true);
