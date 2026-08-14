@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5a9b748_e7c66463",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantMessageListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T14:05:32Z",
+      "side": 1,
+      "message": "As all the methods have identical logic, we can may be extract this to a private helper method like below?\nprivate \u003cT\u003e void processIfApplicable(T message, Consumer\u003cT\u003e handler) {\n if (participantHandler.appliesTo(message)) {\n          logEvent(message.toString());\n          handler.accept(message);\n      }\n  }\n  \n@KafkaHandler\npublic void onTopicEvent(final ParticipantPrime participantPrime) {\nprocessIfApplicable(participantPrime, participantHandler::handleParticipantPrime);\n  }",
+      "range": {
+        "startLine": 63,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e913b93_a6ca95ca",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantMessagePublisher.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T14:05:32Z",
+      "side": 1,
+      "message": "should this be log.error ?",
+      "range": {
+        "startLine": 128,
+        "startChar": 16,
+        "endLine": 128,
+        "endChar": 20
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b7461b3_8b9a72aa",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T14:05:32Z",
+      "side": 1,
+      "message": "Do we need @Qualifier(\"acmProducerFactory\") for explicitly using this bean just to avoid conflict if participant autoconfigures the same beans?",
+      "range": {
+        "startLine": 110,
+        "startChar": 61,
+        "endLine": 110,
+        "endChar": 79
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c53511bd_d4f6c1cf",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T14:05:32Z",
+      "side": 1,
+      "message": "This parameter is not used in the method",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 55
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a31b4aa_1121ff79",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T14:05:32Z",
+      "side": 1,
+      "message": "Do we need missing-topic-fatal to be set for listeners? I see we are setting it in the other review (kafka health check) for runtime module. I presume, we may need it when we implement a custom health check for intermediary separately?",
+      "range": {
+        "startLine": 122,
+        "startChar": 84,
+        "endLine": 122,
+        "endChar": 111
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1508aac_08809969",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T14:05:32Z",
+      "side": 1,
+      "message": "@Qualifier required for this bean?",
+      "range": {
+        "startLine": 123,
+        "startChar": 61,
+        "endLine": 123,
+        "endChar": 79
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
