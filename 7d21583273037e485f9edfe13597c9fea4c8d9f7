@@ -48,6 +48,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7dae6de8_6fb10123",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantMessageListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T15:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5538402a_f4f7efb4",
+      "range": {
+        "startLine": 63,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e913b93_a6ca95ca",
@@ -61,6 +85,30 @@
       "writtenOn": "2026-08-14T14:05:32Z",
       "side": 1,
       "message": "should this be log.error ?",
+      "range": {
+        "startLine": 128,
+        "startChar": 16,
+        "endLine": 128,
+        "endChar": 20
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ef5e2ff_51d5db88",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantMessagePublisher.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T15:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e913b93_a6ca95ca",
       "range": {
         "startLine": 128,
         "startChar": 16,
@@ -118,6 +166,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "799612ab_07d2f199",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T15:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edff8036_0a1c7dde",
+      "range": {
+        "startLine": 110,
+        "startChar": 61,
+        "endLine": 110,
+        "endChar": 79
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c53511bd_d4f6c1cf",
@@ -155,6 +227,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "c53511bd_d4f6c1cf",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 55
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "225f0ae6_e5ef856c",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T15:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23841551_378119c9",
       "range": {
         "startLine": 111,
         "startChar": 34,
@@ -212,6 +308,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "81de61eb_660141ac",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T15:22:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "31f9dce4_4752dd9e",
+      "range": {
+        "startLine": 122,
+        "startChar": 84,
+        "endLine": 122,
+        "endChar": 111
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1508aac_08809969",
@@ -249,6 +369,30 @@
       "side": 1,
       "message": "Yes, I will add",
       "parentUuid": "a1508aac_08809969",
+      "range": {
+        "startLine": 123,
+        "startChar": 61,
+        "endLine": 123,
+        "endChar": 79
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca175549_80756de8",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-14T15:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3906c733_c8270aa2",
       "range": {
         "startLine": 123,
         "startChar": 61,
