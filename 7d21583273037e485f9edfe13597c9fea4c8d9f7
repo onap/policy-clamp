@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5538402a_f4f7efb4",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantMessageListener.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-14T14:39:50Z",
+      "side": 1,
+      "message": "Yes, nice improvement, will do for this and sync listener.",
+      "parentUuid": "b5a9b748_e7c66463",
+      "range": {
+        "startLine": 63,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9e913b93_a6ca95ca",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/comm/ParticipantMessagePublisher.java",
         "patchSetId": 6
@@ -72,6 +96,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "edff8036_0a1c7dde",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-14T14:39:50Z",
+      "side": 1,
+      "message": "Yes, it would cause bean conflict without qualifier.",
+      "parentUuid": "3b7461b3_8b9a72aa",
+      "range": {
+        "startLine": 110,
+        "startChar": 61,
+        "endLine": 110,
+        "endChar": 79
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c53511bd_d4f6c1cf",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
         "patchSetId": 6
@@ -83,6 +131,30 @@
       "writtenOn": "2026-08-14T14:05:32Z",
       "side": 1,
       "message": "This parameter is not used in the method",
+      "range": {
+        "startLine": 111,
+        "startChar": 34,
+        "endLine": 111,
+        "endChar": 55
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23841551_378119c9",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-14T14:39:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c53511bd_d4f6c1cf",
       "range": {
         "startLine": 111,
         "startChar": 34,
@@ -118,6 +190,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "31f9dce4_4752dd9e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-14T14:39:50Z",
+      "side": 1,
+      "message": "We can do as separate commit",
+      "parentUuid": "7a31b4aa_1121ff79",
+      "range": {
+        "startLine": 122,
+        "startChar": 84,
+        "endLine": 122,
+        "endChar": 111
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a1508aac_08809969",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
         "patchSetId": 6
@@ -129,6 +225,30 @@
       "writtenOn": "2026-08-14T14:05:32Z",
       "side": 1,
       "message": "@Qualifier required for this bean?",
+      "range": {
+        "startLine": 123,
+        "startChar": 61,
+        "endLine": 123,
+        "endChar": 79
+      },
+      "revId": "7d21583273037e485f9edfe13597c9fea4c8d9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3906c733_c8270aa2",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/config/KafkaConfig.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-14T14:39:50Z",
+      "side": 1,
+      "message": "Yes, I will add",
+      "parentUuid": "a1508aac_08809969",
       "range": {
         "startLine": 123,
         "startChar": 61,
