@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1085aa8d_943418dd",
+        "filename": ".github/dependabot.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-14T16:45:59Z",
+      "side": 0,
+      "message": "This change needs to be a separate commit due to GHA job verifying change isolation",
+      "revId": "cf087b377f308f38fc4b6ce8750ac55a657da94a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
