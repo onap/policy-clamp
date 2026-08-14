@@ -1,8 +1,0 @@
-{
-    "alive": false,
-    "host": "localhost",
-    "name": "echo",
-    "port": ${obj.port},
-    "sniHostCheck":false,
-    "prometheus":false
-}

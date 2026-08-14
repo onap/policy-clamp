@@ -46,11 +46,6 @@
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.clamp</groupId>
-            <artifactId>policy-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp</groupId>
             <artifactId>policy-models</artifactId>
             <version>${project.version}</version>
         </dependency>

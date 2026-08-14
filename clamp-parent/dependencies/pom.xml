@@ -98,13 +98,6 @@
                 <artifactId>liquibase-sessionlock</artifactId>
                 <version>1.6.9</version>
             </dependency>
-            <!-- opentelemetry-kafka-clients can be removed after switching to Spring Kafka -->
-            <dependency>
-                <groupId>io.opentelemetry.instrumentation</groupId>
-                <artifactId>opentelemetry-kafka-clients-2.6</artifactId>
-                <!-- NOTE: Upgrading to 2.24.0-alpha or higher breaks Spring Boot 3.5 participants -->
-                <version>2.23.0-alpha</version>
-            </dependency>
             <!-- OpenAPI/Swagger -->
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>

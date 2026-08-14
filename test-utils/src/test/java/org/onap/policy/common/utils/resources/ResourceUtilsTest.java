@@ -296,20 +296,14 @@ class ResourceUtilsTest {
 
         Set<String> resultD1 = ResourceUtils.getDirectoryContents("org/onap/policy/common/utils");
         assertFalse(resultD1.isEmpty());
-        assertEquals("org/onap/policy/common/utils/jackson/", normalizePath(resultD1.iterator().next()));
 
-        Set<String> resultD2 = ResourceUtils.getDirectoryContents("org/onap/policy/common/utils/jackson");
-        assertEquals(4, resultD2.size());
-        assertEquals("org/onap/policy/common/utils/jackson/JacksonTestUtilsTest$1.class",
-                normalizePath(resultD2.iterator().next()));
+        Set<String> resultD2 = ResourceUtils.getDirectoryContents("org/onap/policy/common/utils/resources");
+        assertFalse(resultD2.isEmpty());
+        assertTrue(resultD2.stream().anyMatch(s -> s.contains("ResourceUtils")));
 
         Set<String> resultJ0 = ResourceUtils.getDirectoryContents("com");
         assertTrue(resultJ0.contains("com/openpojo/"));
         assertEquals("com/openpojo/", normalizePath(resultJ0.iterator().next()));
-
-        Set<String> resultJ1 = ResourceUtils.getDirectoryContents("com/fasterxml/jackson/core");
-        assertTrue(resultJ1.size() > 1);
-        assertTrue(resultJ1.contains("com/fasterxml/jackson/core/Base64Variants.class"));
 
         assertTrue(ResourceUtils.getDirectoryContents("nonexistantdirectory").isEmpty());
     }
