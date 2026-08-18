@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "613da87b_b6b37127",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/KafkaStartup.java",
+        "patchSetId": 24
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-18T16:44:49Z",
+      "side": 1,
+      "message": "Apologies, while I proposed this new solution, I am worried about race conditions. You mentioned that when the listeners are started, `isRunning\u003dtrue` even when an exception occurs! This implies the readiness check in the other commit might pass temporarily and then fail again. Also, what if one topic exists but not the other? Is it possible we would process some messages before stoping the listener?\n\nYour original solution (patchset 16) of waiting for the topics and _then_ starting the listeners is much more reliable I think.",
+      "range": {
+        "startLine": 47,
+        "startChar": 7,
+        "endLine": 76,
+        "endChar": 5
+      },
+      "revId": "d3d4cf52e77b067eef11dcd3da9b4a0715d9aa91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
