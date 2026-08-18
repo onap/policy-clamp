@@ -39,7 +39,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @DirtiesContext
-@EmbeddedKafka
+@EmbeddedKafka(topics = {"policy-acruntime-participant", "acm-ppnt-sync"})
 @ActiveProfiles({"test", "default"})
 class SupervisionMessagesIntegrationTest {
 

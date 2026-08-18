@@ -46,7 +46,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "default"})
-@EmbeddedKafka
+@EmbeddedKafka(topics = {"policy-acruntime-participant", "acm-ppnt-sync"})
 class ParticipantMessagesTest {
 
     @Autowired

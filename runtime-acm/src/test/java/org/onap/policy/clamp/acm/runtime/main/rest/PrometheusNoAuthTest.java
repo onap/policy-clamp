@@ -39,7 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {"management.server.port:"})
-@EmbeddedKafka
+@EmbeddedKafka(topics = {"policy-acruntime-participant", "acm-ppnt-sync"})
 @ActiveProfiles({"prometheus-noauth", "test"})
 class PrometheusNoAuthTest {
 
