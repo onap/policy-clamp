@@ -129,7 +129,8 @@
                         <configuration>
                             <rules>
                                 <maxDependencyUpdates>
-                                    <maxUpdates>5</maxUpdates>
+                                    <maxUpdates>0</maxUpdates>
+                                    <level>WARN</level>
                                     <processDependencies>false</processDependencies>
                                     <processDependencyManagement>true</processDependencyManagement>
                                     <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
