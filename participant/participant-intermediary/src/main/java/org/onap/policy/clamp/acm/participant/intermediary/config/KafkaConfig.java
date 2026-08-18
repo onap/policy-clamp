@@ -127,6 +127,7 @@ public class KafkaConfig {
         factory.setConsumerFactory(acmConsumerFactory);
         factory.getContainerProperties().setObservationEnabled(true);
         factory.getContainerProperties().setAuthExceptionRetryInterval(kafka.getAuthExceptionRetryInterval());
+        factory.getContainerProperties().setMissingTopicsFatal(true);
         return factory;
     }
 }
