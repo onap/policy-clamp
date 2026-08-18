@@ -40,7 +40,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 @AutoConfigureTracing
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@EmbeddedKafka
+@EmbeddedKafka(topics = {"policy-acruntime-participant", "acm-ppnt-sync"})
 @ActiveProfiles({ "test", "default" })
 class ActuatorControllerTest {
 
