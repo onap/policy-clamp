@@ -20,11 +20,14 @@ updates:
           - "*"
 
   - package-ecosystem: "maven"
-    directory: "/clamp-parent/dependencies"
+    directory: "/"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "io.opentelemetry.instrumentation:opentelemetry-kafka-clients-2.6"
+    # Only update patch versions, e.g. 4.0.6 -> 4.0.7, not 4.1.0
+    allow:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-patch"
     # Group patch updates together into a single pull request
     groups:
       maven-patch-updates:
