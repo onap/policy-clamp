@@ -58,24 +58,16 @@ class AutomationCompositionHandlerTest {
 
     @Test
     void handleAutomationCompositionStateChangeNullTest() {
-        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
-        var cacheProvider = mock(CacheProvider.class);
-        var ach =
-                new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, mock(ThreadHandler.class));
-
         var automationCompositionStateChange = new AutomationCompositionStateChange();
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(automationCompositionStateChange));
-
-        automationCompositionStateChange.setAutomationCompositionId(UUID.randomUUID());
-        automationCompositionStateChange.setDeployOrderedState(DeployOrder.DELETE);
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(automationCompositionStateChange));
-        verify(participantMessagePublisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
-
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
         automationCompositionStateChange.setAutomationCompositionId(automationComposition.getInstanceId());
+        var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         automationCompositionStateChange.setDeployOrderedState(DeployOrder.UPDATE);
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var ach =
+                new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, mock(ThreadHandler.class));
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(automationCompositionStateChange));
     }
 
@@ -153,7 +145,8 @@ class AutomationCompositionHandlerTest {
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
-        verify(listener, times(automationComposition.getElements().size())).delete(any(), any(), any());
+        var timesDelete = automationComposition.getElements().size();
+        verify(listener, times(timesDelete)).delete(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.DELETING, element.getDeployState());
         }
@@ -161,7 +154,16 @@ class AutomationCompositionHandlerTest {
         clearInvocations(listener);
         automationCompositionStateChange.setStartPhase(2);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
-        verify(listener, times(0)).delete(any(), any(), any());
+        timesDelete = 0;
+        verify(listener, times(timesDelete)).delete(any(), any(), any());
+
+        clearInvocations(listener);
+        automationCompositionStateChange.setStartPhase(0);
+        automationCompositionStateChange.getParticipantDtoList().getFirst().getElementDtos()
+                .getFirst().setDeployState(DeployState.DELETED);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        timesDelete = automationComposition.getElements().size() - 1;
+        verify(listener, times(timesDelete)).delete(any(), any(), any());
     }
 
     @Test

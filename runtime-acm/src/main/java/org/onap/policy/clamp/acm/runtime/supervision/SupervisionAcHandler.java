@@ -85,7 +85,6 @@ public class SupervisionAcHandler {
     public void deploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         LOGGER.info("Deployment request received for instanceID: {}", automationComposition.getInstanceId());
         AcmUtils.checkMigrationState(automationComposition);
-
         if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
                 && DeployState.DEPLOYING.equals(automationComposition.getDeployState())
                 && automationComposition.getElements().size() > 1) {
@@ -101,6 +100,7 @@ public class SupervisionAcHandler {
             AcmStateUtils.setCascadedState(automationComposition, DeployState.DEPLOYING, LockState.NONE);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.setDeletable(false);
         var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
@@ -139,7 +139,7 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> automationCompositionStateChangePublisher.send(automationComposition,
-                    startPhase, true, acDefinition, acDefinitionTarget));
+                true, acDefinition, acDefinitionTarget));
     }
 
     /**
@@ -168,7 +168,7 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
             () -> automationCompositionStateChangePublisher.send(automationComposition,
-                    startPhase, true, acDefinition, null));
+                    true, acDefinition, null));
     }
 
     /**
@@ -233,7 +233,7 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
             () -> automationCompositionStateChangePublisher.send(automationComposition,
-                    startPhase, true, acDefinition, null));
+                    true, acDefinition, null));
     }
 
     /**
@@ -261,14 +261,39 @@ public class SupervisionAcHandler {
      */
     public void delete(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition,
                        AutomationCompositionDefinition acDefinitionTarget) {
-        AcmStateUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationComposition.setPhase(startPhase);
+        boolean firstStartPhase = true;
+        if (DeployState.DELETING.equals(automationComposition.getDeployState())) {
+            automationComposition.setLastMsg(TimestampHelper.now());
+            var maxSpNotCompleted = 0; // max startPhase not completed
+            for (var element : automationComposition.getElements().values()) {
+                var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
+                        .get(element.getDefinition().getName());
+                int startPhase = toscaNodeTemplate != null
+                        && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
+                        ? AcmStageUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
+                if (!element.getDeployState().equals(DeployState.DELETED)) {
+                    element.setDeployState(DeployState.DELETING);
+                    maxSpNotCompleted = Math.max(maxSpNotCompleted, startPhase);
+                }
+            }
+            automationComposition.setPhase(maxSpNotCompleted);
+            firstStartPhase = automationComposition.getPhase().equals(
+                    AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate()));
+        } else {
+            AcmStateUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
+            var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+            automationComposition.setPhase(startPhase);
+        }
         automationCompositionProvider.updateAutomationComposition(automationComposition);
+        sendDeleteMsg(automationComposition, firstStartPhase, acDefinition, acDefinitionTarget);
+    }
+
+    private void sendDeleteMsg(AutomationComposition automationComposition, boolean firstStartPhase,
+            AutomationCompositionDefinition acDefinition, AutomationCompositionDefinition acDefinitionTarget) {
         executor.execute(
-            () -> automationCompositionStateChangePublisher.send(
-                    automationComposition, startPhase, true, acDefinition, acDefinitionTarget));
+                () -> automationCompositionStateChangePublisher.send(
+                        automationComposition, firstStartPhase, acDefinition, acDefinitionTarget));
     }
 
     /**
