@@ -29,7 +29,6 @@ import org.onap.policy.clamp.models.acm.concepts.Participant
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
-import org.onap.policy.common.utils.resources.ResourceUtils
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 
@@ -38,9 +37,9 @@ class ParticipantControllerTestHelper {
     static final String ENDPOINT = "participants"
     static final String NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition"
     static final int NUMBER_RECORDS = 10
-    static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json"
-    static final String PARTICIPANT_JSON2 = "src/test/resources/providers/TestParticipant2.json"
-    static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json"
+    static final String PARTICIPANT_JSON = "providers/TestParticipant.json"
+    static final String PARTICIPANT_JSON2 = "providers/TestParticipant2.json"
+    static final String AC_INSTANTIATION_CREATE_JSON = "rest/acm/AutomationComposition.json"
     static final String SYNC_ALL_PATH = "/sync"
     static final String SYNC_KNOWN_PATH = "/sync/82fd8ef9-1d1e-4343-9b28-7f9564ee3de6"
 
@@ -99,16 +98,13 @@ class ParticipantControllerTestHelper {
 
     static def inputParticipants() {
         return [
-                CommonTestData.getObjectFromJson(
-                        ResourceUtils.getResourceAsString(PARTICIPANT_JSON), Participant),
-                CommonTestData.getObjectFromJson(
-                        ResourceUtils.getResourceAsString(PARTICIPANT_JSON2), Participant)
+                CommonTestData.getObjectFromJsonFile(PARTICIPANT_JSON, Participant),
+                CommonTestData.getObjectFromJsonFile(PARTICIPANT_JSON2, Participant)
         ]
     }
 
     static def loadAutomationComposition(String suffix) {
-        def json = ResourceUtils.getResourceAsString(AC_INSTANTIATION_CREATE_JSON)
-        def ac = CommonTestData.getObjectFromJson(json, AutomationComposition)
+        def ac = CommonTestData.getObjectFromJsonFile(AC_INSTANTIATION_CREATE_JSON, AutomationComposition)
         ac.name = ac.name + suffix
         return ac
     }

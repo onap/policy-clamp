@@ -24,10 +24,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import lombok.SneakyThrows;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcmParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
@@ -43,8 +44,8 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.utils.coder.MapperFactory;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -65,21 +66,17 @@ public class CommonTestData {
      *
      * @param dbName the database name
      * @return the standard automation composition parameters
-     * @throws AutomationCompositionRuntimeException on errors reading the automation composition parameters
      */
     public static AcRuntimeParameterGroup getParameterGroup(final String dbName) {
-        return getObjectFromJson(getParameterGroupAsString(dbName), AcRuntimeParameterGroup.class);
-    }
-
-    /**
-     * Gets the standard automation composition parameters, as a String.
-     *
-     * @param dbName the database name
-     * @return the standard automation composition parameters as string
-     */
-    public static String getParameterGroupAsString(final String dbName) {
-        return ResourceUtils.getResourceAsString("src/test/resources/parameters/TestParameters.json")
-                .replace("${dbName}", "jdbc:h2:mem:" + dbName);
+        try {
+            var json = new ClassPathResource("parameters/TestParameters.json")
+                    .getContentAsString(StandardCharsets.UTF_8)
+                    .replace("${dbName}", "jdbc:h2:mem:" + dbName);
+            return getObjectFromJson(json, AcRuntimeParameterGroup.class);
+        } catch (IOException e) {
+            fail("Cannot read TestParameters.json: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -221,7 +218,7 @@ public class CommonTestData {
      */
     public static <T> T getObjectFromJsonFile(final String path, Class<T> clazz) {
         try {
-            return MAPPER.readValue(new File(path), clazz);
+            return MAPPER.readValue(new ClassPathResource(path).getInputStream(), clazz);
         } catch (IOException e) {
             fail("Cannot decode " + path);
             return null;
@@ -237,41 +234,9 @@ public class CommonTestData {
      */
     public static <T> T getObjectFromYamlFile(final String path, Class<T> clazz) {
         try {
-            return YAML_MAPPER.readValue(new File(path), clazz);
+            return YAML_MAPPER.readValue(new ClassPathResource(path).getInputStream(), clazz);
         } catch (IOException e) {
             fail("Cannot decode " + path);
-            return null;
-        }
-    }
-
-    /**
-     * Get Object from yaml file.
-     *
-     * @param is the resource
-     * @param clazz the Class of the Object
-     * @return the Object
-     */
-    public static <T> T getObjectFromYaml(InputStream is, Class<T> clazz) {
-        try {
-            return YAML_MAPPER.readValue(is, clazz);
-        } catch (IOException e) {
-            fail("Cannot decode Input Stream");
-            return null;
-        }
-    }
-
-    /**
-     * Get Object from yaml.
-     *
-     * @param yaml the resource
-     * @param clazz the Class of the Object
-     * @return the Object
-     */
-    public static <T> T getObjectFromYaml(String yaml, Class<T> clazz) {
-        try {
-            return YAML_MAPPER.readValue(yaml, clazz);
-        } catch (IOException e) {
-            fail("Cannot decode Input Stream");
             return null;
         }
     }

@@ -23,9 +23,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,8 +34,8 @@ import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.common.utils.coder.MapperFactory;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.core.io.ClassPathResource;
 
 public class CommonTestData {
 
@@ -172,19 +170,10 @@ public class CommonTestData {
      * @param path path of the resource
      */
     public static ToscaServiceTemplate getToscaServiceTemplateFromYamlFile(String path) {
-        return getToscaServiceTemplateFromYaml(ResourceUtils.getResourceAsString(path));
-    }
-
-    /**
-     * Get ToscaServiceTemplate from yaml.
-     *
-     * @param yaml the resource
-     */
-    public static ToscaServiceTemplate getToscaServiceTemplateFromYaml(String yaml) {
         try {
-            return YAML_MAPPER.readValue(yaml, ToscaServiceTemplate.class);
-        } catch (JsonProcessingException e) {
-            fail("Cannot read or decode " + yaml);
+            return YAML_MAPPER.readValue(new ClassPathResource(path).getInputStream(), ToscaServiceTemplate.class);
+        } catch (IOException e) {
+            fail("Cannot read or decode " + path);
             return null;
         }
     }
@@ -198,7 +187,7 @@ public class CommonTestData {
      */
     public static <T> T getObjectFromJsonFile(final String path, Class<T> clazz) {
         try {
-            return MAPPER.readValue(new File(path), clazz);
+            return MAPPER.readValue(new ClassPathResource(path).getInputStream(), clazz);
         } catch (IOException e) {
             fail("Cannot decode " + path);
             return null;

@@ -29,7 +29,7 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper
 
 class StageScannerTestHelper {
 
-    static final AC_SMOKE_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json"
+    static final AC_SMOKE_JSON = "rest/acm/AutomationCompositionSmoke.json"
 
     static buildMigratingAc(UUID compositionId, UUID compositionTargetId) {
         def ac = InstantiationUtils.getAutomationCompositionFromResource(AC_SMOKE_JSON, "Crud")

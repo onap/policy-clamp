@@ -37,13 +37,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate
 
 class InstantiationProviderTestHelper {
 
-    static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json"
-    static final String AC_INSTANTIATION_UPDATE_JSON = "src/test/resources/rest/acm/AutomationCompositionUpdate.json"
-    static final String AC_MIGRATE_JSON = "src/test/resources/rest/acm/AutomationCompositionMigrate.json"
+    static final String AC_INSTANTIATION_CREATE_JSON = "rest/acm/AutomationComposition.json"
+    static final String AC_INSTANTIATION_UPDATE_JSON = "rest/acm/AutomationCompositionUpdate.json"
+    static final String AC_MIGRATE_JSON = "rest/acm/AutomationCompositionMigrate.json"
     static final String AC_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON =
-            "src/test/resources/rest/acm/AutomationCompositionElementsNotFound.json"
-    static final String AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON =
-            "src/test/resources/rest/acm/AutomationCompositionNotFound.json"
+            "rest/acm/AutomationCompositionElementsNotFound.json"
+    static final String AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON = "rest/acm/AutomationCompositionNotFound.json"
     static final String MIGRATION_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase-migration.yaml"
 
     static final Map<String, String> RESOURCE_PATHS = [

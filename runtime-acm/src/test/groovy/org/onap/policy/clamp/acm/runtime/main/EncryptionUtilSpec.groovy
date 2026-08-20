@@ -36,8 +36,8 @@ import java.security.InvalidAlgorithmParameterException
 
 class EncryptionUtilSpec extends Specification {
 
-    static final TOSCA_TEMPLATE = "src/test/resources/providers/AcDefinitionEncryptTest.yaml"
-    static final INSTANTIATE_JSON = "src/test/resources/providers/AcInstantiateEncryptTest.json"
+    static final TOSCA_TEMPLATE = "providers/AcDefinitionEncryptTest.yaml"
+    static final INSTANTIATE_JSON = "providers/AcInstantiateEncryptTest.json"
     static final AC_SUFFIX = "Crud"
 
     @Shared

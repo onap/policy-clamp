@@ -37,7 +37,7 @@ import org.onap.policy.models.base.PfModelException;
 
 class PodStatusValidatorTest {
 
-    private static final String CHART_INFO = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "ChartList.json";
     private static final int TIMEOUT = 2;
     private static final int STATUS_CHECK_INTERVAL = 1;
     private static ChartInfo chart0;
