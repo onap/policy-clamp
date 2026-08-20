@@ -31,10 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +45,7 @@ import org.onap.policy.common.utils.coder.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -61,12 +60,11 @@ import org.springframework.web.context.WebApplicationContext;
 class AcElementControllerTest {
 
     private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
-    private static final String ELEMENT_CONFIG_YAML = "src/test/resources/config.json";
+    private static final String ELEMENT_CONFIG_YAML = "config.json";
     private static final String RETRIEVE_CONFIG = "/config";
     private static final String ACTIVATE_CONFIG = "/activate";
     private static final String DEACTIVATE_CONFIG = "/deactivate";
     private static ElementConfig config;
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -83,7 +81,7 @@ class AcElementControllerTest {
      */
     @BeforeAll
     static void setupParams() throws IOException {
-        config = MAPPER.readValue(new File(ELEMENT_CONFIG_YAML), ElementConfig.class);
+        config = MAPPER.readValue(new ClassPathResource(ELEMENT_CONFIG_YAML).getInputStream(), ElementConfig.class);
     }
 
     /**
@@ -158,6 +156,6 @@ class AcElementControllerTest {
     }
 
     private String getElementConfigJson() throws IOException {
-        return Files.readString(new File(ELEMENT_CONFIG_YAML).toPath(), StandardCharsets.UTF_8);
+        return new ClassPathResource(ELEMENT_CONFIG_YAML).getContentAsString(StandardCharsets.UTF_8);
     }
 }
