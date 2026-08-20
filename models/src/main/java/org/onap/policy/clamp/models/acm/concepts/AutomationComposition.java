@@ -36,7 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AutomationComposition extends ToscaEntity implements Comparable<AutomationComposition> {
+public class AutomationComposition extends ToscaEntity {
 
     private UUID instanceId;
 
@@ -46,6 +46,8 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     private UUID compositionTargetId;
 
     private Boolean precheck;
+
+    private Boolean deletable = Boolean.TRUE;
 
     private DeployState deployState = DeployState.UNDEPLOYED;
 
@@ -76,6 +78,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         this.compositionId = otherAutomationComposition.compositionId;
         this.compositionTargetId = otherAutomationComposition.compositionTargetId;
         this.precheck = otherAutomationComposition.precheck;
+        this.deletable = otherAutomationComposition.deletable;
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;
         this.lastMsg = otherAutomationComposition.lastMsg;
@@ -84,10 +87,5 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);
         this.stateChangeResult = otherAutomationComposition.stateChangeResult;
         this.revisionId = otherAutomationComposition.revisionId;
-    }
-
-    @Override
-    public int compareTo(final AutomationComposition other) {
-        return compareNameVersion(this, other);
     }
 }
