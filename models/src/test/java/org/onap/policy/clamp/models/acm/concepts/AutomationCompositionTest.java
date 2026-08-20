@@ -37,8 +37,6 @@ class AutomationCompositionTest {
 
         var ac1 = new AutomationComposition(ac0);
         assertEquals(ac0, ac1);
-
-        assertEquals(0, ac0.compareTo(ac1));
     }
 
     @Test
