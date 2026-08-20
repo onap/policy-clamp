@@ -33,9 +33,4 @@ public class ParticipantDto {
 
     private UUID participantId;
     private List<AcElementDto> elementDtos = new ArrayList<>();
-
-    public ParticipantDto(final ParticipantDto participantDto) {
-        this.participantId = participantDto.participantId;
-        this.elementDtos = PfUtils.mapList(participantDto.elementDtos, AcElementDto::new);
-    }
 }

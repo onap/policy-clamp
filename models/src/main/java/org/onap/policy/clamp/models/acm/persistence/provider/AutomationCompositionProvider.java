@@ -112,6 +112,7 @@ public class AutomationCompositionProvider {
      */
     public AutomationComposition createAutomationComposition(final AutomationComposition automationComposition) {
         automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setNeverDeployed(true);
         AcmStateUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
             JpaAutomationComposition::new, "automation composition"));
