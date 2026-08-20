@@ -117,7 +117,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
 
         then:
         1 * helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
-        1 * helper.supervisionAcHandler.delete(_, _, _)
+        1 * helper.acProvider.deleteAutomationComposition(ac.instanceId)
     }
 
     // --- Update deployed instance ---
@@ -219,6 +219,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         def ac = helper.loadAc("acCreate", "Delete")
         ac.stateChangeResult = StateChangeResult.NO_ERROR
         ac.compositionId = compositionId
+        ac.deletable = false
         helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
 
         def wrongId = UUID.randomUUID()
