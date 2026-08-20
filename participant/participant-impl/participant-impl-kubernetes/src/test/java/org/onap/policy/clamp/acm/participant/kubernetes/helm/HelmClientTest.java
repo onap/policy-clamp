@@ -51,7 +51,7 @@ import org.springframework.util.FileSystemUtils;
 
 class HelmClientTest {
 
-    private static final String CHART_INFO = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "ChartList.json";
     private static List<ChartInfo> charts;
 
     @BeforeAll
