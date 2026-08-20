@@ -30,7 +30,6 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -88,8 +87,7 @@ public class InstantiationUtils {
      * @param path path of the resource
      */
     public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
-        return CommonTestData
-                .getObjectFromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
+        return CommonTestData.getObjectFromYamlFile(path, ToscaServiceTemplate.class);
     }
 
     /**
