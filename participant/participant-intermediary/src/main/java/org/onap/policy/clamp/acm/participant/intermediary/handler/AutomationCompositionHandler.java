@@ -33,7 +33,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
-import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.dto.AcElementDto;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
@@ -41,12 +40,9 @@ import org.onap.policy.clamp.models.acm.dto.ElementState;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.clamp.models.acm.dto.ParticipantDto;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmStageUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
@@ -73,24 +69,6 @@ public class AutomationCompositionHandler {
      */
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
         var automationComposition = cacheProvider.getAutomationComposition(stateChangeMsg.getAutomationCompositionId());
-
-        if (automationComposition == null) {
-            if (DeployOrder.DELETE.equals(stateChangeMsg.getDeployOrderedState())) {
-                var automationCompositionAck = new AutomationCompositionDeployAck(
-                        ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-                automationCompositionAck.setParticipantId(cacheProvider.getParticipantId());
-                automationCompositionAck.setReplicaId(cacheProvider.getReplicaId());
-                automationCompositionAck.setMessage("Already deleted or never used");
-                automationCompositionAck.setStateChangeResult(StateChangeResult.NO_ERROR);
-                automationCompositionAck.setResponseTo(stateChangeMsg.getMessageId());
-                automationCompositionAck.setAutomationCompositionId(stateChangeMsg.getAutomationCompositionId());
-                publisher.sendAutomationCompositionAck(automationCompositionAck);
-            } else {
-                LOGGER.warn(AC_NOT_USED, stateChangeMsg.getAutomationCompositionId());
-            }
-            return;
-        }
-
         switch (stateChangeMsg.getDeployOrderedState()) {
             case UNDEPLOY -> handleUndeployState(stateChangeMsg.getMessageId(), automationComposition,
                     stateChangeMsg.getStartPhase(), stateChangeMsg.getParticipantDtoList());
@@ -289,11 +267,13 @@ public class AutomationCompositionHandler {
         var elementDtoMap = ParticipantDtoUtils.getElementDtoMap(participantDtoList, cacheProvider.getParticipantId());
 
         for (var dto : elementDtoMap.values()) {
+            if (DeployState.DELETED.equals(dto.getDeployState())) {
+                continue;
+            }
             var instanceElement = ParticipantDtoUtils.resolveInstanceElement(dto);
             int startPhase = AcmStageUtils.findStartPhase(dto.getCompositionElement().inProperties());
             if (startPhaseMsg.equals(startPhase)) {
-                var element = automationComposition.getElements()
-                        .get(instanceElement.elementId());
+                var element = automationComposition.getElements().get(instanceElement.elementId());
                 if (element != null) {
                     element.setDeployState(DeployState.DELETING);
                     element.setSubState(SubState.NONE);
