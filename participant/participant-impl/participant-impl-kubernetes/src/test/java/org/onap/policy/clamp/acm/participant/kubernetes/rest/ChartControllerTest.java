@@ -30,10 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +51,7 @@ import org.springframework.boot.micrometer.metrics.autoconfigure.CompositeMeterR
 import org.springframework.boot.micrometer.metrics.autoconfigure.MetricsAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
@@ -71,7 +70,7 @@ import org.springframework.web.context.WebApplicationContext;
 @EnableWebSecurity
 class ChartControllerTest {
 
-    private static final String CHART_INFO = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "ChartList.json";
     private static List<ChartInfo> charts;
     private static final String RETRIEVE_CHART_URL = "/helm/charts";
     private static final String INSTALL_CHART_URL = "/helm/install";
@@ -270,6 +269,6 @@ class ChartControllerTest {
     }
 
     private String getChartInfoJson() throws IOException {
-        return Files.readString(new File(CHART_INFO).toPath(), StandardCharsets.UTF_8);
+        return new ClassPathResource(CHART_INFO).getContentAsString(StandardCharsets.UTF_8);
     }
 }
