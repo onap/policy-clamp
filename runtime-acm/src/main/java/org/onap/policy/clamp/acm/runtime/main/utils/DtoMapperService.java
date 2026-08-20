@@ -70,7 +70,7 @@ public class DtoMapperService {
                     element.getDefinition());
 
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, null,
-                    instanceElementDtoTarget);
+                    instanceElementDtoTarget, element.getDeployState());
 
             var participantId = element.getParticipantId();
             participantDtoMap.computeIfAbsent(participantId, k -> new ArrayList<>()).add(acElementDto);
@@ -145,7 +145,7 @@ public class DtoMapperService {
 
             }
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, compositionElementTarget,
-                    instanceElementTarget);
+                    instanceElementTarget, element.getDeployState());
 
             var participantId = element.getParticipantId();
             participantDtoMap.computeIfAbsent(participantId, k -> new ArrayList<>()).add(acElementDto);
@@ -207,7 +207,7 @@ public class DtoMapperService {
 
             }
             var acElementDto = buildAcElementDto(compositionElementDto, instanceElementDto, compositionElementTarget,
-                    instanceElementTarget);
+                    instanceElementTarget, element.getDeployState());
 
             var participantId = element.getParticipantId();
             participantDtoMap.computeIfAbsent(participantId, k -> new ArrayList<>()).add(acElementDto);
@@ -228,12 +228,13 @@ public class DtoMapperService {
     private AcElementDto buildAcElementDto(CompositionElementDto compositionElementDto,
                                            InstanceElementDto instanceElementDto,
                                            CompositionElementDto compositionElementTarget,
-                                           InstanceElementDto instanceElementTarget) {
+                                           InstanceElementDto instanceElementTarget, DeployState deployState) {
         var acElementDto = new AcElementDto();
         acElementDto.setCompositionElement(compositionElementDto);
         acElementDto.setInstanceElement(instanceElementDto);
         acElementDto.setCompositionElementTarget(compositionElementTarget);
         acElementDto.setInstanceElementTarget(instanceElementTarget);
+        acElementDto.setDeployState(deployState);
 
         return acElementDto;
     }
