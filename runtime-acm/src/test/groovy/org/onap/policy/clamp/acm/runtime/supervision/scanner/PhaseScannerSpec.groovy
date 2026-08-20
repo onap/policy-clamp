@@ -206,7 +206,7 @@ class PhaseScannerSpec extends Specification {
         phaseScanner.scanWithPhase(ac, acDefinition, new UpdateSync())
 
         then:
-        1 * acStateChangePublisher.send(_ as AutomationComposition, _ as int, _ as boolean,
+        1 * acStateChangePublisher.send(_ as AutomationComposition, _ as boolean,
                 _ as AutomationCompositionDefinition, targetDefinition)
     }
 
@@ -225,6 +225,6 @@ class PhaseScannerSpec extends Specification {
         phaseScanner.scanWithPhase(ac, acDefinition, new UpdateSync())
 
         then:
-        1 * acStateChangePublisher.send(_ as AutomationComposition, _ as int, _ as boolean, _ as AutomationCompositionDefinition, _)
+        1 * acStateChangePublisher.send(_ as AutomationComposition, _ as boolean, _ as AutomationCompositionDefinition, _)
     }
 }
