@@ -373,12 +373,13 @@ public class InstantiationProvider {
                 automationComposition.getSubState(), automationComposition.getStateChangeResult());
             throw new PfModelRuntimeException(Status.BAD_REQUEST, msg);
         }
-        var compositionTargetId = automationComposition.getCompositionTargetId();
-        if (compositionTargetId != null) {
-            supervisionAcHandler.delete(automationComposition, acDefinition,
-                    acDefinitionProvider.getAcDefinition(compositionTargetId));
+        if (Boolean.TRUE.equals(automationComposition.getDeletable())) {
+            // automationComposition has never got deployed and can be deleted from DB
+            automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         } else {
-            supervisionAcHandler.delete(automationComposition, acDefinition, null);
+            var acDefinitionTarget = automationComposition.getCompositionTargetId() == null ? null
+                    : acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
+            supervisionAcHandler.delete(automationComposition, acDefinition, acDefinitionTarget);
         }
 
         return createInstantiationResponse(automationComposition);

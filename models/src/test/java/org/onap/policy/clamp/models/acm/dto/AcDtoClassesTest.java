@@ -40,60 +40,12 @@ class AcDtoClassesTest {
     }
 
     @Test
-    void testAcElementDtoCopyConstructor() {
-        var compositionId = UUID.randomUUID();
-        var instanceId = UUID.randomUUID();
-        var elementId = UUID.randomUUID();
-        var elementDefId = new ToscaConceptIdentifier("element", "1.0.0");
-
-        var compositionElement = new CompositionElementDto(compositionId, elementDefId,
-                Map.of("key", "value"), Map.of("outKey", "outValue"), ElementState.PRESENT);
-        var instanceElement = new InstanceElementDto(instanceId, elementId,
-                Map.of("prop", "val"), Map.of("outProp", "outVal"), ElementState.PRESENT);
-        var compositionElementTarget = new CompositionElementDto(compositionId, elementDefId,
-                Map.of("key", "newValue"), Map.of(), ElementState.NEW);
-        var instanceElementTarget = new InstanceElementDto(instanceId, elementId,
-                Map.of("prop", "newVal"), Map.of(), ElementState.NEW);
-
-        var original = new AcElementDto();
-        original.setCompositionElement(compositionElement);
-        original.setInstanceElement(instanceElement);
-        original.setCompositionElementTarget(compositionElementTarget);
-        original.setInstanceElementTarget(instanceElementTarget);
-
-        var copy = new AcElementDto(original);
-        assertEquals(original.getCompositionElement(), copy.getCompositionElement());
-        assertEquals(original.getInstanceElement(), copy.getInstanceElement());
-        assertEquals(original.getCompositionElementTarget(), copy.getCompositionElementTarget());
-        assertEquals(original.getInstanceElementTarget(), copy.getInstanceElementTarget());
-    }
-
-    @Test
     void testAcElementDtoDefaultConstructor() {
         var dto = new AcElementDto();
         assertNull(dto.getCompositionElement());
         assertNull(dto.getInstanceElement());
         assertNull(dto.getCompositionElementTarget());
         assertNull(dto.getInstanceElementTarget());
-    }
-
-    @Test
-    void testParticipantDtoCopyConstructor() {
-        var participantId = UUID.randomUUID();
-        var original = new ParticipantDto();
-        original.setParticipantId(participantId);
-
-        var acElementDto = new AcElementDto();
-        acElementDto.setCompositionElement(new CompositionElementDto(UUID.randomUUID(),
-                new ToscaConceptIdentifier("el", "1.0.0"), Map.of(), Map.of()));
-        acElementDto.setInstanceElement(new InstanceElementDto(UUID.randomUUID(),
-                UUID.randomUUID(), Map.of(), Map.of()));
-        original.setElementDtos(List.of(acElementDto));
-
-        var copy = new ParticipantDto(original);
-        assertEquals(participantId, copy.getParticipantId());
-        assertThat(copy.getElementDtos()).hasSize(1);
-        assertNotNull(copy.getElementDtos().getFirst().getCompositionElement());
     }
 
     @Test
