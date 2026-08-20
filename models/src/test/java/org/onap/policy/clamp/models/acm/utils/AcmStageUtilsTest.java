@@ -29,13 +29,11 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 
 class AcmStageUtilsTest {
 
     private static final String TOSCA_TEMPLATE_YAML = "examples/acm/test-pm-subscription-handling.yaml";
-    private static final String AUTOMATION_COMPOSITION_JSON =
-            "src/test/resources/providers/TestAutomationCompositions.json";
+    private static final String AUTOMATION_COMPOSITION_JSON = "providers/TestAutomationCompositions.json";
 
     private static final String PROPERTIES = """
             stage:
@@ -52,8 +50,8 @@ class AcmStageUtilsTest {
 
     @Test
     void testGetFirstStartPhase() {
-        var automationCompositions = CommonTestData.getObjectFromJson(
-                ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
+        var automationCompositions = CommonTestData.getObjectFromJsonFile(
+                AUTOMATION_COMPOSITION_JSON, AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
         automationComposition.setDeployState(DeployState.DEPLOYING);
@@ -75,8 +73,8 @@ class AcmStageUtilsTest {
 
     @Test
     void testGetFirstStartPhaseWithNull() {
-        var automationCompositions = CommonTestData.getObjectFromJson(
-                ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
+        var automationCompositions = CommonTestData.getObjectFromJsonFile(
+                AUTOMATION_COMPOSITION_JSON, AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
         automationComposition.setDeployState(DeployState.DEPLOYING);
@@ -117,8 +115,8 @@ class AcmStageUtilsTest {
     @Test
     void testGetFirstStage() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
-        var automationCompositions = CommonTestData.getObjectFromJson(
-                ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
+        var automationCompositions = CommonTestData.getObjectFromJsonFile(
+                AUTOMATION_COMPOSITION_JSON, AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
         AcmStateUtils.setCascadedState(automationComposition, DeployState.MIGRATING, LockState.LOCKED);
@@ -139,8 +137,8 @@ class AcmStageUtilsTest {
     @Test
     void testGetLastStage() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
-        var automationCompositions = CommonTestData.getObjectFromJson(
-                ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
+        var automationCompositions = CommonTestData.getObjectFromJsonFile(
+                AUTOMATION_COMPOSITION_JSON, AutomationCompositions.class);
         assertThat(automationCompositions).isNotNull();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
         AcmStateUtils.setCascadedState(automationComposition, DeployState.MIGRATION_REVERTING, LockState.LOCKED);

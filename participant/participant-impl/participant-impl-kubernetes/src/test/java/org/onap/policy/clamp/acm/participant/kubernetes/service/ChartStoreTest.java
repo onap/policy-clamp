@@ -54,7 +54,7 @@ import org.springframework.util.FileSystemUtils;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ChartStoreTest {
 
-    private static final String CHART_INFO = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "ChartList.json";
     private static List<ChartInfo> charts;
 
     @Mock
