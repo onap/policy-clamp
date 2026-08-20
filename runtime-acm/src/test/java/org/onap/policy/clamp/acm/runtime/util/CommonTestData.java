@@ -67,7 +67,7 @@ public class CommonTestData {
      * @return the standard automation composition parameters
      * @throws AutomationCompositionRuntimeException on errors reading the automation composition parameters
      */
-    public static AcRuntimeParameterGroup geParameterGroup(final String dbName) {
+    public static AcRuntimeParameterGroup getParameterGroup(final String dbName) {
         return getObjectFromJson(getParameterGroupAsString(dbName), AcRuntimeParameterGroup.class);
     }
 

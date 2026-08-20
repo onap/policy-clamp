@@ -69,7 +69,7 @@ class SimpleScannerTest {
         docMessage.setDeployState(DeployState.UNDEPLOYED);
         docMessage.setLockState(LockState.NONE);
         docMessage.setStateChangeResult(StateChangeResult.FAILED);
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
@@ -94,7 +94,7 @@ class SimpleScannerTest {
         docMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
         docMessage.setDeployState(DeployState.DEPLOYED);
         docMessage.setLockState(LockState.LOCKED);
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
@@ -138,7 +138,7 @@ class SimpleScannerTest {
         docMessage.setInstanceId(INSTANCE_ID);
         docMessage.setInstanceElementId(elementId);
         docMessage.setOutProperties(Map.of("key", "value"));
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
@@ -161,7 +161,7 @@ class SimpleScannerTest {
         docMessage.setInstanceElementId(elementId);
         docMessage.setDeployState(DeployState.DEPLOYED);
         docMessage.setLockState(LockState.LOCKED);
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
@@ -189,7 +189,7 @@ class SimpleScannerTest {
         docMessage.setInstanceElementId(elementId);
         docMessage.setDeployState(DeployState.DELETED);
         docMessage.setLockState(LockState.NONE);
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
@@ -256,7 +256,7 @@ class SimpleScannerTest {
         automationComposition.setCompositionId(COMPOSITION_ID);
         automationComposition.setLastMsg(TimestampHelper.now());
         var acProvider = mock(AutomationCompositionProvider.class);
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
                 mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup, encryptionUtils);
@@ -280,7 +280,7 @@ class SimpleScannerTest {
         docMessage.setDeployState(DeployState.UNDEPLOYED);
         docMessage.setLockState(LockState.NONE);
         var acProvider = mock(AutomationCompositionProvider.class);
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner");
         var simpleScanner = new SimpleScanner(acProvider, mock(AcDefinitionProvider.class),
                 mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup,
                 new EncryptionUtils(acRuntimeParameterGroup));

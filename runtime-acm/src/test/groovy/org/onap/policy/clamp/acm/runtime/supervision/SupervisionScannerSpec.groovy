@@ -331,7 +331,7 @@ class SupervisionScannerSpec extends Specification {
         acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefinitionTarget
         acDefinitionProvider.getAcDefinition(COMPOSITION_ID) >>
                 new AutomationCompositionDefinition(compositionId: COMPOSITION_ID)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def stageScanner = new StageScanner(acProvider,
                 Mock(AcDefinitionProvider),
                 Mock(ParticipantSyncPublisher),

@@ -53,7 +53,7 @@ class PhaseScannerSpec extends Specification {
         def acProvider = Mock(AutomationCompositionProvider) {
             updateAutomationComposition(_) >> ac
         }
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionStateChangePublisher),
                 Mock(AutomationCompositionDeployPublisher),
@@ -81,7 +81,7 @@ class PhaseScannerSpec extends Specification {
         def acProvider = Mock(AutomationCompositionProvider) {
             updateAutomationComposition(_) >> ac
         }
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         acRuntimeParameterGroup.participantParameters.maxOperationWaitMs = -1
         def participantSyncPublisher = Mock(ParticipantSyncPublisher)
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), participantSyncPublisher,
@@ -105,7 +105,7 @@ class PhaseScannerSpec extends Specification {
         ac.stateChangeResult = StateChangeResult.TIMEOUT
         ac.lastMsg = TimestampHelper.now()
         def acProvider = Mock(AutomationCompositionProvider)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         acRuntimeParameterGroup.participantParameters.maxOperationWaitMs = -1
         def participantSyncPublisher = Mock(ParticipantSyncPublisher)
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), participantSyncPublisher,
@@ -131,7 +131,7 @@ class PhaseScannerSpec extends Specification {
         def acProvider = Mock(AutomationCompositionProvider) {
             updateAutomationComposition(_) >> ac
         }
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         acRuntimeParameterGroup.participantParameters.maxOperationWaitMs = -1
         def participantSyncPublisher = Mock(ParticipantSyncPublisher)
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), participantSyncPublisher,
@@ -154,7 +154,7 @@ class PhaseScannerSpec extends Specification {
         def ac = buildDeployingAcForStartPhase(COMPOSITION_ID, INSTANCE_ID)
         def acProvider = Mock(AutomationCompositionProvider)
         def acDeployPublisher = Mock(AutomationCompositionDeployPublisher)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionStateChangePublisher),
                 acDeployPublisher, acRuntimeParameterGroup,
@@ -173,7 +173,7 @@ class PhaseScannerSpec extends Specification {
         def ac = buildAcWithNullStartPhase(COMPOSITION_ID, INSTANCE_ID)
         def acProvider = Mock(AutomationCompositionProvider)
         def acDeployPublisher = Mock(AutomationCompositionDeployPublisher)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionStateChangePublisher),
                 acDeployPublisher, acRuntimeParameterGroup,
@@ -195,7 +195,7 @@ class PhaseScannerSpec extends Specification {
             getAcDefinition(ac.compositionTargetId) >> targetDefinition
         }
         def acStateChangePublisher = Mock(AutomationCompositionStateChangePublisher)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(Mock(AutomationCompositionProvider), acDefinitionProvider,
                 Mock(ParticipantSyncPublisher), acStateChangePublisher,
                 Mock(AutomationCompositionDeployPublisher),
@@ -215,7 +215,7 @@ class PhaseScannerSpec extends Specification {
         def ac = buildUnlockingAc(COMPOSITION_ID, INSTANCE_ID)
         def acProvider = Mock(AutomationCompositionProvider)
         def acStateChangePublisher = Mock(AutomationCompositionStateChangePublisher)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 acStateChangePublisher, Mock(AutomationCompositionDeployPublisher),
                 acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))

@@ -236,7 +236,7 @@ class StageScannerSpec extends Specification {
 
     def buildStageScanner(AutomationCompositionProvider acProvider,
                           ParticipantSyncPublisher participantSyncPublisher = null) {
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup)
         return new StageScanner(acProvider, Mock(AcDefinitionProvider),
                 participantSyncPublisher ?: Mock(ParticipantSyncPublisher),

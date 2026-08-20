@@ -158,7 +158,7 @@ class AcDefinitionScannerSpec extends Specification {
         given:
         def acDefinitionProvider = Mock(AcDefinitionProvider)
         def participantSyncPublisher = Mock(ParticipantSyncPublisher)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         acRuntimeParameterGroup.participantParameters.maxOperationWaitMs = maxWaitMs
         def scanner = new AcDefinitionScanner(acDefinitionProvider, participantSyncPublisher,
                 acRuntimeParameterGroup)
@@ -183,7 +183,7 @@ class AcDefinitionScannerSpec extends Specification {
         given:
         def acDefinitionProvider = Mock(AcDefinitionProvider)
         def participantSyncPublisher = Mock(ParticipantSyncPublisher)
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         acRuntimeParameterGroup.participantParameters.maxOperationWaitMs = -1
         def scanner = new AcDefinitionScanner(acDefinitionProvider, participantSyncPublisher,
                 acRuntimeParameterGroup)
@@ -204,7 +204,7 @@ class AcDefinitionScannerSpec extends Specification {
 
     static buildScanner(AcDefinitionProvider acDefinitionProvider,
                                 ParticipantSyncPublisher participantSyncPublisher) {
-        def acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner")
+        def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         new AcDefinitionScanner(acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup)
     }
 

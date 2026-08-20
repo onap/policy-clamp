@@ -39,7 +39,7 @@ class SupervisionParticipantScannerTest {
         var replica = CommonTestData.createParticipantReplica(CommonTestData.getReplicaId());
         when(participantProvider.findReplicasOnLine()).thenReturn(List.of(replica));
 
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
+        var acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanParticipant");
         var supervisionScanner = new SupervisionParticipantScanner(participantProvider, acRuntimeParameterGroup);
 
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(100000);
