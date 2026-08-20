@@ -75,16 +75,12 @@ public class PhaseScanner extends AbstractScanner {
         var completed = true;
         var minSpNotCompleted = 1000; // min startPhase not completed
         var maxSpNotCompleted = 0; // max startPhase not completed
-        var defaultMin = 1000; // min startPhase
-        var defaultMax = 0; // max startPhase
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = acDefinition.getServiceTemplate().getToscaTopologyTemplate().getNodeTemplates()
                     .get(element.getDefinition().getName());
             int startPhase = toscaNodeTemplate != null
                     && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
                     ? AcmStageUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
-            defaultMin = Math.min(defaultMin, startPhase);
-            defaultMax = Math.max(defaultMax, startPhase);
             if (AcmStateUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
                     element.getSubState())) {
                 completed = false;
@@ -129,11 +125,11 @@ public class PhaseScanner extends AbstractScanner {
             acDeployPublisher.send(acToSend, startPhase, false, acDefinition);
         } else if (isUndeployOrDelete(acToSend.getDeployState()) && compositionTargetId != null) {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(acToSend, startPhase, false, acDefinition,
+            acStateChangePublisher.send(acToSend, false, acDefinition,
                     acDefinitionProvider.getAcDefinition(compositionTargetId));
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(acToSend, startPhase, false, acDefinition, null);
+            acStateChangePublisher.send(acToSend, false, acDefinition, null);
         }
     }
 
