@@ -52,7 +52,6 @@ import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateState
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplicaRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.PageRequest;
@@ -60,13 +59,9 @@ import org.springframework.data.domain.Pageable;
 
 class ParticipantProviderTest {
 
-    private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
-    private static final String ORIGINAL_JSON = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
-
-    private static final String AUTOMATION_COMPOSITION_JSON =
-        "src/test/resources/providers/TestAutomationCompositions.json";
-
-    private static final String NODE_TEMPLATE_STATE_JSON = "src/test/resources/providers/NodeTemplateState.json";
+    private static final String PARTICIPANT_JSON = "providers/TestParticipant.json";
+    private static final String AUTOMATION_COMPOSITION_JSON = "providers/TestAutomationCompositions.json";
+    private static final String NODE_TEMPLATE_STATE_JSON = "providers/NodeTemplateState.json";
     private static final String LIST_IS_NULL = ".*. is marked non-null but is null";
     private static final UUID INVALID_ID = UUID.randomUUID();
 
@@ -79,17 +74,16 @@ class ParticipantProviderTest {
 
     @BeforeEach
     void beforeSetup() {
-        inputParticipants.add(CommonTestData.getObjectFromJson(ORIGINAL_JSON, Participant.class));
+        inputParticipants.add(CommonTestData.getObjectFromJsonFile(PARTICIPANT_JSON, Participant.class));
         jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
 
-        var originalAcJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
-        var acList = CommonTestData.getObjectFromJson(originalAcJson, AutomationCompositions.class);
+        var acList = CommonTestData.getObjectFromJsonFile(AUTOMATION_COMPOSITION_JSON, AutomationCompositions.class);
         inputAutomationCompositionsJpa =
             ProviderUtils.getJpaAndValidateList(acList.getAutomationCompositionList(),
                 JpaAutomationComposition::new, "automation compositions");
 
-        var nodeTemplateStatesJson = ResourceUtils.getResourceAsString(NODE_TEMPLATE_STATE_JSON);
-        nodeTemplateStateList.add(CommonTestData.getObjectFromJson(nodeTemplateStatesJson, NodeTemplateState.class));
+        nodeTemplateStateList.add(CommonTestData.getObjectFromJsonFile(NODE_TEMPLATE_STATE_JSON,
+                NodeTemplateState.class));
         nodeTemplateStateList.get(0).setState(AcTypeState.COMMISSIONED);
         jpaNodeTemplateStateList = ProviderUtils.getJpaAndValidateList(nodeTemplateStateList,
             JpaNodeTemplateState::new, "node template state");

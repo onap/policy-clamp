@@ -32,7 +32,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider
 
 class SupervisionAcHandlerTestHelper {
 
-    static final AC_JSON_PATH = "src/test/resources/rest/acm/AutomationComposition.json"
+    static final AC_JSON_PATH = "rest/acm/AutomationComposition.json"
     static final LATCH_TIMEOUT_SECONDS = 5
 
     final UUID identifier = UUID.randomUUID()
