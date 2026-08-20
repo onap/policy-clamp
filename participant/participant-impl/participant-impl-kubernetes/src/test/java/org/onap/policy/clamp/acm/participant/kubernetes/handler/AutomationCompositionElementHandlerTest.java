@@ -50,7 +50,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class AutomationCompositionElementHandlerTest {
 
-    private static final String CHART_INFO = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "ChartList.json";
     private static List<ChartInfo> charts;
     private static ToscaServiceTemplate toscaServiceTemplate;
     private static final String K8S_AUTOMATION_COMPOSITION_ELEMENT =

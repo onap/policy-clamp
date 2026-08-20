@@ -59,7 +59,7 @@ class AcmUtilsTest {
             "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement";
     private static final String PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT = "org.onap.policy.clamp.acm.Participant";
     private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
-    private static final String AC_INSTANTIATION_JSON = "src/test/resources/json/AutomationComposition.json";
+    private static final String AC_INSTANTIATION_JSON = "json/AutomationComposition.json";
     public static final String AUTOMATION_COMPOSITION_ELEMENT =
             "org.onap.policy.clamp.acm.AutomationCompositionElement";
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
@@ -219,8 +219,7 @@ class AcmUtilsTest {
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(UUID.randomUUID());
         Map<UUID, AutomationCompositionElement> map = new LinkedHashMap<>();
-        var element = CommonTestData.getObjectFromJsonFile(
-                "src/test/resources/json/AutomationCompositionElementNoOrderedState.json",
+        var element = CommonTestData.getObjectFromJsonFile("json/AutomationCompositionElementNoOrderedState.json",
                 AutomationCompositionElement.class);
         map.put(UUID.randomUUID(), element);
         automationComposition.setElements(map);

@@ -30,9 +30,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
-import org.onap.policy.clamp.acm.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
@@ -97,7 +97,9 @@ class ParticipantMessagesTest {
 
     @Test
     void testReceiveParticipantUpdateMessage() {
-        var participantPrimeMsg = TestListenerUtils.createParticipantPrimeMsg();
+        final var participantPrimeMsg = new ParticipantPrime();
+        participantPrimeMsg.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeMsg.setCompositionId(UUID.randomUUID());
 
         assertThatCode(() -> participantHandler.handleParticipantPrime(participantPrimeMsg))
             .doesNotThrowAnyException();

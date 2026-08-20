@@ -30,8 +30,7 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils
 
 class SupervisionMessagesTestHelper {
 
-    static final AC_INSTANTIATION_UPDATE_JSON =
-            "src/test/resources/rest/acm/AutomationCompositionUpdate.json"
+    static final AC_INSTANTIATION_UPDATE_JSON = "rest/acm/AutomationCompositionUpdate.json"
 
     static buildAcmDefinition(AcTypeState state = AcTypeState.PRIMED) {
         def serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML)

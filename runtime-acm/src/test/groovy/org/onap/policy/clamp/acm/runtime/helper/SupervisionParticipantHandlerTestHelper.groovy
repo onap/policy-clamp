@@ -50,8 +50,7 @@ class SupervisionParticipantHandlerTestHelper {
 
     static final PARTICIPANT_ID = CommonTestData.getParticipantId()
     static final REPLICA_ID = CommonTestData.getReplicaId()
-    static final AC_JSON =
-            "src/test/resources/rest/acm/AutomationComposition.json"
+    static final AC_JSON = "rest/acm/AutomationComposition.json"
 
     static createHandler(Map mocks) {
         return new SupervisionParticipantHandler(

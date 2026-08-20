@@ -24,15 +24,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.common.utils.coder.MapperFactory;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -88,7 +87,7 @@ public class CommonTestData {
      */
     public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
         try {
-            return YAML_MAPPER.readValue(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
+            return YAML_MAPPER.readValue(new ClassPathResource(path).getInputStream(), ToscaServiceTemplate.class);
         } catch (IOException e) {
             fail("Cannot read or decode " + e.getMessage());
             return null;
@@ -120,40 +119,9 @@ public class CommonTestData {
      */
     public static <T> T getObjectFromJsonFile(final String path, Class<T> clazz) {
         try {
-            return MAPPER.readValue(new File(path), clazz);
+            return MAPPER.readValue(new ClassPathResource(path).getInputStream(), clazz);
         } catch (IOException e) {
             fail("Cannot decode " + path);
-            return null;
-        }
-    }
-
-    /**
-     * Get Object from json string.
-     *
-     * @param json the json
-     * @param clazz the Class of the Object
-     * @return the Object
-     */
-    public static <T> T getObjectFromJson(final String json, Class<T> clazz) {
-        try {
-            return MAPPER.readValue(json, clazz);
-        } catch (IOException e) {
-            fail("Cannot decode " + json);
-            return null;
-        }
-    }
-
-    /**
-     * Get Json string from Object.
-     *
-     * @param object the Object
-     * @return the Json
-     */
-    public static String getJsonFromObject(final Object object) {
-        try {
-            return MAPPER.writeValueAsString(object);
-        } catch (IOException e) {
-            fail("Cannot encode " + object);
             return null;
         }
     }

@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -55,6 +54,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -187,8 +187,8 @@ public class CommonTestData {
     public static AutomationCompositions getTestAutomationCompositions() {
         try {
             var automationCompositions =
-                    MAPPER.readValue(new File("src/test/resources/providers/TestAutomationCompositions.json"),
-                            AutomationCompositions.class);
+                    MAPPER.readValue(new ClassPathResource("providers/TestAutomationCompositions.json")
+                            .getInputStream(), AutomationCompositions.class);
             automationCompositions.getAutomationCompositionList().get(1).setInstanceId(AC_ID_0);
             automationCompositions.getAutomationCompositionList().get(1).setInstanceId(AC_ID_1);
             return automationCompositions;
