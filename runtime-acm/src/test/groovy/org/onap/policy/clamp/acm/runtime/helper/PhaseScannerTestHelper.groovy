@@ -29,7 +29,7 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper
 
 class PhaseScannerTestHelper {
 
-    static final AC_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json"
+    static final AC_JSON = "rest/acm/AutomationCompositionSmoke.json"
     static final ELEMENT_NAME =
             "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
 

@@ -23,8 +23,8 @@ package org.onap.policy.clamp.acm.participant.a1pms.utils;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,9 +32,9 @@ import org.onap.policy.clamp.acm.participant.a1pms.models.A1PolicyServiceEntity;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
 import org.onap.policy.common.utils.coder.MapperFactory;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.core.io.ClassPathResource;
 
 public class CommonTestData {
 
@@ -114,19 +114,10 @@ public class CommonTestData {
      * @param path path of the resource
      */
     public static ToscaServiceTemplate getToscaServiceTemplateFromYamlFile(String path) {
-        return getToscaServiceTemplateFromYaml(ResourceUtils.getResourceAsString(path));
-    }
-
-    /**
-     * Get ToscaServiceTemplate from yaml.
-     *
-     * @param yaml the resource
-     */
-    public static ToscaServiceTemplate getToscaServiceTemplateFromYaml(String yaml) {
         try {
-            return yamlMapper.readValue(yaml, ToscaServiceTemplate.class);
-        } catch (JsonProcessingException e) {
-            fail("Cannot read or decode " + yaml);
+            return yamlMapper.readValue(new ClassPathResource(path).getInputStream(), ToscaServiceTemplate.class);
+        } catch (IOException e) {
+            fail("Cannot read or decode " + path);
             return null;
         }
     }

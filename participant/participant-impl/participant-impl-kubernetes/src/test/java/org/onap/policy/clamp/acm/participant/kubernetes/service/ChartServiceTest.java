@@ -50,7 +50,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 class ChartServiceTest {
 
-    private static final String CHART_INFO = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO = "ChartList.json";
     private static List<ChartInfo> charts;
 
     @BeforeAll

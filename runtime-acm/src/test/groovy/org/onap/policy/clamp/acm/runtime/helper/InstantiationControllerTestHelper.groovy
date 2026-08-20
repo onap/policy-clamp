@@ -36,12 +36,9 @@ class InstantiationControllerTestHelper {
     static final String ENDPOINT_PATTERN = "compositions/%s/instances"
     static final String NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition"
     static final int NUM_INSTANCES = 10
-    static final String AC_CREATE_JSON =
-            "src/test/resources/rest/acm/AutomationComposition.json"
-    static final String AC_UPDATE_JSON =
-            "src/test/resources/rest/acm/AutomationCompositionUpdate.json"
-    static final String AC_VERSIONING_YAML =
-            "src/test/resources/rest/acm/AutomationCompositionVersioning.yaml"
+    static final String AC_CREATE_JSON = "rest/acm/AutomationComposition.json"
+    static final String AC_UPDATE_JSON = "rest/acm/AutomationCompositionUpdate.json"
+    static final String AC_VERSIONING_YAML = "rest/acm/AutomationCompositionVersioning.yaml"
 
     final ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(
             CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML)
