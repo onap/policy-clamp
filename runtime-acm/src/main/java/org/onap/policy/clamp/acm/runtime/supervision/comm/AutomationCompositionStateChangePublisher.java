@@ -47,13 +47,13 @@ public class AutomationCompositionStateChangePublisher {
      * Send AutomationCompositionStateChange message to Participant.
      *
      * @param automationComposition the AutomationComposition
-     * @param startPhase the startPhase
      * @param acDefinition the AutomationCompositionDefinition
+     * @param acDefinitionTarget the AutomationCompositionDefinition Target
      */
     @Timed(
             value = "publisher.automation_composition_state_change",
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages published")
-    public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase,
+    public void send(AutomationComposition automationComposition, boolean firstStartPhase,
             AutomationCompositionDefinition acDefinition, AutomationCompositionDefinition acDefinitionTarget) {
         var acsc = new AutomationCompositionStateChange();
         acsc.setCompositionId(automationComposition.getCompositionId());
@@ -61,7 +61,7 @@ public class AutomationCompositionStateChangePublisher {
         acsc.setMessageId(UUID.randomUUID());
         acsc.setDeployOrderedState(AcmStateUtils.stateDeployToOrder(automationComposition.getDeployState()));
         acsc.setLockOrderedState(AcmStateUtils.stateLockToOrder(automationComposition.getLockState()));
-        acsc.setStartPhase(startPhase);
+        acsc.setStartPhase(automationComposition.getPhase());
         acsc.setFirstStartPhase(firstStartPhase);
         acsc.setRevisionIdInstance(automationComposition.getRevisionId());
         acsc.setRevisionIdComposition(acDefinition.getRevisionId());
