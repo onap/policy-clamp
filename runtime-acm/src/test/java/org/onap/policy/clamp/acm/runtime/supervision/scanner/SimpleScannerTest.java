@@ -50,7 +50,7 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 class SimpleScannerTest {
 
-    private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json";
+    private static final String AC_JSON = "rest/acm/AutomationCompositionSmoke.json";
     private static final String ELEMENT_NAME =
             "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 

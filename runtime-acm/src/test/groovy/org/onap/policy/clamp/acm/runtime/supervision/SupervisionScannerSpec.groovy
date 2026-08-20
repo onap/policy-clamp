@@ -56,7 +56,7 @@ class SupervisionScannerSpec extends Specification {
     static final COMPOSITION_ID = UUID.randomUUID()
     static final INSTANCE_ID = UUID.randomUUID()
     static final JOB_ID = "JOB_ID"
-    static final AC_SMOKE_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json"
+    static final AC_SMOKE_JSON = "rest/acm/AutomationCompositionSmoke.json"
 
     def "scan AcDefinition should process messages and remove job"() {
         given:
