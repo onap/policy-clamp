@@ -52,7 +52,6 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRollbackRepository;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -68,16 +67,15 @@ class AutomationCompositionProviderTest {
     private static final String AC_IS_NULL = "automationComposition is marked non-null but is null";
     private static final String ACELEMENT_ID_IS_NULL = "elementId is marked non-null but is null";
 
-    private static final String AUTOMATION_COMPOSITION_JSON =
-        "src/test/resources/providers/TestAutomationCompositions.json";
+    private static final String AUTOMATION_COMPOSITION_JSON = "providers/TestAutomationCompositions.json";
 
     private AutomationCompositions inputAutomationCompositions;
     private List<JpaAutomationComposition> inputAutomationCompositionsJpa;
-    private static final String ORIGINAL_JSON = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
 
     @BeforeEach
     void beforeSetupDao() {
-        inputAutomationCompositions = CommonTestData.getObjectFromJson(ORIGINAL_JSON, AutomationCompositions.class);
+        inputAutomationCompositions = CommonTestData.getObjectFromJsonFile(AUTOMATION_COMPOSITION_JSON,
+                AutomationCompositions.class);
         inputAutomationCompositionsJpa =
             ProviderUtils.getJpaAndValidateList(inputAutomationCompositions.getAutomationCompositionList(),
                 JpaAutomationComposition::new, "automation compositions");

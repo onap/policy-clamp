@@ -32,8 +32,7 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper
 
 class SupervisionScannerTestHelper {
 
-    static final AC_SMOKE_JSON =
-            "src/test/resources/rest/acm/AutomationCompositionSmoke.json"
+    static final AC_SMOKE_JSON = "rest/acm/AutomationCompositionSmoke.json"
 
     static buildAcDefinition(UUID compositionId, AcTypeState state) {
         def serviceTemplate = InstantiationUtils.getToscaServiceTemplate(
