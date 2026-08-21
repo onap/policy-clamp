@@ -24,6 +24,9 @@ spring:
     admin:
       auto-create: true  # auto-create topics is useful for tests
       fail-fast: true  # fail if the broker is not available on startup
+    properties:
+      reconnect.backoff.ms: 50
+      reconnect.backoff.max.ms: 1000
     consumer:
       group-id: acm-runtime-test-group  # same for all tests to prevent stale data consumption by subsequent tests
       auto-offset-reset: earliest  # ensure tests consume all messages from the beginning
