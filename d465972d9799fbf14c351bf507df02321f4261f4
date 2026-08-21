@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7af69b8_49d822c9",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/JdbcTelemetryBeanPostProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-21T09:35:41Z",
+      "side": 1,
+      "message": "2026",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "d465972d9799fbf14c351bf507df02321f4261f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
