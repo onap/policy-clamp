@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Base64;
-import org.onap.policy.common.utils.network.NetworkUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -37,7 +36,6 @@ import org.springframework.web.client.RestClient;
  */
 public class CommonRestClient {
 
-    public static final String SELF = NetworkUtil.getHostname();
     public static final String CONTEXT_PATH = "onap/policy/clamp/acm";
     public static final String ENDPOINT_PREFIX = CONTEXT_PATH + "/v2/";
     public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/";
@@ -218,7 +216,7 @@ public class CommonRestClient {
      */
     public void initializeRestClient(int port) {
         restClient = RestClient.builder()
-                .baseUrl("http://" + SELF.trim() + ":" + port + "/")
+                .baseUrl("http://localhost:" + port + "/")
                 .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .build();
