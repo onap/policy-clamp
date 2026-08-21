@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -38,6 +39,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
@@ -57,6 +59,32 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 public class KafkaConfig {
 
     /**
+     * Default common client settings applied to all Kafka clients (consumer, producer, admin).
+     * Can be overridden via {@code KafkaParameters.properties}.
+     */
+    private static final Map<String, Object> COMMON_CLIENT_DEFAULTS = Map.of(
+        CommonClientConfigs.RECONNECT_BACKOFF_MS_CONFIG, 5000L,
+        CommonClientConfigs.RECONNECT_BACKOFF_MAX_MS_CONFIG, 30000L
+    );
+
+    /**
+     * KafkaAdmin for intermediary. Inherits shared properties from {@code KafkaParameters}.
+     */
+    @Bean("acmKafkaAdmin")
+    public KafkaAdmin acmKafkaAdmin(ParticipantParameters participantParameters) {
+        var kafka = participantParameters.getIntermediaryParameters().getKafka();
+        var config = new HashMap<>(COMMON_CLIENT_DEFAULTS);
+
+        // Shared additional properties (security, etc.) - may override defaults above
+        config.putAll(kafka.getProperties());
+
+        // Authoritative settings - not overridable via properties maps
+        config.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+
+        return new KafkaAdmin(config);
+    }
+
+    /**
      * Consumer factory for ACM messaging. Key: String, Value: ParticipantKafkaMessage.
      * Uses ErrorHandlingDeserializer wrapping ParticipantMessageDeserializer.
      */
@@ -64,16 +92,16 @@ public class KafkaConfig {
     public ConsumerFactory<String, ParticipantKafkaMessage> acmConsumerFactory(
             ParticipantParameters participantParameters) {
         var kafka = participantParameters.getIntermediaryParameters().getKafka();
-        Map<String, Object> config = new HashMap<>();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, kafka.getConsumer().getGroupId());
+        var config = new HashMap<>(COMMON_CLIENT_DEFAULTS);
 
-        // Shared additional properties (security, etc.)
+        // Shared additional properties (security, etc.) - may override defaults above
         config.putAll(kafka.getProperties());
         // Consumer-specific additional properties
         config.putAll(kafka.getConsumer().getProperties());
 
-        // Serialization - set last to prevent override via properties maps
+        // Authoritative settings - not overridable via properties maps
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, kafka.getConsumer().getGroupId());
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, ParticipantMessageDeserializer.class);
@@ -88,15 +116,15 @@ public class KafkaConfig {
     public ProducerFactory<String, ParticipantKafkaMessage> acmProducerFactory(
             ParticipantParameters participantParameters) {
         var kafka = participantParameters.getIntermediaryParameters().getKafka();
-        Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+        var config = new HashMap<>(COMMON_CLIENT_DEFAULTS);
 
-        // Shared additional properties (security, etc.)
+        // Shared additional properties (security, etc.) - may override defaults above
         config.putAll(kafka.getProperties());
         // Producer-specific additional properties
         config.putAll(kafka.getProducer().getProperties());
 
-        // Serialization - set last to prevent override via properties maps
+        // Authoritative settings - not overridable via properties maps
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ParticipantMessageSerializer.class);
 
