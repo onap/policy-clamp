@@ -21,12 +21,14 @@
 package org.onap.policy.clamp.acm.participant.intermediary.config
 
 import java.time.Duration
+import org.apache.kafka.clients.CommonClientConfigs
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.KafkaParameters
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
+import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
 import spock.lang.Specification
 
@@ -67,6 +69,11 @@ class KafkaConfigSpec extends Specification {
         kafkaConfig.acmProducerFactory(participantParameters) instanceof DefaultKafkaProducerFactory
     }
 
+    def "create KafkaAdmin"() {
+        expect:
+        kafkaConfig.acmKafkaAdmin(participantParameters) instanceof KafkaAdmin
+    }
+
     def "create KafkaTemplate with observation enabled"() {
         given:
         def producerFactory = kafkaConfig.acmProducerFactory(participantParameters)
@@ -89,5 +96,46 @@ class KafkaConfigSpec extends Specification {
         then:
         factory instanceof ConcurrentKafkaListenerContainerFactory
         factory.containerProperties.observationEnabled == true
+    }
+
+    def "all clients have reconnect backoff defaults"() {
+        when:
+        def consumerConfig = kafkaConfig.acmConsumerFactory(participantParameters).configurationProperties
+        def producerConfig = kafkaConfig.acmProducerFactory(participantParameters).configurationProperties
+        def adminConfig = kafkaConfig.acmKafkaAdmin(participantParameters).configurationProperties
+
+        then:
+        [consumerConfig, producerConfig, adminConfig].each { config ->
+            assert config[CommonClientConfigs.RECONNECT_BACKOFF_MS_CONFIG] == 5000L
+            assert config[CommonClientConfigs.RECONNECT_BACKOFF_MAX_MS_CONFIG] == 30000L
+        }
+    }
+
+    def "defaults can be overridden via properties map"() {
+        given:
+        participantParameters.getIntermediaryParameters().kafka.properties
+                .put(CommonClientConfigs.RECONNECT_BACKOFF_MS_CONFIG, "10000")
+
+        when:
+        def adminConfig = kafkaConfig.acmKafkaAdmin(participantParameters).configurationProperties
+
+        then:
+        adminConfig[CommonClientConfigs.RECONNECT_BACKOFF_MS_CONFIG] == "10000"
+    }
+
+    def "bootstrap.servers in properties map cannot override authoritative field"() {
+        given:
+        participantParameters.getIntermediaryParameters().kafka.properties
+                .put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, "should-be-ignored:9092")
+
+        when:
+        def adminConfig = kafkaConfig.acmKafkaAdmin(participantParameters).configurationProperties
+        def consumerConfig = kafkaConfig.acmConsumerFactory(participantParameters).configurationProperties
+        def producerConfig = kafkaConfig.acmProducerFactory(participantParameters).configurationProperties
+
+        then:
+        [adminConfig, consumerConfig, producerConfig].each { config ->
+            assert config[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] == "localhost:9092"
+        }
     }
 }
