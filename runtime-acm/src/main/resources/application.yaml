@@ -35,6 +35,8 @@ spring:
     properties:
       sasl.mechanism: ${KAFKA_SASL_MECHANISM:GSSAPI}
       sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
+      reconnect.backoff.ms: ${KAFKA_RECONNECT_BACKOFF_MS:5000}
+      reconnect.backoff.max.ms: ${KAFKA_RECONNECT_BACKOFF_MAX_MS:30000}
     listener:
       observation-enabled: true
       auth-exception-retry-interval: ${KAFKA_AUTH_EXCEPTION_RETRY_INTERVAL:5s}
