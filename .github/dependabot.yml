@@ -20,7 +20,7 @@ updates:
           - "*"
 
   - package-ecosystem: "maven"
-    directory: "/"
+    directory: "/clamp-parent/dependencies"
     schedule:
       interval: "weekly"
     # Only update patch versions, e.g. 4.0.6 -> 4.0.7, not 4.1.0
