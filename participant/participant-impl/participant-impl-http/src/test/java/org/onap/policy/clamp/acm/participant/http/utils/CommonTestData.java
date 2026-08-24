@@ -32,7 +32,7 @@ import org.onap.policy.clamp.acm.participant.http.main.models.ConfigurationEntit
 import org.onap.policy.clamp.acm.participant.http.main.models.RestParams;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.core.io.ClassPathResource;

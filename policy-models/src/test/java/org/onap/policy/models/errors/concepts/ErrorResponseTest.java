@@ -24,10 +24,10 @@ package org.onap.policy.models.errors.concepts;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.utils.coder.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ class ErrorResponseTest {
 
             error.setWarningDetails(List.of("Please make sure topology template field is included."));
 
-            var mapper = MapperFactory.createJsonMapper();
+            var mapper = new ObjectMapper();
             var jsonOutput = mapper.writeValueAsString(error);
 
             logger.debug("Resulting json output {}", jsonOutput);

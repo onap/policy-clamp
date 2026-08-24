@@ -34,7 +34,7 @@ import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParame
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.dto.CompositionDto;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public class CommonTestData {

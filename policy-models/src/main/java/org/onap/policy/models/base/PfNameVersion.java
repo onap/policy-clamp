@@ -21,7 +21,7 @@
 package org.onap.policy.models.base;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.onap.policy.common.utils.validation.Version;
+import org.onap.policy.models.utils.validation.Version;
 
 /**
  * An interface that forces a POJO to have getName() and getVersion() methods.

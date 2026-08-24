@@ -19,7 +19,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.utils.validation;
+package org.onap.policy.models.utils.validation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

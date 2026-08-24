@@ -26,9 +26,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
-import org.onap.policy.common.utils.validation.Assertions;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKeyImpl;
+import org.onap.policy.models.utils.validation.Assertions;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

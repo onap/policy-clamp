@@ -19,7 +19,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.utils.validation;
+package org.onap.policy.models.utils.validation;
 
 import com.google.re2j.Pattern;
 import lombok.Data;

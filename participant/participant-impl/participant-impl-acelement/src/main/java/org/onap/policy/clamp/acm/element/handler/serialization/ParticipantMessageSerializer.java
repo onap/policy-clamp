@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 
 public class ParticipantMessageSerializer implements Serializer<ElementMessage> {
 

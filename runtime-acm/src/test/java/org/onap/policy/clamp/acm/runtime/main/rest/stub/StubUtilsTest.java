@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 import org.springframework.http.HttpStatus;
 
 class StubUtilsTest {
