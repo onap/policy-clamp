@@ -22,6 +22,30 @@
       },
       "revId": "d465972d9799fbf14c351bf507df02321f4261f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "404b7d1d_e33501c9",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/JdbcTelemetryBeanPostProcessor.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-08-24T06:58:59Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a7af69b8_49d822c9",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "d465972d9799fbf14c351bf507df02321f4261f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
