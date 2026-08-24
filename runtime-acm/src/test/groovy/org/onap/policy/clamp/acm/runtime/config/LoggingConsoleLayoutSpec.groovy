@@ -23,7 +23,7 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.spi.ThrowableProxy
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.onap.policy.common.utils.coder.MapperFactory
+import org.onap.policy.clamp.models.acm.utils.MapperFactory
 import spock.lang.Specification
 import spock.lang.Unroll
 

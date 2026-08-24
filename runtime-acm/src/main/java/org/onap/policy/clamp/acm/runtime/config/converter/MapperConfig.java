@@ -21,7 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.config.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

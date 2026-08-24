@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 
 public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
 
