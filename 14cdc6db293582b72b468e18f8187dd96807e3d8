@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8750603e_08d43e39",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-24T10:14:37Z",
+      "side": 1,
+      "message": "This appears to be caused by simulator participant using same dependencies at lower versions, and only allowing patch updates. Will need a fix to ignore simulator pom again.",
+      "parentUuid": "affd842c_e31ad85e",
+      "range": {
+        "startLine": 67,
+        "startChar": 25,
+        "endLine": 67,
+        "endChar": 32
+      },
+      "revId": "14cdc6db293582b72b468e18f8187dd96807e3d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "700918b6_60e83d8e",
         "filename": "participant/participant-impl/participant-impl-simulator/pom.xml",
         "patchSetId": 1
