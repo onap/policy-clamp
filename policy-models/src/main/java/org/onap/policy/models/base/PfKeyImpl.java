@@ -25,7 +25,7 @@ import java.io.Serial;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import org.onap.policy.common.utils.validation.Assertions;
+import org.onap.policy.models.utils.validation.Assertions;
 
 /**
  * A key, upon which other key subclasses can be built, providing implementations of the methods.

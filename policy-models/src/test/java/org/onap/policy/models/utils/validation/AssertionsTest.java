@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.common.utils.validation;
+package org.onap.policy.models.utils.validation;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 

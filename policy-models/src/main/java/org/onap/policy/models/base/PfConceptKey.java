@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import org.onap.policy.common.utils.validation.Assertions;
+import org.onap.policy.models.utils.validation.Assertions;
 
 /**
  * A concept key uniquely identifies every first order entity in the system. Every first order concept in the system

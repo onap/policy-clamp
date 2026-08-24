@@ -31,7 +31,7 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.a1pms.models.A1PolicyServiceEntity;
 import org.onap.policy.clamp.models.acm.dto.CompositionElementDto;
 import org.onap.policy.clamp.models.acm.dto.InstanceElementDto;
-import org.onap.policy.common.utils.coder.MapperFactory;
+import org.onap.policy.clamp.models.acm.utils.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.core.io.ClassPathResource;

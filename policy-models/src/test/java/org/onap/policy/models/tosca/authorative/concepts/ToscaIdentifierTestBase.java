@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.onap.policy.common.utils.coder.MapperFactory;
 
 /**
  * Super class to test identity keys.
@@ -36,7 +35,7 @@ import org.onap.policy.common.utils.coder.MapperFactory;
 abstract class ToscaIdentifierTestBase<T extends Comparable<T>> {
     public static final String NAME = "my-name";
     public static final String VERSION = "1.2.3";
-    private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final Class<T> clazz;
     private final String nameField;
