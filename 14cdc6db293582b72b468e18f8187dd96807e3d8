@@ -48,6 +48,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2052057_bd83d0ee",
+        "filename": "clamp-parent/dependencies/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-26T12:18:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8750603e_08d43e39",
+      "range": {
+        "startLine": 67,
+        "startChar": 25,
+        "endLine": 67,
+        "endChar": 32
+      },
+      "revId": "14cdc6db293582b72b468e18f8187dd96807e3d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "700918b6_60e83d8e",
@@ -61,6 +85,30 @@
       "writtenOn": "2026-08-24T10:05:02Z",
       "side": 1,
       "message": "New dependabot config needs to be reviewed - it should only allow patch updates.",
+      "range": {
+        "startLine": 37,
+        "startChar": 28,
+        "endLine": 37,
+        "endChar": 33
+      },
+      "revId": "14cdc6db293582b72b468e18f8187dd96807e3d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b6f674e_034a3f14",
+        "filename": "participant/participant-impl/participant-impl-simulator/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-26T12:18:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "700918b6_60e83d8e",
       "range": {
         "startLine": 37,
         "startChar": 28,
