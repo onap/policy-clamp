@@ -101,8 +101,10 @@ services:
     depends_on:
       - kafka
       - jaeger
+    ports:
+      - ${HTTP_PPNT_PORT}:6969
     deploy:
-      replicas: ${ACM_REPLICAS:-1}
+      replicas: 1
       resources:
         limits:
           cpus: '2.0'
