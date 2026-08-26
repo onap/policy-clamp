@@ -83,6 +83,29 @@ function run_robot() {
     RC=$?
 }
 
+function run_k6_health_check() {
+    if ! command -v k6 &> /dev/null; then
+        echo "k6 not found, skipping k6 health-check"
+        return
+    fi
+
+    echo "Running k6 health-check..."
+    source "${DOCKER_COMPOSE_DIR}"/export-ports.sh > /dev/null 2>&1
+
+    k6 run \
+        -e POLICY_RUNTIME_ACM_IP="localhost:${ACM_PORT}" \
+        -e HTTP_PARTICIPANT_SIM1_IP="localhost:${SIM_PARTICIPANT1_PORT}" \
+        -e POLICY_HTTP_PARTICIPANT="localhost:${HTTP_PPNT_PORT}" \
+        --out "json=${ROBOT_LOG_DIR}/k6-health-check.json" \
+        "${WORKSPACE}/csit/k6/health-check.js"
+
+    if [ $? -eq 0 ]; then
+        echo "k6 health-check PASSED"
+    else
+        echo "k6 health-check FAILED"
+    fi
+}
+
 function set_project_config() {
     echo "Setting project configuration for: $PROJECT"
     case $PROJECT in
@@ -197,6 +220,7 @@ docker_stats | tee "${ROBOT_LOG_DIR}/_sysinfo-1-after-setup.txt"
 if [ "${SKIP_TEST}" == "true" ]; then
     echo "Skipping test"
 else
+    run_k6_health_check
     run_robot
 fi
 
