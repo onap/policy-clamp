@@ -189,6 +189,25 @@ class AcSimRestTest {
     }
 
     @Test
+    void testGetCompositionData() throws Exception {
+        var internalDatas = new InternalDatas();
+        var internalData = new InternalData();
+        internalData.setCompositionId(UUID.randomUUID());
+        internalDatas.getList().add(internalData);
+
+        doReturn(internalDatas).when(simulatorService).getCompositionData(internalData.getCompositionId());
+
+        var requestBuilder = MockMvcRequestBuilders
+                .get(COMPOSITION_DATAS_URL + "/" + internalData.getCompositionId())
+                .accept(MediaType.APPLICATION_JSON_VALUE);
+        var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
+        var body = result.getResponse().getContentAsString();
+        var acsResult = CommonTestData.getObjectFromJson(body, InternalDatas.class);
+        assertEquals(internalData.getCompositionId(), acsResult.getList().getFirst().getCompositionId());
+    }
+
+    @Test
     void testSetCompositionDatas() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(COMPOSITION_DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(CommonTestData.getJsonFromObject(new InternalData()))

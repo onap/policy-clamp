@@ -39,7 +39,7 @@ ReviewAutomationCompositionRestored
     ${postjson}=  Get file  ${CURDIR}/data/ReviewAC.json
     ChangeStatusAutomationComposition  ${compositionTargetIdRestored}   ${InstanceIdRestored}  ${postjson}
     Wait Until Keyword Succeeds    10 min    5 sec    VerifySubStatus  ${compositionTargetIdRestored}  ${InstanceIdRestored}
-    VerifyCompositionParticipantSim   'MyTextUpdated'
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionTargetIdRestored}  'MyTextUpdated'
 
 AcDeleteRestored
     [Documentation]  Undeploy and delete of an automation composition restored.
@@ -63,7 +63,7 @@ SyncParticipant
     ${resp}=   PUT On Session     policy  /onap/policy/clamp/acm/v2/participants/sync
     Log    Received response from runtime acm ${resp.text}
     Should Be Equal As Strings    ${resp.status_code}     202
-    Wait Until Keyword Succeeds    1 min    10 sec    VerifyCompositionParticipantSim   'InternalState'
+    Wait Until Keyword Succeeds   1 min   10 sec    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionIdRestored}  'InternalState'
     VerifyParticipantSim  ${InstanceIdRestored}  myParameterToUpdate
 
 GetInstances

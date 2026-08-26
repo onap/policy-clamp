@@ -145,29 +145,47 @@ public class SimulatorService {
     }
 
     /**
-     * Get Composition Data List.
+     * Get Compositions Data List.
      *
-     * @return the InternalDatas
+     * @return the InternalDatas of all compositions
      */
     public InternalDatas getCompositionDataList() {
         var compositions = intermediaryApi.findCompositions();
         var internalDatas = new InternalDatas();
         for (var composition : compositions) {
-            Set<ToscaConceptIdentifier> set = new HashSet<>();
-            set.addAll(composition.inPropertiesMap().keySet());
-            set.addAll(composition.outPropertiesMap().keySet());
-            for (var key : set) {
-                var internalData = new InternalData();
-                internalData.setCompositionId(composition.compositionId());
-                internalData.setCompositionDefinitionElementId(key);
-                internalData.setIntProperties(composition.inPropertiesMap().get(key));
-                internalData.setOutProperties(composition.outPropertiesMap().get(key));
-                internalDatas.getList().add(internalData);
-            }
+            internalDatas.getList().addAll(getInternalData(composition));
         }
         return internalDatas;
     }
 
+    private List<InternalData> getInternalData(CompositionDto composition) {
+        Set<ToscaConceptIdentifier> set = new HashSet<>();
+        set.addAll(composition.inPropertiesMap().keySet());
+        set.addAll(composition.outPropertiesMap().keySet());
+        List<InternalData> list = new ArrayList<>();
+        for (var key : set) {
+            var internalData = new InternalData();
+            internalData.setCompositionId(composition.compositionId());
+            internalData.setCompositionDefinitionElementId(key);
+            internalData.setIntProperties(composition.inPropertiesMap().get(key));
+            internalData.setOutProperties(composition.outPropertiesMap().get(key));
+            list.add(internalData);
+        }
+        return list;
+    }
+
+    /**
+     * Get Composition Data List.
+     *
+     * @param compositionId the compositionId
+     * @return the InternalDatas of the composition
+     */
+    public InternalDatas getCompositionData(UUID compositionId) {
+        var composition = intermediaryApi.getComposition(compositionId);
+        var internalDatas = new InternalDatas();
+        internalDatas.getList().addAll(getInternalData(composition));
+        return internalDatas;
+    }
 
     public void sendCompositionOutProperties(UUID compositionId, ToscaConceptIdentifier compositionDefinitionElementId,
                                             Map<String, Object> outProperties) {

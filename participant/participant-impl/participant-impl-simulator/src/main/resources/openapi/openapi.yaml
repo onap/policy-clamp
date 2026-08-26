@@ -406,6 +406,54 @@ paths:
           description: Internal Server Error
       security:
         - basicAuth: []
+  /compositiondatas/{compositionId}:
+    get:
+      tags:
+        - Simulator-participant-controller
+      summary: Get composition details.
+      description: Get details of the requested composition.
+      operationId: getCompositionData
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the composition to get
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [InternalDatas](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/InternalDatas.java)
+            containing the composition
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalDatas'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InternalDatas'
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
 
 components:
   securitySchemes:
