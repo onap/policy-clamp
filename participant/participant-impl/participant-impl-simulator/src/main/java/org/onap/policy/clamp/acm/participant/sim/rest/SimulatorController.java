@@ -63,6 +63,11 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
     }
 
     @Override
+    public ResponseEntity<InternalDatas> getCompositionData(UUID compositionId, UUID xonapRequestId) {
+        return new ResponseEntity<>(simulatorService.getCompositionData(compositionId), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<AutomationComposition> getAutomationComposition(UUID instanceId, UUID xonapRequestId) {
         return new ResponseEntity<>(simulatorService.getAutomationComposition(instanceId),
                 HttpStatus.OK);

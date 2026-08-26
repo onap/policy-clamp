@@ -35,6 +35,8 @@ FailDeployAutomationComposition
     ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
     ChangeStatusAutomationComposition  ${compositionId}   ${instanceId}  ${postjson}
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyStateChangeResult  ${compositionId}  ${instanceId}  FAILED
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionId}  {'name': 'onap.policy.clamp.ac.element.type1.Sim_AutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionId}  {'name': 'onap.policy.clamp.ac.element.type2.Sim_AutomationCompositionElement', 'version': '1.2.3'}
 
 UnDeployAutomationComposition
     [Documentation]  UnDeploy automation composition.
@@ -47,12 +49,16 @@ UnDeployAutomationComposition
     Wait Until Keyword Succeeds    3 min    5 sec    VerifyDeployStatus  ${compositionId}  ${instanceId}  UNDEPLOYED
     VerifyInternalStateElementsRuntime  ${compositionId}   ${instanceId}  UNDEPLOYED  709c62b3-8918-41b9-a747-d21eb80c6c41
     VerifyInternalStateElementsRuntime  ${compositionId}   ${instanceId}  UNDEPLOYED  709c62b3-8918-41b9-a747-d21eb80c6c42
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionId}  {'name': 'onap.policy.clamp.ac.element.type1.Sim_AutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionId}  {'name': 'onap.policy.clamp.ac.element.type2.Sim_AutomationCompositionElement', 'version': '1.2.3'}
 
 UnInstantiateAutomationComposition
     [Documentation]  Delete automation composition instance.
     SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM3_IP}
     DeleteAutomationComposition  ${compositionId}  ${instanceId}
     Wait Until Keyword Succeeds    1 min    5 sec    VerifyUninstantiated  ${compositionId}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionId}  {'name': 'onap.policy.clamp.ac.element.type1.Sim_AutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionId}  {'name': 'onap.policy.clamp.ac.element.type2.Sim_AutomationCompositionElement', 'version': '1.2.3'}
 
 DeleteACDefinition
     [Documentation]  DePrime and Delete automation composition definition.

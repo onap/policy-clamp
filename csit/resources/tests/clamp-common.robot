@@ -173,11 +173,23 @@ VerifyRollbackElementsSim
     Should Not Match Regexp  ${respstring}  Sim_NewAutomationCompositionElement
     Should Match Regexp  ${respstring}  Sim_SinkAutomationCompositionElement
 
+VerifyCompositionsParticipantsInMigration
+    [Arguments]  ${compositionFromId}  ${compositionToId}
+    [Documentation]  Verify Compositions in Participants in Migration operation
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionFromId}  {'name': 'onap.policy.clamp.ac.element.Sim_StarterAutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionFromId}  {'name': 'onap.policy.clamp.ac.element.Sim_BridgeAutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionFromId}  {'name': 'onap.policy.clamp.ac.element.Sim_SinkAutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM2_IP}  ${compositionFromId}  {'name': 'onap.policy.clamp.ac.element.Sim_Sink2AutomationCompositionElement', 'version': '1.2.3'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionToId}    {'name': 'onap.policy.clamp.ac.element.Sim_StarterAutomationCompositionElement', 'version': '1.2.4'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionToId}    {'name': 'onap.policy.clamp.ac.element.Sim_BridgeAutomationCompositionElement', 'version': '1.2.4'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionToId}    {'name': 'onap.policy.clamp.ac.element.Sim_NewAutomationCompositionElement', 'version': '1.2.4'}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM3_IP}  ${compositionToId}    {'name': 'onap.policy.clamp.ac.element.Sim_NewAutomationCompositionElement2', 'version': '1.2.4'}
+
 VerifyCompositionParticipantSim
-    [Arguments]  ${textToFind}
+    [Arguments]  ${domain}  ${theCompositionId}  ${textToFind}
     [Documentation]  Query composition on Participant Simulator
     ${auth}=    ParticipantAuth
-    ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/v2/compositiondatas  ${auth}
+    ${resp}=    MakeGetRequest  participant  ${domain}  /onap/policy/simparticipant/v2/compositiondatas/${theCompositionId}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
     ${respstring}   Convert To String   ${resp.json()}
     Should Match Regexp  ${respstring}  ${textToFind}

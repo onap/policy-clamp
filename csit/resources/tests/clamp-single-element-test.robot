@@ -35,6 +35,7 @@ FailDeployAutomationCompositionSimple
     ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
     ChangeStatusAutomationComposition  ${simpleCompositionId}   ${simpleInstanceId}  ${postjson}
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyStateChangeResult  ${simpleCompositionId}  ${simpleInstanceId}  FAILED
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${simpleCompositionId}  {'name': 'onap.policy.clamp.ac.element.Sim_AutomationCompositionElement', 'version': '1.2.3'}
 
 UnDeployAutomationCompositionSimple
     [Documentation]  UnDeploy simple automation composition.
@@ -45,12 +46,14 @@ UnDeployAutomationCompositionSimple
     Wait Until Keyword Succeeds    1 min    5 sec    VerifyInternalStateElementsRuntime  ${simpleCompositionId}   ${simpleInstanceId}  UNDEPLOYING  709c62b3-8918-41b9-a747-d21eb80c6c34
     Wait Until Keyword Succeeds    3 min    5 sec    VerifyDeployStatus  ${simpleCompositionId}  ${simpleInstanceId}  UNDEPLOYED
     VerifyInternalStateElementsRuntime  ${simpleCompositionId}   ${simpleInstanceId}  UNDEPLOYED  709c62b3-8918-41b9-a747-d21eb80c6c34
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${simpleCompositionId}  {'name': 'onap.policy.clamp.ac.element.Sim_AutomationCompositionElement', 'version': '1.2.3'}
 
 UnInstantiateAutomationCompositionSimple
     [Documentation]  Delete simple automation composition instance.
     SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM1_IP}
     DeleteAutomationComposition  ${simpleCompositionId}  ${simpleInstanceId}
     Wait Until Keyword Succeeds    1 min    5 sec    VerifyUninstantiated  ${simpleCompositionId}
+    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${simpleCompositionId}  {'name': 'onap.policy.clamp.ac.element.Sim_AutomationCompositionElement', 'version': '1.2.3'}
 
 DeleteACDefinitionSimple
     [Documentation]  DePrime and Delete simple automation composition definition.

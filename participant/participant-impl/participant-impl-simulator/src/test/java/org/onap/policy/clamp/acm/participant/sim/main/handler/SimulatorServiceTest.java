@@ -140,6 +140,23 @@ class SimulatorServiceTest {
     }
 
     @Test
+    void testGetCompositionData() {
+        var composition = CommonTestData.getTestCompositionDto();
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        when(intermediaryApi.getComposition(composition.compositionId())).thenReturn(composition);
+        var simulatorService = new SimulatorService(intermediaryApi);
+
+        var result = simulatorService.getCompositionData(composition.compositionId());
+        assertThat(result.getList()).hasSize(1);
+        var element = result.getList().getFirst();
+        var key = composition.inPropertiesMap().keySet().iterator().next();
+        assertEquals(element.getCompositionId(), composition.compositionId());
+        assertEquals(element.getCompositionDefinitionElementId(), key);
+        assertEquals(element.getOutProperties(), composition.outPropertiesMap().get(key));
+        assertEquals(element.getIntProperties(), composition.inPropertiesMap().get(key));
+    }
+
+    @Test
     void testSetCompositionData() {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);

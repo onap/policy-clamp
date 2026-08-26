@@ -134,6 +134,7 @@ DeployAutomationCompositionMigration
     ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
     ChangeStatusAutomationComposition  ${compositionFromId}   ${instanceMigrationId}  ${postjson}
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 SendOutPropertiesToRuntime
     [Documentation]  Send Out Properties To Runtime
@@ -176,6 +177,7 @@ FailAutomationCompositionUpdate
     ${resp}=   MakeYamlPostRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  /onap/policy/clamp/acm/v2/compositions/${compositionFromId}/instances  ${updatedpostyaml}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyStateChangeResult  ${compositionFromId}  ${instanceMigrationId}  FAILED
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 AutomationCompositionUpdateRollback
     [Documentation]  Rollback automation composition after update failure.
@@ -186,6 +188,7 @@ AutomationCompositionUpdateRollback
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextInit
     VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 AutomationCompositionUpdate
     [Documentation]  Update of an automation composition.
@@ -199,12 +202,14 @@ AutomationCompositionUpdate
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextUpdated
     VerifyParticipantSim  ${instanceMigrationId}  MyTextUpdated
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 PrecheckAutomationCompositionMigration
     [Documentation]  Precheck Migration of an automation composition.
     ${postyaml}=  Get file  ${CURDIR}/data/ac-instance-precheck-migration.yaml
     MigrateAc  ${postyaml}  ${compositionFromId}  ${compositionToId}  ${instanceMigrationId}  TextForMigration
     Wait Until Keyword Succeeds    2 min    5 sec    VerifySubStatus  ${compositionFromId}  ${instanceMigrationId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 AutomationCompositionMigrationTo
     [Documentation]  Migration of an automation composition.
@@ -217,6 +222,7 @@ AutomationCompositionMigrationTo
     VerifyMigratedElementsSim  ${instanceMigrationId}
     VerifyRemovedElementsSim  ${instanceMigrationId}
     VerifyMigratedElementsSim3  ${instanceMigrationId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailAutomationCompositionMigration
     [Documentation]  Fail Migration of an automation composition.
@@ -229,6 +235,7 @@ UnInstantiateAutomationComposition
     [Documentation]  UnDeploy and Delete automation composition instance.
     SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM1_IP}
     UndeployAndDeleteAutomationComposition  ${compositionId}  ${instanceId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailUnDeployAutomationCompositionMigrationTo
     [Documentation]  Fail UnDeploy automation composition migrated.
@@ -243,6 +250,7 @@ UnDeployAutomationCompositionMigrationTo
     ${postjson}=  Get file  ${CURDIR}/data/UndeployAC.json
     ChangeStatusAutomationComposition  ${compositionToId}   ${instanceMigrationId}  ${postjson}
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionToId}  ${instanceMigrationId}  UNDEPLOYED
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailUnInstantiateAutomationCompositionMigrationTo
     [Documentation]  Fail Delete automation composition instance migrated.
@@ -262,6 +270,7 @@ InstantiateAutomationCompositionRollback
     ${updatedpostyaml}=   Replace String     ${postyaml}     TEXTPLACEHOLDER       MyTextInit
     ${tmpInstanceId}=  MakeYamlInstantiateAutomationComposition   ${compositionFromId}   ${updatedpostyaml}
     set Suite variable  ${instanceMigrationId}    ${tmpInstanceId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 DeployAutomationCompositionRollback
     [Documentation]  Deploy automation for testing rollback.
@@ -269,6 +278,7 @@ DeployAutomationCompositionRollback
     ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
     ChangeStatusAutomationComposition  ${compositionFromId}   ${instanceMigrationId}  ${postjson}
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailAutomationCompositionMigrationRollback
     [Documentation]  Fail Migration of an automation composition for testing rollback.
@@ -288,10 +298,12 @@ RollbackAutomationComposition
     VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
     VerifyRollbackElementsRuntime  ${compositionFromId}  ${instanceMigrationId}
     VerifyRollbackElementsSim  ${instanceMigrationId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 UnInstantiateAutomationCompositionRollback
     [Documentation]  Undeploy and Delete automation composition instance in fail rollback.
     UndeployAndDeleteAutomationComposition  ${compositionFromId}  ${instanceMigrationId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 InstantiateAutomationCompositionRollback2
     [Documentation]  Instantiate automation composition for testing rollback.
@@ -306,6 +318,7 @@ DeployAutomationCompositionRollback2
     ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
     ChangeStatusAutomationComposition  ${compositionFromId}   ${instanceMigrationId}  ${postjson}
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailAutomationCompositionMigrationRollback2
     [Documentation]  Fail Migration of an automation composition for testing rollback.
@@ -325,6 +338,7 @@ RollbackAutomationComposition2
     VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
     VerifyRollbackElementsRuntime  ${compositionFromId}  ${instanceMigrationId}
     VerifyRollbackElementsSim  ${instanceMigrationId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailAutomationCompositionMigrationRollback3
     [Documentation]  Fail Migration of an automation composition for testing rollback.
@@ -339,11 +353,13 @@ FailRollbackAutomationComposition
     ${resp}=   MakePostRequest  ACM  ${POLICY_RUNTIME_ACM_IP}  /onap/policy/clamp/acm/v2/compositions/${compositionFromId}/instances/${instanceMigrationId}/rollback   ${auth}
     Should Be Equal As Strings    ${resp.status_code}     202
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyStateChangeResult  ${compositionFromId}  ${instanceMigrationId}  FAILED
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 UnInstantiateAutomationCompositionRollback2
     [Documentation]  Undeploy and Delete automation composition instance in fail rollback.
     SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM1_IP}
     UndeployAndDeleteAutomationComposition  ${compositionFromId}  ${instanceMigrationId}
+    VerifyCompositionsParticipantsInMigration  ${compositionFromId}  ${compositionToId}
 
 FailDePrimeACDefinitionsFrom
     [Documentation]  Fail DePrime automation composition definition migration From.
