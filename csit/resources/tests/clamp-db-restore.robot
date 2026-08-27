@@ -64,7 +64,7 @@ SyncParticipant
     Log    Received response from runtime acm ${resp.text}
     Should Be Equal As Strings    ${resp.status_code}     202
     Wait Until Keyword Succeeds   1 min   10 sec    VerifyCompositionParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${compositionIdRestored}  'InternalState'
-    VerifyParticipantSim  ${InstanceIdRestored}  myParameterToUpdate
+    VerifyParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${InstanceIdRestored}  myParameterToUpdate
 
 GetInstances
     [Documentation]    Get all the instances from the database
