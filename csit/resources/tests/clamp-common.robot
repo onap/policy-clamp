@@ -141,8 +141,16 @@ VerifyMigratedElementsSim
     ${auth}=    ParticipantAuth
     ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/v2/instances/${theInstanceId}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c34']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c35']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c37']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
     ${respstring}   Convert To String   ${resp.json()}
-    Should Match Regexp  ${respstring}  Sim_NewAutomationCompositionElement
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_StarterAutomationCompositionElement', 'version': '1.2.4'}
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_BridgeAutomationCompositionElement', 'version': '1.2.4'}
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_NewAutomationCompositionElement', 'version': '1.2.4'}
     Should Not Match Regexp  ${respstring}  Sim_SinkAutomationCompositionElement
 
 VerifyMigratedElementsSim3
@@ -151,8 +159,10 @@ VerifyMigratedElementsSim3
     ${auth}=    ParticipantAuth
     ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM3_IP}  /onap/policy/simparticipant/v2/instances/${theInstanceId}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c40']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
     ${respstring}   Convert To String   ${resp.json()}
-    Should Match Regexp  ${respstring}  Sim_NewAutomationCompositionElement2
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_NewAutomationCompositionElement2', 'version': '1.2.4'}
     Should Not Match Regexp  ${respstring}  Sim_SinkAutomationCompositionElement
 
 VerifyRemovedElementsSim
@@ -169,9 +179,17 @@ VerifyRollbackElementsSim
     ${auth}=    ParticipantAuth
     ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/v2/instances/${theInstanceId}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c34']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c35']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
+    ${respstring}   Convert To String   ${resp.json()['elements']['709c62b3-8918-41b9-a747-d21eb79c6c36']['deployState']}
+    Should Be Equal As Strings  ${respstring}  DEPLOYED
     ${respstring}   Convert To String   ${resp.json()}
     Should Not Match Regexp  ${respstring}  Sim_NewAutomationCompositionElement
-    Should Match Regexp  ${respstring}  Sim_SinkAutomationCompositionElement
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_StarterAutomationCompositionElement', 'version': '1.2.3'}
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_BridgeAutomationCompositionElement', 'version': '1.2.3'}
+    Should Match Regexp  ${respstring}  {'name': 'onap.policy.clamp.ac.element.Sim_SinkAutomationCompositionElement', 'version': '1.2.3'}
 
 VerifyCompositionParticipantSim
     [Arguments]  ${textToFind}
@@ -183,10 +201,10 @@ VerifyCompositionParticipantSim
     Should Match Regexp  ${respstring}  ${textToFind}
 
 VerifyParticipantSim
-    [Arguments]  ${theInstanceId}  ${textToFind}
+    [Arguments]  ${domain}  ${theInstanceId}  ${textToFind}
     [Documentation]  Query on Participant Simulator
     ${auth}=    ParticipantAuth
-    ${resp}=    MakeGetRequest  participant  ${HTTP_PARTICIPANT_SIM1_IP}  /onap/policy/simparticipant/v2/instances/${theInstanceId}  ${auth}
+    ${resp}=    MakeGetRequest  participant  ${domain}  /onap/policy/simparticipant/v2/instances/${theInstanceId}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
     ${respstring}   Convert To String   ${resp.json()}
     Should Match Regexp  ${respstring}  ${textToFind}

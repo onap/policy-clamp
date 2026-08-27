@@ -185,7 +185,7 @@ AutomationCompositionUpdateRollback
     Should Be Equal As Strings    ${resp.status_code}     202
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextInit
-    VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
+    VerifyParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${instanceMigrationId}  MyTextInit
 
 AutomationCompositionUpdate
     [Documentation]  Update of an automation composition.
@@ -198,7 +198,7 @@ AutomationCompositionUpdate
     Should Be Equal As Strings    ${resp.status_code}     200
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextUpdated
-    VerifyParticipantSim  ${instanceMigrationId}  MyTextUpdated
+    VerifyParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${instanceMigrationId}  MyTextUpdated
 
 PrecheckAutomationCompositionMigration
     [Documentation]  Precheck Migration of an automation composition.
@@ -212,7 +212,7 @@ AutomationCompositionMigrationTo
     MigrateAc  ${postyaml}  ${compositionFromId}  ${compositionToId}  ${instanceMigrationId}  TextForMigration
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionToId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionToId}  ${instanceMigrationId}  TextForMigration
-    VerifyParticipantSim  ${instanceMigrationId}  TextForMigration
+    VerifyParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${instanceMigrationId}  TextForMigration
     VerifyMigratedElementsRuntime  ${compositionToId}  ${instanceMigrationId}
     VerifyMigratedElementsSim  ${instanceMigrationId}
     VerifyRemovedElementsSim  ${instanceMigrationId}
@@ -285,7 +285,7 @@ RollbackAutomationComposition
     Should Be Equal As Strings    ${resp.status_code}     202
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextInit
-    VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
+    VerifyParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${instanceMigrationId}  MyTextInit
     VerifyRollbackElementsRuntime  ${compositionFromId}  ${instanceMigrationId}
     VerifyRollbackElementsSim  ${instanceMigrationId}
 
@@ -322,7 +322,7 @@ RollbackAutomationComposition2
     Should Be Equal As Strings    ${resp.status_code}     202
     Wait Until Keyword Succeeds    2 min    5 sec    VerifyDeployStatus  ${compositionFromId}  ${instanceMigrationId}  DEPLOYED
     VerifyPropertiesUpdated  ${compositionFromId}  ${instanceMigrationId}  MyTextInit
-    VerifyParticipantSim  ${instanceMigrationId}  MyTextInit
+    VerifyParticipantSim  ${HTTP_PARTICIPANT_SIM1_IP}  ${instanceMigrationId}  MyTextInit
     VerifyRollbackElementsRuntime  ${compositionFromId}  ${instanceMigrationId}
     VerifyRollbackElementsSim  ${instanceMigrationId}
 
