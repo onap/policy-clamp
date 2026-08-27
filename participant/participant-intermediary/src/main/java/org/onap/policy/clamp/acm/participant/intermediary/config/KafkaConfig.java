@@ -101,7 +101,6 @@ public class KafkaConfig {
 
         // Authoritative settings - not overridable via properties maps
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, kafka.getConsumer().getGroupId());
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, ParticipantMessageDeserializer.class);
