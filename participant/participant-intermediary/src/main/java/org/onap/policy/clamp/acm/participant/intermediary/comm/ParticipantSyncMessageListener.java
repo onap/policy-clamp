@@ -43,6 +43,7 @@ import org.springframework.stereotype.Component;
 @KafkaListener(
         topics = "${participant.intermediaryParameters.topics.syncTopic}",
         containerFactory = "acmListenerContainerFactory",
+        id = "acmSyncListener",
         groupId = "${random.uuid}"
 )
 public class ParticipantSyncMessageListener {
