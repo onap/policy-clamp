@@ -44,6 +44,7 @@ import org.springframework.stereotype.Component;
 @Component
 @KafkaListener(
         topics = "${runtime.topics.operationTopic}",
+        groupId = "${spring.kafka.consumer.group-id}",
         id = "participantMessageListener",
         autoStartup = "false"
 )
