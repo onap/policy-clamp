@@ -46,6 +46,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @KafkaListener(
         topics = "${participant.intermediaryParameters.topics.operationTopic}",
+        groupId = "${participant.intermediaryParameters.kafka.consumer.groupId}",
+        id = "acmOperationListener",
         containerFactory = "acmListenerContainerFactory"
 )
 public class ParticipantMessageListener {
