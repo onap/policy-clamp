@@ -53,9 +53,9 @@ class AcHttpClientTest {
      */
     @BeforeAll
     static void setUpMockServer() throws IOException {
-        mockServerPort = 42545;
         mockServer = new MockWebServer();
-        mockServer.start(mockServerPort);
+        mockServer.start(0);
+        mockServerPort = mockServer.getPort();
         mockServer.setDispatcher(new Dispatcher() {
             @NotNull
             @Override
