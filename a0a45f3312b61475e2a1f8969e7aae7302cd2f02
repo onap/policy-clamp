@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1edb82ec_39ceef0d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-08-28T06:59:44Z",
+      "side": 1,
+      "message": "when we implement filtering dtos based on stages in runtime, I think, this needs to be refactored? Or we will need a new method in cacheprovider?",
+      "range": {
+        "startLine": 310,
+        "startChar": 22,
+        "endLine": 310,
+        "endChar": 42
+      },
+      "revId": "a0a45f3312b61475e2a1f8969e7aae7302cd2f02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
