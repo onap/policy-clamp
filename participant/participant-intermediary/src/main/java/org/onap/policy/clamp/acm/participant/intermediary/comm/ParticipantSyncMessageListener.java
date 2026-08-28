@@ -90,7 +90,7 @@ public class ParticipantSyncMessageListener {
 
     private <T> void processIfApplicable(final T message, final Consumer<T> handler) {
         if (participantHandler.appliesTo((ParticipantKafkaMessage) message)) {
-            NetLoggerUtil.log(NetLoggerUtil.EventType.IN, "KAFKA", syncTopic, message.toString());
+            NetLoggerUtil.logIncoming("KAFKA", syncTopic, message.toString());
             handler.accept(message);
         }
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,22 +38,34 @@ public class NetLoggerUtil {
     public static final String SYSTEM_LS = System.lineSeparator();
 
     /**
-     * Specifies if the message is coming in or going out.
+     * Logs a received message to the network logger at INFO level.
+     *
+     * @param protocol the protocol used to receive the message
+     * @param topic the topic the message came from
+     * @param message message to be logged
      */
-    public enum EventType {
-        IN, OUT
+    public static void logIncoming(String protocol, String topic, String message) {
+        networkLogger.info("[IN|{}|{}]{}{}", protocol, topic, SYSTEM_LS, message);
     }
 
     /**
-     * Logs a message to the network logger.
+     * Logs a sent message to the network logger.
+     * Success is logged at INFO level, failure at ERROR level.
      *
-     * @param type can either be IN or OUT
-     * @param protocol the protocol used to receive/send the message
-     * @param topic the topic the message came from or null if the type is REST
+     * @param protocol the protocol used to send the message
+     * @param topic the topic the message was sent to
+     * @param messageType the type of message being sent
      * @param message message to be logged
+     * @param delivered whether the message was delivered successfully
      */
-    public static void log(EventType type, String protocol, String topic, String message) {
-        networkLogger.info("[{}|{}|{}]{}{}", type, protocol, topic, SYSTEM_LS, message);
+    public static void logOutgoing(String protocol, String topic, String messageType,
+            String message, boolean delivered) {
+        if (delivered) {
+            networkLogger.info("[OUT|{}|{}] Sent {}{}{}", protocol, topic, messageType, SYSTEM_LS, message);
+        } else {
+            networkLogger.error("[OUT|{}|{}] Failed to deliver {}{}{}", protocol, topic, messageType,
+                    SYSTEM_LS, message);
+        }
     }
 
 }
