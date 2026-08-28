@@ -21,13 +21,11 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
-@Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractParticipantPublisher<T extends ParticipantKafkaMessage> {
 
@@ -48,7 +46,7 @@ public abstract class AbstractParticipantPublisher<T extends ParticipantKafkaMes
     }
 
     private void send(final String topic, final T message) {
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "KAFKA", topic, message.toString());
+        var delivered = true;
         try {
             if (message.getPartitionKey() == null) {
                 kafkaTemplate.send(topic, message).join();
@@ -56,7 +54,9 @@ public abstract class AbstractParticipantPublisher<T extends ParticipantKafkaMes
                 kafkaTemplate.send(topic, message.getPartitionKey(), message).join();
             }
         } catch (final Exception e) {
-            log.warn("send to {} failed because of {}", topic, e.getMessage(), e);
+            delivered = false;
         }
+        NetLoggerUtil.logOutgoing("KAFKA", topic,
+                message.getMessageType().toString(), message.toString(), delivered);
     }
 }

@@ -129,7 +129,7 @@ class ParticipantMessagePublisherSpec extends Specification {
 
     def "log error and do not throw when send fails"() {
         given: 'logging is captured'
-        def logger = (Logger) LoggerFactory.getLogger(ParticipantMessagePublisher)
+        def logger = (Logger) LoggerFactory.getLogger("acm-network")
         def appender = new ListAppender<ILoggingEvent>()
         appender.start()
         logger.addAppender(appender)
@@ -143,7 +143,7 @@ class ParticipantMessagePublisherSpec extends Specification {
         then: 'no exception is thrown'
         noExceptionThrown()
         and: 'an error is logged'
-        appender.list.any { it.level == Level.ERROR && it.formattedMessage.contains("Kafka down") }
+        appender.list.any { it.level == Level.ERROR && it.formattedMessage.contains("Failed to deliver PARTICIPANT_REGISTER") }
 
         cleanup:
         logger.detachAppender(appender)

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024,2026 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2022-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class MessageListener {
     @KafkaHandler
     public void onTopicEvent(final ElementMessage message) {
         if (handler.appliesTo(message.getElementId())) {
-            NetLoggerUtil.log(NetLoggerUtil.EventType.IN, "KAFKA", topic, message.toString());
+            NetLoggerUtil.logIncoming("KAFKA", topic, message.toString());
             handler.handleMessage(message);
         }
     }

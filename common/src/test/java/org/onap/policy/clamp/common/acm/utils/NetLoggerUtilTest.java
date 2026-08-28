@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,19 @@ import org.junit.jupiter.api.Test;
 class NetLoggerUtilTest {
 
     @Test
-    void testLog() {
-        NetLoggerUtil.log(NetLoggerUtil.EventType.IN, "KAFKA", "someTopic", "message1");
+    void testLogIncoming() {
+        NetLoggerUtil.logIncoming("KAFKA", "someTopic", "message1");
 
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "REST", null, "message2");
+        NetLoggerUtil.logIncoming("REST", null, "message2");
+
+        assertEquals("acm-network", NetLoggerUtil.getNetworkLogger().getName());
+    }
+
+    @Test
+    void testLogOutgoing() {
+        NetLoggerUtil.logOutgoing("KAFKA", "someTopic", "PARTICIPANT_STATUS", "message1", true);
+
+        NetLoggerUtil.logOutgoing("KAFKA", "someTopic", "PARTICIPANT_STATUS", "message2", false);
 
         assertEquals("acm-network", NetLoggerUtil.getNetworkLogger().getName());
     }

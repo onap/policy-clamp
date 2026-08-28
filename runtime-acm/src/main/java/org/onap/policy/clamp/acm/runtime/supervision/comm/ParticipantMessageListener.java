@@ -137,7 +137,7 @@ public class ParticipantMessageListener {
     }
 
     private void logEvent(final String message) {
-        NetLoggerUtil.log(NetLoggerUtil.EventType.IN, "KAFKA", topic, message);
+        NetLoggerUtil.logIncoming("KAFKA", topic, message);
     }
 
 }

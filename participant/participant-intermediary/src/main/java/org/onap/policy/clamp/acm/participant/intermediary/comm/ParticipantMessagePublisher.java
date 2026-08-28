@@ -22,8 +22,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import io.micrometer.core.annotation.Timed;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
@@ -41,7 +39,6 @@ import org.springframework.stereotype.Component;
  * Unified participant message publisher using ParticipantKafkaMessage interface.
  */
 @Component
-@Slf4j
 public class ParticipantMessagePublisher {
 
     @Value("${participant.intermediaryParameters.topics.operationTopic}")
@@ -61,7 +58,7 @@ public class ParticipantMessagePublisher {
      */
     @Timed(value = "publisher.participant_req_sync", description = "PARTICIPANT_REQ_SYNC_MSG messages published")
     public void sendParticipantReqSync(final ParticipantReqSync participantReqSync) {
-        send(participantReqSync, "Sent Participant Request Sync to CLAMP");
+        send(participantReqSync);
     }
 
     /**
@@ -71,7 +68,7 @@ public class ParticipantMessagePublisher {
      */
     @Timed(value = "publisher.participant_status", description = "PARTICIPANT_STATUS messages published")
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
-        send(participantStatus, "Sent Participant Status message to CLAMP");
+        send(participantStatus);
     }
 
     /**
@@ -81,7 +78,7 @@ public class ParticipantMessagePublisher {
      */
     @Timed(value = "publisher.participant_register", description = "PARTICIPANT_REGISTER messages published")
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
-        send(participantRegister, "Sent Participant Register message to CLAMP");
+        send(participantRegister);
     }
 
     /**
@@ -91,7 +88,7 @@ public class ParticipantMessagePublisher {
      */
     @Timed(value = "publisher.participant_deregister", description = "PARTICIPANT_DEREGISTER messages published")
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
-        send(participantDeregister, "Sent Participant Deregister message to CLAMP");
+        send(participantDeregister);
     }
 
     /**
@@ -101,7 +98,7 @@ public class ParticipantMessagePublisher {
      */
     @Timed(value = "publisher.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages published")
     public void sendParticipantPrimeAck(final ParticipantPrimeAck participantPrimeAck) {
-        send(participantPrimeAck, "Sent Participant Prime Ack message to CLAMP");
+        send(participantPrimeAck);
     }
 
     /**
@@ -112,12 +109,11 @@ public class ParticipantMessagePublisher {
     @Timed(value = "publisher.automation_composition_update_ack",
             description = "AUTOMATION_COMPOSITION_UPDATE_ACK/AUTOMATION_COMPOSITION_STATECHANGE_ACK messages published")
     public void sendAutomationCompositionAck(final AutomationCompositionDeployAck automationCompositionAck) {
-        send(automationCompositionAck, "Sent AutomationComposition Update/StateChange Ack to runtime");
+        send(automationCompositionAck);
     }
 
-    private void send(final ParticipantKafkaMessage message, final String logMessage) {
-        NetLoggerUtil.log(NetLoggerUtil.EventType.OUT, "KAFKA", operationTopic,
-                logMessage + " - " + message.toString());
+    private void send(final ParticipantKafkaMessage message) {
+        var delivered = true;
         try {
             if (message.getPartitionKey() == null) {
                 kafkaTemplate.send(operationTopic, message).join();
@@ -125,7 +121,9 @@ public class ParticipantMessagePublisher {
                 kafkaTemplate.send(operationTopic, message.getPartitionKey(), message).join();
             }
         } catch (final Exception e) {
-            log.error("send to {} failed because of {}", operationTopic, e.getMessage(), e);
+            delivered = false;
         }
+        NetLoggerUtil.logOutgoing("KAFKA", operationTopic,
+                message.getMessageType().toString(), message.toString(), delivered);
     }
 }
