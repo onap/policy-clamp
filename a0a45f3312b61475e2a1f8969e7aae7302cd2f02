@@ -22,6 +22,30 @@
       },
       "revId": "a0a45f3312b61475e2a1f8969e7aae7302cd2f02",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be603d80_a6d8f631",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-08-28T08:18:19Z",
+      "side": 1,
+      "message": "we may need a meeting for that to decide how to handle cacheprovider.\nremoving Msg Executor, cacheprovider will be not reliable",
+      "parentUuid": "1edb82ec_39ceef0d",
+      "range": {
+        "startLine": 310,
+        "startChar": 22,
+        "endLine": 310,
+        "endChar": 42
+      },
+      "revId": "a0a45f3312b61475e2a1f8969e7aae7302cd2f02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
