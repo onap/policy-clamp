@@ -58,9 +58,9 @@ class HttpClientTest {
         serviceTemplate = CommonTestData
                 .getToscaServiceTemplateFromYamlFile("clamp/acm/pmsh/funtional-pmsh-usecase-migration.yaml");
         // Setup mock web server
-        int mockServerPort = 42545;
         var mockServer = new MockWebServer();
-        mockServer.start(mockServerPort);
+        mockServer.start(0);
+        int mockServerPort = mockServer.getPort();
         mockServer.setDispatcher(new Dispatcher() {
             @NotNull
             @Override
