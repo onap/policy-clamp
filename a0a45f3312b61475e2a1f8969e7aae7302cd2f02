@@ -46,6 +46,29 @@
       },
       "revId": "a0a45f3312b61475e2a1f8969e7aae7302cd2f02",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00f662d2_87d5329b",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantDtoUtils.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 6710
+      },
+      "writtenOn": "2026-08-28T09:24:06Z",
+      "side": 1,
+      "message": "We could add same isEmpty() check for getCompositionDto too?",
+      "range": {
+        "startLine": 118,
+        "startChar": 7,
+        "endLine": 120,
+        "endChar": 9
+      },
+      "revId": "a0a45f3312b61475e2a1f8969e7aae7302cd2f02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
