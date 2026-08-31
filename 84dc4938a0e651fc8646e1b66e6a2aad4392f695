@@ -1,0 +1,22 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1090c437_c93be096",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/OpenTelemetryConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-08-31T13:56:42Z",
+      "side": 1,
+      "message": "Reverted the deletion in PS2 - the only chart change left is dropping TRACING_SAMPLER_ENDPOINT from runtime-acm\u0027s deployment.yaml as you suggested, plus the portJaegerGrpc values it was the sole reader of. Setting the env var explicitly still activates this bean.\n\nSeparate question on the same bean: would you consider setInitialSampler(Sampler.parentBased(Sampler.traceIdRatioBased(\u003cmanagement.tracing.sampling.probability\u003e))) instead of alwaysOff()? I reproduced what we hit - with the endpoint injected the effective sampler is JaegerRemoteSampler{AlwaysOffSampler}, so an endpoint that never answers means no spans at all instead of falling back to the configured probability. Fine to leave as is if that blackout is deliberate for your deployments.",
+      "parentUuid": "e4910cb4_212ffe5c",
+      "revId": "84dc4938a0e651fc8646e1b66e6a2aad4392f695",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
