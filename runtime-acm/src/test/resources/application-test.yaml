@@ -21,9 +21,6 @@ spring:
     bootstrap-servers: ${spring.embedded.kafka.brokers}  # requires @EmbeddedKafka on @SpringBootTest's
     security:
       protocol: PLAINTEXT  # no security for embedded test broker
-    admin:
-      auto-create: true  # auto-create topics is useful for tests
-      fail-fast: true  # fail if the broker is not available on startup
     properties:
       reconnect.backoff.ms: 50
       reconnect.backoff.max.ms: 1000
