@@ -17,6 +17,24 @@
       "parentUuid": "e4910cb4_212ffe5c",
       "revId": "84dc4938a0e651fc8646e1b66e6a2aad4392f695",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f03f7ec4_01eec941",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/OpenTelemetryConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-08-31T14:08:15Z",
+      "side": 1,
+      "message": "I\u0027m happy either way. In our deployment, remote sampler should always be available anyway, but I think it\u0027s reasonable to have fallback.",
+      "parentUuid": "1090c437_c93be096",
+      "revId": "84dc4938a0e651fc8646e1b66e6a2aad4392f695",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
