@@ -31,6 +31,9 @@ spring:
       group-id: acm-runtime-test-group  # same for all tests to prevent stale data consumption by subsequent tests
       auto-offset-reset: earliest  # ensure tests consume all messages from the beginning
 
+runtime:
+  topicValidation: false
+
 logging:
   level:
     # reduce noise from kafka logging
