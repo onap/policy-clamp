@@ -101,6 +101,5 @@ jaeger:
     host: "http://jaeger"
     portOtlpGrpc: 4317
     portOtlpHttp: 4318
-    portJaegerGrpc: 14250
 
 applicationName: http-ppnt

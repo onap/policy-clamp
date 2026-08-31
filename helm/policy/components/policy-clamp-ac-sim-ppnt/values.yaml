@@ -99,7 +99,6 @@ jaeger:
     host: "http://jaeger"
     portOtlpGrpc: 4317
     portOtlpHttp: 4318
-    portJaegerGrpc: 14250
 
 applicationName: sim-ppnt
 participantId: 101c62b3-8918-41b9-a747-d21eb79c6c90

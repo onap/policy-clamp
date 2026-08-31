@@ -72,8 +72,6 @@ services:
       ALLOW_TRACING: true
       TRACING_EXPORTER_ENDPOINT: http://jaeger:4318/v1/traces
       TRACING_EXPORTER_PROTOCOL: http
-      # To enable Jaeger Remote Sampling, uncomment:
-      # TRACING_SAMPLER_ENDPOINT: http://jaeger:14250
       JAVA_TOOL_OPTIONS: >-
         -Dcom.sun.management.jmxremote.rmi.port=9090
         -Dcom.sun.management.jmxremote=true

@@ -91,8 +91,6 @@ management:
         otlp:
           endpoint: ${TRACING_EXPORTER_ENDPOINT:}
           transport: ${TRACING_EXPORTER_PROTOCOL:http}
-      jaeger-remote-sampler:
-        endpoint: ${TRACING_SAMPLER_ENDPOINT:}
   otlp:
     metrics:
       export:

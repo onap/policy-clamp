@@ -99,8 +99,6 @@ spec:
               value: {{ include "policy-clamp-runtime-acm.exporter-endpoint" . }}
             - name: TRACING_EXPORTER_PROTOCOL
               value: {{ .Values.jaeger.collector.protocol }}
-            - name: TRACING_SAMPLER_ENDPOINT
-              value: "{{ .Values.jaeger.collector.host }}:{{ .Values.jaeger.collector.portJaegerGrpc }}"
           {{- end }}
           ports:
             - containerPort: {{ .Values.service.ports.port }}
