@@ -1,5 +1,6 @@
 #  ============LICENSE_START=======================================================
 #   Copyright (C) 2022,2024-2026 OpenInfra Foundation Europe. All rights reserved.
+#   Modifications Copyright 2026 Deutsche Telekom
 #  ================================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -114,6 +115,5 @@ jaeger:
     host: "http://jaeger"
     portOtlpGrpc: 4317
     portOtlpHttp: 4318
-    portJaegerGrpc: 14250
 
 applicationName: acm-r
