@@ -37,7 +37,7 @@ import org.springframework.test.context.DynamicPropertySource;
  * - inconsistent NOT NULL constraints and @NotNull annotations
  */
 @SpringBootTest
-@EmbeddedKafka
+@EmbeddedKafka(topics = {"policy-acruntime-participant", "acm-ppnt-sync"})
 @ActiveProfiles({"hibernate-validation", "test"})
 class HibernateValidationTest extends AbstractLiquibaseTestBase {
 

@@ -67,7 +67,6 @@ services:
       SQL_PORT: 5432
       SQL_USER: policy_user
       SQL_PASSWORD: policy_user
-      KAFKA_ALLOW_AUTO_CREATE_TOPICS: false
       PROMETHEUS_PORT: 6969
       ALLOW_TRACING: true
       TRACING_EXPORTER_ENDPOINT: http://jaeger:4318/v1/traces
