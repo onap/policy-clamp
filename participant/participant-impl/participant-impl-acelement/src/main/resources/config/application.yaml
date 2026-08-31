@@ -12,8 +12,7 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_SERVER:kafka:9092}
     admin:
-      auto-create: ${KAFKA_ALLOW_AUTO_CREATE_TOPICS:true}
-      fail-fast: false # Whether to fail if the broker is not available on startup.
+      auto-create: true
     security:
       protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
     properties:

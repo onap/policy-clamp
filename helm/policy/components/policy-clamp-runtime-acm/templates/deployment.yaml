@@ -79,8 +79,6 @@ spec:
               value: {{ .Values.service.ports.port | quote }}
             - name: KAFKA_SERVER
               value: "{{ .Values.global.kafkaServer }}:9092"
-            - name: KAFKA_ALLOW_AUTO_CREATE_TOPICS
-              value: "false"
             - name: TOSCA_ELEMENT_NAME
               value: {{ .Values.customNaming.toscaElementName }}
             - name: TOSCA_COMPOSITION_NAME

@@ -38,7 +38,7 @@ import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(["test", "default"])
-@EmbeddedKafka
+@EmbeddedKafka(topics = ["policy-acruntime-participant", "acm-ppnt-sync"])
 @DirtiesContext
 class ParticipantControllerSpec extends Specification {
 

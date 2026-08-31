@@ -81,7 +81,9 @@ public class KafkaConfig {
         // Authoritative settings - not overridable via properties maps
         config.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
 
-        return new KafkaAdmin(config);
+        var admin = new KafkaAdmin(config);
+        admin.setAutoCreate(false);
+        return admin;
     }
 
     /**
