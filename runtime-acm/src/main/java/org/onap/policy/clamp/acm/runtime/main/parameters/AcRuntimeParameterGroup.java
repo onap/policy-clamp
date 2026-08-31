@@ -49,6 +49,5 @@ public class AcRuntimeParameterGroup {
     @NotNull
     private Topics topics = new Topics();
 
-    private boolean topicValidation = false;
-    private boolean kafkaHealthCheck = false;
+    private boolean topicValidation = true;
 }
