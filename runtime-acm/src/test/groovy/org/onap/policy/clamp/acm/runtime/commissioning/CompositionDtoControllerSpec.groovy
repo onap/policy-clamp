@@ -35,7 +35,7 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EmbeddedKafka
+@EmbeddedKafka(topics = ["policy-acruntime-participant", "acm-ppnt-sync"])
 @ActiveProfiles(["test", "default"])
 @DirtiesContext
 class CompositionDtoControllerSpec extends Specification {

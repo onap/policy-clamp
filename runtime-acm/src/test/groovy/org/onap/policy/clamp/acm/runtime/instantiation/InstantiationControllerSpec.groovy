@@ -43,7 +43,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EmbeddedKafka
+@EmbeddedKafka(topics = ["policy-acruntime-participant", "acm-ppnt-sync"])
 @ActiveProfiles(["test", "default"])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class InstantiationControllerSpec extends Specification {
