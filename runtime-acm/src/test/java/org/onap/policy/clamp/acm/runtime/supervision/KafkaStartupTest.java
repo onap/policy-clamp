@@ -42,7 +42,7 @@ class KafkaStartupTest {
         parameterGroup.setTopicValidation(true);
         var registry = mock(KafkaListenerEndpointRegistry.class);
         var kafkaAdmin = mock(KafkaAdmin.class);
-        var kafkaStartup = new KafkaStartup(registry, kafkaAdmin, new KafkaHealthCheck(), parameterGroup);
+        var kafkaStartup = new KafkaStartup(registry, kafkaAdmin, parameterGroup);
         kafkaStartup.startListenersWhenReady();
         verify(registry).getListenerContainers();
     }

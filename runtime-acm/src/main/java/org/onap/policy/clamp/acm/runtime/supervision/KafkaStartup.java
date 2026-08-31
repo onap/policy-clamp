@@ -21,8 +21,6 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -36,29 +34,26 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class KafkaStartup {
-    private final List<String> topics;
     private final KafkaListenerEndpointRegistry registry;
-    private final boolean enableHealthCheck;
-    private final Map<String, Object> properties;
-    private final KafkaHealthCheck kafkaHealthCheck;
+    private final boolean enableTopicValidation;
+    private final KafkaAdmin kafkaAdmin;
+    private final String operationTopic;
+    private final String syncTopic;
 
     /**
      * Constructor.
      *
      * @param registry the Kafka Registry
      * @param kafkaAdmin the Spring Kafka Admin
-     * @param kafkaHealthCheck the kafka HealthChecker
      * @param parameterGroup the parameters
      */
     public KafkaStartup(KafkaListenerEndpointRegistry registry, KafkaAdmin kafkaAdmin,
-            KafkaHealthCheck kafkaHealthCheck, AcRuntimeParameterGroup parameterGroup) {
+                        AcRuntimeParameterGroup parameterGroup) {
         this.registry = registry;
-        this.properties = kafkaAdmin.getConfigurationProperties();
-        this.enableHealthCheck = parameterGroup.isKafkaHealthCheck();
-        this.kafkaHealthCheck = kafkaHealthCheck;
-        this.topics = parameterGroup.isTopicValidation()
-                ? List.of(parameterGroup.getTopics().getOperationTopic(), parameterGroup.getTopics().getSyncTopic())
-                : List.of();
+        this.kafkaAdmin = kafkaAdmin;
+        this.enableTopicValidation = parameterGroup.isTopicValidation();
+        this.operationTopic = parameterGroup.getTopics().getOperationTopic();
+        this.syncTopic = parameterGroup.getTopics().getSyncTopic();
     }
 
     /**
@@ -67,17 +62,28 @@ public class KafkaStartup {
     @Async
     @EventListener(ApplicationReadyEvent.class)
     public void startListenersWhenReady() {
-        if (enableHealthCheck) {
-            runHealthCheck();
+        if (enableTopicValidation) {
+            waitForTopics();
         }
         start();
     }
 
-    private void runHealthCheck() {
+    private void waitForTopics() {
         var fetchTimeout = 5000;
-        while (!kafkaHealthCheck.healthCheck(properties, topics)) {
-            log.debug("Kafka Broker not up yet!");
+        while (!topicsExist()) {
+            log.warn("Kafka topics [{}, {}] not available, retrying in {}ms",
+                    operationTopic, syncTopic, fetchTimeout);
             AcmUtils.pause(fetchTimeout);
+        }
+    }
+
+    private boolean topicsExist() {
+        try {
+            kafkaAdmin.describeTopics(operationTopic, syncTopic);
+            return true;
+        } catch (Exception e) {
+            log.debug("Topic check failed: {}", e.getMessage());
+            return false;
         }
     }
 
