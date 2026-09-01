@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
+import io.opentelemetry.context.Context;
 import java.io.Closeable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -52,7 +53,7 @@ public class SupervisionAspect implements Closeable {
             initialDelayString = "${runtime.participantParameters.heartBeatMs}")
     public void schedule() {
         LOGGER.info("Add scheduled scanning");
-        executor.execute(this::executeScan);
+        executor.execute(Context.current().wrap(this::executeScan));
     }
 
     private void executeScan() {
@@ -67,7 +68,7 @@ public class SupervisionAspect implements Closeable {
     public void doCheck() {
         if (executor.getQueue().size() < 2) {
             LOGGER.info("Add scanning Message");
-            executor.execute(supervisionScanner::run);
+            executor.execute(Context.current().wrap(supervisionScanner::run));
         }
     }
 
