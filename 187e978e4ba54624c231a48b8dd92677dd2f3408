@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "697947f5_0fd9cf47",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantDtoUtils.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-09-01T13:55:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b027d4a_34926a09",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 62
+      },
+      "revId": "187e978e4ba54624c231a48b8dd92677dd2f3408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "53cf77d7_c010ccf1",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-09-01T12:48:23Z",
       "side": 1,
       "message": "This line does not check for missing out property e.g. `outPropertiesMap.containsKey(elementId)`, while the method above does. Is it deliberate?",
+      "range": {
+        "startLine": 172,
+        "startChar": 95,
+        "endLine": 173,
+        "endChar": 108
+      },
+      "revId": "187e978e4ba54624c231a48b8dd92677dd2f3408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5a8f575_9d08a479",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantDtoUtils.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-09-01T13:55:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53cf77d7_c010ccf1",
       "range": {
         "startLine": 172,
         "startChar": 95,
