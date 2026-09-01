@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b027d4a_34926a09",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantDtoUtils.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-09-01T12:48:23Z",
+      "side": 1,
+      "message": "Could use `getOrDefault`:\n\n    elementDefinition.setOutProperties(new HashMap\u003c\u003e(\n            compositionDto.outPropertiesMap().getOrDefault(elementId, Map.of())));",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 62
+      },
+      "revId": "187e978e4ba54624c231a48b8dd92677dd2f3408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53cf77d7_c010ccf1",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/ParticipantDtoUtils.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-09-01T12:48:23Z",
+      "side": 1,
+      "message": "This line does not check for missing out property e.g. `outPropertiesMap.containsKey(elementId)`, while the method above does. Is it deliberate?",
+      "range": {
+        "startLine": 172,
+        "startChar": 95,
+        "endLine": 173,
+        "endChar": 108
+      },
+      "revId": "187e978e4ba54624c231a48b8dd92677dd2f3408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
