@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2023-2026 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,6 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-FROM busybox AS tarball
-RUN mkdir /packages /extracted
-COPY /maven/lib/kserve-participant.tar.gz /packages/
-RUN tar xvzf /packages/kserve-participant.tar.gz --directory /extracted/
-
 FROM onap/policy-jre-alpine:5.1.0-SNAPSHOT
 
 LABEL maintainer="Policy Team"
@@ -38,19 +33,14 @@ LABEL org.opencontainers.image.revision="${git.commit.id.abbrev}"
 ARG POLICY_LOGS=/var/log/onap/policy/kserve-participant
 
 ENV POLICY_LOGS=$POLICY_LOGS
-ENV POLICY_HOME=$POLICY_HOME/clamp
 
 USER root
-RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
+RUN mkdir -p $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_LOGS
 
-COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
-
-WORKDIR $POLICY_HOME
 COPY --chown=policy:policy /maven/policy-clamp-participant-impl-kserve.jar /app/app.jar
 
 EXPOSE 6969
 
 USER policy
-WORKDIR $POLICY_HOME
 ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]
