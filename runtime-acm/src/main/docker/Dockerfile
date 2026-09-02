@@ -49,11 +49,6 @@ COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 WORKDIR $POLICY_HOME
 COPY --chown=policy:policy /maven/policy-clamp-runtime-acm.jar /app/app.jar
 
-RUN pip uninstall -y setuptools || true
-
-RUN python3 -m pip uninstall -y pip || true && \
-    rm -rf /usr/bin/pip* /usr/local/bin/pip*
-
 RUN chmod 755 bin/*.sh
 
 EXPOSE 6969

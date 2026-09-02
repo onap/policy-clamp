@@ -18,16 +18,11 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-FROM busybox AS tarball
-RUN mkdir /packages /extracted
-COPY /maven/lib/http-participant.tar.gz /packages/
-RUN tar xvzf /packages/http-participant.tar.gz --directory /extracted/
-
 FROM onap/policy-jre-alpine:5.1.0-SNAPSHOT
 
 LABEL maintainer="Policy Team"
-LABEL org.opencontainers.image.title="Policy CLAMP ACM HTTP Participant"
-LABEL org.opencontainers.image.description="Policy CLAMP ACM HTTP Participant image based on Alpine"
+LABEL org.opencontainers.image.title="Policy CLAMP ACM A1 PMS Participant"
+LABEL org.opencontainers.image.description="Policy CLAMP ACM A1 PMS Participant image based on Alpine"
 LABEL org.opencontainers.image.url="https://github.com/onap/policy-clamp"
 LABEL org.opencontainers.image.vendor="ONAP Policy Team"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
@@ -35,22 +30,17 @@ LABEL org.opencontainers.image.created="${git.build.time}"
 LABEL org.opencontainers.image.version="${git.build.version}"
 LABEL org.opencontainers.image.revision="${git.commit.id.abbrev}"
 
-ARG POLICY_LOGS=/var/log/onap/policy/http-participant
+ARG POLICY_LOGS=/var/log/onap/policy/a1pms-participant
 
 ENV POLICY_LOGS=$POLICY_LOGS
-ENV POLICY_HOME=$POLICY_HOME/clamp
 
 USER root
-RUN mkdir -p $POLICY_LOGS $POLICY_HOME && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
+RUN mkdir -p $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_LOGS
 
-COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
-
-WORKDIR $POLICY_HOME
-COPY --chown=policy:policy /maven/policy-clamp-participant-impl-http.jar /app/app.jar
+COPY --chown=policy:policy /maven/policy-clamp-participant-impl-a1pms.jar /app/app.jar
 
 EXPOSE 6969
 
 USER policy
-WORKDIR $POLICY_HOME
 ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]

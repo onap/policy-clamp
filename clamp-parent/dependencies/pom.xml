@@ -40,6 +40,10 @@
         <sonar.exclusions>**/gen/**,**/generated-sources/**</sonar.exclusions>
         <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
         <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
+        <docker.skip>false</docker.skip>
+        <docker.skip.build>false</docker.skip.build>
+        <docker.skip.push>false</docker.skip.push>
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
         <!-- Dependency Versions -->
         <version.springboot>4.1.1</version.springboot>
         <version.swagger.core.v3>2.2.54</version.swagger.core.v3>

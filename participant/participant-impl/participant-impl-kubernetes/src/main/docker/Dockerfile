@@ -18,11 +18,6 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-FROM busybox AS tarball
-RUN mkdir /packages /extracted
-COPY /maven/lib/kubernetes-participant.tar.gz /packages/
-RUN tar xvzf /packages/kubernetes-participant.tar.gz --directory /extracted/
-
 FROM onap/policy-jre-alpine:5.1.0-SNAPSHOT
 
 LABEL maintainer="Policy Team"
@@ -38,19 +33,14 @@ LABEL org.opencontainers.image.revision="${git.commit.id.abbrev}"
 ARG POLICY_LOGS=/var/log/onap/policy/k8s-participant
 
 ENV POLICY_LOGS=$POLICY_LOGS
-ENV POLICY_HOME=$POLICY_HOME/clamp
 
 USER root
-RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
+RUN mkdir -p $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_LOGS
 
-COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
-
-WORKDIR $POLICY_HOME
 COPY --chown=policy:policy /maven/policy-clamp-participant-impl-kubernetes.jar /app/app.jar
 
-RUN chmod 755 bin/*.sh && \
-    apk update && \
+RUN apk update && \
     apk add wget && \
     wget -nv https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz && \
     tar xvf helm-v3.5.2-linux-amd64.tar.gz && \
@@ -64,5 +54,4 @@ RUN chmod 755 bin/*.sh && \
 EXPOSE 6969
 
 USER policy
-WORKDIR $POLICY_HOME
 ENTRYPOINT [ "java", "-jar", "/app/app.jar" ]
