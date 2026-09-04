@@ -35,6 +35,24 @@
       "parentUuid": "1090c437_c93be096",
       "revId": "84dc4938a0e651fc8646e1b66e6a2aad4392f695",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2303f109_e9263a38",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/OpenTelemetryConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-09-04T13:17:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f03f7ec4_01eec941",
+      "revId": "84dc4938a0e651fc8646e1b66e6a2aad4392f695",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
