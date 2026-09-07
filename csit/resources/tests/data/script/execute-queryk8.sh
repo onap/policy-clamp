@@ -1,6 +1,6 @@
 #!/bin/sh
 # ============LICENSE_START====================================================
-# Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+# Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,10 +20,4 @@
 scriptPath=$1
 
 PSQL="psql -h ${PG_HOST} -p ${PG_PORT} -U ${PG_USER} -w -d ${PG_SCHEMA}"
-${PSQL} <"${scriptPath}"
-rc=$?
-if [ ${rc} -ne 0 ]; then
-  return ${rc}
-fi
-
-exit 0
+exec ${PSQL} <"${scriptPath}"
