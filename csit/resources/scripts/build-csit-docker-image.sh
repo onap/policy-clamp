@@ -33,4 +33,4 @@ if [ -n "$IMAGE_ID" ]; then
 fi
 
 echo "Building robot framework docker image"
-docker build . --file Dockerfile --tag "onap/${ROBOT_DOCKER_IMAGE}" --quiet
+docker build . --file Dockerfile --tag "onap/${ROBOT_DOCKER_IMAGE}" --progress=plain || exit 1
