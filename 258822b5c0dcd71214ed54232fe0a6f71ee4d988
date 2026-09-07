@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee295b59_58eec490",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-09-07T18:05:51Z",
+      "side": 1,
+      "message": "What if we delete directly based on the composition just being in UNDEPLOYED state (instead of adding the new `deletable` column)? Like this:\n\n    if (compositionTargetId !\u003d null) {\n        supervisionAcHandler.delete(automationComposition, acDefinition,\n                acDefinitionProvider.getAcDefinition(compositionTargetId));\n    } else if (DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())) {\n        automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());\n    } else {\n        supervisionAcHandler.delete(automationComposition, acDefinition, null);\n    }\n  \nDoesn\u0027t composition `deployState \u003d\u003d UNDEPLOYED` already imply that all elements are undeployed as well? Though this alternate approach would cover both \"never deployed\" and \"deployed then cleanly undeployed\", if that\u0027s okay.",
+      "range": {
+        "startLine": 377,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 9
+      },
+      "revId": "258822b5c0dcd71214ed54232fe0a6f71ee4d988",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
