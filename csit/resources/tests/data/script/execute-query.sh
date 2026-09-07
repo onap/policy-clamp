@@ -1,6 +1,6 @@
 #!/bin/sh
 # ============LICENSE_START====================================================
-# Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+# Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
 # =============================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,10 +22,4 @@ export PGPASSWORD=policy_user
 scriptPath=$1
 
 PSQL="psql -h postgres -U policy_user -w -d clampacm"
-${PSQL} <"${scriptPath}"
-rc=$?
-if [ ${rc} -ne 0 ]; then
-  return ${rc}
-fi
-
-exit 0
+exec ${PSQL} <"${scriptPath}"
