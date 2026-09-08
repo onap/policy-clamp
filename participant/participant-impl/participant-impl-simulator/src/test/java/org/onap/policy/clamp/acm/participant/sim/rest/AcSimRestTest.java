@@ -31,6 +31,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.onap.policy.clamp.acm.participant.intermediary.config.KafkaLifecycle;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.acm.participant.sim.main.handler.SimulatorService;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalData;
@@ -79,6 +80,9 @@ class AcSimRestTest {
 
     @MockitoBean
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+    @MockitoBean
+    private KafkaLifecycle kafkaLifecycle;
 
     @Autowired
     private WebApplicationContext context;

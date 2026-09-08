@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023 Nordix Foundation.
+ *  Copyright (C) 2021-2026 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +29,14 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHan
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * This class sends messages from participants to CLAMP.
+ * Periodically sends heartbeat messages from participants to the runtime.
  */
 @Component
-public class MessageSender extends TimerTask implements Closeable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageSender.class);
+public class HeartbeatSender extends TimerTask implements Closeable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeartbeatSender.class);
 
     private final ParticipantHandler participantHandler;
     private final ScheduledExecutorService timerPool;
@@ -50,17 +48,19 @@ public class MessageSender extends TimerTask implements Closeable {
      * @param participantHandler the participant handler to use for gathering information
      * @param parameters the parameters of the participant
      */
-    public MessageSender(ParticipantHandler participantHandler, ParticipantParameters parameters) {
+    public HeartbeatSender(ParticipantHandler participantHandler, ParticipantParameters parameters) {
         this.participantHandler = participantHandler;
-
-        // Kick off the timer
-        timerPool = makeTimerPool();
-        interval = parameters.getIntermediaryParameters().getReportingTimeIntervalMs();
+        this.timerPool = makeTimerPool();
+        this.interval = parameters.getIntermediaryParameters().getReportingTimeIntervalMs();
     }
 
-    @EventListener
-    public void handleContextRefreshEvent(ContextRefreshedEvent ctxRefreshedEvent) {
+    /**
+     * Start the heartbeat scheduler. Called by {@code KafkaLifecycle} after
+     * Kafka is available and the participant has been registered.
+     */
+    public void startScheduler() {
         timerPool.scheduleAtFixedRate(this, interval, interval, TimeUnit.MILLISECONDS);
+        LOGGER.info("Heartbeat scheduler started with interval {}ms", interval);
     }
 
     @Override

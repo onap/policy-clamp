@@ -59,7 +59,6 @@ server:
     path: /error
 
 runtime:
-  topicValidation: ${TOPIC_VALIDATION:true}
   topics:
     operationTopic: ${RUNTIME_OPERATION_TOPIC:policy-acruntime-participant}
     syncTopic: ${RUNTIME_SYNC_TOPIC:acm-ppnt-sync}
@@ -107,9 +106,6 @@ management:
         enabled: true
       show-components: always
   health:
-    group:
-      readiness:
-        include: kafkaReadiness
     db:
       enabled: false
 

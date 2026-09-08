@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
-import java.time.Instant;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
@@ -34,19 +33,24 @@ public class ParticipantStatusReqPublisher {
     private final ParticipantPublisher participantPublisher;
 
     /**
-     * Send ParticipantStatusReq to Participant.
+     * Send ParticipantStatusReq to a specific participant.
      *
      * @param participantId the participant Id
      */
     @Timed(value = "publisher.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages published")
     public void send(UUID participantId) {
         var message = new ParticipantStatusReq();
-        if (participantId != null) {
-            message.setParticipantId(participantId);
-            message.getParticipantIdList().add(participantId);
-        }
+        message.setParticipantId(participantId);
+        message.getParticipantIdList().add(participantId);
+        participantPublisher.sendToSyncTopic(message);
+    }
 
-        message.setTimestamp(Instant.now());
+    /**
+     * Broadcast ParticipantStatusReq to all participants.
+     */
+    @Timed(value = "publisher.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages published")
+    public void broadcast() {
+        var message = new ParticipantStatusReq();
         participantPublisher.sendToSyncTopic(message);
     }
 }
