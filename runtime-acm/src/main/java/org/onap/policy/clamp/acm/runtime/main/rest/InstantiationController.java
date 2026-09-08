@@ -24,7 +24,7 @@ package org.onap.policy.clamp.acm.runtime.main.rest;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider;
+import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationProvider;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionInstanceApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class InstantiationController extends AbstractRestController implements AutomationCompositionInstanceApi {
 
     // The Automation Composition provider for instantiation requests
-    private final AutomationCompositionInstantiationProvider provider;
+    private final InstantiationProvider provider;
 
     /**
      * Creates an automation composition.

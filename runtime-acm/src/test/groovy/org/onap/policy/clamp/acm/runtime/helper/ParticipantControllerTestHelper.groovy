@@ -19,7 +19,7 @@
  */
 package org.onap.policy.clamp.acm.runtime.helper
 
-import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider
+import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationProvider
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestClient
@@ -46,7 +46,7 @@ class ParticipantControllerTestHelper {
     final CommonRestClient client = new CommonRestClient()
     ParticipantProvider participantProvider
     AcDefinitionProvider acDefinitionProvider
-    AutomationCompositionInstantiationProvider instantiationProvider
+    InstantiationProvider instantiationProvider
 
     static int seedCounter = 0
 
@@ -71,7 +71,7 @@ class ParticipantControllerTestHelper {
     }
 
     void setProviders(ParticipantProvider participantProvider, AcDefinitionProvider acDefinitionProvider,
-                      AutomationCompositionInstantiationProvider instantiationProvider) {
+                      InstantiationProvider instantiationProvider) {
         this.participantProvider = participantProvider
         this.acDefinitionProvider = acDefinitionProvider
         this.instantiationProvider = instantiationProvider

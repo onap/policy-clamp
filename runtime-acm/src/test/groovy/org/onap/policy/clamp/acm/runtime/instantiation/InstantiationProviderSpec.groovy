@@ -40,7 +40,7 @@ import org.springframework.data.domain.Pageable
 import spock.lang.Shared
 import spock.lang.Specification
 
-class AutomationCompositionInstantiationProviderSpec extends Specification {
+class InstantiationProviderSpec extends Specification {
 
     @Shared
     InstantiationProviderTestHelper helper = new InstantiationProviderTestHelper()
@@ -484,7 +484,7 @@ class AutomationCompositionInstantiationProviderSpec extends Specification {
         def ac = helper.loadAc("acCreate", "Crud")
         ac.compositionId = compositionId
 
-        def provider = new AutomationCompositionInstantiationProvider(helper.acProvider, helper.acDefinitionProvider,
+        def provider = new InstantiationProvider(helper.acProvider, helper.acDefinitionProvider,
                 null, null, null, null, null)
 
         when:
