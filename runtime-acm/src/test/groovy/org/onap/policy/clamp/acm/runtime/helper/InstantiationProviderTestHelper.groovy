@@ -19,7 +19,7 @@
  */
 package org.onap.policy.clamp.acm.runtime.helper
 
-import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider
+import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationProvider
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
@@ -89,7 +89,7 @@ class InstantiationProviderTestHelper {
     def createProvider(
             AcRuntimeParameterGroup params = CommonTestData.getTestParamaterGroup(),
             EncryptionUtils encryption = new EncryptionUtils(CommonTestData.getTestParamaterGroup())) {
-        return new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+        return new InstantiationProvider(acProvider, acDefinitionProvider,
                 new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, params, encryption)
     }
 
@@ -116,7 +116,7 @@ class InstantiationProviderTestHelper {
         def acDef = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED)
         ac.compositionId = acDef.compositionId
 
-        def provider = new AutomationCompositionInstantiationProvider(localAcProvider, localAcDefProvider,
+        def provider = new InstantiationProvider(localAcProvider, localAcDefProvider,
                 new AcInstanceStateResolver(), null, localParticipantProvider, localParams, null)
 
         return [acDef: acDef, provider: provider]

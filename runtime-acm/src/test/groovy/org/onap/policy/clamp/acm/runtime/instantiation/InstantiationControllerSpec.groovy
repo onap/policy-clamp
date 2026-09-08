@@ -58,7 +58,7 @@ class InstantiationControllerSpec extends Specification {
     ParticipantProvider participantProvider
 
     @Autowired
-    AutomationCompositionInstantiationProvider instantiationProvider
+    InstantiationProvider instantiationProvider
 
     @LocalServerPort
     int port

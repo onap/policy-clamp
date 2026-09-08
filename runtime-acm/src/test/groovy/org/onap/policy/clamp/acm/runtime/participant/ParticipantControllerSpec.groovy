@@ -20,7 +20,7 @@
 package org.onap.policy.clamp.acm.runtime.participant
 
 import org.onap.policy.clamp.acm.runtime.helper.ParticipantControllerTestHelper
-import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider
+import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationProvider
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
@@ -55,7 +55,7 @@ class ParticipantControllerSpec extends Specification {
     AcDefinitionProvider acDefinitionProvider
 
     @Autowired
-    AutomationCompositionInstantiationProvider instantiationProvider
+    InstantiationProvider instantiationProvider
 
     def setup() {
         helper.setProviders(participantProvider, acDefinitionProvider, instantiationProvider)
