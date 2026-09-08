@@ -22,6 +22,30 @@
       },
       "revId": "258822b5c0dcd71214ed54232fe0a6f71ee4d988",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d06bb37_1e34a3cc",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-09-08T07:12:22Z",
+      "side": 1,
+      "message": "normal flow:\n* Creation -\u003e UNDEPLOYED\n* DEPLOY action -\u003e DEPLOYING -\u003e DEPLOYED\n* UNDEPLOY action -\u003e UNDEPLOYING -\u003e UNDEPLOYED\n* DELETE action -\u003e DELETING -\u003e delete in DB\n\ndeletable column (flow where the instance is never deployed):\n* Creation -\u003e UNDEPLOYED\n* DELETE action -\u003e delete in DB",
+      "parentUuid": "ee295b59_58eec490",
+      "range": {
+        "startLine": 377,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 9
+      },
+      "revId": "258822b5c0dcd71214ed54232fe0a6f71ee4d988",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
