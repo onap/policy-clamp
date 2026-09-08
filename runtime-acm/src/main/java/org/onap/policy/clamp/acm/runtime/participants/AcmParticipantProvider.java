@@ -104,7 +104,7 @@ public class AcmParticipantProvider {
      *
      */
     public void sendAllParticipantStatusRequest() {
-        this.participantStatusReqPublisher.send((UUID) null);
+        this.participantStatusReqPublisher.broadcast();
     }
 
     private Map<UUID, AutomationCompositionElement> getAcElementsForParticipant(UUID participantId, Pageable pageable) {

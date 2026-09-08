@@ -151,11 +151,12 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, ParticipantKafkaMessage> acmListenerContainerFactory(
             @Qualifier("acmConsumerFactory") ConsumerFactory<String, ParticipantKafkaMessage> acmConsumerFactory,
             ParticipantParameters participantParameters) {
-        var kafka = participantParameters.getIntermediaryParameters().getKafka();
         var factory = new ConcurrentKafkaListenerContainerFactory<String, ParticipantKafkaMessage>();
         factory.setConsumerFactory(acmConsumerFactory);
+        factory.setAutoStartup(false);
         factory.getContainerProperties().setObservationEnabled(true);
-        factory.getContainerProperties().setAuthExceptionRetryInterval(kafka.getAuthExceptionRetryInterval());
+        factory.getContainerProperties().setAuthExceptionRetryInterval(
+                participantParameters.getIntermediaryParameters().getKafka().getAuthExceptionRetryInterval());
         return factory;
     }
 }

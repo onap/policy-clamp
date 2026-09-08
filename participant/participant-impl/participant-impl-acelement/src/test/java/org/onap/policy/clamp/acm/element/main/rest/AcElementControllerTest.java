@@ -40,6 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ConfigService;
+import org.onap.policy.clamp.acm.participant.intermediary.config.KafkaLifecycle;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.common.utils.coder.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,9 @@ class AcElementControllerTest {
 
     @MockitoBean
     private ConfigService configService;
+
+    @MockitoBean
+    private KafkaLifecycle kafkaLifecycle;
 
     @Autowired
     private WebApplicationContext context;

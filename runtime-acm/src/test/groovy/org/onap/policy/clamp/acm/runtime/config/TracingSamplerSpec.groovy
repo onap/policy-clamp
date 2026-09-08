@@ -46,7 +46,7 @@ import spock.lang.Specification
 // Without this, Boot's TracingContextCustomizerFactory force-sets
 // management.tracing.export.enabled=false at a precedence above @SpringBootTest properties.
 @AutoConfigureTracing
-@EmbeddedKafka
+@EmbeddedKafka(topics = ["policy-acruntime-participant", "acm-ppnt-sync"])
 @ActiveProfiles(["test", "default"])
 @DirtiesContext
 class TracingSamplerSpec extends Specification {

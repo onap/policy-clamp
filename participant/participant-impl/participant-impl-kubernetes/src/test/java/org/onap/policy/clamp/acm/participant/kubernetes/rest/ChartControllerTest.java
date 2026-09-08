@@ -37,6 +37,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.onap.policy.clamp.acm.participant.intermediary.config.KafkaLifecycle;
 import org.onap.policy.clamp.acm.participant.kubernetes.configurations.SecurityConfig;
 import org.onap.policy.clamp.acm.participant.kubernetes.controller.ChartController;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -53,6 +54,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -86,10 +89,13 @@ class ChartControllerTest {
     private ChartService chartService;
 
     @MockitoBean
-    private org.springframework.kafka.core.KafkaTemplate<String, Object> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @MockitoBean
-    private org.springframework.kafka.config.KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+    @MockitoBean
+    private KafkaLifecycle kafkaLifecycle;
 
     @Autowired
     private WebApplicationContext context;
