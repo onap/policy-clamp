@@ -70,13 +70,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AutomationCompositionInstantiationProvider {
+public class InstantiationProvider {
     private static final String DO_NOT_MATCH = " do not match with ";
     private static final String ELEMENT_ID_NOT_PRESENT = "Element id not present ";
     private static final String NOT_VALID_ORDER =
         "Not valid order %s; DeployState: %s; LockState: %s; SubState: %s; StateChangeResult: %s";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionInstantiationProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InstantiationProvider.class);
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
