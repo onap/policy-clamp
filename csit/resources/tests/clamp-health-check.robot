@@ -31,10 +31,4 @@ HealthcheckParticipantSim
 
 RegisterParticipants
     [Documentation]  Register Participants.
-    ${auth}=    ClampAuth
-    Log    Creating session http://${POLICY_RUNTIME_ACM_IP}
-    ${session}=    Create Session      policy  http://${POLICY_RUNTIME_ACM_IP}   auth=${auth}
-    ${resp}=   PUT On Session     policy  /onap/policy/clamp/acm/v2/participants
-    Log    Received response from runtime acm ${resp.text}
-    Should Be Equal As Strings    ${resp.status_code}     202
     Wait Until Keyword Succeeds    10 sec    2 sec    VerifyParticipantsRegistered

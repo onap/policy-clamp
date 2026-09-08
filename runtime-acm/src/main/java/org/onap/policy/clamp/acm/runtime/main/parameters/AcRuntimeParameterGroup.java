@@ -48,6 +48,4 @@ public class AcRuntimeParameterGroup {
     @Valid
     @NotNull
     private Topics topics = new Topics();
-
-    private boolean topicValidation = true;
 }
