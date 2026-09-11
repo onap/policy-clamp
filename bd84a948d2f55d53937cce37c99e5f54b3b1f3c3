@@ -41,6 +41,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "67071c4f_09130156",
+        "filename": "participant/participant-impl/participant-impl-a1pms/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2026-09-11T09:36:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8229ccc6_4c4e6ebe",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 25
+      },
+      "revId": "bd84a948d2f55d53937cce37c99e5f54b3b1f3c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01c6f000_5ce252c9",
@@ -54,6 +78,30 @@
       "writtenOn": "2026-09-07T20:40:23Z",
       "side": 1,
       "message": "Slightly out-of-scope, but since you are cleaning all of the other Dockerfiles: could we remove these pip/python exclusions? I don\u0027t believe the base image even provides these packages any more.",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 44
+      },
+      "revId": "bd84a948d2f55d53937cce37c99e5f54b3b1f3c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "670f6f58_e6555e48",
+        "filename": "runtime-acm/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2026-09-11T09:36:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01c6f000_5ce252c9",
       "range": {
         "startLine": 51,
         "startChar": 0,
