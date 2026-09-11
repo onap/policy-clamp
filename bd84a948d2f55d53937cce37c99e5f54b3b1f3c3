@@ -18,6 +18,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43fdbf99_76da0450",
+        "filename": "packages/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-09-11T13:14:28Z",
+      "side": 1,
+      "message": "It is possible to remove it here, but it might break external docker images builds still expecting it, so we can leave for now.",
+      "parentUuid": "a5297b89_b2a8ee95",
+      "revId": "bd84a948d2f55d53937cce37c99e5f54b3b1f3c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8229ccc6_4c4e6ebe",
