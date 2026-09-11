@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6313de6e_6ffd87c7",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-09-11T16:22:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1747112_e11c9f22",
+      "range": {
+        "startLine": 50,
+        "startChar": 20,
+        "endLine": 50,
+        "endChar": 29
+      },
+      "revId": "a808e0399cb7338af5060b88ef0209478b1a25e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59175d85_a2745ea7",
