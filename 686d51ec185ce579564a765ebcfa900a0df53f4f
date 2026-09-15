@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f32cf90a_e5ff0d5c",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-09-15T13:23:27Z",
+      "side": 1,
+      "message": "It would be more explicit to print, \"no elements present for the instanceId{}\"?",
+      "range": {
+        "startLine": 63,
+        "startChar": 22,
+        "endLine": 63,
+        "endChar": 71
+      },
+      "revId": "686d51ec185ce579564a765ebcfa900a0df53f4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b46d32a0_a34ec29d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-09-15T13:23:27Z",
+      "side": 1,
+      "message": "On what scenario we get an empty element list for a participantId?",
+      "range": {
+        "startLine": 62,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "686d51ec185ce579564a765ebcfa900a0df53f4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee6e1966_70c37a41",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-09-15T13:23:27Z",
+      "side": 1,
+      "message": "when do we get this scenario?",
+      "range": {
+        "startLine": 94,
+        "startChar": 22,
+        "endLine": 94,
+        "endChar": 72
+      },
+      "revId": "686d51ec185ce579564a765ebcfa900a0df53f4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5ea0a67_677bce69",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-09-15T13:23:27Z",
+      "side": 1,
+      "message": "No elements present for the instanceId",
+      "range": {
+        "startLine": 183,
+        "startChar": 22,
+        "endLine": 183,
+        "endChar": 74
+      },
+      "revId": "686d51ec185ce579564a765ebcfa900a0df53f4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
