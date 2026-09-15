@@ -47,6 +47,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "98fa15b0_3df79de0",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-09-15T13:53:11Z",
+      "side": 1,
+      "message": "it not supposed to be happen, but it could be good to have this validation",
+      "parentUuid": "b46d32a0_a34ec29d",
+      "range": {
+        "startLine": 62,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "686d51ec185ce579564a765ebcfa900a0df53f4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee6e1966_70c37a41",
@@ -60,6 +84,30 @@
       "writtenOn": "2026-09-15T13:23:27Z",
       "side": 1,
       "message": "when do we get this scenario?",
+      "range": {
+        "startLine": 94,
+        "startChar": 22,
+        "endLine": 94,
+        "endChar": 72
+      },
+      "revId": "686d51ec185ce579564a765ebcfa900a0df53f4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39f371df_5330664e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2026-09-15T13:53:11Z",
+      "side": 1,
+      "message": "it not supposed to be happen, but it could be good to have this validation",
+      "parentUuid": "ee6e1966_70c37a41",
       "range": {
         "startLine": 94,
         "startChar": 22,
