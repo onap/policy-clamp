@@ -162,17 +162,6 @@ public class CommonTestData {
     }
 
     /**
-     * Create a new Test parameter group for Encryption.
-     *
-     * @return a new AutomationCompositionDefinition
-     */
-    public static AcRuntimeParameterGroup getEncryptionParameterGroup() {
-        var acRuntimeParameterGroup = getTestParamaterGroup();
-        acRuntimeParameterGroup.getAcmParameters().setEnableEncryption(true);
-        return acRuntimeParameterGroup;
-    }
-
-    /**
      * Modify the state of the AutomationComposition.
      * @param automationComposition automationComposition
      * @param deployState deployState

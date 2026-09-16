@@ -20,7 +20,6 @@
 package org.onap.policy.clamp.acm.runtime.supervision
 
 import org.onap.policy.clamp.acm.runtime.helper.SupervisionAcHandlerTestHelper
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.comm.*
 import org.onap.policy.clamp.models.acm.concepts.*
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider
@@ -38,7 +37,7 @@ class SupervisionAcHandlerSpec extends Specification {
                 Mock(AutomationCompositionProvider), Mock(MessageProvider),
                 Mock(AutomationCompositionDeployPublisher), Mock(AutomationCompositionStateChangePublisher),
                 Mock(AcElementPropertiesPublisher), Mock(AutomationCompositionMigrationPublisher),
-                Mock(AcPreparePublisher), Mock(EncryptionUtils))
+                Mock(AcPreparePublisher))
     }
 
     def awaitLatch(CountDownLatch latch) {

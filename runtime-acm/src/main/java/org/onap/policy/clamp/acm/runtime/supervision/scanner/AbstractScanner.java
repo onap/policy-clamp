@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -46,16 +45,14 @@ public abstract class AbstractScanner {
     protected final AutomationCompositionProvider acProvider;
     protected final AcDefinitionProvider acDefinitionProvider;
     protected final ParticipantSyncPublisher participantSyncPublisher;
-    private final EncryptionUtils encryptionUtils;
 
     protected AbstractScanner(final AutomationCompositionProvider acProvider,
             final AcDefinitionProvider acDefinitionProvider, final ParticipantSyncPublisher participantSyncPublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup, final EncryptionUtils encryptionUtils) {
+            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.acProvider = acProvider;
         this.acDefinitionProvider = acDefinitionProvider;
         this.participantSyncPublisher = participantSyncPublisher;
         this.maxOperationWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxOperationWaitMs();
-        this.encryptionUtils = encryptionUtils;
     }
 
     protected void complete(final AutomationComposition automationComposition, UpdateSync updateSync) {
@@ -145,13 +142,7 @@ public abstract class AbstractScanner {
             acProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         }
         if (updateSync.isToBeSync()) {
-            var acToSend = new AutomationComposition(automationComposition);
-            decryptInstanceProperties(acToSend);
-            participantSyncPublisher.sendSync(acToSend);
+            participantSyncPublisher.sendSync(automationComposition);
         }
-    }
-
-    protected void decryptInstanceProperties(AutomationComposition automationComposition) {
-        encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
     }
 }

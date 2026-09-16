@@ -36,7 +36,6 @@ import static org.onap.policy.clamp.acm.runtime.helper.SupervisionParticipantHan
 import static org.onap.policy.clamp.acm.runtime.helper.SupervisionParticipantHandlerTestHelper.createStatusMessage
 import static org.onap.policy.clamp.acm.runtime.helper.SupervisionParticipantHandlerTestHelper.createStatusMessageWithParticipantDef
 
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher
@@ -369,8 +368,7 @@ class SupervisionParticipantHandlerSpec extends Specification {
                 acProvider            : Mock(AutomationCompositionProvider),
                 acDefinitionProvider  : Mock(AcDefinitionProvider),
                 syncPublisher         : Mock(ParticipantSyncPublisher),
-                messageProvider       : Mock(MessageProvider),
-                encryptionUtils       : Mock(EncryptionUtils)
+                messageProvider       : Mock(MessageProvider)
         ]
         createHandler(defaults + overrides)
     }

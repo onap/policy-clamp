@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.runtime.helper
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationProvider
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState
@@ -87,10 +86,9 @@ class InstantiationProviderTestHelper {
     }
 
     def createProvider(
-            AcRuntimeParameterGroup params = CommonTestData.getTestParamaterGroup(),
-            EncryptionUtils encryption = new EncryptionUtils(CommonTestData.getTestParamaterGroup())) {
+            AcRuntimeParameterGroup params = CommonTestData.getTestParamaterGroup()) {
         return new InstantiationProvider(acProvider, acDefinitionProvider,
-                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, params, encryption)
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, params)
     }
 
     def createPrimedDefinition(ToscaServiceTemplate template = serviceTemplate) {
@@ -117,7 +115,7 @@ class InstantiationProviderTestHelper {
         ac.compositionId = acDef.compositionId
 
         def provider = new InstantiationProvider(localAcProvider, localAcDefProvider,
-                new AcInstanceStateResolver(), null, localParticipantProvider, localParams, null)
+                new AcInstanceStateResolver(), null, localParticipantProvider, localParams)
 
         return [acDef: acDef, provider: provider]
     }

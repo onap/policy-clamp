@@ -20,7 +20,6 @@
 package org.onap.policy.clamp.acm.runtime.helper
 
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher
@@ -60,8 +59,7 @@ class SupervisionParticipantHandlerTestHelper {
                 mocks.acProvider as AutomationCompositionProvider,
                 mocks.acDefinitionProvider as AcDefinitionProvider,
                 mocks.syncPublisher as ParticipantSyncPublisher,
-                mocks.messageProvider as MessageProvider,
-                mocks.encryptionUtils as EncryptionUtils
+                mocks.messageProvider as MessageProvider
         )
     }
 

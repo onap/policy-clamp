@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -56,9 +55,8 @@ public class PhaseScanner extends AbstractScanner {
                         final ParticipantSyncPublisher participantSyncPublisher,
                         final AutomationCompositionStateChangePublisher acStateChangePublisher,
                         final AutomationCompositionDeployPublisher acDeployPublisher,
-                        final AcRuntimeParameterGroup acRuntimeParameterGroup,
-                        final EncryptionUtils encryptionUtils) {
-        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
+                        final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup);
         this.acStateChangePublisher = acStateChangePublisher;
         this.acDeployPublisher = acDeployPublisher;
     }
@@ -117,19 +115,17 @@ public class PhaseScanner extends AbstractScanner {
         // create a pause between sync message and next startPhase message
         AcmUtils.pause(300);
 
-        var acToSend = new AutomationComposition(automationComposition);
-        decryptInstanceProperties(acToSend);
         var compositionTargetId = automationComposition.getCompositionTargetId();
-        if (DeployState.DEPLOYING.equals(acToSend.getDeployState())) {
+        if (DeployState.DEPLOYING.equals(automationComposition.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionDeploy");
-            acDeployPublisher.send(acToSend, startPhase, false, acDefinition);
-        } else if (isUndeployOrDelete(acToSend.getDeployState()) && compositionTargetId != null) {
+            acDeployPublisher.send(automationComposition, startPhase, false, acDefinition);
+        } else if (isUndeployOrDelete(automationComposition.getDeployState()) && compositionTargetId != null) {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(acToSend, false, acDefinition,
+            acStateChangePublisher.send(automationComposition, false, acDefinition,
                     acDefinitionProvider.getAcDefinition(compositionTargetId));
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
-            acStateChangePublisher.send(acToSend, false, acDefinition, null);
+            acStateChangePublisher.send(automationComposition, false, acDefinition, null);
         }
     }
 

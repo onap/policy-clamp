@@ -20,7 +20,6 @@
 package org.onap.policy.clamp.acm.runtime.helper
 
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler
 import org.onap.policy.clamp.acm.runtime.supervision.comm.*
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
@@ -44,7 +43,6 @@ class SupervisionAcHandlerTestHelper {
     AcElementPropertiesPublisher elementPublisher
     AutomationCompositionMigrationPublisher migrationPublisher
     AcPreparePublisher preparePublisher
-    EncryptionUtils encryptionUtils
     SupervisionAcHandler handler
 
     void initMocks(AutomationCompositionProvider acProvider, MessageProvider messageProvider,
@@ -52,7 +50,7 @@ class SupervisionAcHandlerTestHelper {
                    AutomationCompositionStateChangePublisher stateChangePublisher,
                    AcElementPropertiesPublisher elementPublisher,
                    AutomationCompositionMigrationPublisher migrationPublisher,
-                   AcPreparePublisher preparePublisher, EncryptionUtils encryptionUtils) {
+                   AcPreparePublisher preparePublisher) {
         this.acProvider = acProvider
         this.messageProvider = messageProvider
         this.deployPublisher = deployPublisher
@@ -60,9 +58,8 @@ class SupervisionAcHandlerTestHelper {
         this.elementPublisher = elementPublisher
         this.migrationPublisher = migrationPublisher
         this.preparePublisher = preparePublisher
-        this.encryptionUtils = encryptionUtils
         this.handler = new SupervisionAcHandler(acProvider, deployPublisher, stateChangePublisher,
-                elementPublisher, migrationPublisher, preparePublisher, messageProvider, encryptionUtils)
+                elementPublisher, migrationPublisher, preparePublisher, messageProvider)
     }
 
     static def getLatchTimeoutSeconds() {

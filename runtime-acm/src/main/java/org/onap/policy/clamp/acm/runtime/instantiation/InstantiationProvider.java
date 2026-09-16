@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.base.validation.BeanValidationResult;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -84,7 +83,6 @@ public class InstantiationProvider {
     private final SupervisionAcHandler supervisionAcHandler;
     private final ParticipantProvider participantProvider;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
-    private final EncryptionUtils encryptionUtils;
 
     /**
      * Create automation composition.
@@ -107,7 +105,6 @@ public class InstantiationProvider {
         } else {
             associateParticipantId(automationComposition, acDefinition, null);
         }
-        encryptInstanceProperties(automationComposition, compositionId);
         automationComposition = automationCompositionProvider.createAutomationComposition(automationComposition);
 
         return createInstantiationResponse(automationComposition);
@@ -148,7 +145,6 @@ public class InstantiationProvider {
             } else {
                 associateParticipantId(acFromDb, acDefinition, null);
             }
-            encryptInstanceProperties(acFromDb, compositionId);
             automationComposition = automationCompositionProvider.updateAutomationComposition(acFromDb);
             return createInstantiationResponse(automationComposition);
 
@@ -196,11 +192,9 @@ public class InstantiationProvider {
         automationCompositionProvider.copyAcElementsBeforeUpdate(acToBeUpdated); //NOSONAR
 
         prepareForUpdate(automationComposition, acToBeUpdated, acDefinition);
-        var acToPublish = new AutomationComposition(acToBeUpdated);
-        encryptInstanceProperties(acToBeUpdated, acToBeUpdated.getCompositionId());
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         // Publish property update event to the participants
-        supervisionAcHandler.update(acToPublish, acDefinition);
+        supervisionAcHandler.update(acToBeUpdated, acDefinition);
         return createInstantiationResponse(automationComposition);
     }
 
@@ -222,14 +216,10 @@ public class InstantiationProvider {
         updateElementsProperties(automationComposition, acFromDb, acDefinitionTarget, acDefinition);
 
         updateAcForMigration(acFromDb, acDefinitionTarget, DeployState.MIGRATING);
-
-        var acToPublish = new AutomationComposition(acFromDb);
-        encryptInstanceProperties(acFromDb, acFromDb.getCompositionTargetId());
-
         var ac = automationCompositionProvider.updateAutomationComposition(acFromDb);
 
         // Publish migrate event to the participants
-        supervisionAcHandler.migrate(acPriorUpdate, acToPublish, acDefinition, acDefinitionTarget);
+        supervisionAcHandler.migrate(acPriorUpdate, acFromDb, acDefinition, acDefinitionTarget);
         return createInstantiationResponse(ac);
     }
 
@@ -322,15 +312,6 @@ public class InstantiationProvider {
         result.addResult(automationCompositionProvider.validateElementIds(automationComposition));
 
         return result;
-    }
-
-
-    private void encryptInstanceProperties(AutomationComposition automationComposition, UUID compositionId) {
-        if (encryptionUtils.encryptionEnabled()) {
-            var acDefinitionOpt = acDefinitionProvider.findAcDefinition(compositionId);
-            acDefinitionOpt.ifPresent(acDefinition
-                -> encryptionUtils.findAndEncryptSensitiveData(acDefinition, automationComposition));
-        }
     }
 
     /**

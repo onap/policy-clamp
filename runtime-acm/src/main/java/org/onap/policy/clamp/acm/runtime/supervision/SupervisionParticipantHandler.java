@@ -29,7 +29,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -74,7 +73,6 @@ public class SupervisionParticipantHandler {
     private final AcDefinitionProvider acDefinitionProvider;
     private final ParticipantSyncPublisher participantSyncPublisher;
     private final MessageProvider messageProvider;
-    private final EncryptionUtils encryptionUtils;
 
     private void validation(UUID participantId,
             List<ParticipantSupportedElementType> participantSupportedElementTypes) {
@@ -216,11 +214,9 @@ public class SupervisionParticipantHandler {
             return;
         }
         LOGGER.debug("Composition to be send in Restart message {}", acDefinition.getCompositionId());
-        var automationCompositionList =
-                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
-        encryptionUtils.decryptInstanceProperties(automationCompositionList);
         var automationCompositions =
-                automationCompositionList.stream().filter(ac -> isAcToBeSyncRestarted(participantId, ac)).toList();
+                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId())
+                        .stream().filter(ac -> isAcToBeSyncRestarted(participantId, ac)).toList();
         participantSyncPublisher.sendRestartMsg(participantId, replicaId, acDefinition, automationCompositions);
     }
 
@@ -289,7 +285,6 @@ public class SupervisionParticipantHandler {
 
     private AutomationComposition getAutomationCompositionForSync(UUID automationCompositionId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(automationCompositionId);
-        encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
             var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
             var stage = AcmStageUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
