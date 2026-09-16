@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
@@ -71,7 +70,6 @@ public class SupervisionAcHandler {
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
     private final AcPreparePublisher acPreparePublisher;
     private final MessageProvider messageProvider;
-    private final EncryptionUtils encryptionUtils;
 
     private final ExecutorService executor =
             Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
@@ -105,11 +103,7 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> {
-                var acToSend = new AutomationComposition(automationComposition);
-                encryptionUtils.decryptInstanceProperties(acToSend.getElements());
-                automationCompositionDeployPublisher.send(acToSend, startPhase, true, acDefinition);
-            });
+            () -> automationCompositionDeployPublisher.send(automationComposition, startPhase, true, acDefinition));
     }
 
     /**
@@ -185,11 +179,7 @@ public class SupervisionAcHandler {
         var stage = AcmStageUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(stage);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> {
-            var acToSend = new AutomationComposition(automationComposition);
-            encryptionUtils.decryptInstanceProperties(acToSend.getElements());
-            acPreparePublisher.sendPrepare(acToSend, stage, acDefinition);
-        });
+        executor.execute(() -> acPreparePublisher.sendPrepare(automationComposition, stage, acDefinition));
     }
 
     /**
@@ -247,10 +237,7 @@ public class SupervisionAcHandler {
         var acPriorUpdate = automationCompositionProvider
                 .getAutomationCompositionRollback(automationComposition.getInstanceId());
         executor.execute(
-            () -> {
-                encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
-                acElementPropertiesPublisher.send(acPriorUpdate, automationComposition, acDefinition);
-            });
+            () -> acElementPropertiesPublisher.send(acPriorUpdate, automationComposition, acDefinition));
     }
 
     /**
@@ -389,12 +376,9 @@ public class SupervisionAcHandler {
     public void migrate(AutomationCompositionRollback acPriorUpdate, AutomationComposition automationComposition,
                         AutomationCompositionDefinition acDefinition,
                         AutomationCompositionDefinition acDefinitionTarget) {
-        executor.execute(() -> {
-            encryptionUtils.decryptInstanceProperties(automationComposition.getElements());
-            encryptionUtils.decryptInstanceProperties(acPriorUpdate.getElements());
-            acCompositionMigrationPublisher.send(acPriorUpdate, automationComposition, automationComposition.getPhase(),
-                    acDefinition, acDefinitionTarget, true);
-        });
+        executor.execute(() -> acCompositionMigrationPublisher.send(
+                acPriorUpdate, automationComposition, automationComposition.getPhase(),
+                acDefinition, acDefinitionTarget, true));
     }
 
     /**

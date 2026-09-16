@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -55,7 +54,6 @@ public class StageScanner extends AbstractScanner {
      * @param participantSyncPublisher the Participant Sync Publisher
      * @param acMigrationPublisher the AutomationComposition Migration Publisher
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
-     * @param encryptionUtils the EncryptionUtils
      */
     public StageScanner(
             final AutomationCompositionProvider acProvider,
@@ -63,9 +61,8 @@ public class StageScanner extends AbstractScanner {
             final ParticipantSyncPublisher participantSyncPublisher,
             final AutomationCompositionMigrationPublisher acMigrationPublisher,
             final AcPreparePublisher acPreparePublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup,
-            final EncryptionUtils encryptionUtils) {
-        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
+            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup);
         this.acMigrationPublisher = acMigrationPublisher;
         this.acPreparePublisher = acPreparePublisher;
     }
@@ -129,9 +126,7 @@ public class StageScanner extends AbstractScanner {
             // create a pause between sync message and next stage message
             AcmUtils.pause(AcmUtils.DELAY_MESSAGE);
 
-            var acToSend = new AutomationComposition(automationComposition);
-            decryptInstanceProperties(acToSend);
-            sendNextStage(acToSend, minStageNotCompleted, acDefinition);
+            sendNextStage(automationComposition, minStageNotCompleted, acDefinition);
         } else {
             handleTimeout(automationComposition, updateSync);
         }

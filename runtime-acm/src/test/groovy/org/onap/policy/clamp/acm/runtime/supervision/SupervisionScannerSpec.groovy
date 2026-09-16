@@ -24,7 +24,6 @@ import static org.onap.policy.clamp.acm.runtime.helper.SupervisionScannerTestHel
 import static org.onap.policy.clamp.acm.runtime.helper.SupervisionScannerTestHelper.buildMigratingAcWithMigrationStates
 
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher
@@ -336,8 +335,7 @@ class SupervisionScannerSpec extends Specification {
                 Mock(AcDefinitionProvider),
                 Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionMigrationPublisher),
-                Mock(AcPreparePublisher), acRuntimeParameterGroup,
-                Mock(EncryptionUtils))
+                Mock(AcPreparePublisher), acRuntimeParameterGroup)
         def messageProvider = Mock(MessageProvider) {
             findCompositionMessages() >> new HashSet()
             findInstanceMessages() >> new HashSet()

@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.runtime.instantiation
 import jakarta.ws.rs.core.Response
 import org.onap.policy.clamp.acm.runtime.helper.InstantiationProviderTestHelper
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData
 import org.onap.policy.clamp.models.acm.concepts.*
@@ -174,7 +173,7 @@ class InstantiationProviderSpec extends Specification {
         def ac = helper.loadCustomAc("acUpdate", "Crud", initialState, compositionId)
         acSetup(ac, compositionId)
         helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
-        def provider = helper.createProvider(new AcRuntimeParameterGroup(), Mock(EncryptionUtils))
+        def provider = helper.createProvider(new AcRuntimeParameterGroup())
 
         when:
         provider.updateAutomationComposition(compositionId, acToUpdate(ac, compositionId))
@@ -223,7 +222,7 @@ class InstantiationProviderSpec extends Specification {
         helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
 
         def wrongId = UUID.randomUUID()
-        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), Mock(EncryptionUtils))
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup))
 
         when: "wrong compositionId"
         provider.deleteAutomationComposition(wrongId, ac.instanceId)
@@ -400,7 +399,7 @@ class InstantiationProviderSpec extends Specification {
         def ac = helper.loadAc("acElementNotFound", "AcElementNotFound")
         ac.compositionId = compositionId
         helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
-        def provider = helper.createProvider(CommonTestData.getTestParamaterGroup(), Mock(EncryptionUtils))
+        def provider = helper.createProvider(CommonTestData.getTestParamaterGroup())
 
         when:
         action(provider, compositionId, ac)
@@ -423,7 +422,7 @@ class InstantiationProviderSpec extends Specification {
         helper.acDefinitionProvider.getAcDefinition(compositionId) >> {
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, "definition not found")
         }
-        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), null)
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup))
 
         when:
         action(provider, compositionId, ac)
@@ -442,7 +441,7 @@ class InstantiationProviderSpec extends Specification {
         def ac = helper.loadAc("acDefNotFound", "AcNotFound")
         helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
         def wrongId = UUID.randomUUID()
-        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), null)
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup))
 
         when:
         action(provider, wrongId, ac)
@@ -465,7 +464,7 @@ class InstantiationProviderSpec extends Specification {
         def targetId = UUID.randomUUID()
         ac.compositionTargetId = targetId
         helper.acProvider.getAutomationComposition(ac.instanceId) >> ac
-        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), null)
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup))
 
         when:
         def result = provider.getAutomationComposition(targetId, ac.instanceId)
@@ -486,7 +485,7 @@ class InstantiationProviderSpec extends Specification {
         ac.compositionId = compositionId
 
         def provider = new InstantiationProvider(helper.acProvider, helper.acDefinitionProvider,
-                null, null, null, null, null)
+                null, null, null, null)
 
         when:
         provider.createAutomationComposition(compositionId, ac)
@@ -512,7 +511,7 @@ class InstantiationProviderSpec extends Specification {
         ac.lockState = acLockState
         helper.acProvider.getAutomationComposition(instanceId) >> ac
 
-        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), null)
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup))
         def update = new AcInstanceStateUpdate(
                 deployOrder: deployOrder, lockOrder: lockOrder, subOrder: subOrder)
 
@@ -680,7 +679,7 @@ class InstantiationProviderSpec extends Specification {
         def acDefTarget = CommonTestData.createAcDefinition(helper.serviceTemplateMigration, AcTypeState.PRIMED)
         helper.acDefinitionProvider.getAcDefinition(compositionTargetId) >> acDefTarget
 
-        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup), null)
+        def provider = helper.createProvider(Mock(AcRuntimeParameterGroup))
         def update = new AcInstanceStateUpdate(deployOrder: DeployOrder.UNDEPLOY, lockOrder: LockOrder.NONE)
 
         when:
@@ -688,30 +687,6 @@ class InstantiationProviderSpec extends Specification {
 
         then:
         1 * helper.supervisionAcHandler.undeploy(_, _, acDefTarget)
-    }
-
-    // --- Encryption ---
-
-    def "create encrypts properties when encryption is enabled"() {
-        given:
-        def compositionId = setupPrimedDefinition()
-        def ac = helper.loadAc("acCreate", "Encrypt")
-        ac.compositionId = compositionId
-        helper.acProvider.createAutomationComposition(ac) >> ac
-
-        def encryptionUtils = Mock(EncryptionUtils) {
-            encryptionEnabled() >> true
-        }
-        helper.acDefinitionProvider.findAcDefinition(compositionId) >> Optional.empty()
-
-        def provider = helper.createProvider(CommonTestData.getTestParamaterGroup(), encryptionUtils)
-
-        when:
-        def response = provider.createAutomationComposition(compositionId, ac)
-
-        then:
-        response != null
-        1 * encryptionUtils.encryptionEnabled() >> true
     }
 
     // --- mergePropertiesAndValidate validation failure ---

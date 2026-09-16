@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -49,9 +48,8 @@ public class SimpleScanner extends AbstractScanner {
     public SimpleScanner(final AutomationCompositionProvider acProvider,
                          final AcDefinitionProvider acDefinitionProvider,
                          final ParticipantSyncPublisher participantSyncPublisher,
-                         final AcRuntimeParameterGroup acRuntimeParameterGroup,
-                         final EncryptionUtils encryptionUtils) {
-        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
+                         final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+        super(acProvider, acDefinitionProvider, participantSyncPublisher, acRuntimeParameterGroup);
     }
 
     /**

@@ -27,7 +27,6 @@ import static org.onap.policy.clamp.acm.runtime.helper.PhaseScannerTestHelper.bu
 import static org.onap.policy.clamp.acm.runtime.helper.PhaseScannerTestHelper.buildUndeployingAcWithTarget
 import static org.onap.policy.clamp.acm.runtime.helper.PhaseScannerTestHelper.buildUnlockingAc
 
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher
@@ -57,7 +56,7 @@ class PhaseScannerSpec extends Specification {
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionStateChangePublisher),
                 Mock(AutomationCompositionDeployPublisher),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))
+                acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -87,7 +86,7 @@ class PhaseScannerSpec extends Specification {
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), participantSyncPublisher,
                 Mock(AutomationCompositionStateChangePublisher),
                 Mock(AutomationCompositionDeployPublisher),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))
+                acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -111,7 +110,7 @@ class PhaseScannerSpec extends Specification {
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), participantSyncPublisher,
                 Mock(AutomationCompositionStateChangePublisher),
                 Mock(AutomationCompositionDeployPublisher),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))
+                acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -137,7 +136,7 @@ class PhaseScannerSpec extends Specification {
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), participantSyncPublisher,
                 Mock(AutomationCompositionStateChangePublisher),
                 Mock(AutomationCompositionDeployPublisher),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))
+                acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -157,8 +156,7 @@ class PhaseScannerSpec extends Specification {
         def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionStateChangePublisher),
-                acDeployPublisher, acRuntimeParameterGroup,
-                new EncryptionUtils(acRuntimeParameterGroup))
+                acDeployPublisher, acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -176,8 +174,7 @@ class PhaseScannerSpec extends Specification {
         def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionStateChangePublisher),
-                acDeployPublisher, acRuntimeParameterGroup,
-                new EncryptionUtils(acRuntimeParameterGroup))
+                acDeployPublisher, acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -198,8 +195,7 @@ class PhaseScannerSpec extends Specification {
         def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(Mock(AutomationCompositionProvider), acDefinitionProvider,
                 Mock(ParticipantSyncPublisher), acStateChangePublisher,
-                Mock(AutomationCompositionDeployPublisher),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))
+                Mock(AutomationCompositionDeployPublisher), acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:
@@ -218,7 +214,7 @@ class PhaseScannerSpec extends Specification {
         def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
         def phaseScanner = new PhaseScanner(acProvider, Mock(AcDefinitionProvider), Mock(ParticipantSyncPublisher),
                 acStateChangePublisher, Mock(AutomationCompositionDeployPublisher),
-                acRuntimeParameterGroup, new EncryptionUtils(acRuntimeParameterGroup))
+                acRuntimeParameterGroup)
         def acDefinition = buildAcDefinition()
 
         when:

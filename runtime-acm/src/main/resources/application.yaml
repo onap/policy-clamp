@@ -70,7 +70,6 @@ runtime:
   acmParameters:
     toscaElementName: ${TOSCA_ELEMENT_NAME:org.onap.policy.clamp.acm.AutomationCompositionElement}
     toscaCompositionName: ${TOSCA_COMPOSITION_NAME:org.onap.policy.clamp.acm.AutomationComposition}
-    enableEncryption: ${MSG_ENABLE_ENCRYPTION:false}
 
 management:
   server:

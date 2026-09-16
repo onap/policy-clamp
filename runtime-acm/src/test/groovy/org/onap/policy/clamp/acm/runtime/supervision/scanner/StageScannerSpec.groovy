@@ -26,7 +26,6 @@ import static org.onap.policy.clamp.acm.runtime.helper.StageScannerTestHelper.bu
 import static org.onap.policy.clamp.acm.runtime.helper.StageScannerTestHelper.buildMigrationRevertingAc
 import static org.onap.policy.clamp.acm.runtime.helper.StageScannerTestHelper.buildPreparingAc
 
-import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher
@@ -237,10 +236,9 @@ class StageScannerSpec extends Specification {
     def buildStageScanner(AutomationCompositionProvider acProvider,
                           ParticipantSyncPublisher participantSyncPublisher = null) {
         def acRuntimeParameterGroup = CommonTestData.getParameterGroup("dbScanner")
-        def encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup)
         return new StageScanner(acProvider, Mock(AcDefinitionProvider),
                 participantSyncPublisher ?: Mock(ParticipantSyncPublisher),
                 Mock(AutomationCompositionMigrationPublisher), Mock(AcPreparePublisher),
-                acRuntimeParameterGroup, encryptionUtils)
+                acRuntimeParameterGroup)
     }
 }
