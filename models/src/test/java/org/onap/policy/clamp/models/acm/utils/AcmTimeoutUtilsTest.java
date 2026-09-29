@@ -26,6 +26,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 
 class AcmTimeoutUtilsTest {
 
@@ -45,17 +46,23 @@ class AcmTimeoutUtilsTest {
         assertEquals(AcmTimeoutUtils.PRIME_TIMEOUT, result);
         result = AcmTimeoutUtils.getOpName(AcTypeState.DEPRIMING);
         assertEquals(AcmTimeoutUtils.DEPRIME_TIMEOUT, result);
-        result = AcmTimeoutUtils.getOpName(DeployState.DEPLOYING);
+        result = AcmTimeoutUtils.getOpName(DeployState.DEPLOYING, SubState.NONE);
         assertEquals(AcmTimeoutUtils.DEPLOY_TIMEOUT, result);
-        result = AcmTimeoutUtils.getOpName(DeployState.UNDEPLOYING);
+        result = AcmTimeoutUtils.getOpName(DeployState.UNDEPLOYING, SubState.NONE);
         assertEquals(AcmTimeoutUtils.UNDEPLOY_TIMEOUT, result);
-        result = AcmTimeoutUtils.getOpName(DeployState.UPDATING);
+        result = AcmTimeoutUtils.getOpName(DeployState.UPDATING, SubState.NONE);
         assertEquals(AcmTimeoutUtils.UPDATE_TIMEOUT, result);
-        result = AcmTimeoutUtils.getOpName(DeployState.DELETING);
+        result = AcmTimeoutUtils.getOpName(DeployState.DELETING, SubState.NONE);
         assertEquals(AcmTimeoutUtils.DELETE_TIMEOUT, result);
-        result = AcmTimeoutUtils.getOpName(DeployState.MIGRATING);
+        result = AcmTimeoutUtils.getOpName(DeployState.MIGRATING, SubState.NONE);
         assertEquals(AcmTimeoutUtils.MIGRATE_TIMEOUT, result);
-        result = AcmTimeoutUtils.getOpName(DeployState.DEPLOYED);
+        result = AcmTimeoutUtils.getOpName(DeployState.DEPLOYED, SubState.NONE);
         assertEquals(AcmTimeoutUtils.DEFAULT_TIMEOUT, result);
+        result = AcmTimeoutUtils.getOpName(DeployState.UNDEPLOYED, SubState.PREPARING);
+        assertEquals(AcmTimeoutUtils.PREPARE_TIMEOUT, result);
+        result = AcmTimeoutUtils.getOpName(DeployState.DEPLOYED, SubState.REVIEWING);
+        assertEquals(AcmTimeoutUtils.REVIEW_TIMEOUT, result);
+        result = AcmTimeoutUtils.getOpName(DeployState.DEPLOYED, SubState.MIGRATION_PRECHECKING);
+        assertEquals(AcmTimeoutUtils.MIGRATION_PRECHECK_TIMEOUT, result);
     }
 }

@@ -15,11 +15,18 @@
             "deployState": "UNDEPLOYED",
             "lockState": "NONE",
             "description": "Automation composition element for the K8S microservice for PMSH",
-            "deployTimeoutMs": "200000",
-            "undeployTimeoutMs": "150000",
-            "updateTimeoutMs": "200000",
-            "migrateTimeoutMs": "200000",
-            "deleteTimeoutMs": "100000"
+            "properties" : {
+                "deployTimeoutMs": "200000",
+                "undeployTimeoutMs": "150000",
+                "updateTimeoutMs": "200000",
+                "migrateTimeoutMs": "200000",
+                "deleteTimeoutMs": "100000",
+                "migrateRollbackTimeoutMs": "200000",
+                "updateRollbackTimeoutMs": "200000",
+                "migrationPreCheckTimeoutMs": "100000",
+                "prepareTimeoutMs": "100000",
+                "reviewTimeoutMs": "100000"
+            }
         }
     }
 }

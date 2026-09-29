@@ -25,6 +25,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AcmTimeoutUtils {
@@ -36,12 +37,25 @@ public final class AcmTimeoutUtils {
     public static final String UPDATE_TIMEOUT = "updateTimeoutMs";
     public static final String MIGRATE_TIMEOUT = "migrateTimeoutMs";
     public static final String DELETE_TIMEOUT = "deleteTimeoutMs";
+    public static final String MIGRATE_ROLLBACK_TIMEOUT = "migrateRollbackTimeoutMs";
+    public static final String UPDATE_ROLLBACK = "updateRollbackTimeoutMs";
+
+    public static final String MIGRATION_PRECHECK_TIMEOUT = "migrationPreCheckTimeoutMs";
+    public static final String PREPARE_TIMEOUT = "prepareTimeoutMs";
+    public static final String REVIEW_TIMEOUT = "reviewTimeoutMs";
 
     public static final Map<DeployState, String> MAP_TIMEOUT = Map.of(DeployState.DEPLOYING, DEPLOY_TIMEOUT,
             DeployState.UNDEPLOYING, UNDEPLOY_TIMEOUT,
             DeployState.UPDATING, UPDATE_TIMEOUT,
             DeployState.MIGRATING, MIGRATE_TIMEOUT,
-            DeployState.DELETING, DELETE_TIMEOUT);
+            DeployState.DELETING, DELETE_TIMEOUT,
+            DeployState.MIGRATION_REVERTING, MIGRATE_ROLLBACK_TIMEOUT,
+            DeployState.UPDATE_REVERTING, UPDATE_ROLLBACK);
+
+    public static final Map<SubState, String> MAP_SUB_TIMEOUT = Map.of(
+            SubState.MIGRATION_PRECHECKING, MIGRATION_PRECHECK_TIMEOUT,
+            SubState.PREPARING, PREPARE_TIMEOUT,
+            SubState.REVIEWING, REVIEW_TIMEOUT);
 
     /**
      * Get timeout value from properties by name operation, return default value if not present.
@@ -72,10 +86,12 @@ public final class AcmTimeoutUtils {
     /**
      * Get operation name of a AutomationComposition.
      *
-     * @param deployState the state of the AutomationComposition
+     * @param deployState the deployState of the AutomationComposition
+     * @param subState the subState of the AutomationComposition
      * @return the operation name
      */
-    public static String getOpName(DeployState deployState) {
-        return MAP_TIMEOUT.getOrDefault(deployState, DEFAULT_TIMEOUT);
+    public static String getOpName(DeployState deployState, SubState subState) {
+        return SubState.NONE.equals(subState) ? MAP_TIMEOUT.getOrDefault(deployState, DEFAULT_TIMEOUT)
+                : MAP_SUB_TIMEOUT.getOrDefault(subState, DEFAULT_TIMEOUT);
     }
 }
