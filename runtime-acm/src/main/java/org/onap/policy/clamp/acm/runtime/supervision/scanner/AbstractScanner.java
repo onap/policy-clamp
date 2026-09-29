@@ -20,10 +20,12 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
+import java.util.Optional;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.MigrationState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -109,9 +111,9 @@ public abstract class AbstractScanner {
             saveAndSync(automationComposition, updateSync);
             return;
         }
-        var name = AcmTimeoutUtils.getOpName(automationComposition.getDeployState());
-        var element = automationComposition.getElements().values().stream()
-                .filter(el -> automationComposition.getDeployState().equals(el.getDeployState())).findFirst();
+        var name = AcmTimeoutUtils
+                .getOpName(automationComposition.getDeployState(), automationComposition.getSubState());
+        var element = getAcElementForTimeout(automationComposition);
         var maxWaitMs = element.map(automationCompositionElement -> AcmTimeoutUtils.getTimeout(
                 automationCompositionElement.getProperties(), name, maxOperationWaitMs)).orElse(maxOperationWaitMs);
         var now = TimestampHelper.nowEpochMilli();
@@ -123,6 +125,17 @@ public abstract class AbstractScanner {
             updateSync.setToBeSync(true);
         }
         saveAndSync(automationComposition, updateSync);
+    }
+
+    private Optional<AutomationCompositionElement> getAcElementForTimeout(
+            AutomationComposition automationComposition) {
+        if (SubState.NONE.equals(automationComposition.getSubState())) {
+            return automationComposition.getElements().values().stream()
+                    .filter(el -> automationComposition.getDeployState().equals(el.getDeployState())).findFirst();
+        } else {
+            return automationComposition.getElements().values().stream()
+                    .filter(el -> automationComposition.getSubState().equals(el.getSubState())).findFirst();
+        }
     }
 
     /**
