@@ -129,7 +129,7 @@ services:
 
 # messaging services:
   kafka:
-    image: nexus3.onap.org:10001/confluentinc/cp-kafka:7.7.7
+    image: nexus3.onap.org:10001/confluentinc/cp-kafka:7.9.10
     container_name: kafka
     hostname: kafka
     ports:

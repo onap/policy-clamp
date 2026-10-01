@@ -71,26 +71,6 @@ InstantiateAutomationComposition
     ${tmpInstanceId}=  MakeJsonInstantiateAutomationComposition  ${compositionId}  ${postjson}
     Set Suite Variable  ${instanceId}  ${tmpInstanceId}
 
-InstantiateAutomationCompositionTimeout
-    [Documentation]  Instantiate automation composition timeout.
-    ${postyaml}=  Get file  ${CURDIR}/data/ac-instance-timeout.yaml
-    ${tmpInstanceId}=  MakeYamlInstantiateAutomationComposition   ${compositionFromId}   ${postyaml}
-    set Suite variable  ${instanceTimeoutId}    ${tmpInstanceId}
-
-DeployAutomationCompositionTimeout
-    [Documentation]  Deploy automation composition timeout.
-    SetParticipantSimTimeout  ${HTTP_PARTICIPANT_SIM1_IP}
-    SetParticipantSimTimeout  ${HTTP_PARTICIPANT_SIM2_IP}
-    ${postjson}=  Get file  ${CURDIR}/data/DeployAC.json
-    ChangeStatusAutomationComposition  ${compositionFromId}  ${instanceTimeoutId}   ${postjson}
-    Wait Until Keyword Succeeds    5 min    5 sec    VerifyStateChangeResult  ${compositionFromId}  ${instanceTimeoutId}  TIMEOUT
-
-DeleteAutomationCompositionTimeout
-    [Documentation]  Delete automation composition timeout.
-    SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM1_IP}
-    SetParticipantSimSuccess  ${HTTP_PARTICIPANT_SIM2_IP}
-    UndeployAndDeleteAutomationComposition  ${compositionFromId}  ${instanceTimeoutId}
-
 InstantiateAutomationCompositionMigrationFrom
     [Documentation]  Instantiate automation composition migration.
     ${postyaml}=  Get file  ${CURDIR}/data/ac-instance-migration-from.yaml
