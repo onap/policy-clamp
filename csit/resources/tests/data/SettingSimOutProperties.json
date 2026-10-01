@@ -1,0 +1,64 @@
+{
+  "deployProps": {
+    "CUSTOM_DATA": "DEPLOYED"
+  },
+  "undeployProps": {
+    "CUSTOM_DATA": "UNDEPLOYED"
+  },
+  "lockProps": {
+    "CUSTOM_DATA": "LOCKED"
+  },
+  "unlockProps": {
+    "CUSTOM_DATA": "UNLOCKED"
+  },
+  "updateProps": {
+    "CUSTOM_DATA": "Update"
+  },
+  "migrateProps": {
+    "CUSTOM_DATA": "Migrated"
+  },
+  "migratePrecheckProps": {
+    "CUSTOM_DATA": "MigratePrecheck"
+  },
+  "prepareProps": {
+    "CUSTOM_DATA": "Prepare"
+  },
+  "reviewProps": {
+    "CUSTOM_DATA": "Review"
+  },
+  "primeProps": {
+    "CUSTOM_DATA": "PRIMED"
+  },
+  "deprimeProps": {
+    "CUSTOM_DATA": "COMMISSIONED"
+  },
+  "rollbackProps": {
+    "CUSTOM_DATA": "Rollback"
+  },
+  "deploySuccess": true,
+  "undeploySuccess": true,
+  "lockSuccess": true,
+  "unlockSuccess": true,
+  "deleteSuccess": true,
+  "updateSuccess": true,
+  "migrateSuccess": true,
+  "migratePrecheck": true,
+  "prepare": true,
+  "review": true,
+  "rollback": true,
+  "primeSuccess": true,
+  "deprimeSuccess": true,
+  "deployTimerMs": 60,
+  "undeployTimerMs": 60,
+  "lockTimerMs": 60,
+  "unlockTimerMs": 60,
+  "updateTimerMs": 60,
+  "migrateTimerMs": 100,
+  "migratePrecheckTimerMs": 60,
+  "prepareTimerMs": 60,
+  "reviewTimerMs": 60,
+  "deleteTimerMs": 60,
+  "primeTimerMs": 60,
+  "deprimeTimerMs": 60,
+  "rollbackTimerMs": 60
+}

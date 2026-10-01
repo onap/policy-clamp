@@ -232,35 +232,38 @@ VerifyUninstantiated
 SetParticipantSimFail
     [Arguments]  ${domain}
     [Documentation]  Set Participant Simulator Fail.
-    ${auth}=    ParticipantAuth
     ${postjson}=  Get file  ${CURDIR}/data/SettingSimPropertiesFail.json
-    ${resp}=   MakeJsonPutRequest  participant  ${domain}  /onap/policy/simparticipant/v2/parameters  ${postjson}  ${auth}
-    Should Be Equal As Strings    ${resp.status_code}     200
+    SetParticipantConfig  ${domain}  ${postjson}
 
 SetParticipantSimSuccess
     [Arguments]  ${domain}
     [Documentation]  Set Participant Simulator Success.
-    ${auth}=    ParticipantAuth
     ${postjson}=  Get file  ${CURDIR}/data/SettingSimPropertiesSuccess.json
-    ${resp}=   MakeJsonPutRequest  participant  ${domain}  /onap/policy/simparticipant/v2/parameters  ${postjson}  ${auth}
-    Should Be Equal As Strings    ${resp.status_code}     200
+    SetParticipantConfig  ${domain}  ${postjson}
+
+SetParticipantSimOutProperties
+    [Arguments]  ${domain}
+    [Documentation]  Set Participant OutProperties.
+    ${postjson}=  Get file  ${CURDIR}/data/SettingSimOutProperties.json
+    SetParticipantConfig  ${domain}  ${postjson}
 
 SetParticipantSimTimeout
     [Arguments]  ${domain}
     [Documentation]  Set Participant Simulator Timeout.
-    ${auth}=    ParticipantAuth
     ${postjson}=  Get file  ${CURDIR}/data/SettingSimPropertiesTimeout.json
-    ${resp}=   MakeJsonPutRequest  participant  ${domain}  /onap/policy/simparticipant/v2/parameters  ${postjson}  ${auth}
-    Should Be Equal As Strings    ${resp.status_code}     200
+    SetParticipantConfig  ${domain}  ${postjson}
 
 SetParticipantSimDelay
     [Arguments]  ${domain}
     [Documentation]  Set Participant Simulator Delay.
-    ${auth}=    ParticipantAuth
     ${postjson}=  Get file  ${CURDIR}/data/SettingSimPropertiesDelay.json
+    SetParticipantConfig  ${domain}  ${postjson}
+
+SetParticipantConfig
+    [Arguments]  ${domain}  ${postjson}
+    ${auth}=    ParticipantAuth
     ${resp}=   MakeJsonPutRequest  participant  ${domain}  /onap/policy/simparticipant/v2/parameters  ${postjson}  ${auth}
     Should Be Equal As Strings    ${resp.status_code}     200
-
 
 ClampAuth
     ${auth}=    Create List    runtimeUser    zb!XztG34
