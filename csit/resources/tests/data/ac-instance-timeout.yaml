@@ -31,7 +31,12 @@ elements:
       deployTimeoutMs: 200
       undeployTimeoutMs: 150
       updateTimeoutMs: 200
+      updateRollbackTimeoutMs: 200
       migrateTimeoutMs: 200
+      migrateRollbackTimeoutMs: 200
+      migrationPreCheckTimeoutMs: 200
+      prepareTimeoutMs: 200
+      reviewTimeoutMs: 200
       deleteTimeoutMs: 100
       baseUrl: http://address:30800
       httpHeaders:
@@ -61,7 +66,12 @@ elements:
       deployTimeoutMs: 200
       undeployTimeoutMs: 150
       updateTimeoutMs: 200
+      updateRollbackTimeoutMs: 200
       migrateTimeoutMs: 200
+      migrateRollbackTimeoutMs: 200
+      migrationPreCheckTimeoutMs: 200
+      prepareTimeoutMs: 200
+      reviewTimeoutMs: 200
       deleteTimeoutMs: 100
       baseUrl: http://address:30801
       httpHeaders:
@@ -91,7 +101,12 @@ elements:
       deployTimeoutMs: 200
       undeployTimeoutMs: 150
       updateTimeoutMs: 200
+      updateRollbackTimeoutMs: 200
       migrateTimeoutMs: 200
+      migrateRollbackTimeoutMs: 200
+      migrationPreCheckTimeoutMs: 200
+      prepareTimeoutMs: 200
+      reviewTimeoutMs: 200
       deleteTimeoutMs: 100
       baseUrl: http://address:30802
       httpHeaders:
@@ -121,7 +136,12 @@ elements:
       deployTimeoutMs: 200
       undeployTimeoutMs: 150
       updateTimeoutMs: 200
+      updateRollbackTimeoutMs: 200
       migrateTimeoutMs: 200
+      migrateRollbackTimeoutMs: 200
+      migrationPreCheckTimeoutMs: 200
+      prepareTimeoutMs: 200
+      reviewTimeoutMs: 200
       deleteTimeoutMs: 100
       baseUrl: http://address:30803
       httpHeaders:
