@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "725dea45_8692e828",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-10-08T13:44:46Z",
+      "side": 1,
+      "message": "Can we also do the swagger/documentation changes for the api separately. Thanks",
+      "revId": "66ae493f49e2497410338450c265d76534dbd700",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2eaffd45_9d5fd855",
