@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eaffd45_9d5fd855",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/main/handler/SimulatorService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2026-10-08T13:43:13Z",
+      "side": 1,
+      "message": "Typo getpropsFromConfig",
+      "range": {
+        "startLine": 454,
+        "startChar": 61,
+        "endLine": 454,
+        "endChar": 79
+      },
+      "revId": "66ae493f49e2497410338450c265d76534dbd700",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
