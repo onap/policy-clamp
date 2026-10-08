@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,36 @@
 
 package org.onap.policy.clamp.acm.participant.sim.model;
 
+import java.util.Map;
 import lombok.Data;
 
 @Data
 public class SimConfig {
+
+    private Map<String, Object> deployProps;
+
+    private Map<String, Object> undeployProps;
+
+    private Map<String, Object> lockProps;
+
+    private Map<String, Object> unlockProps;
+
+    private Map<String, Object> updateProps;
+
+    private Map<String, Object> migrateProps;
+
+    private Map<String, Object> migratePrecheckProps;
+
+    private Map<String, Object> prepareProps;
+
+    private Map<String, Object> reviewProps;
+
+    private Map<String, Object> primeProps;
+
+    private Map<String, Object> deprimeProps;
+
+    private Map<String, Object> rollbackProps;
+
     private boolean deploySuccess = true;
 
     private boolean undeploySuccess = true;
