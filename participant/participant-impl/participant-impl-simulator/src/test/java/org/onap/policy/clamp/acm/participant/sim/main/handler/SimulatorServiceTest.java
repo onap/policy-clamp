@@ -188,6 +188,7 @@ class SimulatorServiceTest {
         simulatorService.review(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
         simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID(), 0, 1, new HashMap<>());
         simulatorService.migratePrecheck(UUID.randomUUID(), UUID.randomUUID(), new HashMap<>());
+        simulatorService.rollback(UUID.randomUUID(), UUID.randomUUID(), 0,  1, new HashMap<>());
         verify(intermediaryApi, times(0)).sendAcDefinitionInfo(any(), any(), any());
     }
 

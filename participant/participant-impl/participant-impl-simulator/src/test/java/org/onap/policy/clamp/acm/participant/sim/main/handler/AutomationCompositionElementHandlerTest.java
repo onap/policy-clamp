@@ -71,6 +71,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(
             new ElementStateDto(INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.UNDEPLOYED,
                 StateChangeResult.FAILED, "Deploy failed!", INSTANCE_ELEMENT.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.deploy(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
+                StateChangeResult.NO_ERROR, "Deployed", config.getDeployProps()));
     }
 
     @Test
@@ -90,6 +97,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(
             new ElementStateDto(INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
                 StateChangeResult.FAILED, "Undeploy failed!", INSTANCE_ELEMENT.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.undeploy(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
+        verify(intermediaryApi).updateAutomationCompositionElementState(
+            new ElementStateDto(INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.UNDEPLOYED,
+                StateChangeResult.NO_ERROR, "Undeployed", config.getUndeployProps()));
     }
 
     @Test
@@ -109,6 +123,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), null, LockState.UNLOCKED,
             StateChangeResult.FAILED, "Lock failed!", null, null, INSTANCE_ELEMENT.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.lock(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), null, LockState.LOCKED,
+            StateChangeResult.NO_ERROR, "Locked", null, null, config.getLockProps()));
     }
 
     @Test
@@ -128,6 +149,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), null, LockState.LOCKED,
             StateChangeResult.FAILED, "Unlock failed!", null, null, INSTANCE_ELEMENT.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.unlock(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), null, LockState.UNLOCKED,
+            StateChangeResult.NO_ERROR, "Unlocked", null, null, config.getUnlockProps()));
     }
 
     @Test
@@ -150,6 +178,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
             StateChangeResult.FAILED, "Update failed!", instanceElementUpdated.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.update(COMPOSITION_ELEMENT, INSTANCE_ELEMENT, instanceElementUpdated);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
+            StateChangeResult.NO_ERROR, "Updated", config.getUpdateProps()));
     }
 
     @Test
@@ -185,6 +220,12 @@ class AutomationCompositionElementHandlerTest {
         acElementHandler.prime(COMPOSITION);
         verify(intermediaryApi).updateCompositionState(COMPOSITION.compositionId(), AcTypeState.COMMISSIONED,
                 StateChangeResult.FAILED, "Prime failed!", COMPOSITION.outPropertiesMap());
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.prime(COMPOSITION);
+        verify(intermediaryApi).updateCompositionState(COMPOSITION.compositionId(), AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "Primed", Map.of(ELEMENT_DEFINITION_ID, config.getPrimeProps()));
     }
 
     @Test
@@ -202,6 +243,12 @@ class AutomationCompositionElementHandlerTest {
         acElementHandler.deprime(COMPOSITION);
         verify(intermediaryApi).updateCompositionState(COMPOSITION.compositionId(), AcTypeState.PRIMED,
                 StateChangeResult.FAILED, "Deprime failed!", COMPOSITION.outPropertiesMap());
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.deprime(COMPOSITION);
+        verify(intermediaryApi).updateCompositionState(COMPOSITION.compositionId(), AcTypeState.COMMISSIONED,
+            StateChangeResult.NO_ERROR, "Deprimed", Map.of(ELEMENT_DEFINITION_ID, config.getDeprimeProps()));
     }
 
     @Test
@@ -228,6 +275,14 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
             StateChangeResult.FAILED, "Migrate failed!", instanceElementMigrated.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler
+            .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 0);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+            DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Migrated", config.getMigrateProps()));
     }
 
     @Test
@@ -246,6 +301,14 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementStage(new ElementStageDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), "stage 1 Migrated", 2,
             null, null, instanceElementMigrated.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler
+            .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 1);
+        verify(intermediaryApi).updateAutomationCompositionElementStage(new ElementStageDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), "stage 1 Migrated", 2,
+            null, null, config.getMigrateProps()));
     }
 
     @Test
@@ -315,6 +378,14 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
             StateChangeResult.FAILED, "Migration precheck failed", instanceElementMigrated.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.migratePrecheck(COMPOSITION_ELEMENT, compositionElementTarget,
+            INSTANCE_ELEMENT, instanceElementMigrated);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
+            StateChangeResult.NO_ERROR, "Migration precheck completed", config.getMigratePrecheckProps()));
     }
 
     @Test
@@ -334,6 +405,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.UNDEPLOYED,
             StateChangeResult.FAILED, "Prepare failed", INSTANCE_ELEMENT.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.prepare(COMPOSITION_ELEMENT, INSTANCE_ELEMENT, 0);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.UNDEPLOYED,
+            StateChangeResult.NO_ERROR, "Prepare completed", config.getPrepareProps()));
     }
 
     @Test
@@ -352,6 +430,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementStage(new ElementStageDto(
                 instanceElement.instanceId(), instanceElement.elementId(), "stage 1 Prepared", 2,
                 null, null, instanceElement.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.prepare(compositionElement, instanceElement, 1);
+        verify(intermediaryApi).updateAutomationCompositionElementStage(new ElementStageDto(
+                instanceElement.instanceId(), instanceElement.elementId(), "stage 1 Prepared", 2,
+                null, null, config.getPrepareProps()));
     }
 
     @Test
@@ -371,6 +456,13 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
             StateChangeResult.FAILED, "Review failed", INSTANCE_ELEMENT.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.review(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+            INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
+            StateChangeResult.NO_ERROR, "Review completed", config.getReviewProps()));
     }
 
     @Test
@@ -399,6 +491,15 @@ class AutomationCompositionElementHandlerTest {
             INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
             StateChangeResult.FAILED, "Migration rollback failed",
                 instanceElementRollback.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, compositionElementRollback, INSTANCE_ELEMENT,
+                instanceElementRollback, 0);
+        verify(intermediaryApi).updateAutomationCompositionElementState(new ElementStateDto(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), DeployState.DEPLOYED,
+                StateChangeResult.NO_ERROR, "Migration rollback done",
+                config.getRollbackProps()));
     }
 
     @Test
@@ -417,6 +518,14 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementStage(new ElementStageDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), "stage 2 Migration rollback", 1,
                 null, null, instanceElementRollback.outProperties()));
+
+        config = CommonTestData.createSimConfigWithProps();
+        simulatorService.setConfig(config);
+        acElementHandler.rollbackMigration(COMPOSITION_ELEMENT, compositionElementRollback, INSTANCE_ELEMENT,
+                instanceElementRollback, 2);
+        verify(intermediaryApi).updateAutomationCompositionElementStage(new ElementStageDto(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), "stage 2 Migration rollback", 1,
+                null, null, config.getRollbackProps()));
     }
 
     @Test

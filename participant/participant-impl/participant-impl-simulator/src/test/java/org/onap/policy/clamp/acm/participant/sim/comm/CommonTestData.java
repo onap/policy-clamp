@@ -31,8 +31,11 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.dto.CompositionDto;
 import org.onap.policy.common.utils.coder.MapperFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -41,6 +44,7 @@ public class CommonTestData {
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
     private static final ObjectMapper MAPPER = MapperFactory.createJsonMapper();
+    public static final String CUSTOM_DATA = "CUSTOM_DATA";
 
     /**
      * Get ParticipantSimParameters.
@@ -149,6 +153,40 @@ public class CommonTestData {
      */
     public static SimConfig createSimConfig() {
         var config = new SimConfig();
+        config.setPrepareTimerMs(1);
+        config.setDeployTimerMs(1);
+        config.setReviewTimerMs(1);
+        config.setUndeployTimerMs(1);
+        config.setLockTimerMs(1);
+        config.setUnlockTimerMs(1);
+        config.setUpdateTimerMs(1);
+        config.setDeleteTimerMs(1);
+        config.setPrimeTimerMs(1);
+        config.setDeprimeTimerMs(1);
+        config.setMigrateTimerMs(1);
+        config.setMigratePrecheckTimerMs(1);
+        return config;
+    }
+
+    /**
+     * Create a new SimConfig with Props.
+     *
+     * @return a new SimConfig
+     */
+    public static SimConfig createSimConfigWithProps() {
+        var config = new SimConfig();
+        config.setDeployProps(Map.of(CUSTOM_DATA, DeployState.DEPLOYED.name()));
+        config.setUndeployProps(Map.of(CUSTOM_DATA, DeployState.UNDEPLOYED.name()));
+        config.setLockProps(Map.of(CUSTOM_DATA, LockState.LOCKED.name()));
+        config.setUnlockProps(Map.of(CUSTOM_DATA, LockState.UNLOCKED.name()));
+        config.setUpdateProps(Map.of(CUSTOM_DATA, "Update"));
+        config.setMigrateProps(Map.of(CUSTOM_DATA, "Migrated"));
+        config.setRollbackProps(Map.of(CUSTOM_DATA, "Rollback"));
+        config.setMigratePrecheckProps(Map.of(CUSTOM_DATA, "MigratePrecheck"));
+        config.setPrepareProps(Map.of(CUSTOM_DATA, "Prepare"));
+        config.setReviewProps(Map.of(CUSTOM_DATA, "Review"));
+        config.setPrimeProps(Map.of(CUSTOM_DATA, AcTypeState.PRIMED));
+        config.setDeprimeProps(Map.of(CUSTOM_DATA, AcTypeState.COMMISSIONED));
         config.setPrepareTimerMs(1);
         config.setDeployTimerMs(1);
         config.setReviewTimerMs(1);

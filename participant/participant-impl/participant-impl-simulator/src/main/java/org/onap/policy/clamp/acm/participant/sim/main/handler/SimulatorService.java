@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -219,7 +220,9 @@ public class SimulatorService {
      * @param outProperties the outProperties
      */
     public void deploy(UUID instanceId, UUID elementId, Map<String, Object> outProperties) {
-        sendAcInternalState(instanceId, elementId, outProperties, DeployState.DEPLOYING);
+        if (config.getDeployProps() == null) {
+            sendAcInternalState(instanceId, elementId, outProperties, DeployState.DEPLOYING);
+        }
 
         if (isInterrupted(getConfig().getDeployTimerMs(),
             "Current Thread deploy is Interrupted during execution {}", elementId)) {
@@ -228,8 +231,10 @@ public class SimulatorService {
 
         if (getConfig().isDeploySuccess()) {
             outProperties.put(INTERNAL_STATE, DeployState.DEPLOYED.name());
+            var props = config.getDeployProps() != null ? config.getDeployProps() : outProperties;
+
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceId, elementId,
-                    DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Deployed", outProperties));
+                    DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Deployed", props));
         } else {
             outProperties.put(INTERNAL_STATE, DeployState.UNDEPLOYED.name());
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceId, elementId,
@@ -245,7 +250,9 @@ public class SimulatorService {
      * @param outProperties the outProperties
      */
     public void undeploy(UUID instanceId, UUID elementId, Map<String, Object> outProperties) {
-        sendAcInternalState(instanceId, elementId, outProperties, DeployState.UNDEPLOYING);
+        if (config.getUndeployProps() == null) {
+            sendAcInternalState(instanceId, elementId, outProperties, DeployState.UNDEPLOYING);
+        }
 
         if (isInterrupted(getConfig().getUndeployTimerMs(),
             "Current Thread undeploy is Interrupted during execution {}", elementId)) {
@@ -254,9 +261,10 @@ public class SimulatorService {
 
         if (getConfig().isUndeploySuccess()) {
             outProperties.put(INTERNAL_STATE, DeployState.UNDEPLOYED);
+            var props = config.getUndeployProps() != null ? config.getUndeployProps() : outProperties;
 
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceId, elementId,
-                DeployState.UNDEPLOYED, StateChangeResult.NO_ERROR, "Undeployed", outProperties));
+                DeployState.UNDEPLOYED, StateChangeResult.NO_ERROR, "Undeployed", props));
         } else {
             outProperties.put(INTERNAL_STATE, DeployState.DEPLOYED);
 
@@ -279,13 +287,14 @@ public class SimulatorService {
         }
 
         if (getConfig().isLockSuccess()) {
+            var props = config.getLockProps() != null ? config.getLockProps() : outProperties;
             intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
                             .instance(instanceId)
                             .elementId(elementId)
                             .lockState(LockState.LOCKED)
                             .stateChangeResult(StateChangeResult.NO_ERROR)
                             .message("Locked")
-                            .outProperties(outProperties)
+                            .outProperties(props)
                     .build());
         } else {
             intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
@@ -312,13 +321,14 @@ public class SimulatorService {
         }
 
         if (getConfig().isUnlockSuccess()) {
+            var props = config.getUnlockProps() != null ? config.getUnlockProps() : outProperties;
             intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
                     .instance(instanceId)
                     .elementId(elementId)
                     .lockState(LockState.UNLOCKED)
                     .stateChangeResult(StateChangeResult.NO_ERROR)
                     .message("Unlocked")
-                    .outProperties(outProperties).build());
+                    .outProperties(props).build());
         } else {
             intermediaryApi.updateAutomationCompositionElementState(ElementStateDto.builder()
                     .instance(instanceId)
@@ -400,9 +410,10 @@ public class SimulatorService {
         }
 
         if (getConfig().isUpdateSuccess()) {
+            var props = config.getUpdateProps() != null ? config.getUpdateProps() : outProperties;
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                 instanceId, elementId, DeployState.DEPLOYED, StateChangeResult.NO_ERROR,
-                "Updated", outProperties));
+                "Updated", props));
         } else {
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                 instanceId, elementId, DeployState.DEPLOYED, StateChangeResult.FAILED,
@@ -423,8 +434,10 @@ public class SimulatorService {
 
         if (getConfig().isPrimeSuccess()) {
             updateCompositionOutProperties(composition, AcTypeState.PRIMED.name());
+            var props = config.getPrimeProps() != null ? getPropsFormConfig(composition, config.getPrimeProps())
+                    : composition.outPropertiesMap();
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
-                StateChangeResult.NO_ERROR, "Primed", composition.outPropertiesMap());
+                StateChangeResult.NO_ERROR, "Primed", props);
         } else {
             updateCompositionOutProperties(composition, AcTypeState.COMMISSIONED.name());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
@@ -436,6 +449,15 @@ public class SimulatorService {
         for (var elementEntry : composition.outPropertiesMap().entrySet()) {
             elementEntry.getValue().put(INTERNAL_STATE, data);
         }
+    }
+
+    private Map<ToscaConceptIdentifier, Map<String, Object>> getPropsFormConfig(
+            CompositionDto composition, Map<String, Object> props) {
+        Map<ToscaConceptIdentifier, Map<String, Object>> result = new HashMap<>();
+        for (var elementEntry : composition.outPropertiesMap().entrySet()) {
+            result.put(elementEntry.getKey(), props);
+        }
+        return result;
     }
 
     /**
@@ -451,8 +473,10 @@ public class SimulatorService {
 
         if (getConfig().isDeprimeSuccess()) {
             updateCompositionOutProperties(composition, AcTypeState.COMMISSIONED.name());
+            var props = config.getDeprimeProps() != null ? getPropsFormConfig(composition, config.getDeprimeProps())
+                    : composition.outPropertiesMap();
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
-                StateChangeResult.NO_ERROR, "Deprimed", composition.outPropertiesMap());
+                StateChangeResult.NO_ERROR, "Deprimed", props);
         } else {
             updateCompositionOutProperties(composition, AcTypeState.PRIMED.name());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
@@ -481,13 +505,14 @@ public class SimulatorService {
             @SuppressWarnings("unchecked")
             var stageList = (List<Integer>) outProperties.get(MIGRATION_PROPERTY);
             stageList.add(stage);
+            var props = config.getMigrateProps() != null ? config.getMigrateProps() : outProperties;
             if (nextStage == stage) {
                 intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceId, elementId,
-                    DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Migrated", outProperties));
+                    DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Migrated", props));
             } else {
                 var msg = String.format(STAGE_MSG, stage, "Migrated");
                 intermediaryApi.updateAutomationCompositionElementStage(new ElementStageDto(
-                    instanceId, elementId, msg, nextStage, null, null, outProperties));
+                    instanceId, elementId, msg, nextStage, null, null, props));
             }
         } else {
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
@@ -510,9 +535,10 @@ public class SimulatorService {
         }
 
         if (config.isMigratePrecheck()) {
+            var props = config.getMigratePrecheckProps() != null ? config.getMigratePrecheckProps() : outProperties;
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                 instanceId, elementId, DeployState.DEPLOYED, StateChangeResult.NO_ERROR,
-                "Migration precheck completed", outProperties));
+                "Migration precheck completed", props));
         } else {
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                 instanceId, elementId, DeployState.DEPLOYED, StateChangeResult.FAILED,
@@ -540,14 +566,15 @@ public class SimulatorService {
             @SuppressWarnings("unchecked")
             var stageList = (List<Integer>) outProperties.get(PREPARE_PROPERTY);
             stageList.add(stage);
+            var props = config.getPrepareProps() != null ? config.getPrepareProps() : outProperties;
             if (nextStage == stage) {
                 intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                     instanceId, elementId, DeployState.UNDEPLOYED, StateChangeResult.NO_ERROR,
-                    "Prepare completed", outProperties));
+                    "Prepare completed", props));
             } else {
                 var msg = String.format(STAGE_MSG, stage, "Prepared");
                 intermediaryApi.updateAutomationCompositionElementStage(new ElementStageDto(
-                    instanceId, elementId, msg, nextStage, outProperties));
+                    instanceId, elementId, msg, nextStage, props));
             }
         } else {
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
@@ -570,8 +597,9 @@ public class SimulatorService {
         }
 
         if (config.isReview()) {
+            var props = config.getReviewProps() != null ? config.getReviewProps() : outProperties;
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceId, elementId,
-                DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Review completed", outProperties));
+                DeployState.DEPLOYED, StateChangeResult.NO_ERROR, "Review completed", props));
         } else {
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(instanceId, elementId,
                 DeployState.DEPLOYED, StateChangeResult.FAILED, "Review failed", outProperties));
@@ -585,10 +613,10 @@ public class SimulatorService {
      * @param elementId               the elementId
      * @param stage                   the stage
      * @param nextStage               the next stage
-     * @param instanceOutProperties   in Properties from instance element
+     * @param outProperties   in Properties from instance element
      */
     public void rollback(UUID instanceId, UUID elementId, int stage, int nextStage,
-            Map<String, Object> instanceOutProperties) {
+            Map<String, Object> outProperties) {
         if (isInterrupted(getConfig().getRollbackTimerMs(),
             "Current Thread for rollback was Interrupted during execution {}", instanceId)) {
             LOGGER.debug("Rollback interrupted");
@@ -596,23 +624,24 @@ public class SimulatorService {
         }
 
         if (config.isRollback()) {
-            instanceOutProperties.putIfAbsent(ROLLBACK_PROPERTY, new ArrayList<>());
+            outProperties.putIfAbsent(ROLLBACK_PROPERTY, new ArrayList<>());
             @SuppressWarnings("unchecked")
-            var stageList = (List<Integer>) instanceOutProperties.get(ROLLBACK_PROPERTY);
+            var stageList = (List<Integer>) outProperties.get(ROLLBACK_PROPERTY);
             stageList.add(stage);
+            var props = config.getRollbackProps() != null ? config.getRollbackProps() : outProperties;
             if (nextStage == stage) {
                 intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                     instanceId, elementId, DeployState.DEPLOYED, StateChangeResult.NO_ERROR,
-                    "Migration rollback done", instanceOutProperties));
+                    "Migration rollback done", props));
             } else {
                 var msg = String.format(STAGE_MSG, stage, "Migration rollback");
                 intermediaryApi.updateAutomationCompositionElementStage(new ElementStageDto(
-                    instanceId, elementId, msg, nextStage, instanceOutProperties));
+                    instanceId, elementId, msg, nextStage, props));
             }
         } else {
             intermediaryApi.updateAutomationCompositionElementState(new ElementStateDto(
                 instanceId, elementId, DeployState.DEPLOYED, StateChangeResult.FAILED,
-                "Migration rollback failed", instanceOutProperties));
+                "Migration rollback failed", outProperties));
         }
     }
 }
