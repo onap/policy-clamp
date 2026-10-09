@@ -92,8 +92,8 @@ public class DocToscaTopologyTemplate
     public void fromAuthorative(ToscaTopologyTemplate toscaTopologyTemplate) {
         description = toscaTopologyTemplate.getDescription();
 
-        if (toscaTopologyTemplate.getInputs() != null) {
-            inputs = PfUtils.mapMap(toscaTopologyTemplate.getInputs(), DocToscaParameter::new);
+        inputs = PfUtils.mapMap(toscaTopologyTemplate.getInputs(), DocToscaParameter::new);
+        if (inputs != null) {
             for (var entry : inputs.entrySet()) {
                 if (entry.getValue().getName() == null) {
                     entry.getValue().setName(entry.getKey());
