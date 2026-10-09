@@ -42,7 +42,7 @@ paths:
           format: uuid
       responses:
         200:
-          description: OK, reutrns a serialised instance of
+          description: OK, returns a serialised instance of
             [ChartList](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/models/ChartList.java)
           headers:
             api-version:

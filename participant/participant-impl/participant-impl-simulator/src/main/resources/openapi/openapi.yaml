@@ -59,7 +59,7 @@ paths:
           format: uuid
       responses:
         200:
-          description: OK, reutrns a serialised instance of
+          description: OK, returns a serialised instance of
             [SimConfig](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/SimConfig.java)
           headers:
             X-LatestVersion:
