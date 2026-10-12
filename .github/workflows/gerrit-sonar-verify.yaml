@@ -110,7 +110,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         # yamllint disable-line rule:line-length
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed  # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25  # v2.22.1
         with:
           egress-policy: audit
       - name: 'Clear votes'
@@ -137,7 +137,7 @@ jobs:
     permissions:
       contents: read
     # yamllint disable-line rule:line-length
-    uses: lfreleng-actions/security-workflows/.github/workflows/sonarqube-cloud.yaml@4da5165382f8ca9b5ef0270caa343be4a63493d5  # v0.9.2
+    uses: lfreleng-actions/security-workflows/.github/workflows/sonarqube-cloud.yaml@6c2ced2c9310a4f2606ad29a464e9f2d8fd397b8  # v0.9.3
     with:
       # Same SonarCloud project the Jenkins jobs report to, so the
       # migration does not fork the analysis history.
@@ -240,7 +240,7 @@ jobs:
     steps:
       - name: 'Harden runner'
         # yamllint disable-line rule:line-length
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed  # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25  # v2.22.1
         with:
           egress-policy: audit
       - name: 'Get workflow conclusion'
