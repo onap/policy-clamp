@@ -72,3 +72,5 @@ server:
     enabled: false
   servlet:
     context-path: /onap/policy/simparticipant
+
+basicAuth: ${BASIC_AUTH:true}
