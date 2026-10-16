@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024,2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
@@ -40,7 +41,7 @@ class StringToServiceTemplateConverterTest {
         var stringToServiceTemplateConverter = new StringToServiceTemplateConverter();
         var dbData  = stringToServiceTemplateConverter.convertToDatabaseColumn(docServiceTemplate);
         var result = stringToServiceTemplateConverter.convertToEntityAttribute(dbData);
-        assertThat(docServiceTemplate.compareTo(result)).isEqualByComparingTo(0);
+        assertEquals(docServiceTemplate.toString(), result.toString());
     }
 
     @Test

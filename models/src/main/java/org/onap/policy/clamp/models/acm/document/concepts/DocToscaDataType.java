@@ -70,16 +70,4 @@ public class DocToscaDataType extends DocToscaWithToscaProperties<ToscaDataType>
 
         constraints = PfUtils.mapList(toscaDataType.getConstraints(), DocToscaConstraint::new);
     }
-
-    @Override
-    public int compareTo(DocToscaEntity<ToscaDataType> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaDataType) otherConcept;
-
-        return PfUtils.compareCollections(constraints, other.constraints);
-    }
 }

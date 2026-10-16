@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,41 +36,26 @@ class DocToscaTopologyTemplateTest {
 
     @Test
     void testToscaTopologyTemplate() {
-        var topologyTemplate =  new ToscaTopologyTemplate();
-        var doc = new DocToscaTopologyTemplate(topologyTemplate);
-        assertThat(doc)
-                .isNotEqualByComparingTo(null)
-                .isEqualByComparingTo(doc);
-        var doc2 = new DocToscaTopologyTemplate(doc);
-        assertThat(doc).isEqualByComparingTo(doc2);
-
         var nodeTemplate = new ToscaNodeTemplate();
         nodeTemplate.setType("type");
         nodeTemplate.setTypeVersion("1.0.0");
+        var topologyTemplate =  new ToscaTopologyTemplate();
         topologyTemplate.setNodeTemplates(Map.of(NAME, nodeTemplate));
+        var doc = new DocToscaTopologyTemplate(topologyTemplate);
         doc = new DocToscaTopologyTemplate(topologyTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        var doc2 = new DocToscaTopologyTemplate(doc);
         doc2.setNodeTemplates(doc.getNodeTemplates());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         var toscaPolicy = new ToscaPolicy();
         toscaPolicy.setType("type");
         toscaPolicy.setTypeVersion("1.0.0");
         topologyTemplate.setPolicies(List.of(Map.of(NAME, toscaPolicy)));
         doc = new DocToscaTopologyTemplate(topologyTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setPolicies(doc.getPolicies());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         topologyTemplate.setInputs(Map.of(NAME, new ToscaParameter()));
         doc = new DocToscaTopologyTemplate(topologyTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setInputs(doc.getInputs());
-        assertThat(doc).isEqualByComparingTo(doc2);
-        var docParameter = doc.getInputs().get(NAME);
-        assertThat(docParameter)
-                .isNotEqualByComparingTo(null)
-                .isEqualByComparingTo(docParameter);
 
         doc2 = new DocToscaTopologyTemplate(doc);
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());

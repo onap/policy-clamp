@@ -90,21 +90,4 @@ public class DocToscaNodeTemplate extends DocToscaWithTypeAndStringProperties<To
 
         capabilities = DocUtil.mapToDocMap(toscaNodeTemplate.getCapabilities(), DocToscaCapabilityAssignment::new);
     }
-
-    @Override
-    public int compareTo(DocToscaEntity<ToscaNodeTemplate> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaNodeTemplate) otherConcept;
-
-        result = DocUtil.compareCollections(requirements, other.requirements);
-        if (result != 0) {
-            return result;
-        }
-
-        return DocUtil.compareMaps(capabilities, other.capabilities);
-    }
 }

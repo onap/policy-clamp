@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022,2024-2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2022,2024-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaRequirement;
 
 @Data
@@ -93,32 +92,5 @@ public class DocToscaRequirement extends DocToscaWithTypeAndStringProperties<Tos
         if (toscaRequirement.getOccurrences() != null) {
             occurrences = new ArrayList<>(toscaRequirement.getOccurrences());
         }
-    }
-
-    @Override
-    public int compareTo(DocToscaEntity<ToscaRequirement> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaRequirement) otherConcept;
-
-        result = PfUtils.compareObjects(capability, other.capability);
-        if (result != 0) {
-            return result;
-        }
-
-        result = PfUtils.compareObjects(node, other.node);
-        if (result != 0) {
-            return result;
-        }
-
-        result = PfUtils.compareObjects(relationship, other.relationship);
-        if (result != 0) {
-            return result;
-        }
-
-        return PfUtils.compareCollections(occurrences, other.occurrences);
     }
 }
