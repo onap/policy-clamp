@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfUtils;
@@ -38,7 +37,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
 @Data
 @NoArgsConstructor
-public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializable, Comparable<DocToscaProperty> {
+public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -147,65 +146,5 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
         }
 
         metadata = PfUtils.mapMap(toscaProperty.getMetadata(), metadataItem -> metadataItem);
-    }
-
-    @Override
-    public int compareTo(DocToscaProperty otherConcept) {
-        if (otherConcept == null) {
-            return -1;
-        }
-        if (this == otherConcept) {
-            return 0;
-        }
-
-        int result = name.compareTo(otherConcept.name);
-        if (result != 0) {
-            return result;
-        }
-
-        return compareFields(otherConcept);
-    }
-
-    /**
-     * Compare the fields of this ToscaProperty object with the fields of the other ToscaProperty object.
-     *
-     * @param other the other ToscaProperty object
-     */
-    private int compareFields(final DocToscaProperty other) {
-        if (!type.equals(other.type)) {
-            return type.compareTo(other.type);
-        }
-
-        int result = ObjectUtils.compare(description, other.description);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(required, other.required);
-        if (result != 0) {
-            return result;
-        }
-
-        result = PfUtils.compareObjects(defaultValue, other.defaultValue);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(status, other.status);
-        if (result != 0) {
-            return result;
-        }
-
-        result = PfUtils.compareCollections(constraints, other.constraints);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(entrySchema, other.entrySchema);
-        if (result != 0) {
-            return result;
-        }
-
-        return PfUtils.compareMaps(metadata, other.metadata);
     }
 }

@@ -28,12 +28,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaParameter;
 
 @Data
 @NoArgsConstructor
-public class DocToscaParameter implements PfAuthorative<ToscaParameter>, Serializable, Comparable<DocToscaParameter> {
+public class DocToscaParameter implements PfAuthorative<ToscaParameter>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -96,22 +95,5 @@ public class DocToscaParameter implements PfAuthorative<ToscaParameter>, Seriali
         }
 
         value = toscaParameter.getValue();
-    }
-
-    @Override
-    public int compareTo(DocToscaParameter otherConcept) {
-        if (otherConcept == null) {
-            return -1;
-        }
-        if (this == otherConcept) {
-            return 0;
-        }
-
-        int result = name.compareTo(otherConcept.name);
-        if (result != 0) {
-            return result;
-        }
-
-        return PfUtils.compareObjects(value, otherConcept.value);
     }
 }

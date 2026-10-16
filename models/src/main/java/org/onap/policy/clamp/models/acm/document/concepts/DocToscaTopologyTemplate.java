@@ -29,7 +29,6 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfUtils;
@@ -38,8 +37,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
-public class DocToscaTopologyTemplate
-        implements PfAuthorative<ToscaTopologyTemplate>, Serializable, Comparable<DocToscaTopologyTemplate> {
+public class DocToscaTopologyTemplate implements PfAuthorative<ToscaTopologyTemplate>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -105,41 +103,5 @@ public class DocToscaTopologyTemplate
 
         policies =
                 DocUtil.listToDocMap(toscaTopologyTemplate.getPolicies(), DocToscaPolicy::new, new LinkedHashMap<>());
-    }
-
-    @Override
-    public int compareTo(DocToscaTopologyTemplate otherConcept) {
-        int result = compareToWithoutEntities(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        result = DocUtil.compareMaps(inputs, otherConcept.inputs);
-        if (result != 0) {
-            return result;
-        }
-
-        result = DocUtil.compareMaps(nodeTemplates, otherConcept.nodeTemplates);
-        if (result != 0) {
-            return result;
-        }
-        return DocUtil.compareMaps(policies, otherConcept.policies);
-    }
-
-    /**
-     * Compare this topology template to another topology template, ignoring contained entities.
-     *
-     * @param otherConcept the other topology template
-     * @return the result of the comparison
-     */
-    public int compareToWithoutEntities(final DocToscaTopologyTemplate otherConcept) {
-        if (otherConcept == null) {
-            return -1;
-        }
-        if (this == otherConcept) {
-            return 0;
-        }
-
-        return ObjectUtils.compare(description, otherConcept.description);
     }
 }

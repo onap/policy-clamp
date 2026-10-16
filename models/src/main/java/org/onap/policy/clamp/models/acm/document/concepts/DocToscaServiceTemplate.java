@@ -28,7 +28,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfUtils;
@@ -157,58 +156,5 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
         if (toscaServiceTemplate.getToscaTopologyTemplate() != null) {
             toscaTopologyTemplate = new DocToscaTopologyTemplate(toscaServiceTemplate.getToscaTopologyTemplate());
         }
-    }
-
-    @Override
-    public int compareTo(DocToscaEntity<ToscaServiceTemplate> otherConcept) {
-        int result = compareToWithoutEntities(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaServiceTemplate) otherConcept;
-
-        result = DocUtil.compareMaps(dataTypes, other.dataTypes);
-        if (result != 0) {
-            return result;
-        }
-
-        result = DocUtil.compareMaps(capabilityTypes, other.capabilityTypes);
-        if (result != 0) {
-            return result;
-        }
-
-        result = DocUtil.compareMaps(relationshipTypes, other.relationshipTypes);
-        if (result != 0) {
-            return result;
-        }
-
-        result = DocUtil.compareMaps(nodeTypes, other.nodeTypes);
-        if (result != 0) {
-            return result;
-        }
-
-        result = DocUtil.compareMaps(policyTypes, other.policyTypes);
-        if (result != 0) {
-            return result;
-        }
-
-        return ObjectUtils.compare(toscaTopologyTemplate, other.toscaTopologyTemplate);
-    }
-
-    /**
-     * Compare this service template to another service template, ignoring contained entities.
-     *
-     * @param otherConcept the other topology template
-     * @return the result of the comparison
-     */
-    public int compareToWithoutEntities(final DocToscaEntity<ToscaServiceTemplate> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaServiceTemplate) otherConcept;
-        return ObjectUtils.compare(toscaDefinitionsVersion, other.toscaDefinitionsVersion);
     }
 }

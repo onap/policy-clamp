@@ -87,21 +87,4 @@ public class DocToscaCapabilityAssignment extends DocToscaWithTypeAndStringPrope
         attributes = PfUtils.mapMap(toscaCapabilityAssignment.getAttributes(), attribute -> attribute);
         occurrences = PfUtils.mapList(toscaCapabilityAssignment.getOccurrences(), occurrence -> occurrence);
     }
-
-    @Override
-    public int compareTo(DocToscaEntity<ToscaCapabilityAssignment> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaCapabilityAssignment) otherConcept;
-
-        result = PfUtils.compareMaps(attributes, other.attributes);
-        if (result != 0) {
-            return result;
-        }
-
-        return PfUtils.compareCollections(occurrences, other.occurrences);
-    }
 }

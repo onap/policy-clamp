@@ -73,16 +73,4 @@ public class DocToscaNodeType extends DocToscaWithToscaProperties<ToscaNodeType>
         requirements = PfUtils.mapList(toscaNodeType.getRequirements(),
                 map -> DocUtil.mapToDocMap(map, DocToscaRequirement::new));
     }
-
-    @Override
-    public int compareTo(DocToscaEntity<ToscaNodeType> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaNodeType) otherConcept;
-
-        return PfUtils.compareCollections(requirements, other.requirements);
-    }
 }

@@ -30,18 +30,16 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfNameVersion;
-import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
 public abstract class DocToscaEntity<T extends ToscaEntity>
-        implements PfNameVersion, PfAuthorative<T>, Serializable, Comparable<DocToscaEntity<T>> {
+        implements PfNameVersion, PfAuthorative<T>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -111,35 +109,5 @@ public abstract class DocToscaEntity<T extends ToscaEntity>
         }
 
         metadata = toscaEntity.getMetadata();
-    }
-
-    @Override
-    public int compareTo(final DocToscaEntity<T> otherConcept) {
-        if (otherConcept == null) {
-            return -1;
-        }
-        if (this == otherConcept) {
-            return 0;
-        }
-        if (getClass() != otherConcept.getClass()) {
-            return getClass().getName().compareTo(otherConcept.getClass().getName());
-        }
-
-        int result = PfUtils.getKey(this).asIdentifier().compareTo(PfUtils.getKey(otherConcept).asIdentifier());
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(derivedFrom, otherConcept.derivedFrom);
-        if (result != 0) {
-            return result;
-        }
-
-        result = PfUtils.compareMaps(metadata, otherConcept.metadata);
-        if (result != 0) {
-            return result;
-        }
-
-        return ObjectUtils.compare(description, otherConcept.description);
     }
 }
