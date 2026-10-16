@@ -29,7 +29,6 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaWithToscaProperties;
 
@@ -74,17 +73,5 @@ public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> ext
                 properties.put(toscaPropertyEntry.getKey(), jpaProperty);
             }
         }
-    }
-
-    @Override
-    public int compareTo(final DocToscaEntity<T> otherConcept) {
-        int result = super.compareTo(otherConcept);
-        if (result != 0) {
-            return result;
-        }
-
-        final var other = (DocToscaWithToscaProperties<T>) otherConcept;
-
-        return DocUtil.compareMaps(properties, other.properties);
     }
 }

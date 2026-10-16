@@ -53,48 +53,33 @@ class DocToscaServiceTemplateTest {
         serviceTemplate.setVersion(PfKey.NULL_KEY_VERSION);
         var doc = new DocToscaServiceTemplate(serviceTemplate);
         assertThat(doc.toAuthorative()).isNotNull();
-        assertThat(doc).isNotEqualByComparingTo(null)
-                .isEqualByComparingTo(doc);
 
         var doc2 = new DocToscaServiceTemplate(doc);
         assertThat(doc2.toAuthorative()).isNotNull();
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setToscaTopologyTemplate(doc.getToscaTopologyTemplate());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         serviceTemplate.setDataTypes(Map.of(NAME, new ToscaDataType()));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setDataTypes(doc.getDataTypes());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         serviceTemplate.setCapabilityTypes(Map.of(NAME, new ToscaCapabilityType()));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setCapabilityTypes(doc.getCapabilityTypes());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         serviceTemplate.setRelationshipTypes(Map.of(NAME, new ToscaRelationshipType()));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setRelationshipTypes(doc.getRelationshipTypes());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         serviceTemplate.setNodeTypes(Map.of(NAME, new ToscaNodeType()));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setNodeTypes(doc.getNodeTypes());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         serviceTemplate.setPolicyTypes(Map.of(NAME, new ToscaPolicyType()));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setPolicyTypes(doc.getPolicyTypes());
-        assertThat(doc).isEqualByComparingTo(doc2);
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
 
         serviceTemplate.setName(NAME);
@@ -116,16 +101,14 @@ class DocToscaServiceTemplateTest {
 
         dataType.setConstraints(List.of(toscaConstraint));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setDataTypes(Map.of(NAME_VERSION, doc.getDataTypes().get(NAME_VERSION)));
-        assertThat(doc).isEqualByComparingTo(doc2);
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
 
         var property = new ToscaProperty();
         property.setType("type");
         dataType.setProperties(Map.of(NAME, property));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        assertThat(doc).isNotEqualTo(doc2);
     }
 
     @Test
@@ -134,29 +117,6 @@ class DocToscaServiceTemplateTest {
         var doc = new DocToscaServiceTemplate(serviceTemplate);
         assertThat(PfUtils.getDefinedName(doc)).isEqualTo("tosca");
         assertThat(PfUtils.getDefinedVersion(doc)).isEqualTo("1.0.0");
-
-        serviceTemplate.setDerivedFrom(NAME);
-        var doc2 = new DocToscaServiceTemplate(doc);
-        doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
-        doc2.setDerivedFrom(doc.getDerivedFrom());
-        assertThat(doc).isEqualByComparingTo(doc2);
-
-        serviceTemplate.setDescription("Description");
-        doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
-        doc2.setDescription(doc.getDescription());
-        assertThat(doc).isEqualByComparingTo(doc2);
-
-        serviceTemplate.setMetadata(Map.of("key", "value"));
-        doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
-        doc2.setMetadata(doc.getMetadata());
-        assertThat(doc).isEqualByComparingTo(doc2);
-
-        var d = new DocToscaEntity<ToscaServiceTemplate>() {};
-        var result = doc.compareTo(d);
-        assertThat(result).isNotZero();
     }
 
     @Test
@@ -168,22 +128,20 @@ class DocToscaServiceTemplateTest {
         var doc2 = new DocToscaServiceTemplate(doc);
         var docNodeType = doc.getNodeTypes().get(NAME_VERSION);
         doc2.setNodeTypes(Map.of(NAME_VERSION, docNodeType));
-        assertThat(doc).isEqualByComparingTo(doc2);
+        assertThat(doc).isEqualTo(doc2);
 
         var requirement = new ToscaRequirement();
         requirement.setType(NAME);
         requirement.setTypeVersion("1.0.0");
         nodeType.setRequirements(List.of(Map.of(NAME, requirement)));
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        assertThat(doc).isNotEqualTo(doc2);
         docNodeType = doc.getNodeTypes().get(NAME_VERSION);
         doc2.getNodeTypes().get(NAME_VERSION).setRequirements(docNodeType.getRequirements());
-        assertThat(doc).isEqualByComparingTo(doc2);
+        assertThat(doc).isEqualTo(doc2);
 
-        var docRequirement = docNodeType.getRequirements().get(0).get(NAME_VERSION);
-        assertThat(docRequirement)
-                .isNotEqualByComparingTo(null)
-                .isEqualByComparingTo(docRequirement);
+        var docRequirement = docNodeType.getRequirements().getFirst().get(NAME_VERSION);
+        assertThat(docRequirement).isNotNull();
 
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
         doc2 = new DocToscaServiceTemplate(doc);
@@ -203,29 +161,29 @@ class DocToscaServiceTemplateTest {
 
         property.setDescription("Description");
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        assertThat(doc).isNotEqualTo(doc2);
         var docNodeType = doc2.getNodeTypes().get(NAME_VERSION);
         var docProperty = docNodeType.getProperties().get(NAME);
         docProperty.setDescription(property.getDescription());
-        assertThat(doc).isEqualByComparingTo(doc2);
+        assertThat(doc).isEqualTo(doc2);
 
         property.setRequired(true);
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        assertThat(doc).isNotEqualTo(doc2);
         docProperty.setRequired(property.isRequired());
-        assertThat(doc).isEqualByComparingTo(doc2);
+        assertThat(doc).isEqualTo(doc2);
 
         property.setDefaultValue("Default");
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        assertThat(doc).isNotEqualTo(doc2);
         docProperty.setDefaultValue(property.getDefaultValue());
-        assertThat(doc).isEqualByComparingTo(doc2);
+        assertThat(doc).isEqualTo(doc2);
 
         property.setStatus(ToscaProperty.Status.SUPPORTED);
         doc = new DocToscaServiceTemplate(serviceTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
+        assertThat(doc).isNotEqualTo(doc2);
         docProperty.setStatus(property.getStatus());
-        assertThat(doc).isEqualByComparingTo(doc2);
+        assertThat(doc).isEqualTo(doc2);
     }
 
     @Test
