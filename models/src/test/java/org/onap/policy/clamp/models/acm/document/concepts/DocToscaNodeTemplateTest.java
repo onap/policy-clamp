@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
+ *  Copyright (C) 2025-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,40 +41,28 @@ class DocToscaNodeTemplateTest {
         var nodeTemplate = new ToscaNodeTemplate();
         nodeTemplate.setType(TYPE);
         nodeTemplate.setTypeVersion(VERSION);
-        var doc = new DocToscaNodeTemplate(nodeTemplate);
-        assertThat(doc)
-                .isNotEqualByComparingTo(null)
-                .isEqualByComparingTo(doc);
 
         var requirement = new ToscaRequirement();
         requirement.setType(TYPE);
         requirement.setTypeVersion(VERSION);
         nodeTemplate.setRequirements(List.of(Map.of(NAME, requirement)));
+        var doc = new DocToscaNodeTemplate(nodeTemplate);
         var doc2 = new DocToscaNodeTemplate(doc);
         doc = new DocToscaNodeTemplate(nodeTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setRequirements(doc.getRequirements());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         var capabilityAssignment = new ToscaCapabilityAssignment();
         capabilityAssignment.setType(TYPE);
         capabilityAssignment.setTypeVersion(VERSION);
         nodeTemplate.setCapabilities(Map.of(NAME, capabilityAssignment));
         doc = new DocToscaNodeTemplate(nodeTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         doc2.setCapabilities(doc.getCapabilities());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         capabilityAssignment.setAttributes(Map.of("key", "value"));
         doc = new DocToscaNodeTemplate(nodeTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         var docCapabilityAssignment = doc.getCapabilities().get(NAME_VERSION);
-        assertThat(docCapabilityAssignment)
-                .isNotEqualByComparingTo(null)
-                .isEqualByComparingTo(docCapabilityAssignment);
 
         doc2.getCapabilities().get(NAME_VERSION).setAttributes(docCapabilityAssignment.getAttributes());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
         doc2 = new DocToscaNodeTemplate(doc);
@@ -83,12 +71,10 @@ class DocToscaNodeTemplateTest {
         capabilityAssignment.setAttributes(null);
         capabilityAssignment.setOccurrences(List.of(NAME));
         doc = new DocToscaNodeTemplate(nodeTemplate);
-        assertThat(doc).isNotEqualByComparingTo(doc2);
         docCapabilityAssignment = doc.getCapabilities().get(NAME_VERSION);
 
         doc2.getCapabilities().get(NAME_VERSION).setAttributes(docCapabilityAssignment.getAttributes());
         doc2.getCapabilities().get(NAME_VERSION).setOccurrences(docCapabilityAssignment.getOccurrences());
-        assertThat(doc).isEqualByComparingTo(doc2);
 
         assertThat(doc.toAuthorative()).isEqualTo(doc2.toAuthorative());
         doc2 = new DocToscaNodeTemplate(doc);

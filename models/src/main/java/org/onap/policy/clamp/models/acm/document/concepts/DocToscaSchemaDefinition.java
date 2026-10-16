@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.base.PfAuthorative;
 import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.models.base.PfUtils;
@@ -35,7 +34,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaSchemaDefinition;
 @Data
 @NoArgsConstructor
 public class DocToscaSchemaDefinition
-        implements PfAuthorative<ToscaSchemaDefinition>, Serializable, Comparable<DocToscaSchemaDefinition> {
+        implements PfAuthorative<ToscaSchemaDefinition>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -96,22 +95,5 @@ public class DocToscaSchemaDefinition
             constraints = PfUtils.mapList(toscaEntrySchema.getConstraints(), DocToscaConstraint::new);
 
         }
-    }
-
-    @Override
-    public int compareTo(DocToscaSchemaDefinition other) {
-        if (other == null) {
-            return -1;
-        }
-        if (this == other) {
-            return 0;
-        }
-
-        int result = ObjectUtils.compare(description, other.description);
-        if (result != 0) {
-            return result;
-        }
-
-        return PfUtils.compareCollections(constraints, other.constraints);
     }
 }
