@@ -39,17 +39,20 @@ participant:
 
 management:
   tracing:
-    # NOTE: On Spring Boot 4, rename to management.tracing.export.enabled
-    enabled: ${ALLOW_TRACING:false}
-    propagation:
-      produce: ${TRACING_PROPAGATION_TYPE:W3C}
     sampling:
       probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
-  otlp:
-    # NOTE: On Spring Boot 4, these move to management.opentelemetry.tracing.export.otlp.*
+    propagation:
+      produce: ${TRACING_PROPAGATION_TYPE:W3C}
+  opentelemetry:
     tracing:
-      endpoint: ${TRACING_EXPORTER_ENDPOINT:}
-      transport: ${TRACING_EXPORTER_PROTOCOL:http}
+      export:
+        # Spring Boot 4: replaces management.tracing.enabled +
+        # management.otlp.tracing.* from the Spring Boot 3 configuration
+        enabled: ${ALLOW_TRACING:false}
+        otlp:
+          endpoint: ${TRACING_EXPORTER_ENDPOINT:}
+          transport: ${TRACING_EXPORTER_PROTOCOL:http}
+  otlp:
     metrics:
       export:
         enabled: false
