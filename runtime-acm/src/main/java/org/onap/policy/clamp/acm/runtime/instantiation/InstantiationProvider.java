@@ -133,12 +133,7 @@ public class InstantiationProvider {
         AcDefinitionProvider.checkPrimedComposition(acDefinition);
         AcmUtils.checkMigrationState(acFromDb);
         if (DeployState.UNDEPLOYED.equals(acFromDb.getDeployState())) {
-            LOGGER.info("Updating undeployed instance with id {}", instanceId);
-            acFromDb.setElements(automationComposition.getElements());
-            acFromDb.setName(automationComposition.getName());
-            acFromDb.setVersion(automationComposition.getVersion());
-            acFromDb.setDescription(automationComposition.getDescription());
-            acFromDb.setDerivedFrom(automationComposition.getDerivedFrom());
+            updateAutomationComposition(acFromDb, automationComposition);
             var validationResult = validateAutomationComposition(acFromDb, acDefinition, 0);
             if (!validationResult.isValid()) {
                 throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
@@ -147,7 +142,6 @@ public class InstantiationProvider {
             }
             automationComposition = automationCompositionProvider.updateAutomationComposition(acFromDb);
             return createInstantiationResponse(automationComposition);
-
         }
 
         var deployOrder = DeployOrder.UPDATE;
@@ -175,6 +169,26 @@ public class InstantiationProvider {
             default -> throw new PfModelRuntimeException(Status.BAD_REQUEST,
                 "Not allowed to " + deployOrder + " in the state " + acFromDb.getDeployState());
         };
+    }
+
+    private void updateAutomationComposition(AutomationComposition acFromDb,
+            AutomationComposition automationComposition) {
+        LOGGER.info("Updating undeployed instance with id {}", acFromDb.getInstanceId());
+        var dbElements = acFromDb.getElements().values();
+        acFromDb.setElements(automationComposition.getElements());
+        for (var dbElement : dbElements) {
+            var elementId = dbElement.getId();
+            var element = acFromDb.getElements().get(elementId);
+            if (element != null) { // NOSONAR
+                element.setOutProperties(dbElement.getOutProperties());
+                element.setOperationalState(dbElement.getOperationalState());
+                element.setUseState(dbElement.getUseState());
+            }
+        }
+        acFromDb.setName(automationComposition.getName());
+        acFromDb.setVersion(automationComposition.getVersion());
+        acFromDb.setDescription(automationComposition.getDescription());
+        acFromDb.setDerivedFrom(automationComposition.getDerivedFrom());
     }
 
     /**
