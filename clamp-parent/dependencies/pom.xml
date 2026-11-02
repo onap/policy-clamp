@@ -45,7 +45,7 @@
         <docker.skip.push>false</docker.skip.push>
         <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
         <!-- Dependency Versions -->
-        <version.springboot>4.1.1</version.springboot>
+        <version.springboot>4.1.2</version.springboot>
         <version.swagger.core.v3>2.2.55</version.swagger.core.v3>
         <spock.version>2.4-groovy-5.0</spock.version>
         <gmavenplus-plugin.version>5.1.0</gmavenplus-plugin.version>
@@ -107,18 +107,18 @@
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>jackson-databind-nullable</artifactId>
-                <version>0.2.11</version>
+                <version>0.2.12</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1</version>
             </dependency>
             <!-- Kubernetes client is used by kserve participant -->
             <dependency>
                 <groupId>io.kubernetes</groupId>
                 <artifactId>client-java</artifactId>
-                <version>27.0.0</version>
+                <version>27.0.1</version>
             </dependency>
             <!-- Utilities -->
             <dependency>
@@ -150,7 +150,7 @@
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>mockwebserver</artifactId>
-                <version>5.5.0</version>
+                <version>5.5.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -226,7 +226,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.6.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -281,7 +281,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.6.3</version>
+                    <version>3.6.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
