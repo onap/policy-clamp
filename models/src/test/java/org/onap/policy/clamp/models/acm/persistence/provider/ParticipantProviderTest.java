@@ -51,6 +51,7 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplicaRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantSupportedAcElementsRepository;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -97,7 +98,7 @@ class ParticipantProviderTest {
 
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         assertThatThrownBy(() -> participantProvider.saveParticipant(null)).hasMessageMatching(LIST_IS_NULL);
 
@@ -116,7 +117,7 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         assertThat(participantProvider.findParticipant(INVALID_ID)).isEmpty();
 
@@ -140,7 +141,7 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         assertThatThrownBy(() -> participantProvider.getParticipantById(INVALID_ID)).isInstanceOf(
             PfModelRuntimeException.class).hasMessageMatching("Participant Not Found with ID:.*.");
@@ -153,7 +154,7 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         var acElementList = inputAutomationCompositionsJpa.get(0).getElements();
 
@@ -180,7 +181,7 @@ class ParticipantProviderTest {
 
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         var listOfNodeTemplateState =
             participantProvider.getAcNodeTemplateStates(UUID.fromString(participantId), pageable);
@@ -196,7 +197,7 @@ class ParticipantProviderTest {
 
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         assertThrows(NullPointerException.class, () -> participantProvider.getParticipantById(null));
         assertThrows(NullPointerException.class, () -> participantProvider.findParticipant(null));
@@ -231,7 +232,7 @@ class ParticipantProviderTest {
         when(participantRepository.findAll()).thenReturn(jpaParticipantList);
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         var result = participantProvider.getSupportedElementMap();
         assertThat(result).hasSize(2);
@@ -248,7 +249,7 @@ class ParticipantProviderTest {
 
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
+            mock(ParticipantReplicaRepository.class), null);
 
         assertThatThrownBy(() -> participantProvider.getCompositionIds(null)).hasMessageMatching(LIST_IS_NULL);
 
@@ -264,7 +265,7 @@ class ParticipantProviderTest {
         when(replicaRepository.findById(replica.getReplicaId().toString())).thenReturn(Optional.of(jpaReplica));
         var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
                 mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
-                replicaRepository);
+                replicaRepository, null);
 
         var result = participantProvider.findParticipantReplica(replica.getReplicaId());
         assertThat(result).isNotEmpty();
@@ -280,7 +281,7 @@ class ParticipantProviderTest {
         when(replicaRepository.findByParticipantState(ParticipantState.ON_LINE)).thenReturn(List.of(jpaReplica));
         var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
                 mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
-                replicaRepository);
+                replicaRepository, null);
 
         var result = participantProvider.findReplicasOnLine();
         assertThat(result).hasSize(1);
@@ -294,7 +295,7 @@ class ParticipantProviderTest {
         when(replicaRepository.getReferenceById(jpaReplica.getReplicaId())).thenReturn(jpaReplica);
         var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
                 mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
-                replicaRepository);
+                replicaRepository, null);
 
         var replica = inputParticipants.get(0).getReplicas().values().iterator().next();
         participantProvider.saveParticipantReplica(replica);
@@ -306,7 +307,7 @@ class ParticipantProviderTest {
         var replicaRepository = mock(ParticipantReplicaRepository.class);
         var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
                 mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
-                replicaRepository);
+                replicaRepository, null);
         participantProvider.deleteParticipantReplica(CommonTestData.getReplicaId());
         verify(replicaRepository).deleteById(CommonTestData.getReplicaId().toString());
     }
@@ -321,7 +322,7 @@ class ParticipantProviderTest {
         var replicaRepository = mock(ParticipantReplicaRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
                 mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
-                replicaRepository);
+                replicaRepository, null);
 
         jpaParticipant.setReplicas(List.of());
         var set = Set.of(UUID.fromString(participantId));
@@ -349,8 +350,19 @@ class ParticipantProviderTest {
         var replicaRepository = mock(ParticipantReplicaRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
                 mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
-                replicaRepository);
+                replicaRepository, null);
         participantProvider.checkRegisteredParticipant(acDefinition);
         verify(participantRepository).getReferenceById(participantId);
+    }
+
+    @Test
+    void testDeleteSupportedElementTypes() {
+        var supportedAcElementsRepository = mock(ParticipantSupportedAcElementsRepository.class);
+        var participantProvider = new ParticipantProvider(null,
+                null, null,
+                null, supportedAcElementsRepository);
+        var participantId = UUID.randomUUID();
+        participantProvider.deleteSupportedElementTypes(participantId);
+        verify(supportedAcElementsRepository).deleteByParticipantId(participantId.toString());
     }
 }
