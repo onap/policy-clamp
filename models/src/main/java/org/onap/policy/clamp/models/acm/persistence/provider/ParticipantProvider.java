@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2021-2026 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplicaRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantSupportedAcElementsRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.Pageable;
@@ -64,6 +65,8 @@ public class ParticipantProvider {
     private final NodeTemplateStateRepository nodeTemplateStateRepository;
 
     private final ParticipantReplicaRepository replicaRepository;
+
+    private final ParticipantSupportedAcElementsRepository  supportedAcElementsRepository;
 
     /**
      * Get all participants.
@@ -233,5 +236,14 @@ public class ParticipantProvider {
         var participantIds = acDefinition.getElementStateMap().values().stream()
                 .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
         verifyParticipantState(participantIds);
+    }
+
+    /**
+     * Delete SupportedElementTypes.
+     *
+     * @param participantId the participantId
+     */
+    public void deleteSupportedElementTypes(UUID participantId) {
+        supportedAcElementsRepository.deleteByParticipantId(participantId.toString());
     }
 }

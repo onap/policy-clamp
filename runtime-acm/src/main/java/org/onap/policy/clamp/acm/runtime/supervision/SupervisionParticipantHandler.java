@@ -161,6 +161,7 @@ public class SupervisionParticipantHandler {
                 participantSupportedElementType.stream().map(this::toToscaConceptIdentifier).toList())) {
             participant.setParticipantSupportedElementTypes(listToMap(participantSupportedElementType));
             toRestart = true;
+            participantProvider.deleteSupportedElementTypes(participantId);
         }
         if (toRestart) {
             participantProvider.saveParticipant(participant);
