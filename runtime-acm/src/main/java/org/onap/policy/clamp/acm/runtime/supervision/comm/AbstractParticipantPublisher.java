@@ -20,7 +20,11 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
+import io.opentelemetry.context.Context;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.common.acm.utils.NetLoggerUtil;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantKafkaMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,14 +39,17 @@ public abstract class AbstractParticipantPublisher<T extends ParticipantKafkaMes
     @Value("${runtime.topics.syncTopic}")
     private String syncTopic;
 
+    private final ExecutorService executor =
+            Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
+
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendToSyncTopic(final T message) {
-        this.send(syncTopic, message);
+        executor.execute(() -> this.send(syncTopic, message));
     }
 
     public void send(final T message) {
-        this.send(operationTopic, message);
+        executor.execute(() -> this.send(operationTopic, message));
     }
 
     private void send(final String topic, final T message) {
