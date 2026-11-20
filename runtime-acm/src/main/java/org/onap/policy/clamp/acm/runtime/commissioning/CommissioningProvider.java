@@ -21,16 +21,12 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
-import io.opentelemetry.context.Context;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
-import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
@@ -61,9 +57,6 @@ public class CommissioningProvider {
     private final AcTypeStateResolver acTypeStateResolver;
     private final ParticipantPrimePublisher participantPrimePublisher;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
-
-    private final ExecutorService executor =
-            Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(CommissioningProvider.class);
@@ -233,9 +226,8 @@ public class CommissioningProvider {
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
-        executor.execute(
-                () -> participantPrimePublisher.sendPriming(
-                        preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId()));
+        participantPrimePublisher.sendPriming(
+                preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId());
     }
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
@@ -245,7 +237,7 @@ public class CommissioningProvider {
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
-        executor.execute(() -> participantPrimePublisher.sendDepriming(
-                preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId()));
+        participantPrimePublisher.sendDepriming(
+                preparation, acmDefinition.getCompositionId(), acmDefinition.getRevisionId());
     }
 }

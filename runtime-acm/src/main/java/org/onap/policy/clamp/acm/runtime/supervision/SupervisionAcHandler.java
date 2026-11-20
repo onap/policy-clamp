@@ -21,18 +21,14 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
-import io.opentelemetry.context.Context;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
-import org.onap.policy.clamp.common.acm.utils.AcmThreadFactory;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -71,9 +67,6 @@ public class SupervisionAcHandler {
     private final AcPreparePublisher acPreparePublisher;
     private final MessageProvider messageProvider;
 
-    private final ExecutorService executor =
-            Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
-
     /**
      * Handle Deploy an AutomationComposition instance.
      *
@@ -102,8 +95,7 @@ public class SupervisionAcHandler {
         var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(
-            () -> automationCompositionDeployPublisher.send(automationComposition, startPhase, true, acDefinition));
+        automationCompositionDeployPublisher.send(automationComposition, startPhase, true, acDefinition);
     }
 
     /**
@@ -132,8 +124,8 @@ public class SupervisionAcHandler {
         var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> automationCompositionStateChangePublisher.send(automationComposition,
-                true, acDefinition, acDefinitionTarget));
+        automationCompositionStateChangePublisher.send(automationComposition,
+                true, acDefinition, acDefinitionTarget);
     }
 
     /**
@@ -160,9 +152,7 @@ public class SupervisionAcHandler {
         var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(
-            () -> automationCompositionStateChangePublisher.send(automationComposition,
-                    true, acDefinition, null));
+        automationCompositionStateChangePublisher.send(automationComposition, true, acDefinition, null);
     }
 
     /**
@@ -179,7 +169,7 @@ public class SupervisionAcHandler {
         var stage = AcmStageUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(stage);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> acPreparePublisher.sendPrepare(automationComposition, stage, acDefinition));
+        acPreparePublisher.sendPrepare(automationComposition, stage, acDefinition);
     }
 
     /**
@@ -194,7 +184,7 @@ public class SupervisionAcHandler {
                 .setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> acPreparePublisher.sendReview(automationComposition, acDefinition));
+        acPreparePublisher.sendReview(automationComposition, acDefinition);
     }
 
     /**
@@ -221,9 +211,7 @@ public class SupervisionAcHandler {
         var startPhase = AcmStageUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(
-            () -> automationCompositionStateChangePublisher.send(automationComposition,
-                    true, acDefinition, null));
+        automationCompositionStateChangePublisher.send(automationComposition, true, acDefinition, null);
     }
 
     /**
@@ -236,8 +224,7 @@ public class SupervisionAcHandler {
                        AutomationCompositionDefinition acDefinition) {
         var acPriorUpdate = automationCompositionProvider
                 .getAutomationCompositionRollback(automationComposition.getInstanceId());
-        executor.execute(
-            () -> acElementPropertiesPublisher.send(acPriorUpdate, automationComposition, acDefinition));
+        acElementPropertiesPublisher.send(acPriorUpdate, automationComposition, acDefinition);
     }
 
     /**
@@ -278,9 +265,8 @@ public class SupervisionAcHandler {
 
     private void sendDeleteMsg(AutomationComposition automationComposition, boolean firstStartPhase,
             AutomationCompositionDefinition acDefinition, AutomationCompositionDefinition acDefinitionTarget) {
-        executor.execute(
-                () -> automationCompositionStateChangePublisher.send(
-                        automationComposition, firstStartPhase, acDefinition, acDefinitionTarget));
+        automationCompositionStateChangePublisher.send(
+                automationComposition, firstStartPhase, acDefinition, acDefinitionTarget);
     }
 
     /**
@@ -376,9 +362,8 @@ public class SupervisionAcHandler {
     public void migrate(AutomationCompositionRollback acPriorUpdate, AutomationComposition automationComposition,
                         AutomationCompositionDefinition acDefinition,
                         AutomationCompositionDefinition acDefinitionTarget) {
-        executor.execute(() -> acCompositionMigrationPublisher.send(
-                acPriorUpdate, automationComposition, automationComposition.getPhase(),
-                acDefinition, acDefinitionTarget, true));
+        acCompositionMigrationPublisher.send(acPriorUpdate, automationComposition, automationComposition.getPhase(),
+                acDefinition, acDefinitionTarget, true);
     }
 
     /**
@@ -393,7 +378,7 @@ public class SupervisionAcHandler {
                                 AutomationComposition automationComposition,
                                 AutomationCompositionDefinition acDefinition,
                                 AutomationCompositionDefinition acDefinitionTarget) {
-        executor.execute(() -> acCompositionMigrationPublisher.send(acPriorUpdate, automationComposition, 0,
-                acDefinition, acDefinitionTarget, true));
+        acCompositionMigrationPublisher.send(acPriorUpdate, automationComposition, 0, acDefinition,
+                acDefinitionTarget, true);
     }
 }
