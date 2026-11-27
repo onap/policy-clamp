@@ -1,0 +1,11 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Francesco Fiora <francesco.fiora@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Verified+1: ONAP Bypass GHA <releng+onap.bypass.gha@linuxfoundation.org>
+Verified+1: ONAP GitHub Actions <collab-it+ecomp-jobbuilder@linuxfoundation.org>
+Code-Review+2: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-by: Adam Kenihan <adam.kenihan@est.tech>
+Submitted-at: Fri, 27 Nov 2026 10:15:53 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/148719
+Project: policy/clamp
+Branch: refs/heads/master
